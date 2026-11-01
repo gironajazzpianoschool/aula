@@ -1749,19 +1749,28 @@ const QUOTES=[
   {a:"J.S. Bach",ca:"No és tan difícil: només cal prémer les tecles correctes en el moment adequat.",es:"No es tan difícil: solo hay que pulsar las teclas correctas en el momento adecuado.",en:"It's not that hard: you just have to hit the right keys at the right time."},
   {a:"C. Debussy",ca:"La música comença allà on acaba la paraula.",es:"La música comienza donde acaba la palabra.",en:"Music begins where the word ends."},
   {a:"Friedrich Nietzsche",ca:"Sense la música, la vida seria un error.",es:"Sin la música, la vida sería un error.",en:"Without music, life would be a mistake."},
-  {a:"Hans Christian Andersen",ca:"On fallen les paraules, parla la música.",es:"Donde fallan las palabras, habla la música.",en:"Where words fail, music speaks."}
+  {a:"Hans Christian Andersen",ca:"On fallen les paraules, parla la música.",es:"Donde fallan las palabras, habla la música.",en:"Where words fail, music speaks."},
+  {a:"Charlie Parker",ca:"Si no ho has viscut, no ho podràs tocar.",es:"Si no lo has vivido, no lo podrás tocar.",en:"If you haven't lived it, you can't play it."},
+  {a:"L. van Beethoven",ca:"La música és una revelació més alta que qualsevol saviesa.",es:"La música es una revelación más alta que cualquier sabiduría.",en:"Music is a higher revelation than all wisdom and philosophy."},
+  {a:"F. Chopin",ca:"La senzillesa és la fita més alta de l'art.",es:"La sencillez es la meta más alta del arte.",en:"Simplicity is the highest goal of art."},
+  {a:"Herbie Hancock",ca:"No hi ha errors, només oportunitats.",es:"No hay errores, solo oportunidades.",en:"There are no mistakes, only opportunities."},
+  {a:"W.A. Mozart",ca:"La música no està en les notes, sinó en el silenci entre elles.",es:"La música no está en las notas, sino en el silencio entre ellas.",en:"The music is not in the notes, but in the silence between."},
+  {a:"John Coltrane",ca:"La música és la meva espiritualitat.",es:"La música es mi espiritualidad.",en:"Music is my spirituality."},
+  {a:"Clara Schumann",ca:"Un músic ha de sentir el que toca, no només tocar el que sent.",es:"Un músico debe sentir lo que toca, no solo tocar lo que siente.",en:"A musician must feel what they play, not just play what they feel."},
+  {a:"Leonard Bernstein",ca:"La música pot nomenar l'innombrable i comunicar l'inconegut.",es:"La música puede nombrar lo innombrable y comunicar lo desconocido.",en:"Music can name the unnameable and communicate the unknowable."},
+  {a:"Chick Corea",ca:"Toca el que sents i sentiràs el que toques.",es:"Toca lo que sientes y sentirás lo que tocas.",en:"Play what you feel and you will feel what you play."},
+  {a:"Igor Stravinsky",ca:"Escoltar és un acte de creació.",es:"Escuchar es un acto de creación.",en:"Listening is an act of creation."}
 ];
 
 let lastQuoteIdx = 0;
 function quoteIndex() {
   let idx;
-  const last = sessionStorage.getItem('lastQuote');
+  const last = localStorage.getItem('lastQuote'); // 👈 CANVIAT A localStorage
   do { idx = Math.floor(Math.random() * QUOTES.length); } 
   while (QUOTES.length > 1 && idx === +last);
-  sessionStorage.setItem('lastQuote', idx);
+  localStorage.setItem('lastQuote', idx); // 👈 CANVIAT A localStorage
   return idx;
 }
-
 function renderQuote() {
   const q = QUOTES[lastQuoteIdx];
   const lang = (currentLang === 'es' || currentLang === 'en') ? currentLang : 'ca';
