@@ -1,5 +1,5 @@
 /**
- * TONAL EMOTIONS - v23
+ * TONAL EMOTIONS - v24
  */
 
 /* ══ 1. CONFIGURACIÓ ══ */
@@ -1067,9 +1067,22 @@ function activateManualNote(d){
   activeManualNotes.add(d);
   handleMIDIMessage({data:[0x90,currentKeyRoot+d+60,100]});
   const b=document.querySelector(`.manual-btn[data-degree="${d}"]`); if(b) b.classList.add('active');
+  
+  // Timeout de seguretat: apaga el botó automàticament després de 800ms si no s'ha alliberat
+  b._safetyTimeout = setTimeout(() => {
+    deactivateManualNote(d);
+  }, 800);
 }
+
 function deactivateManualNote(d){
-  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`); if(b) b.classList.remove('active');
+  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
+  if(b) {
+    b.classList.remove('active');
+    if(b._safetyTimeout) {
+      clearTimeout(b._safetyTimeout);
+      b._safetyTimeout = null;
+    }
+  }
   if(!activeManualNotes.has(d)) return;
   activeManualNotes.delete(d);
   handleMIDIMessage({data:[0x80,currentKeyRoot+d+60,0]});
@@ -1542,6 +1555,21 @@ document.querySelectorAll('.manual-btn').forEach(b => {
   b.addEventListener('pointerup', off);
   b.addEventListener('pointercancel', off);
   b.addEventListener('pointerleave', off);
+});
+
+// Listener global: apaga tots els botons si es toca fora del panell manual
+document.addEventListener('touchstart', (e) => {
+  const panel = $('manual-panel');
+  if (panel && !panel.contains(e.target)) {
+    clearAllManualNotes();
+  }
+}, { passive: true });
+
+document.addEventListener('pointerdown', (e) => {
+  const panel = $('manual-panel');
+  if (panel && !panel.contains(e.target)) {
+    clearAllManualNotes();
+  }
 });
 
 btnToggleManual.addEventListener('click',toggleManualPanel);
