@@ -404,6 +404,13 @@ html.smartphone-mode .mode-toggle-btn, html.smartphone-mode .difficulty-btn { pa
 html.smartphone-mode #btn-ear-filter { position: absolute; top: -45px; right: 0; z-index: 10; margin: 0; padding: 6px 12px; font-size: 11px; min-height: 32px; white-space: nowrap; }
 html.smartphone-mode #ear-timer-full { font-size: 28px; margin: 10px 0; }
 html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; font-size: 14px; font-weight: 700; margin: 10px auto 0 auto; grid-column: 1 / -1; justify-self: center; }
+
+/* ── FIX TABLET: Evitar que els botons del teclat manual es quedin il·luminats ── */
+.manual-btn {
+  touch-action: none !important; /* Impedeix que el navegador interpreti el toc com un intent de fer scroll */
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
 </style>
 </head>
 <body>
