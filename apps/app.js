@@ -315,7 +315,7 @@ function cleanupOnExit(){
   [resultModal,pauseModal,infoModal,battleModal,battleResultModal,hardcoreWarning].forEach(m=>{ if(m) m.classList.remove('visible'); });
   const im=$('instructions-modal'); if(im) im.classList.remove('visible');
   if(manualPanel){ manualPanel.classList.remove('visible','ear-position'); manualPanel.style.display='none'; }
-  manualPanelVisible=false; activeManualNotes.clear(); numHeld={};
+  clearAllManualNotes(); // 👈 NETEJA VISUAL I LÒGICA EN SORTIR
   stopProva();
 }
 
@@ -1019,6 +1019,15 @@ function updateFilterInfo(){
 }
 function hideFilterInfo(){ if(filterInfoEl) filterInfoEl.style.display='none'; }
 
+function clearAllManualNotes() {
+  activeManualNotes.forEach(d => {
+    const b = document.querySelector(`.manual-btn[data-degree="${d}"]`);
+    if (b) b.classList.remove('active');
+  });
+  activeManualNotes.clear();
+  numHeld = {};
+}
+
 function toggleManualPanel(){
   if(earMode.classList.contains('active') && earModeType==='listen'){ return; }
   manualPanelVisible = !manualPanelVisible;
@@ -1029,6 +1038,7 @@ function toggleManualPanel(){
     } else {
       manualPanel.classList.remove('visible');
       manualPanel.style.display = 'none';
+      clearAllManualNotes(); // 👈 NETEJA DE SEGURETAT EN AMAGAR
     }
     if(earMode.classList.contains('active')) {
       manualPanel.classList.add('ear-position');
@@ -1769,13 +1779,15 @@ if($('ear-delay-input-full')) $('ear-delay-input-full').value = '6';
     if(beT) beT.style.display='none';
 
     // Mostra/amaga el panell manual segons el mode (mai en Escolta)
-    function syncTabletManualPanel(){
+     
+function syncTabletManualPanel(){
       const panel=$('manual-panel');
       if(!panel) return;
       const inEar=$('ear-mode').classList.contains('active');
       const inMidi=$('midi-mode').classList.contains('active');
       if(inEar && earModeType==='listen'){
         panel.classList.remove('visible','ear-position'); panel.style.display='none'; manualPanelVisible=false;
+        clearAllManualNotes(); // 👈 NETEJA DE SEGURETAT EN MODE ESCOLTA
       } else if(inEar || inMidi){
         panel.classList.add('visible'); panel.style.display='block';
         panel.classList.toggle('ear-position', inEar);
