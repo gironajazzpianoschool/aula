@@ -431,13 +431,47 @@ body.editmode .vid { padding-left: 34px; }
   background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)); 
 }
 
-/* FIX MÒBIL: Botó "i" il·luminat */
+/* FIX MÒBIL: Botó d'ajuda com a X vermella en smartphones */
 @media (max-width: 767px) {
+  #mHelp {
+    background: var(--card) !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: none !important;
+    padding: 0 8px !important;
+    margin: 0 !important;
+    width: auto !important;
+    height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+  }
+  /* 1. Amaguem la imatge de l'interrogant blau a mòbil */
+  #mHelp img {
+    display: none !important;
+  }
+  /* 2. Afegim la X vermella */
+  #mHelp::before {
+    content: '✕' !important;
+    color: var(--danger) !important; /* #ff5577 */
+    font-size: 18px !important;
+    font-weight: 900 !important;
+  }
+  #mHelp:hover {
+    border-color: var(--danger) !important;
+    background: rgba(255, 85, 119, 0.1) !important;
+  }
   #mHelp.on {
-    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
-    border: 1.5px solid #e8b04b !important;
-    color: #e8b04b !important;
-    box-shadow: 0 0 14px rgba(232,176,75,0.22) !important;
+    background: rgba(255, 85, 119, 0.15) !important;
+    border: 1.5px solid var(--danger) !important;
+    color: var(--danger) !important;
+    box-shadow: 0 0 14px rgba(255, 85, 119, 0.3) !important;
+  }
+  #mHelp.on::before {
+    color: var(--danger) !important;
   }
 }
 
@@ -511,6 +545,15 @@ body.editmode .vid { padding-left: 34px; }
   opacity: 1;
   clip-path: inset(0 0 0 0);
   transition: clip-path 1.05s steps(26, end), opacity .08s linear;
+}
+.now .vr.tip-on::before { opacity: 1; }
+.now .vr.tip-fade::after {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.now .vr.tip-fade::before {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 .now .vr.tip-on::before { opacity: 1; }
 
@@ -1930,18 +1973,6 @@ function tonalStatsHtml() {
 function renderApps() {
   var av = $('appsView');
   av.innerHTML = '';
-  if (isSmartphone()) {
-    var warn = document.createElement('div');
-    warn.className = 'celebration';
-    warn.style.cssText = 'margin-bottom:16px;text-align:left;';
-    warn.innerHTML = '<h2 style="font-size:16px;">📱 ' + (LS.lang === 'ca' ? 'Mode Smartphone' : 'Modo Smartphone') + '</h2>' +
-      '<p style="font-size:13px;color:var(--mut);margin-top:6px;line-height:1.5;">' + 
-      (LS.lang === 'ca' 
-        ? 'Al mòbil, <b>TONAL EMOTIONS</b> funciona amb <b>funcionalitats limitades</b>: només el mode <b>🎧 EAR TRAINING</b> està disponible (el LABORATORI requereix pantalla gran). Gaudeix de l\'entrenament auditiu des de qualsevol lloc!' 
-        : 'En el móvil, <b>TONAL EMOTIONS</b> funciona con <b>funcionalidades limitadas</b>: solo el modo <b>🎧 EAR TRAINING</b> está disponible (el LABORATORIO requiere pantalla grande). ¡Disfruta del entrenamiento auditivo desde cualquier lugar!') +
-      '</p>';
-    av.insertBefore(warn, av.firstChild);
-  }
   var g = document.createElement('div');
   g.className = 'appgrid';
   APPS.forEach(function (a, i) {
@@ -1950,9 +1981,7 @@ function renderApps() {
     var iconHtml = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
     var statsHtml = (a.url && a.url.indexOf('TONAL') >= 0) ? tonalStatsHtml() : '';
     c.innerHTML = '<div class="ae">' + iconHtml + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3><p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + statsHtml + '<button>' + t().appsOpen + '</button>';
-    var obreBtn = c.querySelector('button');
-    if (a.url && a.url.indexOf('TONAL') >= 0) obreBtn.classList.add('obre-destacat');
-    obreBtn.onclick = function () { if (a.url) { var sep = a.url.indexOf('?') >= 0 ? '&' : '?'; window.open(a.url + sep + 'lang=' + LS.lang, '_blank'); } else alert(t().appsSoon); };
+    c.querySelector('button').onclick = function () { if (a.url) window.open(a.url, '_blank'); else alert(t().appsSoon); };
     g.appendChild(c);
   });
   av.appendChild(g);
@@ -2114,8 +2143,16 @@ function setLabels() {
   $('mFree').innerHTML = ICON_FOLDER + ' ' + t().mFree.replace(/^\s*📁\s*/, '');
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
-  $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
-  $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  
+  // CANVI: Comprovar si és smartphone per posar la X vermella o la imatge
+  if (isSmartphone()) {
+    $('mHelp').innerHTML = ''; // La CSS s'encarrega de mostrar la 'X' vermella
+    $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
+  } else {
+    $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
+    $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  }
+  
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
   $('mSave').textContent = isTabletDevice() ? '📧' : '💾';
@@ -2545,17 +2582,31 @@ function openDocsEditor(level, uiUnused, b) {
 }
 
 /* Tooltip del play: s'encén al botó però viu a la fila (no es mou amb el puls) */
+var tipTimeout = null;
 document.addEventListener('mouseover', function (e) {
   var btn = e.target.closest ? e.target.closest('.now .play') : null;
   if (!btn) return;
   var vr = btn.closest('.vr');
-  if (vr && vr.hasAttribute('data-tip')) vr.classList.add('tip-on');
+  if (vr && vr.hasAttribute('data-tip')) {
+    vr.classList.add('tip-on');
+    vr.classList.remove('tip-fade');
+    if (tipTimeout) clearTimeout(tipTimeout);
+    tipTimeout = setTimeout(function() {
+      vr.classList.add('tip-fade');
+      setTimeout(function() {
+        vr.classList.remove('tip-on', 'tip-fade');
+      }, 500);
+    }, 2000);
+  }
 });
 document.addEventListener('mouseout', function (e) {
   var btn = e.target.closest ? e.target.closest('.now .play') : null;
   if (!btn) return;
   var vr = btn.closest('.vr');
-  if (vr) vr.classList.remove('tip-on');
+  if (vr) {
+    vr.classList.remove('tip-on', 'tip-fade');
+    if (tipTimeout) clearTimeout(tipTimeout);
+  }
 });
 
 /* ================================================================
