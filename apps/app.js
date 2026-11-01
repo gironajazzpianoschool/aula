@@ -1509,68 +1509,84 @@ $('ear-duration-full').addEventListener('input',e=>{ if(earTrainingActive) retur
 
 const btnToggleManual=$('btn-toggle-manual'), btnToggleManualEar=$('btn-toggle-manual-ear');
 
-/* 🔧 CORRECCIÓ 3: Events pointer per evitar que les tecles es quedin il·luminades a l'iPad */
+/* ══ TECLAT MANUAL BLINDAT PER A TABLET/iOS (Versió Definitiva) ══ */
+
+// 0. Injecció de CSS crític per evitar que iOS interpreti el toc com a scroll/zoom
+const touchFixStyle = document.createElement('style');
+touchFixStyle.textContent = `.manual-btn { touch-action: none !important; -webkit-user-select: none !important; user-select: none !important; -webkit-tap-highlight-color: transparent !important; cursor: pointer !important; }`;
+document.head.appendChild(touchFixStyle);
+
+// 1. Neteja nuclear: eliminem qualsevol listener antic clonant el node
+document.querySelectorAll('.manual-btn').forEach(b => {
+  b.replaceWith(b.cloneNode(true));
+});
+
+// 2. Reconstruïm listeners nets i robustos
 document.querySelectorAll('.manual-btn').forEach(b => {
   const d = parseInt(b.dataset.degree);
 
-  const on = (e) => {
+  const activate = (e) => {
     if (e.cancelable) e.preventDefault();
     activateManualNote(d);
   };
 
-  const off = (e) => {
-    if (e && e.cancelable) e.preventDefault();
-    // 1. Forcem treure la classe visual IMMEDIATAMENT
-    const btn = document.querySelector(`.manual-btn[data-degree="${d}"]`);
-    if (btn) btn.classList.remove('active');
+  const deactivate = (e) => {
+    try { if (e && e.cancelable) e.preventDefault(); } catch(err){}
     
-    // 2. Netejem la lògica interna
+    const btn = document.querySelector(`.manual-btn[data-degree="${d}"]`);
+    if (btn) {
+      btn.classList.remove('active');
+      if (btn._safetyTimeout) {
+        clearTimeout(btn._safetyTimeout);
+        btn._safetyTimeout = null;
+      }
+    }
+    
     if (activeManualNotes.has(d)) {
       activeManualNotes.delete(d);
       handleMIDIMessage({data: [0x80, currentKeyRoot + d + 60, 0]});
     }
   };
 
-  // Neteja prèvia d'esdeveniments per evitar duplicats
-  b.removeEventListener('mousedown', on);
-  b.removeEventListener('touchstart', on);
-  b.removeEventListener('pointerdown', on);
-  b.removeEventListener('mouseup', off);
-  b.removeEventListener('mouseleave', off);
-  b.removeEventListener('touchend', off);
-  b.removeEventListener('touchcancel', off);
-  b.removeEventListener('pointerup', off);
-  b.removeEventListener('pointercancel', off);
-  b.removeEventListener('pointerleave', off);
-
-  // Registre d'esdeveniments
-  b.addEventListener('mousedown', on);
-  b.addEventListener('touchstart', on, { passive: false });
-  b.addEventListener('pointerdown', on);
-
-  b.addEventListener('mouseup', off);
-  b.addEventListener('mouseleave', off);
-  b.addEventListener('touchend', off, { passive: false });
-  b.addEventListener('touchcancel', off, { passive: false });
-  b.addEventListener('pointerup', off);
-  b.addEventListener('pointercancel', off);
-  b.addEventListener('pointerleave', off);
+  // Registrem TOTS els esdeveniments possibles (prioritat a touch/pointer per a tablet)
+  b.addEventListener('touchstart', activate, { passive: false });
+  b.addEventListener('touchend', deactivate, { passive: false });
+  b.addEventListener('touchcancel', deactivate, { passive: false });
+  
+  b.addEventListener('pointerdown', activate, { passive: false });
+  b.addEventListener('pointerup', deactivate, { passive: false });
+  b.addEventListener('pointercancel', deactivate, { passive: false });
+  b.addEventListener('pointerleave', deactivate, { passive: false });
+  
+  // Fallback per a ratolí (PC)
+  b.addEventListener('mousedown', activate);
+  b.addEventListener('mouseup', deactivate);
+  b.addEventListener('mouseleave', deactivate);
 });
 
-// Listener global: apaga tots els botons si es toca fora del panell manual
-document.addEventListener('touchstart', (e) => {
+// 3. XARXA DE SEGURETAT GLOBAL: si s'aixeca el dit a qualsevol lloc FORA del panell, netegem qualsevol nota que hagi quedat penjada
+const globalDeactivate = (e) => {
   const panel = $('manual-panel');
   if (panel && !panel.contains(e.target)) {
-    clearAllManualNotes();
+    if (activeManualNotes.size > 0) {
+      activeManualNotes.forEach(d => {
+        const btn = document.querySelector(`.manual-btn[data-degree="${d}"]`);
+        if (btn) {
+          btn.classList.remove('active');
+          if (btn._safetyTimeout) {
+            clearTimeout(btn._safetyTimeout);
+            btn._safetyTimeout = null;
+          }
+        }
+        handleMIDIMessage({data: [0x80, currentKeyRoot + d + 60, 0]});
+      });
+      activeManualNotes.clear();
+    }
   }
-}, { passive: true });
+};
 
-document.addEventListener('pointerdown', (e) => {
-  const panel = $('manual-panel');
-  if (panel && !panel.contains(e.target)) {
-    clearAllManualNotes();
-  }
-});
+document.addEventListener('touchend', globalDeactivate, { passive: true });
+document.addEventListener('pointerup', globalDeactivate, { passive: true });
 
 btnToggleManual.addEventListener('click',toggleManualPanel);
 btnToggleManualEar.addEventListener('click',toggleManualPanel);
