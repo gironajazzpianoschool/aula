@@ -1509,84 +1509,57 @@ $('ear-duration-full').addEventListener('input',e=>{ if(earTrainingActive) retur
 
 const btnToggleManual=$('btn-toggle-manual'), btnToggleManualEar=$('btn-toggle-manual-ear');
 
-/* ══ TECLAT MANUAL BLINDAT PER A TABLET/iOS (Versió Definitiva) ══ */
+/* ══ TECLAT MANUAL - SOLUCIÓ iOS SIMPLE ══ */
 
-// 0. Injecció de CSS crític per evitar que iOS interpreti el toc com a scroll/zoom
-const touchFixStyle = document.createElement('style');
-touchFixStyle.textContent = `.manual-btn { touch-action: none !important; -webkit-user-select: none !important; user-select: none !important; -webkit-tap-highlight-color: transparent !important; cursor: pointer !important; }`;
-document.head.appendChild(touchFixStyle);
+// CSS per evitar comportaments estranys a iOS
+const iosStyle = document.createElement('style');
+iosStyle.textContent = `.manual-btn { touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; }`;
+document.head.appendChild(iosStyle);
 
-// 1. Neteja nuclear: eliminem qualsevol listener antic clonant el node
-document.querySelectorAll('.manual-btn').forEach(b => {
-  b.replaceWith(b.cloneNode(true));
-});
-
-// 2. Reconstruïm listeners nets i robustos
-document.querySelectorAll('.manual-btn').forEach(b => {
-  const d = parseInt(b.dataset.degree);
-
-  const activate = (e) => {
-    if (e.cancelable) e.preventDefault();
-    activateManualNote(d);
-  };
-
-  const deactivate = (e) => {
-    try { if (e && e.cancelable) e.preventDefault(); } catch(err){}
-    
-    const btn = document.querySelector(`.manual-btn[data-degree="${d}"]`);
-    if (btn) {
-      btn.classList.remove('active');
-      if (btn._safetyTimeout) {
-        clearTimeout(btn._safetyTimeout);
-        btn._safetyTimeout = null;
-      }
-    }
-    
+// Funció global per apagar TOTS els botons
+const clearAll = () => {
+  document.querySelectorAll('.manual-btn.active').forEach(btn => {
+    btn.classList.remove('active');
+    const d = parseInt(btn.dataset.degree);
     if (activeManualNotes.has(d)) {
       activeManualNotes.delete(d);
       handleMIDIMessage({data: [0x80, currentKeyRoot + d + 60, 0]});
     }
-  };
-
-  // Registrem TOTS els esdeveniments possibles (prioritat a touch/pointer per a tablet)
-  b.addEventListener('touchstart', activate, { passive: false });
-  b.addEventListener('touchend', deactivate, { passive: false });
-  b.addEventListener('touchcancel', deactivate, { passive: false });
-  
-  b.addEventListener('pointerdown', activate, { passive: false });
-  b.addEventListener('pointerup', deactivate, { passive: false });
-  b.addEventListener('pointercancel', deactivate, { passive: false });
-  b.addEventListener('pointerleave', deactivate, { passive: false });
-  
-  // Fallback per a ratolí (PC)
-  b.addEventListener('mousedown', activate);
-  b.addEventListener('mouseup', deactivate);
-  b.addEventListener('mouseleave', deactivate);
-});
-
-// 3. XARXA DE SEGURETAT GLOBAL: si s'aixeca el dit a qualsevol lloc FORA del panell, netegem qualsevol nota que hagi quedat penjada
-const globalDeactivate = (e) => {
-  const panel = $('manual-panel');
-  if (panel && !panel.contains(e.target)) {
-    if (activeManualNotes.size > 0) {
-      activeManualNotes.forEach(d => {
-        const btn = document.querySelector(`.manual-btn[data-degree="${d}"]`);
-        if (btn) {
-          btn.classList.remove('active');
-          if (btn._safetyTimeout) {
-            clearTimeout(btn._safetyTimeout);
-            btn._safetyTimeout = null;
-          }
-        }
-        handleMIDIMessage({data: [0x80, currentKeyRoot + d + 60, 0]});
-      });
-      activeManualNotes.clear();
-    }
-  }
+  });
 };
 
-document.addEventListener('touchend', globalDeactivate, { passive: true });
-document.addEventListener('pointerup', globalDeactivate, { passive: true });
+// Event al DOCUMENT (no als botons) - més fiable a iOS
+document.addEventListener('touchstart', (e) => {
+  const btn = e.target.closest('.manual-btn');
+  if (!btn) return;
+  e.preventDefault();
+  const d = parseInt(btn.dataset.degree);
+  if (!activeManualNotes.has(d)) {
+    activeManualNotes.add(d);
+    btn.classList.add('active');
+    handleMIDIMessage({data: [0x90, currentKeyRoot + d + 60, 100]});
+  }
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  clearAll(); // Apaga-ho TOT quan deixes anar el dit
+}, { passive: false });
+
+// Fallback per ratolí (PC)
+document.addEventListener('mousedown', (e) => {
+  const btn = e.target.closest('.manual-btn');
+  if (!btn) return;
+  const d = parseInt(btn.dataset.degree);
+  if (!activeManualNotes.has(d)) {
+    activeManualNotes.add(d);
+    btn.classList.add('active');
+    handleMIDIMessage({data: [0x90, currentKeyRoot + d + 60, 100]});
+  }
+});
+
+document.addEventListener('mouseup', () => clearAll());
+document.addEventListener('mouseleave', () => clearAll());
 
 btnToggleManual.addEventListener('click',toggleManualPanel);
 btnToggleManualEar.addEventListener('click',toggleManualPanel);
