@@ -1509,58 +1509,62 @@ $('ear-duration-full').addEventListener('input',e=>{ if(earTrainingActive) retur
 
 const btnToggleManual=$('btn-toggle-manual'), btnToggleManualEar=$('btn-toggle-manual-ear');
 
-/* ══ TECLAT MANUAL - SOLUCIÓ iOS SIMPLE ══ */
+/* ══ TECLAT MANUAL: SOLUCIÓ RADICAL PER A IPAD (Document Listeners) ══ */
 
-// CSS per evitar comportaments estranys a iOS
-const iosStyle = document.createElement('style');
-iosStyle.textContent = `.manual-btn { touch-action: none !important; user-select: none !important; -webkit-user-select: none !important; }`;
-document.head.appendChild(iosStyle);
+// 1. Injecció de CSS crític per evitar que iOS interpreti el toc com a scroll/zoom
+const touchFixStyle = document.createElement('style');
+touchFixStyle.textContent = `.manual-btn { touch-action: none !important; -webkit-user-select: none !important; user-select: none !important; -webkit-tap-highlight-color: transparent !important; }`;
+document.head.appendChild(touchFixStyle);
 
-// Funció global per apagar TOTS els botons
-const clearAll = () => {
-  document.querySelectorAll('.manual-btn.active').forEach(btn => {
-    btn.classList.remove('active');
+// 2. Funció auxiliar per trobar el botó sota el dit/ratolí
+function findManualBtn(x, y) {
+  const el = document.elementFromPoint(x, y);
+  if (!el) return null;
+  return el.closest('.manual-btn');
+}
+
+// 3. Listener global per a l'inici del toc (Tàctil i Ratolí)
+function handleGlobalDown(e) {
+  // Només intervenim si el toc comença dins del panell manual
+  const panel = $('manual-panel');
+  if (!panel || !panel.contains(e.target)) return;
+
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  const btn = findManualBtn(x, y);
+  
+  if (btn) {
+    if (e.cancelable) e.preventDefault(); // Evita scroll i events de ratolí sintètics
     const d = parseInt(btn.dataset.degree);
-    if (activeManualNotes.has(d)) {
-      activeManualNotes.delete(d);
-      handleMIDIMessage({data: [0x80, currentKeyRoot + d + 60, 0]});
-    }
-  });
-};
-
-// Event al DOCUMENT (no als botons) - més fiable a iOS
-document.addEventListener('touchstart', (e) => {
-  const btn = e.target.closest('.manual-btn');
-  if (!btn) return;
-  e.preventDefault();
-  const d = parseInt(btn.dataset.degree);
-  if (!activeManualNotes.has(d)) {
-    activeManualNotes.add(d);
-    btn.classList.add('active');
-    handleMIDIMessage({data: [0x90, currentKeyRoot + d + 60, 100]});
+    activateManualNote(d);
   }
-}, { passive: false });
+}
 
-document.addEventListener('touchend', (e) => {
-  e.preventDefault();
-  clearAll(); // Apaga-ho TOT quan deixes anar el dit
-}, { passive: false });
-
-// Fallback per ratolí (PC)
-document.addEventListener('mousedown', (e) => {
-  const btn = e.target.closest('.manual-btn');
-  if (!btn) return;
-  const d = parseInt(btn.dataset.degree);
-  if (!activeManualNotes.has(d)) {
-    activeManualNotes.add(d);
-    btn.classList.add('active');
-    handleMIDIMessage({data: [0x90, currentKeyRoot + d + 60, 100]});
+// 4. Listener global per al final del toc (Tàctil i Ratolí)
+function handleGlobalUp(e) {
+  // Apaguem TOTS els botons sempre que s'aixequi el dit/ratolí fora d'un botó,
+  // o intentem apagar el específic si el podem localitzar.
+  const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+  const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+  const btn = findManualBtn(x, y);
+  
+  if (btn) {
+    const d = parseInt(btn.dataset.degree);
+    deactivateManualNote(d);
+  } else {
+    // Si no trobem el botó (ex. el dit ha lliscat), netegem tot per seguretat
+    clearAllManualNotes();
   }
-});
+}
 
-document.addEventListener('mouseup', () => clearAll());
-document.addEventListener('mouseleave', () => clearAll());
+// 5. Registre d'esdeveniments al DOCUMENT (no als botons)
+// Això garanteix que l'iPad sempre rebi el senyal de "fi de toc"
+document.addEventListener('touchstart', handleGlobalDown, { passive: false });
+document.addEventListener('touchend', handleGlobalUp, { passive: true });
+document.addEventListener('touchcancel', handleGlobalUp, { passive: true });
 
+document.addEventListener('mousedown', handleGlobalDown);
+document.addEventListener('mouseup', handleGlobalUp);
 btnToggleManual.addEventListener('click',toggleManualPanel);
 btnToggleManualEar.addEventListener('click',toggleManualPanel);
 
