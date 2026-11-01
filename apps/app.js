@@ -1240,13 +1240,15 @@ function checkPasswordAndSubmit(){
 
 /* ══ MISSATGE DE REQUISIT D'ACCÉS ══ */
 function detectReferrerLanguage() {
+  // 1r: si el web de l'escola ens passa l'idioma per URL, manarà sempre (no depèn del referrer)
+  const urlParams = new URLSearchParams(window.location.search);
+  const langParam = urlParams.get('lang');
+  if (langParam === 'ca' || langParam === 'es' || langParam === 'en') return langParam;
+  // 2n: mecanismes antics (referrer / localStorage compartit)
   const ref = document.referrer.toLowerCase();
   const isFromSchool = ref.includes('gironajazz') || ref.includes('localhost') || ref.includes('127.0.0.1');
   if (!isFromSchool) return null;
-  const urlParams = new URLSearchParams(window.location.search);
-  const langParam = urlParams.get('lang');
   const storedLang = localStorage.getItem('gjps_lang');
-  if (langParam) return langParam;
   if (storedLang) return storedLang;
   if (ref.includes('/ca/') || ref.includes('?lang=ca')) return 'ca';
   if (ref.includes('/es/') || ref.includes('?lang=es')) return 'es';
