@@ -436,35 +436,35 @@ body.editmode .vid { padding-left: 34px; }
   .hdr { 
     display: flex; 
     flex-wrap: wrap; 
-    gap: 4px; /* Reduïm el gap perquè càpiguen 3 botons */
+    gap: 4px;
     width: 100%; 
     align-items: stretch; 
     padding: 0; 
   }
   .modes { display: contents; }
   
-  /* FILA 1: Seguiment (sol), després Navegació, Apps i FAQ (33% cadascun) */
+  /* FILA 1: Navegació, Apps, FAQ (3 botons) */
   #mTrack { order: 1; flex: 1 1 100%; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  #mFree  { order: 2; flex: 1 1 32%; height: 36px; font-size: 11px; padding: 0 2px; }
-  #mApps  { order: 3; flex: 1 1 32%; height: 36px; font-size: 11px; padding: 0 2px; }
-  #mInfo  { order: 4; flex: 1 1 32%; height: 36px; font-size: 11px; padding: 0 2px; }
+  #mFree  { order: 2; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
+  #mApps  { order: 3; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
+  #mInfo  { order: 4; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
   
-  /* FILA 2: Interrogant vermell i Selector d'idioma (50% cadascun) */
-  #mHelp      { order: 5; flex: 1 1 48%; height: 36px; font-size: 12px; padding: 0; justify-content: center; }
-  #langToggle { order: 6; flex: 1 1 48%; height: 36px; font-size: 12px; padding: 0; justify-content: center; }
+  /* FILA 2: Interrogant vermell i Selector d'idioma */
+  #mHelp      { order: 5; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; }
+  #langToggle { order: 6; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; }
 
-  /* Estil específic per al botó d'ajuda: INTERROGANT VERMELL */
+  /* Estil per al botó d'ajuda: INTERROGANT VERMELL */
   #mHelp {
     background: var(--card) !important;
     border: 1px solid var(--line) !important;
     box-shadow: none !important;
   }
   #mHelp img { 
-    display: none !important; /* Amaguem la imatge blava original */
+    display: none !important;
   }
   #mHelp::before {
-    content: '?' !important; /* Interrogant en lloc de creu */
-    color: var(--danger) !important; /* Vermell (#ff5577) */
+    content: '?' !important;
+    color: var(--danger) !important;
     font-size: 22px !important;
     font-weight: 900 !important;
     line-height: 1 !important;
@@ -2174,13 +2174,13 @@ function setLabels() {
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
   
-  // CANVI: Comprovar si és smartphone per posar la X vermella o la imatge
-  if (isSmartphone()) {
-    $('mHelp').innerHTML = ''; // La CSS s'encarrega de mostrar la 'X' vermella
-    $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
-  } else {
+  // CANVI CLAU: No injectar imatge en smartphones
+  if (!isSmartphone()) {
     $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
     $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  } else {
+    $('mHelp').innerHTML = ''; // Deixar buit, el CSS mostrarà l'interrogant vermell
+    $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
   }
   
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
