@@ -1709,7 +1709,14 @@ function renderTrack() {
 now.appendChild(makeVid(next.v, next.id, true, '')); var playBtn = now.querySelector('.play');
 if (playBtn) {
   var vrWrap = playBtn.closest('.vr');
-  if (vrWrap) vrWrap.setAttribute('data-tip', LS.lang === 'ca' ? '▶ Comença aquí i segueix l\'ordre del llistat' : '▶ Comienza aquí y sigue el orden del listado');
+  var totalDone = Object.keys(LS.done).length;
+var tipText = '';
+if (LS.lang === 'ca') {
+    tipText = totalDone === 0 ? '▶ Comença aquí el teu recorregut' : '▶ Continua progressant amb aquest vídeo';
+} else {
+    tipText = totalDone === 0 ? '▶ Comienza aquí tu recorrido' : '▶ Continúa progresando con este vídeo';
+}
+if (vrWrap) vrWrap.setAttribute('data-tip', tipText);
 }
     var ap = adjParts(next.si, next.ui, next.b);
     if (ap) { now.appendChild(ap.btn); now.appendChild(ap.box); }
