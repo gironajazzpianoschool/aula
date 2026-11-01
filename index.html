@@ -441,11 +441,6 @@ body.editmode .vid { padding-left: 34px; }
   }
 }
 
-.modes button.on, .modes button:hover { 
-  border-color: #e8b04b; color: #e8b04b; 
-  background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)); 
-}
-
 /* FIX FAQ: Forçar fons correcte al PC */
 @media (min-width: 1101px) {
   #mInfo {
@@ -459,6 +454,76 @@ body.editmode .vid { padding-left: 34px; }
     border-color: #e8b04b !important;
   }
 }
+
+/* ── PLAY DESTACAT v4 (Seguiment Continuat) ── */
+.now .play {
+  position: relative;
+  animation: playGlow 3.8s ease-in-out infinite;
+}
+@keyframes playGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(232,176,75,0.5); background: rgba(232,176,75,0.05); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(232,176,75,0), 0 0 14px 3px rgba(232,176,75,0.35); background: rgba(232,176,75,0.22); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); background: rgba(232,176,75,0.03); transform: scale(1); }
+}
+.now .play:hover {
+  animation-play-state: running;
+  border-color: #f0c060;
+  color: #f0c060;
+}
+.now .vr[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  transform: none;
+  width: max-content;
+  max-width: min(340px, 78vw);
+  white-space: normal;
+  text-align: center;
+  background: #1a1f28;
+  color: #c3c9d4;
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,.45);
+  z-index: 100;
+}
+.now .vr[data-tip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 11px;
+  transform: none;
+  border: 5px solid transparent;
+  border-top-color: var(--line);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 100;
+}
+.now .vr.tip-on::after {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1.05s steps(26, end), opacity .08s linear;
+}
+.now .vr.tip-on::before { opacity: 1; }
+
+/* ── BOTÓ "OBRE" DESTACAT (TONAL EMOTIONS) ── */
+.appcard button.obre-destacat {
+  animation: obreGlow 3.8s ease-in-out infinite;
+}
+@keyframes obreGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(232,176,75,0.5); transform: scale(1); filter: brightness(1); }
+  50%  { box-shadow: 0 0 0 4px rgba(232,176,75,0), 0 0 10px 2px rgba(232,176,75,0.28); transform: scale(1.02); filter: brightness(1.10); }
+  100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); transform: scale(1); filter: brightness(0.85); }
+}
+
 </style>
 </head>
 <body>
@@ -1004,7 +1069,7 @@ function parseDriveId(val) {
 function mkAdj(docs, si, ui, b) {
   var btn = document.createElement('button');
   btn.className = 'adjb';
-  btn.textContent = t().adj + ' (' + docs.length + ')';
+  btn.textContent = '📎 ' + t().adj + ' (' + docs.length + ')';
   var box = document.createElement('div');
   box.className = 'docs';
   var headerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)"><span style="font-size:12px;color:var(--mut);font-weight:600">Documents d\'aquest bloc</span>';
@@ -1641,7 +1706,11 @@ function renderTrack() {
     var now = document.createElement('div');
     now.className = 'now';
     now.innerHTML = '<div class="ctx">' + D[next.si].n[LS.lang] + ' · ' + t().unit + ' ' + (next.ui + 1) + '</div><div class="nowlbl">' + t().now + ' ' + t().blocks[next.b] + '</div>';
-    now.appendChild(makeVid(next.v, next.id, true, ''));
+now.appendChild(makeVid(next.v, next.id, true, '')); var playBtn = now.querySelector('.play');
+if (playBtn) {
+  var vrWrap = playBtn.closest('.vr');
+  if (vrWrap) vrWrap.setAttribute('data-tip', LS.lang === 'ca' ? '▶ Comença aquí i segueix l\'ordre del llistat' : '▶ Comienza aquí y sigue el orden del listado');
+}
     var ap = adjParts(next.si, next.ui, next.b);
     if (ap) { now.appendChild(ap.btn); now.appendChild(ap.box); }
     tv.appendChild(now);
@@ -1844,7 +1913,7 @@ function tonalStatsHtml() {
   var diffLbl = b.diff === 'hard' ? 'Difícil' : (ca ? 'Fàcil' : 'Fácil');
   var keyLbl = (KEYS[b.key] || 'C') + ' ' + (ca ? 'Major' : 'Mayor');
   var h = '<div style="margin:0 0 12px;padding:10px 12px;border:1px solid var(--gold);border-radius:10px;background:rgba(232,176,75,0.06);text-align:center;">';
-  h += '<div style="color:var(--gold);font-size:var(--fs-xs);letter-spacing:2px;font-weight:800;text-transform:uppercase;">' + (ca ? '🏆 Rècord personal' : ' Récord personal') + '</div>';
+  h += '<div style="color:var(--gold);font-size:var(--fs-xs);letter-spacing:2px;font-weight:800;text-transform:uppercase;">' + (ca ? '🏆 Rècord personal' : '🏆 Récord personal') + '</div>';
   h += '<div style="color:var(--ink);font-size:26px;font-weight:800;margin:4px 0 2px;">' + b.p + '%</div>';
   h += '<div style="color:var(--mut);font-size:var(--fs-xs);line-height:1.5;">TEST · ' + notesLbl + ' · ' + diffLbl + ' · ' + keyLbl + ' · ' + dateStr + '</div>';
   h += '<div style="color:var(--mut);font-size:var(--fs-xs);margin-top:4px;">' + (ca ? '🎯 ' + s.sessions + ' sessions · Últim: ' : '🎯 ' + s.sessions + ' sesiones · Último: ') + (s.last ? s.last.p + '%' : '—') + '</div>';
@@ -1874,7 +1943,9 @@ function renderApps() {
     var iconHtml = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
     var statsHtml = (a.url && a.url.indexOf('TONAL') >= 0) ? tonalStatsHtml() : '';
     c.innerHTML = '<div class="ae">' + iconHtml + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3><p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + statsHtml + '<button>' + t().appsOpen + '</button>';
-    c.querySelector('button').onclick = function () { if (a.url) window.open(a.url, '_blank'); else alert(t().appsSoon); };
+    var obreBtn = c.querySelector('button');
+    if (a.url && a.url.indexOf('TONAL') >= 0) obreBtn.classList.add('obre-destacat');
+    obreBtn.onclick = function () { if (a.url) { var sep = a.url.indexOf('?') >= 0 ? '&' : '?'; window.open(a.url + sep + 'lang=' + LS.lang, '_blank'); } else alert(t().appsSoon); };
     g.appendChild(c);
   });
   av.appendChild(g);
@@ -2465,6 +2536,20 @@ function openDocsEditor(level, uiUnused, b) {
     paint();
   };
 }
+
+/* Tooltip del play: s'encén al botó però viu a la fila (no es mou amb el puls) */
+document.addEventListener('mouseover', function (e) {
+  var btn = e.target.closest ? e.target.closest('.now .play') : null;
+  if (!btn) return;
+  var vr = btn.closest('.vr');
+  if (vr && vr.hasAttribute('data-tip')) vr.classList.add('tip-on');
+});
+document.addEventListener('mouseout', function (e) {
+  var btn = e.target.closest ? e.target.closest('.now .play') : null;
+  if (!btn) return;
+  var vr = btn.closest('.vr');
+  if (vr) vr.classList.remove('tip-on');
+});
 
 /* ================================================================
    12. ARRENCADA
