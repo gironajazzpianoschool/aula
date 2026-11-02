@@ -684,9 +684,12 @@ function showToast(msg, duration) {
   setTimeout(function() { toast.style.opacity = '0'; }, duration);
 }
 
+var GUEST_BASE = 42; /* ⚠️ mira la nota matemàtica més avall */
 function getDailyPassword() {
   var avui = new Date();
-  return String(avui.getDate() + (avui.getMonth() + 1) + 42);
+  var d = avui.getDate(), m = avui.getMonth() + 1;
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  return String(GUEST_BASE + d + m) + pad(d) + pad(m);
 }
 
 var USERS_DB = [
@@ -706,7 +709,7 @@ var USERS_DB = [
   { n: 'Student-25', p: 'glissando5sT', role: 'client' }, { n: 'Student-26', p: 'staccato8uV', role: 'client' },
   { n: 'Student-27', p: 'legato1wX', role: 'client' }, { n: 'Student-28', p: 'fermata4yZ', role: 'client' },
   { n: 'Student-29', p: 'tremolo6aB', role: 'client' }, { n: 'Student-30', p: 'vibrato9cD', role: 'client' },
-  { n: 'Invitat', p: getDailyPassword(), role: 'client' }
+  { n: 'guest', p: getDailyPassword(), role: 'client' }
 ];
 
 function findUser(name) {
@@ -1780,13 +1783,28 @@ now.appendChild(makeVid(next.v, next.id, true, '')); var playBtn = now.querySele
 if (playBtn) {
   var vrWrap = playBtn.closest('.vr');
   var totalDone = Object.keys(LS.done).length;
-var tipText = '';
-if (LS.lang === 'ca') {
+  var tipText = '';
+  if (LS.lang === 'ca') {
     tipText = totalDone === 0 ? '▶ Comença aquí el teu recorregut' : '▶ Continua progressant amb aquest vídeo';
-} else {
+  } else {
     tipText = totalDone === 0 ? '▶ Comienza aquí tu recorrido' : '▶ Continúa progresando con este vídeo';
-}
-if (vrWrap) vrWrap.setAttribute('data-tip', tipText);
+  }
+  if (vrWrap) {
+    vrWrap.setAttribute('data-tip', tipText);
+    /* ── TÀCTIL: mostrar el tooltip automàticament durant 3,5 s ── */
+    if (isSmartphone() || isTabletDevice()) {
+      setTimeout(function () {
+        vrWrap.classList.add('tip-on');
+        vrWrap.classList.remove('tip-fade');
+        setTimeout(function () {
+          vrWrap.classList.add('tip-fade');
+          setTimeout(function () {
+            vrWrap.classList.remove('tip-on', 'tip-fade');
+          }, 500);
+        }, 3500);
+      }, 400);
+    }
+  }
 }
     var ap = adjParts(next.si, next.ui, next.b);
     if (ap) { now.appendChild(ap.btn); now.appendChild(ap.box); }
@@ -1975,7 +1993,7 @@ function renderFree() {
 }
 
 function tonalStatsHtml() {
-  if (!LS.user || LS.user === 'Invitat') return '';
+  if (!LS.user || LS.user === 'guest') return '';
   var KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
   var ca = LS.lang === 'ca';
   var s = lsJSON('gjps_tonal_stats_' + LS.user, null);
@@ -2126,7 +2144,7 @@ function showLogin() {
 function startSession(n) {
   LS.user = n;
   lsSet('gjps_session', n);
-  if (n === 'Invitat') {
+  if (n === 'guest') {
     var avui = new Date();
     lsSet('gjps_guest_date', avui.getDate() + '-' + (avui.getMonth() + 1));
   }
@@ -2192,7 +2210,7 @@ function render() {
   $('modal').classList.remove('on');
   $('player').src = '';
   document.documentElement.style.zoom = '';
-  if (LS.user === 'Invitat') {
+  if (LS.user === 'guest') {
     var avui = new Date();
     var dataAvui = avui.getDate() + '-' + (avui.getMonth() + 1);
     var dataLogin = lsGet('gjps_guest_date');
