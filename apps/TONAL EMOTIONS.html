@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
+<script>
+/* BLOQUEIG IMMEDIAT SMARTPHONE: evita que es vegi la contrasenya 1 segon */
+(function(){
+  var ua = navigator.userAgent;
+  if (!(/iPhone|iPod/.test(ua) || (/Android/.test(ua) && /Mobile/.test(ua)))) return;
+  document.documentElement.classList.add('smartphone-mode');
+  var st = document.createElement('style');
+  st.textContent = 'html.smartphone-mode #password-modal, html.smartphone-mode #start-screen { display: none !important; }';
+  document.head.appendChild(st);
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TONAL EMOTIONS</title>
