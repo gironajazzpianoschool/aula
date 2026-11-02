@@ -498,15 +498,15 @@ body.editmode .vid { padding-left: 34px; }
   }
   .modes { display: contents; }
   
-  /* FILA 1: Navegació, Apps, FAQ (3 botons) */
-  #mTrack { order: 1; flex: 1 1 100%; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  #mFree  { order: 2; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  #mApps  { order: 3; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  #mInfo  { order: 4; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  
-  /* FILA 2: Interrogant vermell i Selector d'idioma */
-  #mHelp      { order: 5; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); }
-  #langToggle { order: 6; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0 8px; justify-content: center; }
+  /* FILA 1: Seguiment Continuat (sencer) */
+  #mTrack { order: 1; flex: 1 1 100%; min-width: 0; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  /* FILA 2: Navegació Lliure | Apps */
+  #mFree  { order: 2; flex: 1 1 calc(50% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
+  #mApps  { order: 3; flex: 1 1 calc(50% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
+  /* FILA 3: FAQ | Interrogant | Idioma (3 botons en una sola fila) */
+  #mInfo      { order: 4; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 2px; }
+  #mHelp      { order: 5; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); }
+  #langToggle { order: 6; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; justify-content: center; gap: 4px; }
 
   /* Botó d'ajuda: interrogant vermell */
   #mHelp img { display: none; }
