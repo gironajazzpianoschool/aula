@@ -597,6 +597,21 @@ body.editmode .vid { padding-left: 34px; }
   100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); transform: scale(1); filter: brightness(0.85); }
 }
 
+/* ══ SMARTPHONE FIX DEFINITIU (bloc final, prioritat màxima) ══ */
+@media (max-width: 767px) {
+  .hdr { display: flex !important; flex-wrap: wrap !important; gap: 4px !important; width: 100% !important; align-items: stretch !important; }
+  .modes { display: contents !important; }
+  #mTrack { order: 1 !important; flex: 1 1 100% !important; min-width: 0 !important; height: 44px !important; font-size: 13px !important; }
+  #mFree  { order: 2 !important; flex: 1 1 calc(45% - 4px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
+  #mApps  { order: 3 !important; flex: 1 1 calc(27% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
+  #mInfo  { order: 4 !important; flex: 1 1 calc(27% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
+  #mHelp  { order: 5 !important; flex: 1 1 calc(50% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 12px !important; padding: 0 !important; justify-content: center !important; background: var(--card) !important; border: 1px solid var(--line) !important; box-shadow: none !important; }
+  #langToggle { order: 6 !important; flex: 1 1 calc(50% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 12px !important; padding: 0 8px !important; justify-content: center !important; }
+  #mHelp img { display: none !important; }
+  #mHelp::before { content: '?' !important; color: var(--danger) !important; font-size: 20px !important; font-weight: 900 !important; line-height: 1 !important; }
+  #mHelp.on { background: rgba(255,85,119,0.15) !important; border: 1.5px solid var(--danger) !important; box-shadow: 0 0 14px rgba(255,85,119,0.3) !important; }
+  #mHelp.on::before { color: var(--danger) !important; }
+}
 </style>
 </head>
 <body>
@@ -2176,8 +2191,13 @@ function setLabels() {
   
   // CANVI CLAU: No injectar imatge en smartphones
   if (!isSmartphone()) {
+    if (isSmartphone()) {
+    $('mHelp').innerHTML = ''; /* Deixem buit: el CSS pintarà el '?' vermell */
+    $('mHelp').title = LS.lang === 'ca' ? 'Ajuda' : 'Ayuda';
+  } else {
     $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
     $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  }
   } else {
     $('mHelp').innerHTML = ''; // Deixar buit, el CSS mostrarà l'interrogant vermell
     $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
