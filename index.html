@@ -339,16 +339,18 @@ body.editmode .vid { padding-left: 34px; }
 .now .play {
   position: relative;
   animation: playGlow 3.8s ease-in-out infinite;
+  border-color: var(--ok);
+  color: var(--ok);
 }
 @keyframes playGlow {
-  0%   { box-shadow: 0 0 0 0 rgba(232,176,75,0.5); background: rgba(232,176,75,0.05); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(232,176,75,0), 0 0 14px 3px rgba(232,176,75,0.35); background: rgba(232,176,75,0.22); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); background: rgba(232,176,75,0.03); transform: scale(1); }
+  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); transform: scale(1); }
 }
 .now .play:hover {
   animation-play-state: running;
-  border-color: #f0c060;
-  color: #f0c060;
+  border-color: #6ff0b0;
+  color: #6ff0b0;
 }
 .now .vr[data-tip]::after {
   content: attr(data-tip);
