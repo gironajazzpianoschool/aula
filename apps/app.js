@@ -25,7 +25,7 @@ const INSTRUMENTS = {
   strings:{wave:'sawtooth',harmonics:[0.6,0.3,0.15,0.08],filter:2500},
   flute:{wave:'sine',harmonics:[1.0,0.15,0.02,0.0],filter:0}
 };
-const TEST_IMAGE_MS=1000, TEST_EXPLORE_MS=2000, BATTLE_HIDE_MS=500, BATTLE_ADVANCE_MS=1000, BATTLE_TURN_MS=2500;
+const TEST_IMAGE_MS=1000, TEST_EXPLORE_MS=2000, BATTLE_HIDE_MS=500, BATTLE_ADVANCE_MS=1000, BATTLE_TURN_MS=2500, SD_BANNER_MS=2400;
 
 /* ══ DETECCIÓ DE DISPOSITIU ══ */
 const UA = navigator.userAgent;
@@ -336,6 +336,7 @@ function showFinalResult(winnerIdx){
   const img=ensureBattleResultImg(); img.src=CONFIG.IMAGE_PATH+file; img.style.display='block';
   compactBattleResult();
   battleResultModal.classList.add('visible');
+  suspendManualPanel();
 }
 function compactBattleResult(){
   battleResultModal.style.width='min(460px,92vw)';
@@ -757,6 +758,7 @@ function showResultMessage(){
   if(filtered) m+=' '+t('result_filtered').replace('{X}',p);
   resultMessage.textContent=m;
   resultModal.classList.add('visible');
+  suspendManualPanel();
 }
 
 /* ══ 9. BATALLA ══ */
@@ -912,7 +914,7 @@ function startSuddenDeath(){
       sdBannerTO=setTimeout(()=>{
         hideSuddenBanner();
         try{ startSDRound(); }catch(err){ console.error('[SD] error ronda:', err); }
-      }, 1500);
+      }, SD_BANNER_MS);
   };
   if(earDifficulty==='easy'){ playCadenceWithPedalSound(launchSD); } else { launchSD(); }
 }
@@ -1027,6 +1029,35 @@ function clearAllManualNotes() {
   });
   activeManualNotes.clear();
   numHeld = {};
+}
+
+/* ══ SUSPENSIÓ DEL TECLAT MANUAL AMB MODALS DE RESULTAT ══ */
+function suspendManualPanel(){
+  const panel=$('manual-panel');
+  if(!panel) return;
+  panel.dataset.wasVisible = manualPanelVisible ? '1' : '0';
+  panel.classList.remove('visible','ear-position');
+  panel.style.display='none';
+  clearAllManualNotes();
+}
+function resumeManualPanel(){
+  const panel=$('manual-panel');
+  if(!panel) return;
+  const inEar=earMode.classList.contains('active');
+  const inMidi=midiMode.classList.contains('active');
+  if(IS_TABLET){
+    if(inEar && earModeType==='listen'){ panel.classList.remove('visible','ear-position'); panel.style.display='none'; manualPanelVisible=false; return; }
+    if(inEar || inMidi){
+      panel.classList.add('visible'); panel.style.display='block';
+      panel.classList.toggle('ear-position', inEar);
+      manualPanelVisible=true; updateManualButtonsVisibility(); return;
+    }
+    panel.classList.remove('visible','ear-position'); panel.style.display='none'; manualPanelVisible=false; return;
+  }
+  const was = panel.dataset.wasVisible==='1';
+  manualPanelVisible=was;
+  if(was){ panel.classList.add('visible'); panel.style.display='block'; panel.classList.toggle('ear-position', inEar); }
+  else { panel.classList.remove('visible','ear-position'); panel.style.display='none'; }
 }
 
 function toggleManualPanel(){
@@ -1573,7 +1604,7 @@ $('btn-battle-cancel').addEventListener('click',hideBattleModal);
 ['battle-player1-name','battle-player2-name'].forEach(id=>{
   $(id).addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); startBattle(); } });
 });
-$('btn-battle-close').addEventListener('click',()=>battleResultModal.classList.remove('visible'));
+$('btn-close-result').addEventListener('click',()=>{ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); resumeManualPanel(); });
 $('btn-close-result').addEventListener('click',()=>{ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); });
 $('btn-close-info').addEventListener('click', () => {
   infoModal.classList.remove('visible');
@@ -1599,11 +1630,11 @@ $('btn-fullscreen-ear').addEventListener('click',()=>{ if(document.documentEleme
 document.addEventListener('keydown',e=>{
   if(!$('password-modal').classList.contains('hidden')) return;
   if(battleModal&&battleModal.classList.contains('visible')){ if(e.key==='Escape'){e.preventDefault();hideBattleModal();} return; }
-  if(battleResultModal&&battleResultModal.classList.contains('visible')){ if(e.key==='Enter'||e.key==='Escape'){e.preventDefault();battleResultModal.classList.remove('visible');} return; }
+  if(battleResultModal&&battleResultModal.classList.contains('visible')){ if(e.key==='Enter'||e.key==='Escape'){e.preventDefault();battleResultModal.classList.remove('visible'); resumeManualPanel();} return; }
   const el=e.target;
   if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA')){ if(el.getClientRects().length>0) return; }
   if(e.code==='Space'){e.preventDefault();return;}
-  if(e.key==='Enter'&&resultModal.classList.contains('visible')){ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); return; }
+  if(e.key==='Enter'&&resultModal.classList.contains('visible')){ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); resumeManualPanel(); return; }
   if(e.key==='Enter'&&infoModal.classList.contains('visible')){ e.preventDefault(); infoModal.classList.remove('visible'); stopProva(); return; }
   if(e.key==='Escape'){
     e.preventDefault();
