@@ -1,5 +1,5 @@
 /**
- * TONAL EMOTIONS - v24
+ * TONAL EMOTIONS - v25
  */
 
 /* ══ 1. CONFIGURACIÓ ══ */
@@ -863,6 +863,7 @@ function battleResultImageFile(){
    function showBattleResultModal(){
      sdActive=false;
      console.log('[BATTLE] fi:', bp1.correct, '-', bp2.correct, '| sdCount=', sdCount, '| sdWinner=', sdWinner);
+     stopAllPedalSounds(); stopAllEarPianoNotes(); stopCadence();
      if(sdWinner){ const w=sdWinner; sdWinner=null; showFinalResult(w); return; }
      
      // SI HI HA EMPAT (FINS I TOT 0-0) I NO HEM ARREBAT A 2 MORTS SÚBITES, ACTIVEM-LA
@@ -882,8 +883,8 @@ function startSuddenDeath(){
   
   // Només cadència en mode FÀCIL; en DIFÍCIL anem directe al banner
   const launchSD = () => {
-      sdActive=true; sdWinner=null; sdPairMiss=[false,false]; sdPairAns=0; sdTotalPairs=0;
-      stopAllPedalSounds(); stopAllEarPianoNotes(); stopTonicPedal(true); stopCadence();
+                stopAllPedalSounds(); stopAllEarPianoNotes(); stopTonicPedal(true); stopCadence();
+                sdActive=true; sdWinner=null; sdPairMiss=[false,false]; sdPairAns=0; sdTotalPairs=0;
       if(warmupInterval){ clearInterval(warmupInterval); warmupInterval=null; }
       const ov=$('warmup-overlay'); if(ov) ov.classList.remove('visible');
       if(earTimer){ clearInterval(earTimer); earTimer=null; }
@@ -916,7 +917,8 @@ function startSuddenDeath(){
         try{ startSDRound(); }catch(err){ console.error('[SD] error ronda:', err); }
       }, SD_BANNER_MS);
   };
-  if(earDifficulty==='easy'){ playCadenceWithPedalSound(launchSD); } else { launchSD(); }
+  stopCadence(); stopAllPedalSounds();
+  launchSD();
 }
 function startSDRound(){
   battleMode=true;
@@ -1032,17 +1034,24 @@ function clearAllManualNotes() {
 }
 
 /* ══ SUSPENSIÓ DEL TECLAT MANUAL AMB MODALS DE RESULTAT ══ */
+(function(){
+  const peFix=document.createElement('style');
+  peFix.textContent='#warmup-overlay:not(.visible){pointer-events:none!important;}#v10-sudden:not(.visible){pointer-events:none!important;}#manual-panel:not(.visible){pointer-events:none!important;}';
+  document.head.appendChild(peFix);
+})();
 function suspendManualPanel(){
   const panel=$('manual-panel');
   if(!panel) return;
   panel.dataset.wasVisible = manualPanelVisible ? '1' : '0';
   panel.classList.remove('visible','ear-position');
   panel.style.display='none';
+  panel.style.pointerEvents='none';
   clearAllManualNotes();
 }
 function resumeManualPanel(){
   const panel=$('manual-panel');
   if(!panel) return;
+  panel.style.pointerEvents='';
   const inEar=earMode.classList.contains('active');
   const inMidi=midiMode.classList.contains('active');
   if(IS_TABLET){
@@ -1601,11 +1610,15 @@ btnToggleManualEar.addEventListener('click',toggleManualPanel);
 
 $('btn-battle-start').addEventListener('click',startBattle);
 $('btn-battle-cancel').addEventListener('click',hideBattleModal);
+function closeBattleResult(){ if(battleResultModal.classList.contains('visible')){ battleResultModal.classList.remove('visible'); resumeManualPanel(); } }
+$('btn-battle-close').addEventListener('click',closeBattleResult);
+document.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('#btn-battle-close')) closeBattleResult(); },true);
 ['battle-player1-name','battle-player2-name'].forEach(id=>{
   $(id).addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); startBattle(); } });
 });
-$('btn-close-result').addEventListener('click',()=>{ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); resumeManualPanel(); });
-$('btn-close-result').addEventListener('click',()=>{ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); });
+function closeResultModal(){ if(resultModal.classList.contains('visible')){ resultModal.classList.remove('visible'); if(earModeType==='test') accuracyPanel.classList.remove('visible'); resumeManualPanel(); } }
+$('btn-close-result').addEventListener('click',closeResultModal);
+document.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('#btn-close-result')) closeResultModal(); },true);
 $('btn-close-info').addEventListener('click', () => {
   infoModal.classList.remove('visible');
   stopProva();
