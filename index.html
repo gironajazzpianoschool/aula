@@ -612,6 +612,15 @@ body.editmode .vid { padding-left: 34px; }
   #mHelp.on { background: rgba(255,85,119,0.15) !important; border: 1.5px solid var(--danger) !important; box-shadow: 0 0 14px rgba(255,85,119,0.3) !important; }
   #mHelp.on::before { color: var(--danger) !important; }
 }
+/* ══ ICONA D'AJUDA: IMATGE A TOTS ELS DISPOSITIUS (correcció final) ══ */
+#mHelp::before { content: none !important; }
+#mHelp img { display: block !important; }
+@media (min-width: 1101px) {
+  #mHelp img { width: 72px !important; height: 72px !important; object-fit: contain !important; }
+}
+@media (max-width: 767px) {
+  #mHelp img { width: 22px !important; height: 22px !important; object-fit: contain !important; }
+}
 </style>
 </head>
 <body>
@@ -2191,13 +2200,8 @@ function setLabels() {
   
   // CANVI CLAU: No injectar imatge en smartphones
   if (!isSmartphone()) {
-    if (isSmartphone()) {
-    $('mHelp').innerHTML = ''; /* Deixem buit: el CSS pintarà el '?' vermell */
-    $('mHelp').title = LS.lang === 'ca' ? 'Ajuda' : 'Ayuda';
-  } else {
     $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
-    $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
-  }
+  $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
   } else {
     $('mHelp').innerHTML = ''; // Deixar buit, el CSS mostrarà l'interrogant vermell
     $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
