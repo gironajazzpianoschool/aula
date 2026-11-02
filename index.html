@@ -332,192 +332,8 @@ body.editmode .vid { padding-left: 34px; }
 #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--gold); color: var(--ink); padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 999999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: center; max-width: 90vw; }
 
 /* ============================================================
-   11. RESPONSIVE - NET I ENDRERÇAT
+   11. RESPONSIVE - NET I ENDREÇAT
    ============================================================ */
-
-/* SMARTPHONE (< 768px): Files separades */
-@media (max-width: 767px) {
-  .donuts { grid-template-columns: repeat(3, 1fr); }
-  .blkcol { grid-template-columns: repeat(3, 1fr); }
-  .hdr { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; align-items: stretch; }
-  .modes { display: contents; }
-  #mTrack { order: 1; flex: 1 1 100%; width: auto; height: 46px; font-size: 13px; font-weight: 800; }
-  #mFree { order: 2; flex: 1 1 33%; width: auto; height: 38px; font-size: 12px; }
-  #mApps { order: 3; flex: 1 1 33%; width: auto; height: 38px; font-size: 12px; }
-  #mInfo { order: 4; flex: 1 1 33%; width: auto; height: 38px; font-size: 12px; }
-  #mHelp { order: 5; flex: 1 1 50%; width: auto; height: 38px; font-size: 12px; padding: 0 8px; justify-content: center; }
-  #langToggle { order: 6; flex: 1 1 50%; width: auto; height: 38px; font-size: 12px; padding: 0 8px; justify-content: center; }
-}
-
-/* Altres ajustos de mòbil */
-@media (max-width: 768px) {
-  html { zoom: 1; }
-  .wrap { width: 100dvw; height: 100dvh; }
-  .blkcol { grid-template-columns: repeat(2, 1fr); }
-  .vgrid { grid-template-columns: 1fr; }
-  .ritem { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .ritem button { width: 100%; text-align: center; padding: 8px; }
-  .lbox { width: 95vw; padding: 20px; }
-  .faq-item h3 { font-size: 15px; }
-  .vidadjpills { flex-direction: column; }
-  .vidadjpills a { width: 100%; justify-content: center; }
-  .modal.on .close { display: none !important; }
-  .modal.on.ios-device .close {
-    display: flex !important; opacity: 0 !important; pointer-events: auto !important;
-    background: transparent !important; border: none !important; box-shadow: none !important;
-  }
-  @media (orientation: portrait) {
-    .modal.on .wrap { width: 100vh !important; height: 100vw !important; transform: rotate(90deg); transform-origin: top left; position: fixed; top: 0; left: 100vw; }
-    .modal.on .close { top: 14px !important; right: 14px !important; }
-  }
-  @media (orientation: landscape) {
-    .frame iframe { width: 100dvw !important; height: 100dvh !important; object-fit: cover; }
-  }
-}
-
-@media (max-width: 480px) {
-  .blkcol { grid-template-columns: 1fr; }
-  .donuts { grid-template-columns: repeat(2, 1fr); }
-  .userblock { width: 100%; justify-content: space-between; }
-  #who { max-width: 65%; }
-}
-
-/* PC (> 1100px): "i" gran i neon */
-@media (min-width: 1101px) {
-  #mHelp {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    padding: 0 !important;
-    margin: 0 4px !important;
-    width: 40px !important;
-    height: 40px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    overflow: visible !important;
-  }
-  #mHelp:hover { transform: scale(1.1); }
-  #mHelp img {
-    width: 72px !important;
-    height: 72px !important;
-    object-fit: contain;
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50% !important;
-    z-index: 2;
-  }
-  #mInfo { position: relative !important; z-index: 3 !important; }
-  #langToggle { position: relative !important; z-index: 3 !important; }
-}
-/* FIX PC: Assegurar que els botons es vegin bé */
-.modes button {
-  height: 42px; line-height: 1; padding: 0 9px; 
-  background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)); 
-  border: 1.5px solid #2a2f3a; color: #f2f2f2; border-radius: 10px; 
-  cursor: pointer; font-weight: 700; font-size: 13px; 
-  display: inline-flex; align-items: center; justify-content: center; gap: 7px; 
-  transition: all .2s; white-space: nowrap;
-}
-.modes button.on, .modes button:hover { 
-  border-color: #e8b04b; color: #e8b04b; 
-  background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)); 
-}
-
-/* SMARTPHONE (< 768px): Distribució exacta en 2 files */
-@media (max-width: 767px) {
-  .hdr { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 4px;
-    width: 100%; 
-    align-items: stretch; 
-    padding: 0; 
-  }
-  .modes { display: contents; }
-  
-  /* FILA 1: Navegació, Apps, FAQ (3 botons) */
-  #mTrack { order: 1; flex: 1 1 100%; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  #mFree  { order: 2; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  #mApps  { order: 3; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  #mInfo  { order: 4; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
-  
-  /* FILA 2: Interrogant vermell i Selector d'idioma */
-  #mHelp      { order: 5; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; }
-  #langToggle { order: 6; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; }
-
-  /* Estil per al botó d'ajuda: INTERROGANT VERMELL */
-  #mHelp {
-    background: var(--card) !important;
-    border: 1px solid var(--line) !important;
-    box-shadow: none !important;
-  }
-  #mHelp img { 
-    display: none !important;
-  }
-  #mHelp::before {
-    content: '?' !important;
-    color: var(--danger) !important;
-    font-size: 22px !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
-  }
-  #mHelp:hover { 
-    border-color: var(--danger) !important; 
-    background: rgba(255, 85, 119, 0.1) !important; 
-  }
-  #mHelp.on {
-    background: rgba(255, 85, 119, 0.15) !important;
-    border: 1.5px solid var(--danger) !important;
-    box-shadow: 0 0 14px rgba(255, 85, 119, 0.3) !important;
-  }
-}
-  /* 1. Amaguem la imatge de l'interrogant blau a mòbil */
-  #mHelp img {
-    display: none !important;
-  }
-  /* 2. Afegim la X vermella */
-  #mHelp::before {
-    content: '✕' !important;
-    color: var(--danger) !important; /* #ff5577 */
-    font-size: 18px !important;
-    font-weight: 900 !important;
-  }
-  #mHelp:hover {
-    border-color: var(--danger) !important;
-    background: rgba(255, 85, 119, 0.1) !important;
-  }
-  #mHelp.on {
-    background: rgba(255, 85, 119, 0.15) !important;
-    border: 1.5px solid var(--danger) !important;
-    color: var(--danger) !important;
-    box-shadow: 0 0 14px rgba(255, 85, 119, 0.3) !important;
-  }
-  #mHelp.on::before {
-    color: var(--danger) !important;
-  }
-}
-
-/* FIX FAQ: Forçar fons correcte al PC */
-@media (min-width: 1101px) {
-  #mInfo {
-    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
-    color: #f2f2f2 !important;
-    border: 1.5px solid #2a2f3a !important;
-  }
-  #mInfo:hover, #mInfo.on {
-    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
-    color: #e8b04b !important;
-    border-color: #e8b04b !important;
-  }
-}
 
 /* ── PLAY DESTACAT v4 (Seguiment Continuat) ── */
 .now .play {
@@ -585,7 +401,6 @@ body.editmode .vid { padding-left: 34px; }
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-.now .vr.tip-on::before { opacity: 1; }
 
 /* ── BOTÓ "OBRE" DESTACAT (TONAL EMOTIONS) ── */
 .appcard button.obre-destacat {
@@ -597,36 +412,43 @@ body.editmode .vid { padding-left: 34px; }
   100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); transform: scale(1); filter: brightness(0.85); }
 }
 
-/* ══ SMARTPHONE FIX DEFINITIU (bloc final, prioritat màxima) ══ */
-@media (max-width: 767px) {
-  .hdr { display: flex !important; flex-wrap: wrap !important; gap: 4px !important; width: 100% !important; align-items: stretch !important; }
-  .modes { display: contents !important; }
-  #mTrack { order: 1 !important; flex: 1 1 100% !important; min-width: 0 !important; height: 44px !important; font-size: 13px !important; }
-  #mFree  { order: 2 !important; flex: 1 1 calc(45% - 4px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
-  #mApps  { order: 3 !important; flex: 1 1 calc(27% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
-  #mInfo  { order: 4 !important; flex: 1 1 calc(27% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 11px !important; padding: 0 4px !important; }
-  #mHelp  { order: 5 !important; flex: 1 1 calc(50% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 12px !important; padding: 0 !important; justify-content: center !important; background: var(--card) !important; border: 1px solid var(--line) !important; box-shadow: none !important; }
-  #langToggle { order: 6 !important; flex: 1 1 calc(50% - 2px) !important; min-width: 0 !important; height: 38px !important; font-size: 12px !important; padding: 0 8px !important; justify-content: center !important; }
-  #mHelp img { display: none !important; }
-  #mHelp::before { content: '?' !important; color: var(--danger) !important; font-size: 20px !important; font-weight: 900 !important; line-height: 1 !important; }
-  #mHelp.on { background: rgba(255,85,119,0.15) !important; border: 1.5px solid var(--danger) !important; box-shadow: 0 0 14px rgba(255,85,119,0.3) !important; }
-  #mHelp.on::before { color: var(--danger) !important; }
-}
-/* ══ ICONA D'AJUDA: IMATGE A TOTS ELS DISPOSITIUS (correcció final) ══ */
-#mHelp::before { content: none !important; }
-#mHelp img { display: block !important; }
-@media (min-width: 1101px) {
-  #mHelp img { width: 72px !important; height: 72px !important; object-fit: contain !important; }
-}
-@media (max-width: 767px) {
-  #mHelp { display: flex !important; align-items: center !important; justify-content: center !important; }
-  #mHelp img { display: block !important; width: 22px !important; height: 22px !important; object-fit: contain !important; }
-}
-/* ══ PC/TABLET: cap residu vermell en clicar l'ajuda ══ */
-#mHelp::after { content: none !important; }
+/* ══════════════════════════════════════════════════════════════
+   PC / TABLET (> 767px)
+   ══════════════════════════════════════════════════════════════ */
 @media (min-width: 768px) {
+  /* Botó d'ajuda: imatge gran */
+  #mHelp {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 4px !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+  }
+  #mHelp:hover { transform: scale(1.1); }
+  #mHelp img {
+    width: 72px !important;
+    height: 72px !important;
+    object-fit: contain;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50% !important;
+    z-index: 2;
+  }
+  /* Sense residus vermells en clicar */
   #mHelp.on,
-  #mHelp:hover,
   #mHelp:active,
   #mHelp:focus {
     background: transparent !important;
@@ -634,6 +456,92 @@ body.editmode .vid { padding-left: 34px; }
     box-shadow: none !important;
     outline: none !important;
   }
+  #mInfo { position: relative !important; z-index: 3 !important; }
+  #langToggle { position: relative !important; z-index: 3 !important; }
+  
+  /* FAQ amb fons correcte */
+  #mInfo {
+    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
+    color: #f2f2f2 !important;
+    border: 1.5px solid #2a2f3a !important;
+  }
+  #mInfo:hover, #mInfo.on {
+    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
+    color: #e8b04b !important;
+    border-color: #e8b04b !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SMARTPHONE (≤ 767px)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* Grids */
+  .donuts { grid-template-columns: repeat(3, 1fr); }
+  .blkcol { grid-template-columns: repeat(3, 1fr); }
+  .vgrid { grid-template-columns: 1fr; }
+  .ritem { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .ritem button { width: 100%; text-align: center; padding: 8px; }
+  .lbox { width: 95vw; padding: 20px; }
+  .faq-item h3 { font-size: 15px; }
+  .vidadjpills { flex-direction: column; }
+  .vidadjpills a { width: 100%; justify-content: center; }
+  
+  /* Header: distribució en 2 files */
+  .hdr { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4px;
+    width: 100%; 
+    align-items: stretch; 
+    padding: 0; 
+  }
+  .modes { display: contents; }
+  
+  /* FILA 1: Navegació, Apps, FAQ (3 botons) */
+  #mTrack { order: 1; flex: 1 1 100%; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  #mFree  { order: 2; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
+  #mApps  { order: 3; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
+  #mInfo  { order: 4; flex: 1 1 calc(33.333% - 3px); height: 36px; font-size: 11px; padding: 0 2px; }
+  
+  /* FILA 2: Interrogant vermell i Selector d'idioma */
+  #mHelp      { order: 5; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); }
+  #langToggle { order: 6; flex: 1 1 calc(50% - 2px); height: 36px; font-size: 12px; padding: 0 8px; justify-content: center; }
+
+  /* Botó d'ajuda: interrogant vermell */
+  #mHelp img { display: none; }
+  #mHelp::before {
+    content: '?';
+    color: var(--danger);
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  #mHelp:hover { border-color: var(--danger); background: rgba(255, 85, 119, 0.1); }
+  #mHelp.on { background: rgba(255, 85, 119, 0.15); border: 1.5px solid var(--danger); box-shadow: 0 0 14px rgba(255, 85, 119, 0.3); }
+  
+  /* Reproductor a pantalla completa */
+  html { zoom: 1; }
+  .wrap { width: 100dvw; height: 100dvh; }
+  .modal.on .close { display: none !important; }
+  .modal.on.ios-device .close {
+    display: flex !important; opacity: 0 !important; pointer-events: auto !important;
+    background: transparent !important; border: none !important; box-shadow: none !important;
+  }
+  @media (orientation: portrait) {
+    .modal.on .wrap { width: 100vh !important; height: 100vw !important; transform: rotate(90deg); transform-origin: top left; position: fixed; top: 0; left: 100vw; }
+    .modal.on .close { top: 14px !important; right: 14px !important; }
+  }
+  @media (orientation: landscape) {
+    .frame iframe { width: 100dvw !important; height: 100dvh !important; object-fit: cover; }
+  }
+}
+
+@media (max-width: 480px) {
+  .blkcol { grid-template-columns: 1fr; }
+  .donuts { grid-template-columns: repeat(2, 1fr); }
+  .userblock { width: 100%; justify-content: space-between; }
+  #who { max-width: 65%; }
 }
 </style>
 </head>
@@ -666,10 +574,10 @@ body.editmode .vid { padding-left: 34px; }
 
 <main>
   <div id="trackView" style="display:none"></div>
-<div id="freeView" style="display:none"></div>
-<div id="appsView" style="display:none"></div>
-<div id="infoView" style="display:none"></div>
-<div id="helpView" style="display:none"></div>
+  <div id="freeView" style="display:none"></div>
+  <div id="appsView" style="display:none"></div>
+  <div id="infoView" style="display:none"></div>
+  <div id="helpView" style="display:none"></div>
 </main>
 
 <div class="modal" id="modal">
@@ -735,14 +643,12 @@ function isIOS() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
-
 function isSmartphone() {
   var ua = navigator.userAgent;
   if (/iPhone|iPod/.test(ua)) return true;
   if (/Android/.test(ua) && /Mobile/.test(ua)) return true;
   return false;
 }
-
 function isTabletDevice() {
   return isMobileDevice() && !isSmartphone();
 }
@@ -763,7 +669,6 @@ const ICON_HEADPHONES = '<svg viewBox="0 0 24 24" width="15" height="15" fill="n
 const ICON_GRADUATION = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>';
 const ICON_FLASK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg>';
 const ICON_CHART = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>';
-const ICON_QUESTION = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:0;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
 
 function t() { return UI[LS.lang]; }
 function li() { return LS.lang === 'ca' ? 0 : 1; }
@@ -821,7 +726,7 @@ function toggleBookmark(id) {
 }
 
 /* ================================================================
-   2. DADES DEL CURS
+   2. DADES DEL CURS (amb marcadors dinàmics per a links)
    ================================================================ */
 var LEVELS = [
   { id: 0, n: { ca: 'Vídeos de benvinguda', es: 'Vídeos de bienvenida' }, active: true },
@@ -838,67 +743,67 @@ var APPS = [
 ];
 
 var LINKS = {
-  r: { cat: ['1B0keL0UC2u8HQJ9ZsidlYRgAHU67QDse','1KbtqX7jMbyanCzpD0aVXEInudOop4Uie','1I_hoZCdMvIHplsa5n8kxKvAoioH9vy2B','1G8ql4nEzH6I-I0mYX7w1a3qwsZ8Q9FDu','1ZI7Xw2zcbmdXp8gQgr-ixdaCGHY0xyaA','1XeX2j2RrdZFEc7Al1UJrFJIMu1_xL1zf','1nU-ixKtfFOXOHh058DVoWAB6ioJpymCH','1UVYULkrIppofoV5-RZ4nGRwrZOR7mfuT','1h0o_6CcV4F3e0Sdo1ZQKIsE1Kl4mwX9Z','1N32IzKMse_hXrRRUYiDgVXtRUJJ_YV0h','1diOC2djV_xxfV6hn7r55KFJVZlTcfVst'], sp: ['1JFnVd-R442wbUI-zHGgHpylVk2Ua2tmZ','1vvYih6EhhGHbJaqYVWNqfODJDz9bNtlX','1DEF_WLBTIQcRb78qNhRYo-wRJGkBn7xj','1cJGljT6Qlbc9NCOUUzjJqxkbbj3Lwr7i','1d7e0ffPQ8laYqqnahr1OQ8biRzKYUg5S','1jzF-6Io1CHt6DQGdvzJzqlQ5T0bTnLkv','1iIG9rTGmxO7Q0Fyw6tX4DlLmeMavihwf','1zpFwJ0PrWq13c4LKJLCBJXULzxMYv2XV','1Ub0aiaQXFDtJYZ2LwUf5ebvTvYHmz_sl','1tgU-sT_AbAWT7QvJp3nkFueDE2nT45Lj','10EQuIBUZTMaalzK9Uc3Noi_zSgArh04G'] },
-  a: { cat: ['1Jk1odT5P1JEeX_UZBFjmX1YfFgYMuYPT','1rUZZckM1muEFKNPP6GQdOh7BGnjW6qoY','1OQMVd-DMxvH-Y9TRv4I8GZH-z_cv1APq','1mE1mD-mPJeiVVBD-aStek6u7MFLLc832','1MQHBogWbvjm9y9vKnEHISdaN--yZMJbU','1GTK-UaZ__wx5Msg1qp9-hedBZdDl4q-D','1BXkDyB59_uFPQjkHM1dxDbT2D1Lxd2tE','14uPrMyyKLlOQIzbHWlMbq6rPGIOlLoPx','12hgmR9rtRNGqML6AEdKXm7YMl2vSZP43','1JZNTwfzkNfbzodfNWTLK4ETNME5HkT_N','1uaIbVGqpQpgRoG7N3HiFtHQTFWxcYgZe'], sp: ['1q1uGcQnCcJs05AiaZCoFATTXwazP1H1O','1e5K8CNKCpbyxwzHewyK0FmJbHDtHFetM','1AAtCHcDOk3dRH2fIPDYGmhxeSH8vBtvf','1xAcozy8FLHhVL2FHXqgbrItbj4EAlMP9','15LvqjTo6zQUGpDW52_LPAcCJ_7FnztML','1noTW5PdsWPp0M-plkaNVmJVy-7QeBDlW','1PHOJiHVaTaEQivhZY4rYIcDf_AXg0s9h','1bR1QqucC6eOATqWNYEP_yvs6HAsPjL42','1re1JZXvw-bnPEn4beaIrS_prrigbpjBF','1U1DnI2DLtB0WUmyln9AkRzv0wCMU7kE-','19Tcxnhl9cAX1Mj3G7PvjXTtQIFDe0Wl2'] },
-  t: { cat: ['1VeU8NSwOsN_eubIbfoQsKo4YFDnlqM5F','1GAbFwRM9HEhGVTkQ4LxveFnbK6hj_gww','1VAjy_fhDiHK7QacaqRAggjCkJNlTq5r6','1rC-hzFKjkNSlBhfzbNKuXr-zuSxikuW1','1zN7p0do8nezfm1zClu1IggfoPEPA9O1H','1x7I-fDE0SSsv-8SnyraMCtjFJ5zwgFV5'], sp: ['1pfzM2lUFMe0p1D90i_m79SXHgtKOhAUK','1mZw0Qkhl2H_YkQuw8i2g_ia_PvkDU0D_','19bXw4EyI_u2eD6o8xMQxcZx3yM47_zqH','16t3LcAE3E6EWCSmY2Z2_WtTWe1y3TRih','1RlHXbwc2_A6cA-JSmljCJUyFsWhDp9rl','1z4osLC6yqSQgTRafjv_ocq4rSgHZJED_'] },
-  gift: { classic: { cat: '16VAaCCvSqD1I-QuGXq6CBU8YhLV26vDA', sp: '1qyi41EYduAG3aeSs40VB3JT8L2Ni1H2Y' }, jazz: { cat: '1OFThJqwDq46Fa_qeBf-FroHmiCXwHgLl', sp: '19ZY_CzFGSKnMfNgRFarYokOiZRwBVbX9' } }
+  r: {
+    cat: ['1B0keL0UC2u8HQJ9ZsidlYRgAHU67QDse','1KbtqX7jMbyanCzpD0aVXEInudOop4Uie','1I_hoZCdMvIHplsa5n8kxKvAoioH9vy2B','1G8ql4nEzH6I-I0mYX7w1a3qwsZ8Q9FDu','1ZI7Xw2zcbmdXp8gQgr-ixdaCGHY0xyaA','1XeX2j2RrdZFEc7Al1UJrFJIMu1_xL1zf','1nU-ixKtfFOXOHh058DVoWAB6ioJpymCH','1UVYULkrIppofoV5-RZ4nGRwrZOR7mfuT','1h0o_6CcV4F3e0Sdo1ZQKIsE1Kl4mwX9Z','1N32IzKMse_hXrRRUYiDgVXtRUJJ_YV0h','1diOC2djV_xxfV6hn7r55KFJVZlTcfVst'],
+    sp: ['1JFnVd-R442wbUI-zHGgHpylVk2Ua2tmZ','1vvYih6EhhGHbJaqYVWNqfODJDz9bNtlX','1DEF_WLBTIQcRb78qNhRYo-wRJGkBn7xj','1cJGljT6Qlbc9NCOUUzjJqxkbbj3Lwr7i','1d7e0ffPQ8laYqqnahr1OQ8biRzKYUg5S','1jzF-6Io1CHt6DQGdvzJzqlQ5T0bTnLkv','1iIG9rTGmxO7Q0Fyw6tX4DlLmeMavihwf','1zpFwJ0PrWq13c4LKJLCBJXULzxMYv2XV','1Ub0aiaQXFDtJYZ2LwUf5ebvTvYHmz_sl','1tgU-sT_AbAWT7QvJp3nkFueDE2nT45Lj','10EQuIBUZTMaalzK9Uc3Noi_zSgArh04G']
+  },
+  a: {
+    cat: ['1Jk1odT5P1JEeX_UZBFjmX1YfFgYMuYPT','1rUZZckM1muEFKNPP6GQdOh7BGnjW6qoY','1OQMVd-DMxvH-Y9TRv4I8GZH-z_cv1APq','1mE1mD-mPJeiVVBD-aStek6u7MFLLc832','1MQHBogWbvjm9y9vKnEHISdaN--yZMJbU','1GTK-UaZ__wx5Msg1qp9-hedBZdDl4q-D','1BXkDyB59_uFPQjkHM1dxDbT2D1Lxd2tE','14uPrMyyKLlOQIzbHWlMbq6rPGIOlLoPx','12hgmR9rtRNGqML6AEdKXm7YMl2vSZP43','1JZNTwfzkNfbzodfNWTLK4ETNME5HkT_N','1uaIbVGqpQpgRoG7N3HiFtHQTFWxcYgZe'],
+    sp: ['1q1uGcQnCcJs05AiaZCoFATTXwazP1H1O','1e5K8CNKCpbyxwzHewyK0FmJbHDtHFetM','1AAtCHcDOk3dRH2fIPDYGmhxeSH8vBtvf','1xAcozy8FLHhVL2FHXqgbrItbj4EAlMP9','15LvqjTo6zQUGpDW52_LPAcCJ_7FnztML','1noTW5PdsWPp0M-plkaNVmJVy-7QeBDlW','1PHOJiHVaTaEQivhZY4rYIcDf_AXg0s9h','1bR1QqucC6eOATqWNYEP_yvs6HAsPjL42','1re1JZXvw-bnPEn4beaIrS_prrigbpjBF','1U1DnI2DLtB0WUmyln9AkRzv0wCMU7kE-','19Tcxnhl9cAX1Mj3G7PvjXTtQIFDe0Wl2']
+  },
+   t: {
+    cat: ['1VeU8NSwOsN_eubIbfoQsKo4YFDnlqM5F','1GAbFwRM9HEhGVTkQ4LxveFnbK6hj_gww','1VAjy_fhDiHK7QacaqRAggjCkJNlTq5r6','1rC-hzFKjkNSlBhfzbNKuXr-zuSxikuW1','1zN7p0do8nezfm1zClu1IggfoPEPA9O1H','1x7I-fDE0SSsv-8SnyraMCtjFJ5zwgFV5','1OFYINMfF6suImcrg2d4SxfaPlJ_PUG7x','1-njSXFDDHnaRCYZ7MRZAeXjbUPSk5PaE','','',''],
+    sp: ['1pfzM2lUFMe0p1D90i_m79SXHgtKOhAUK','1mZw0Qkhl2H_YkQuw8i2g_ia_PvkDU0D_','19bXw4EyI_u2eD6o8xMQxcZx3yM47_zqH','16t3LcAE3E6EWCSmY2Z2_WtTWe1y3TRih','1RlHXbwc2_A6cA-JSmljCJUyFsWhDp9rl','1z4osLC6yqSQgTRafjv_ocq4rSgHZJED_','1ar_I6xcrSZm38ySNsSJxvSC8sJ5BMPhi','1sOayWKQ-28Y7NkE7H0wXNA9QzH4P70DY','','','']
+  },
+  gift: {
+    classic: { cat: '16VAaCCvSqD1I-QuGXq6CBU8YhLV26vDA', sp: '1qyi41EYduAG3aeSs40VB3JT8L2Ni1H2Y' },
+    jazz: { cat: '1OFThJqwDq46Fa_qeBf-FroHmiCXwHgLl', sp: '19ZY_CzFGSKnMfNgRFarYokOiZRwBVbX9' }
+  }
 };
-
-function getLink(type, idx) {
-  var lang = LS.lang === 'ca' ? 'cat' : 'sp';
-  if (type === 'gift_classic') return LINKS.gift.classic[lang] || LINKS.gift.classic.cat;
-  if (type === 'gift_jazz') return LINKS.gift.jazz[lang] || LINKS.gift.jazz.cat;
-  var links = LINKS[type] && LINKS[type][lang];
-  if (links && links[idx]) return links[idx];
-  var otherLang = lang === 'cat' ? 'sp' : 'cat';
-  var otherLinks = LINKS[type] && LINKS[type][otherLang];
-  if (otherLinks && otherLinks[idx]) return otherLinks[idx];
-  return null;
-}
 
 var D = [
   { n: { ca: 'Benvinguda', es: 'Bienvenida' }, u: [{ w: { v: [['Presentació de l\'Escola', 'Presentación de la Escuela', ''], ['Com funciona aquesta web', 'Cómo funciona esta web', ''], ['Quin teclat comprar?', '¿Qué teclado comprar?', '']] } } ] },
   { n: { ca: 'Fonaments', es: 'Fundamentos' }, u: [
-    { g: { v: [['Notes al piano: Introducció Essencial','Notas en el piano: Introducción Esencial',getLink('t',0)],['Claus musicals: Com Llegir i Col·locar Mans','Claves musicales: Cómo Leer y Colocar las Manos',getLink('t',1)]] }, r: { v: [['Pols i Tempo: Figures bàsiques','Pulso y Tempo: Figuras básicas',getLink('r',0)]] } },
-    { t: { v: [['Funcionament de les Rutines','Funcionamiento de las Rutinas']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { d: [['Entrenament Rítmic 1-12','Entrenamiento Rítmico 1-12','a']] }, a: { v: [['Fonaments de l\'Oïda Musical','Fundamentos del Oído Musical',getLink('a',0)]] }, p: { v: [['La Xocolatera (tema)','La Chocolatera (tema)']], d: [['La Xocolatera (partitura)','La Chocolatera (partitura)','s']] } },
-    { t: { v: [['Postura al Piano: Posició Corporal Correcta','Postura al Piano: Posición Corporal Correcta'],['Rutines 01-10','Rutinas 01-10']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { v: [['Puntet, Lligadura de prolongació i Contratemps','Puntillo, Ligadura de prolongación y Contratiempo',getLink('r',1)]] }, p: { v: [['Himne Alegria (I)','Himno Alegría (I)']], d: [['La Xocolatera (partitura)','La Chocolatera (partitura)','s'],['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s']] } },
-    { t: { v: [['Rutines 11-20','Rutinas 11-20']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, a: { v: [['Evita Memoritzar Intervals','Evita Memorizar Intervalos',getLink('a',1)]] }, p: { v: [['Perestroika (SAU)','Perestroika (SAU)']], d: [['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s'],['Perestroika (play-along)','Perestroika (play-along)','a']] } }
+    { g: { v: [['Notes al piano: Introducció Essencial','Notas en el piano: Introducción Esencial','LK:t:0'],['Claus musicals: Com Llegir i Col·locar Mans','Claves musicales: Cómo Leer y Colocar las Manos','LK:t:1']] }, r: { v: [['Pols i Tempo: Figures bàsiques','Pulso y Tempo: Figuras básicas','LK:r:0']] } },
+    { t: { v: [['Funcionament de les Rutines','Funcionamiento de las Rutinas']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { d: [['Entrenament Rítmic 1-12','Entrenamiento Rítmico 1-12','a']] }, a: { v: [['Fonaments de l\'Oïda Musical','Fundamentos del Oído Musical','LK:a:0']] }, p: { v: [['La Xocolatera (tema)','La Chocolatera (tema)']], d: [['La Xocolatera (partitura)','La Chocolatera (partitura)','s']] } },
+    { t: { v: [['Postura al Piano: Posició Corporal Correcta','Postura al Piano: Posición Corporal Correcta'],['Rutines 01-10','Rutinas 01-10']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { v: [['Puntet, Lligadura de prolongació i Contratemps','Puntillo, Ligadura de prolongación y Contratiempo','LK:r:1']] }, p: { v: [['Himne Alegria (I)','Himno Alegría (I)']], d: [['La Xocolatera (partitura)','La Chocolatera (partitura)','s'],['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s']] } },
+    { t: { v: [['Rutines 11-20','Rutinas 11-20']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, a: { v: [['Evita Memoritzar Intervals','Evita Memorizar Intervalos','LK:a:1']] }, p: { v: [['Perestroika (SAU)','Perestroika (SAU)']], d: [['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s'],['Perestroika (play-along)','Perestroika (play-along','a']] } }
   ] },
   { n: { ca: 'Consolidació', es: 'Consolidación' }, u: [
-    { t: { v: [['Rutines 21-30','Rutinas 21-30']] }, g: { v: [['Introducció a les Tríades','Introducción a las Tríadas',getLink('t',2)]] }, r: { v: [['Síncopa Musical','Síncopa Musical',getLink('r',2)]] }, a: { v: [['Emocions: Notes Diatòniques','Emociones: Notas Diatónicas',getLink('a',2)]] }, p: { v: [['Aunque Tú No Lo Sepas','Aunque Tú No Lo Sepas']], d: [['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s'],['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a']] } },
-    { t: { v: [['Rutines 31-40','Rutinas 31-40']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { d: [['Entrenament Rítmic 13-24','Entrenamiento Rítmico 13-24','a']] }, p: { v: [['Tríades Majors: CT1','Tríadas Mayores: CT1']], d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura)','s']] } },
-    { t: { v: [['Rutines 41-50','Rutinas 41-50']] }, r: { v: [['Semicorxeres (I)','Semicorcheas (I)',getLink('r',3)]] }, p: { d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura)','s'],['Tríades Majors CT1 (cicle)','Tríadas Mayores CT1 (ciclo)','d']] } },
-    { t: { v: [['Rutines 51-60','Rutinas 51-60']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, a: { v: [['Instruccions i Correcció del Test','Instrucciones y Corrección del Test',getLink('a',3)]] }, p: { d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura)','s'],['Play-along Tríades Majors CT1','Play-along Tríadas Mayores CT1','a']] } }
+    { t: { v: [['Rutines 21-30','Rutinas 21-30']] }, g: { v: [['Introducció a les Tríades','Introducción a las Tríadas','LK:t:2']] }, r: { v: [['Síncopa Musical','Síncopa Musical','LK:r:2']] }, a: { v: [['Emocions: Notes Diatòniques','Emociones: Notas Diatónicas','LK:a:2']] }, p: { v: [['Aunque Tú No Lo Sepas','Aunque Tú No Lo Sepas']], d: [['Himne Alegria v.1 (partitura)','Himno Alegría v.1 (partitura)','s'],['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a']] } },
+    { t: { v: [['Rutines 31-40','Rutinas 31-40']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, r: { d: [['Entrenament Rítmic 13-24','Entrenamiento Rítmico 13-24','a']] }, p: { v: [['Tríades Majors: CT1','Tríadas Mayores: CT1']], d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura','s']] } },
+    { t: { v: [['Rutines 41-50','Rutinas 41-50']] }, r: { v: [['Semicorxeres (I)','Semicorcheas (I)','LK:r:3']] }, p: { d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura)','s'],['Tríades Majors CT1 (cicle)','Tríadas Mayores CT1 (ciclo)','d']] } },
+    { t: { v: [['Rutines 51-60','Rutinas 51-60']] }, g: { d: [['Notació Anglosaxona','Notación Anglosajona','d']] }, a: { v: [['Instruccions i Correcció del Test','Instrucciones y Corrección del Test','LK:a:3']] }, p: { d: [['Perestroika (play-along)','Perestroika (play-along)','a'],['Aunque... (play-along)','Aunque... (play-along)','a'],['Himne Alegria v.2 (partitura)','Himno Alegría v.2 (partitura)','s'],['Play-along Tríades Majors CT1','Play-along Tríadas Mayores CT1','a']] } }
   ] },
   { n: { ca: 'Descobriment del Sistema Tonal', es: 'Descubrimiento del Sistema Tonal' }, u: [
-    { t: { v: [['Rutines 61-70','Rutinas 61-70']] }, g: { v: [['Escala Major: Patró Universal','Escala Mayor: Patrón Universal',getLink('t',3)]] }, r: { v: [['Semicorxeres (II)','Semicorcheas (II)',getLink('r',4)]] }, a: { v: [['Test de Notes Diatòniques','Test de Notas Diatónicas',getLink('a',4)]] }, p: { v: [['Let it Be','Let it Be'],['Tríades Majors: CT2','Tríadas Mayores: CT2']] } },
-    { t: { v: [['Rutines 71-80','Rutinas 71-80']] }, r: { d: [['Entrenament Rítmic 25-36','Entrenamiento Rítmico 25-36','a']] }, a: { v: [['Emocions: Notes No Diatòniques','Emociones: Notas No Diatónicas',getLink('a',5)]] }, p: { d: [['Let it Be (play-along)','Let it Be (play-along)','a'],['Tríades Majors CT2 (cicle)','Tríadas Mayores CT2 (ciclo)','d']] } },
-    { t: { v: [['Rutines 81-90','Rutinas 81-90']] }, g: { v: [['Introducció al Sistema Tonal','Introducción al Sistema Tonal']] }, r: { v: [['Valors Irregulars: El Tresillo (I)','Valores Irregulares: El Tresillo (I)',getLink('r',5)]] }, p: { v: [['Himne Alegria (II)','Himno Alegría (II)']], d: [['Himne Alegria v.3 (partitura)','Himno Alegría v.3 (partitura)','s'],['Let it Be (play-along)','Let it Be (play-along)','a'],['Play-along Tríades Majors CT2','Play-along Tríadas Mayores CT2','a']] } },
+    { t: { v: [['Rutines 61-70','Rutinas 61-70']] }, g: { v: [['Escala Major: Patró Universal','Escala Mayor: Patrón Universal','LK:t:3']] }, r: { v: [['Semicorxeres (II)','Semicorcheas (II)','LK:r:4']] }, a: { v: [['Test de Notes Diatòniques','Test de Notas Diatónicas','LK:a:4']] }, p: { v: [['Let it Be','Let it Be'],['Tríades Majors: CT2','Tríadas Mayores: CT2']] } },
+    { t: { v: [['Rutines 71-80','Rutinas 71-80']] }, r: { d: [['Entrenament Rítmic 25-36','Entrenamiento Rítmico 25-36','a']] }, a: { v: [['Emocions: Notes No Diatòniques','Emociones: Notas No Diatónicas','LK:a:5']] }, p: { d: [['Let it Be (play-along)','Let it Be (play-along)','a'],['Tríades Majors CT2 (cicle)','Tríadas Mayores CT2 (ciclo)','d']] } },
+    { t: { v: [['Rutines 81-90','Rutinas 81-90']] }, g: { v: [['Introducció al Sistema Tonal','Introducción al Sistema Tonal','LK:t:4']] }, r: { v: [['Valors Irregulars: El Tresillo (I)','Valores Irregulares: El Tresillo (I)','LK:r:5']] }, p: { v: [['Himne Alegria (II)','Himno Alegría (II)']], d: [['Himne Alegria v.3 (partitura)','Himno Alegría v.3 (partitura)','s'],['Let it Be (play-along)','Let it Be (play-along)','a'],['Play-along Tríades Majors CT2','Play-along Tríadas Mayores CT2','a']] } },
     { t: { v: [['Rutines 91-100','Rutinas 91-100']] }, r: { d: [['Entrenament Rítmic 37-45','Entrenamiento Rítmico 37-45','a']] }, p: { v: [['Tríades Majors: CC','Tríadas Mayores: CC']], d: [['Himne Alegria v.4 (partitura)','Himno Alegría v.4 (partitura)','s'],['Let it Be (play-along)','Let it Be (play-along)','a'],['Tríades Majors CTC (cicle)','Tríadas Mayores CTC (ciclo)','d']] } }
   ] },
   { n: { ca: 'Desenvolupament Harmònic', es: 'Desarrollo Armónico' }, u: [
-    { t: { v: [['Rutines 101-110','Rutinas 101-110']] }, g: { v: [['Inversió de Tríades Majors i Menors','Inversión de Tríadas Mayores y Menores',getLink('t',4)]] }, r: { v: [['Valors Irregulars: El Tresillo (II)','Valores Irregulares: El Tresillo (II)',getLink('r',6)]] }, p: { d: [['Himne Alegria v.4 (partitura)','Himno Alegría v.4 (partitura)','s'],['Silent Night (partitura)','Silent Night (partitura)','s'],['Amélie (partitura)','Amélie (partitura)','s'],['Play-along Tríades Majors CCA i CCD','Play-along Tríadas Mayores CCA y CCD','a']] } },
+    { t: { v: [['Rutines 101-110','Rutinas 101-110']] }, g: { v: [['Inversió de Tríades Majors i Menors','Inversión de Tríadas Mayores y Menores','LK:t:5']] }, r: { v: [['Valors Irregulars: El Tresillo (II)','Valores Irregulares: El Tresillo (II)','LK:r:6']] }, p: { d: [['Himne Alegria v.4 (partitura)','Himno Alegría v.4 (partitura)','s'],['Silent Night (partitura)','Silent Night (partitura)','s'],['Amélie (partitura)','Amélie (partitura)','s'],['Play-along Tríades Majors CCA i CCD','Play-along Tríadas Mayores CCA y CCD','a']] } },
     { t: { v: [['Rutines 111-120','Rutinas 111-120']] }, r: { d: [['Entrenament Rítmic 46-48','Entrenamiento Rítmico 46-48','a']] }, p: { v: [['Tríades Menors: CT1','Tríadas Menores: CT1']], d: [['Himne Alegria v.4 (partitura)','Himno Alegría v.4 (partitura)','s'],['Silent Night (partitura)','Silent Night (partitura)','s'],['Amélie (partitura)','Amélie (partitura)','s'],['Greensleeves (partitura)','Greensleeves (partitura)','s']] } },
-    { t: { v: [['Rutines 121-130','Rutinas 121-130']] }, g: { v: [['Tríades Majors i Menors en Posició Oberta','Tríadas Mayores y Menores en Posición Abierta',getLink('t',5)]] }, r: { v: [['Mètrica Simple i Composta','Métrica Simple y Compuesta',getLink('r',7)]] }, a: { v: [['Test de Notes No Diatòniques','Test de Notas No Diatónicas',getLink('a',6)]] }, p: { d: [['Amélie (partitura)','Amélie (partitura)','s'],['Greensleeves (partitura)','Greensleeves (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s'],['Für Elise (partitura)','Für Elise (partitura)','s'],['Tríades Menors CT1 (cicle)','Tríadas Menores CT1 (ciclo)','d']] } },
-    { t: { v: [['Rutines 131-140','Rutinas 131-140']] }, r: { d: [['Entrenament Rítmic 49-60: Descobrir Mètrica i Solucions','Entrenamiento Rítmico 49-60: Descubrir Métrica y Soluciones','a']] }, a: { v: [['Emocions: Notes Diatòniques + No Diatòniques','Emociones: Notas Diatónicas + No Diatónicas',getLink('a',7)]] }, p: { d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s'],['Amélie (partitura)','Amélie (partitura)','s'],['Greensleeves (partitura)','Greensleeves (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s'],['Play-along Tríades Menors CT1','Play-along Tríadas Menores CT1','a']] } }
+    { t: { v: [['Rutines 121-130','Rutinas 121-130']] }, g: { v: [['Tríades Majors i Menors en Posició Oberta','Tríadas Mayores y Menores en Posición Abierta','LK:t:6']] }, r: { v: [['Mètrica Simple i Composta','Métrica Simple y Compuesta','LK:r:7']] }, a: { v: [['Test de Notes No Diatòniques','Test de Notas No Diatónicas','LK:a:6']] }, p: { d: [['Amélie (partitura)','Amélie (partitura)','s'],['Greensleeves (partitura)','Greensleeves (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s'],['Für Elise (partitura)','Für Elise (partitura)','s'],['Tríades Menors CT1 (cicle)','Tríadas Menores CT1 (ciclo)','d']] } },
+    { t: { v: [['Rutines 131-140','Rutinas 131-140']] }, r: { d: [['Entrenament Rítmic 49-60: Descobrir Mètrica i Solucions','Entrenamiento Rítmico 49-60: Descubrir Métrica y Soluciones','a']] }, a: { v: [['Emocions: Notes Diatòniques + No Diatòniques','Emociones: Notas Diatónicas + No Diatónicas','LK:a:7']] }, p: { d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s'],['Amélie (partitura)','Amélie (partitura)','s'],['Greensleeves (partitura)','Greensleeves (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s'],['Play-along Tríades Menors CT1','Play-along Tríadas Menores CT1','a']] } }
   ] },
   { n: { ca: 'Domini del Nivell Fonamental', es: 'Dominio del Nivel Fundamental' }, u: [
-    { t: { v: [['Rutines 141-150','Rutinas 141-150']] }, g: { v: [['Voicings Triàdics a Dues Mans','Voicings Triádicos a Dos Manos']] }, r: { v: [['Entrenament Rítmic','Entrenamiento Rítmico',getLink('r',8)]] }, p: { v: [['Tríades Menors: CT2','Tríadas Menores: CT2']], d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s']] } },
+    { t: { v: [['Rutines 141-150','Rutinas 141-150']] }, g: { v: [['Voicings Triàdics a Dues Mans','Voicings Triádicos a Dos Manos','LK:t:7']] }, r: { v: [['Entrenament Rítmic','Entrenamiento Rítmico','LK:r:8']] }, p: { v: [['Tríades Menors: CT2','Tríadas Menores: CT2']], d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s'],['The Entertainer (partitura)','The Entertainer (partitura)','s']] } },
     { t: { v: [['Rutines 151-160','Rutinas 151-160']] }, r: { d: [['Entrenament Rítmic 61-72','Entrenamiento Rítmico 61-72','a']] }, p: { d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s'],['Play-along Tríades Menors CT2','Play-along Tríadas Menores CT2','a']] } },
-    { t: { v: [['Rutines 161-170','Rutinas 161-170']] }, g: { v: [['Introducció al Solfeig','Introducción al Solfeo']] }, r: { v: [['Introducció a la Mètrica Irregular','Introducción a la Métrica Irregular',getLink('r',9)]] }, p: { v: [['Tríades Menors: CC','Tríadas Menores: CC']], d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s']] } },
+    { t: { v: [['Rutines 161-170','Rutinas 161-170']] }, g: { v: [['Introducció al Solfeig','Introducción al Solfeo','LK:t:8']] }, r: { v: [['Introducció a la Mètrica Irregular','Introducción a la Métrica Irregular','LK:r:9']] }, p: { v: [['Tríades Menors: CC','Tríadas Menores: CC']], d: [['Für Elise (partitura)','Für Elise (partitura)','s'],['The Piano (partitura)','The Piano (partitura)','s']] } },
     { t: { v: [['Rutines 171-180','Rutinas 171-180']] }, r: { d: [['Entrenament Rítmic 73-84','Entrenamiento Rítmico 73-84','a']] }, p: { v: [['Interstellar','Interstellar']], d: [['Play-along Tríades Menors CC','Play-along Tríadas Menores CC','a']] } }
   ] },
   { n: { ca: 'Integració i Connexió de Tríades', es: 'Integración y Conexión de Tríadas' }, u: [
-    { g: { v: [['Funcions Tonals Bàsiques','Funciones Tonales Básicas']] }, p: { v: [['Heaven (Bryan Adams)','Heaven (Bryan Adams)']], d: [['Interstellar (play-along)','Interstellar (play-along)','a']] } },
-    { a: { v: [['Test de Notes Diatòniques + No Diatòniques','Test de Notas Diatónicas + No Diatónicas',getLink('a',8)]] }, p: { v: [['Time','Time']], d: [['Heaven (play-along)','Heaven (play-along)','a'],['Interstellar (play-along)','Interstellar (play-along)','a']] } },
-    { g: { v: [['Introducció a la Connexió de Tríades','Introducción a la Conexión de Tríadas']] }, r: { v: [['Repàs de Ritme del Nivell Fonamental','Repaso de Ritmo del Nivel Fundamental',getLink('r',10)]] }, a: { v: [['La Tònica com a Única Referència','La Tónica como Única Referencia',getLink('a',9)]] }, p: { d: [['Heaven (play-along)','Heaven (play-along)','a'],['Interstellar (play-along)','Interstellar (play-along)','a'],['Time (play-along)','Time (play-along)','a']] } },
-    { r: { d: [['Entrenament Rítmic 73-84','Entrenamiento Rítmico 73-84','a']] }, a: { v: [['TONAL EMOTIONS: El teu Laboratori Auditiu','TONAL EMOTIONS: Tu Laboratorio Auditivo',getLink('a',10)]] }, p: { v: [['Someone Like You','Someone Like You'],['Introducció als FNG','Introducción a los FNG']], d: [['Someone Like You (partitura + play-along)','Someone Like You (partitura + play-along)','s']] } }
+    { g: { v: [['Funcions Tonals Bàsiques','Funciones Tonales Básicas','LK:t:9']] }, p: { v: [['Heaven (Bryan Adams)','Heaven (Bryan Adams)']], d: [['Interstellar (play-along)','Interstellar (play-along)','a']] } },
+    { a: { v: [['Test de Notes Diatòniques + No Diatòniques','Test de Notas Diatónicas + No Diatónicas','LK:a:8']] }, p: { v: [['Time','Time']], d: [['Heaven (play-along)','Heaven (play-along)','a'],['Interstellar (play-along)','Interstellar (play-along)','a']] } },
+    { g: { v: [['Introducció a la Connexió de Tríades','Introducción a la Conexión de Tríades','LK:t:10']] }, r: { v: [['Repàs de Ritme del Nivell Fonamental','Repaso de Ritmo del Nivel Fundamental','LK:r:10']] }, a: { v: [['La Tònica com a Única Referència','La Tónica como Única Referencia','LK:a:9']] }, p: { d: [['Heaven (play-along)','Heaven (play-along)','a'],['Interstellar (play-along)','Interstellar (play-along)','a'],['Time (play-along)','Time (play-along)','a']] } },
+    { r: { d: [['Entrenament Rítmic 73-84','Entrenamiento Rítmico 73-84','a']] }, a: { v: [['TONAL EMOTIONS: El teu Laboratori Auditiu','TONAL EMOTIONS: Tu Laboratorio Auditivo','LK:a:10']] }, p: { v: [['Someone Like You','Someone Like You'],['Introducció als FNG','Introducción a los FNG']], d: [['Someone Like You (partitura + play-along)','Someone Like You (partitura + play-along)','s']] } }
   ] }
 ];
 
 var GIFT = [
-  ['Masterclass 1: Història de la Música', 'Masterclass 1: Historia de la Música', getLink('gift_classic')],
-  ['Masterclass 2: Història del Jazz', 'Masterclass 2: Historia del Jazz', getLink('gift_jazz')]
+  ['Masterclass 1: Història de la Música', 'Masterclass 1: Historia de la Música', 'LK:gift:classic'],
+  ['Masterclass 2: Història del Jazz', 'Masterclass 2: Historia del Jazz', 'LK:gift:jazz']
 ];
 
 /* ================================================================
@@ -1011,18 +916,67 @@ function secName(si) {
   return D[si] ? D[si].n[LS.lang] : '';
 }
 function vidDesc(v, id, b) { var o = OV.d[id]; return (o && o[LS.lang]) ? esc(o[LS.lang]) : t().desc[b]; }
+
+/* ================================================================
+   FUNCIÓ DINÀMICA: Resol links en el moment del clic
+   ================================================================ */
+function resolveLink(marker) {
+  // Format: 'LK:tipus:índex' (ex: 'LK:t:0', 'LK:gift:classic')
+  if (!marker || marker.indexOf('LK:') !== 0) return marker;
+  var parts = marker.split(':');
+  if (parts.length < 3) return null;
+  var tipus = parts[1];
+  var index = parts.slice(2).join(':'); // Per si el tipus té ':' (ex: 'gift:classic')
+  
+  var lang = LS.lang === 'ca' ? 'cat' : 'sp';
+  
+  if (tipus === 'gift') {
+    var giftType = index; // 'classic' o 'jazz'
+    return LINKS.gift[giftType] && LINKS.gift[giftType][lang] ? LINKS.gift[giftType][lang] : null;
+  }
+  
+  var idx = parseInt(index, 10);
+  var links = LINKS[tipus] && LINKS[tipus][lang];
+  if (links && links[idx]) return links[idx];
+  
+  // Fallback a l'altre idioma si no existeix
+  var otherLang = lang === 'cat' ? 'sp' : 'cat';
+  var otherLinks = LINKS[tipus] && LINKS[tipus][otherLang];
+  if (otherLinks && otherLinks[idx]) return otherLinks[idx];
+  
+  return null;
+}
+
 function driveSrc(v, id) {
+  // 1. Primer comprovar si hi ha un link personalitzat a OV
   var L = (OV.l[id] && OV.l[id][LS.lang]) || OV.l[id];
   if (L !== undefined && L !== '') {
-    if (/^https?:\/\//.test(L)) {
-      var m = L.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      var m2 = L.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      var pid = m ? m[1] : (m2 ? m2[1] : null);
-      return pid ? 'https://drive.google.com/file/d/' + pid + '/preview' : L;
+    // Si és un objecte {ca: '...', es: '...'}, agafar l'idioma correcte
+    if (typeof L === 'object' && L[LS.lang]) L = L[LS.lang];
+    else if (typeof L === 'object') L = L.ca || L.es || null;
+    
+    if (L) {
+      if (/^https?:\/\//.test(L)) {
+        var m = L.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        var m2 = L.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        var pid = m ? m[1] : (m2 ? m2[1] : null);
+        return pid ? 'https://drive.google.com/file/d/' + pid + '/preview' : L;
+      }
+      return 'https://drive.google.com/file/d/' + L + '/preview';
     }
-    return 'https://drive.google.com/file/d/' + L + '/preview';
   }
-  return v[2] ? 'https://drive.google.com/file/d/' + v[2] + '/preview' : null;
+  
+  // 2. Si no hi ha personalitzat, resoldre el marcador dinàmic
+  var linkId = v[2];
+  if (linkId) {
+    if (linkId.indexOf('LK:') === 0) {
+      var resolved = resolveLink(linkId);
+      return resolved ? 'https://drive.google.com/file/d/' + resolved + '/preview' : null;
+    }
+    return 'https://drive.google.com/file/d/' + linkId + '/preview';
+  }
+  
+  return null;
 }
 
 /* ================================================================
@@ -1068,6 +1022,7 @@ function reorderVideo(videoId, newOrder) {
   if (target < 0 || target >= numbered.length || target === cur) return;
   swapOrder(videoId, numbered[target]);
 }
+
 /* ================================================================
    5b. BLOC VIRTUAL (OV.bl) I MOVIMENT DE VÍDEOS
    ================================================================ */
@@ -1386,6 +1341,7 @@ function applyEditState() {
         b.onclick = function (e) {
           e.stopPropagation();
           var cur = (OV.l[id] && OV.l[id][LS.lang]) || OV.l[id] || '';
+          if (typeof cur === 'object') cur = cur[LS.lang] || cur.ca || cur.es || '';
           var val = prompt(t().linkPrompt + '\n\n' + (LS.lang === 'ca' ? 'Actual:' : 'Actual:') + '\n' + (cur || '—'), cur);
           if (val === null) return;
           val = val.trim();
@@ -1765,6 +1721,7 @@ function renderTrack() {
         lkBtn.className = 'lkbtn';
         lkBtn.type = 'button';
         var curGift = (OV.l['gift.' + i] && OV.l['gift.' + i][LS.lang]) || OV.l['gift.' + i] || '';
+        if (typeof curGift === 'object') curGift = curGift[LS.lang] || curGift.ca || curGift.es || '';
         lkBtn.textContent = curGift ? '🔗✔' : '🔗';
         lkBtn.style.cssText = 'background:rgba(10,12,16,.85);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;';
         if (curGift) { lkBtn.style.borderColor = '#39d98a'; lkBtn.style.color = '#39d98a'; }
@@ -2212,9 +2169,10 @@ function setLabels() {
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
   
-  // CANVI CLAU: No injectar imatge en smartphones
-   $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
-      $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  // Imatge d'interrogant (el CSS s'encarrega d'amagar-la o mostrar-la segons el dispositiu)
+  $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
+  $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+  
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
   $('mSave').textContent = isTabletDevice() ? '📧' : '💾';
