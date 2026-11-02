@@ -619,7 +619,21 @@ body.editmode .vid { padding-left: 34px; }
   #mHelp img { width: 72px !important; height: 72px !important; object-fit: contain !important; }
 }
 @media (max-width: 767px) {
-  #mHelp img { width: 22px !important; height: 22px !important; object-fit: contain !important; }
+  #mHelp { display: flex !important; align-items: center !important; justify-content: center !important; }
+  #mHelp img { display: block !important; width: 22px !important; height: 22px !important; object-fit: contain !important; }
+}
+/* ══ PC/TABLET: cap residu vermell en clicar l'ajuda ══ */
+#mHelp::after { content: none !important; }
+@media (min-width: 768px) {
+  #mHelp.on,
+  #mHelp:hover,
+  #mHelp:active,
+  #mHelp:focus {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
 }
 </style>
 </head>
@@ -2199,14 +2213,8 @@ function setLabels() {
   $('mInfo').textContent = 'FAQ';
   
   // CANVI CLAU: No injectar imatge en smartphones
-  if (!isSmartphone()) {
-    $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
-  $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
-  } else {
-    $('mHelp').innerHTML = ''; // Deixar buit, el CSS mostrarà l'interrogant vermell
-    $('mHelp').title = LS.lang === 'ca' ? 'Tancar ajuda' : 'Cerrar ayuda';
-  }
-  
+   $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació" style="width:36px;height:36px;object-fit:contain;">';
+      $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
   $('mSave').textContent = isTabletDevice() ? '📧' : '💾';
