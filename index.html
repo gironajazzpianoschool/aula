@@ -634,6 +634,10 @@ body.editmode .vid { padding-left: 34px; }
    1. UTILITATS I ESTAT GLOBAL
    ================================================================ */
 window.onerror = function (m, s, l) {
+  /* Ignorem els "Script error." sense origen (línia 0): són soroll de Safari,
+     extensions o processos del sistema (ex. botó Compartir de l'iPad),
+     no errors del nostre codi. Els errors reals (amb fitxer i línia) es mostren. */
+  if (m === 'Script error.' || m === 'Script error' || (!s && (l === 0 || l === undefined))) return false;
   var f = document.getElementById('fatal');
   f.style.display = 'block';
   f.textContent = '⚠️ Error JS: ' + m + ' (línia ' + l + ')';
