@@ -154,8 +154,8 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .acts button:disabled:hover { border-color: var(--line); color: var(--mut); background: none; }
 .acts button.done:disabled { opacity: 1; cursor: default; }
 @media (hover: none) {
-  .acts button:hover, .now .acts button.ck:hover { border-color: var(--line); color: var(--mut); background: none; }
-  .acts button.done:hover { border-color: var(--ok); color: var(--ok); }
+  .acts button:hover:not(.done):not(.bookmarked), .now .acts button.ck:hover:not(.done) { border-color: var(--line); color: var(--mut); background: none; }
+  .acts button.done:hover, .now .acts button.ck.done:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.10); }
   .acts button.bookmarked:hover { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
 }
 .acts button.bookmarked { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
@@ -1534,6 +1534,10 @@ function makeVid(v, id, track, tag) {
     if (LS.done[id]) { delete LS.done[id]; saveDone(); render(); return; }
     LS.done[id] = 1; saveDone();
     btn.classList.add('done');   /* flash verd */
+    btn.style.borderColor = 'var(--ok)';
+    btn.style.color = 'var(--ok)';
+    btn.style.background = 'rgba(57,217,138,0.12)';
+    btn.style.opacity = '1';
     btn.disabled = true;         /* evita doble toc */
     setTimeout(function () { render(); }, 500);
   };
