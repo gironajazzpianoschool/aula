@@ -2336,7 +2336,7 @@ function openFullscreenVideo(src) {
   var modal = $('modal');
   var isIOSDevice = isIOS();
 
-  if (isMobileDevice()) {
+   if (isMobileDevice()) {
     modal.classList.add('on');
     if (isIOSDevice) {
       modal.classList.add('ios-device');
@@ -2360,6 +2360,31 @@ function openFullscreenVideo(src) {
       setTimeout(function () {
         try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {}); } catch (e) {}
       }, 350);
+    } else {
+      /* ── ANDROID: mòbil no-iOS ── */
+      modal.classList.remove('ios-device');
+      var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1&authuser=0' : currentVideoSrc + '?autoplay=1&authuser=0';
+      player.src = finalSrc;
+      player.classList.add('active');
+      document.documentElement.style.zoom = '1';
+      showCloseBtn();
+      var wrapEl = document.querySelector('.wrap');
+      if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
+      else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
+      /* Forcem l'orientació horitzontal */
+      setTimeout(function () {
+        try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {}); } catch (e) {}
+      }, 350);
+      /* Missatge d'ajuda per a Android: indicar com posar pantalla completa */
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        if (LS.lang === 'ca') {
+          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Per veure el vídeo en pantalla completa, toca la icona <span style="color:var(--gold);font-weight:900;font-size:22px;">⛶</span> del reproductor (cantonada inferior dreta).</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">El vídeo ja s\'ha obert en orientació horitzontal. Toca la pantalla per començar.</div>';
+        } else {
+          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Para ver el vídeo en pantalla completa, toca el icono <span style="color:var(--gold);font-weight:900;font-size:22px;">⛶</span> del reproductor (esquina inferior derecha).</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">El vídeo ya se ha abierto en orientación horizontal. Toca la pantalla para empezar.</div>';
+        }
+        setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
+      }
     }
   } else {
     player.src = '';
