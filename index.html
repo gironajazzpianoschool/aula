@@ -150,6 +150,13 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .acts button:hover { border-color: var(--gold); color: var(--ink); }
 .acts button.done { border-color: var(--ok); color: var(--ok); }
 .now .acts button.ck:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.08); }
+.acts button:disabled { opacity: .35; cursor: not-allowed; }
+.acts button:disabled:hover { border-color: var(--line); color: var(--mut); background: none; }
+@media (hover: none) {
+  .acts button:hover { border-color: var(--line); color: var(--mut); background: none; }
+  .acts button.done:hover { border-color: var(--ok); color: var(--ok); }
+  .acts button.bookmarked:hover { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
+}
 .acts button.bookmarked { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
 .acts button.nt.has-notes { border-color: var(--gold); color: var(--gold); font-weight: 700; }
 .acts button.nt.active { border-color: var(--gold); color: var(--gold); animation: notePulse 2s infinite; }
@@ -1519,6 +1526,7 @@ function makeVid(v, id, track, tag) {
   row.querySelector('.play').onclick = function () { var src = driveSrc(v, id); if (!src) { showToast(t().soon); return; } openFullscreenVideo(src); };
   row.querySelector('.mx').onclick = function () { var src = driveSrc(v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
   row.querySelector('.cl').onclick = function () { row.querySelector('.inl').classList.remove('on'); row.querySelector('.inl iframe').src = ''; };
+  if (!hasLink) { row.querySelectorAll('.acts .ck, .acts .bk, .acts .nt').forEach(function (b) { b.disabled = true; }); }
   row.querySelector('.ck').onclick = function () { if (editModeOn) return; if (LS.done[id]) delete LS.done[id]; else LS.done[id] = 1; saveDone(); render(); };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
