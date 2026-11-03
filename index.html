@@ -588,7 +588,6 @@ body.editmode .vid { padding-left: 34px; }
 <div class="modal" id="modal">
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
-    <button class="close" id="fsPlayer" title="Pantalla completa" style="right:66px;">⛶</button>
     <div class="frame">
       <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
       <div class="video-overlay" id="videoOverlay">
@@ -1097,7 +1096,9 @@ function findNext() {
 function smartFreeLevel() {
   var all = allVids();
   var welcome = all.filter(function (x) { return x.si === 0; });
-  var welcomeDone = welcome.length > 0 && welcome.every(function (x) { return LS.done[x.id]; });
+  var welcomeWithLink = welcome.filter(function (x) { return !!driveSrc(x.v, x.id); });
+  /* Si la Benvinguda no té cap vídeo amb link, entrem directament al Nivell 1 */
+  var welcomeDone = (welcomeWithLink.length === 0) || (welcome.length > 0 && welcome.every(function (x) { return LS.done[x.id]; }));
   if (!welcomeDone) { freeLevel = 0; freeBlock = 'w'; return; }
   
   initializeOrder();
@@ -2074,7 +2075,7 @@ function renderApps() {
     var iconHtml = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
     var statsHtml = (a.url && a.url.indexOf('TONAL') >= 0) ? tonalStatsHtml() : '';
     c.innerHTML = '<div class="ae">' + iconHtml + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3><p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + statsHtml + '<button>' + t().appsOpen + '</button>';
-    c.querySelector('button').onclick = function () { if (a.url) window.open(a.url, '_blank'); else alert(t().appsSoon); };
+    c.querySelector('button').onclick = function () { if (a.url) window.open(a.url + (a.url.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LS.lang, '_blank'); else alert(t().appsSoon); };
     g.appendChild(c);
   });
   av.appendChild(g);
@@ -2352,17 +2353,13 @@ function openFullscreenVideo(src) {
         setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
       }
       document.documentElement.style.zoom = '1';
-        } else {
-      modal.classList.remove('ios-device');
-      var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1&authuser=0' : currentVideoSrc + '?autoplay=1&authuser=0';
-      player.src = finalSrc;
-      player.classList.add('active');
-      if (overlay) overlay.classList.add('hidden');
-      document.documentElement.style.zoom = '1';
-      showCloseBtn();
       var wrapEl = document.querySelector('.wrap');
       if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
       else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
+      /* Un cop dins de pantalla completa, forcem l'orientació horitzontal */
+      setTimeout(function () {
+        try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {}); } catch (e) {}
+      }, 350);
     }
   } else {
     player.src = '';
@@ -2378,6 +2375,7 @@ function openFullscreenVideo(src) {
 
 function closeVideoPlayer() {
   document.documentElement.style.zoom = '';
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
   if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen();
   else { $('modal').classList.remove('on'); $('player').src = ''; }
 }
@@ -2404,16 +2402,6 @@ if (frameEl) {
 }
 
 $('xPlayer').onclick = closeVideoPlayer;
-$('fsPlayer').onclick = function () {
-  var wrapEl = document.querySelector('.wrap');
-  if (document.fullscreenElement || document.webkitFullscreenElement) {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-  } else {
-    if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
-    else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
-  }
-};
 $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') closeVideoPlayer(); });
 document.addEventListener('fullscreenchange', function () {
   if (!document.fullscreenElement) {
