@@ -315,7 +315,10 @@ function cleanupOnExit(){
   [resultModal,pauseModal,infoModal,battleModal,battleResultModal,hardcoreWarning].forEach(m=>{ if(m) m.classList.remove('visible'); });
   const im=$('instructions-modal'); if(im) im.classList.remove('visible');
   if(manualPanel){ manualPanel.classList.remove('visible','ear-position'); manualPanel.style.display='none'; }
-  clearAllManualNotes(); // 👈 NETEJA VISUAL I LÒGICA EN SORTIR
+  manualPanelVisible=false;
+  if($('btn-toggle-manual')) $('btn-toggle-manual').classList.remove('active');
+  if($('btn-toggle-manual-ear')) $('btn-toggle-manual-ear').classList.remove('active');
+  clearAllManualNotes();
   stopProva();
 }
 
@@ -1103,25 +1106,19 @@ function toggleManualPanel(){
 }
 
 function activateManualNote(d){
+  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
+  if(b){ if(b._glowTO){ clearTimeout(b._glowTO); b._glowTO=null; } b.classList.add('active'); }
   if(activeManualNotes.has(d)) return;
   activeManualNotes.add(d);
   handleMIDIMessage({data:[0x90,currentKeyRoot+d+60,100]});
-  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`); if(b) b.classList.add('active');
-  
-  // Timeout de seguretat: apaga el botó automàticament després de 800ms si no s'ha alliberat
-  b._safetyTimeout = setTimeout(() => {
-    deactivateManualNote(d);
-  }, 800);
+  if(b){ b._safetyTimeout=setTimeout(()=>{ deactivateManualNote(d); },1500); }
 }
-
 function deactivateManualNote(d){
   const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
-  if(b) {
-    b.classList.remove('active');
-    if(b._safetyTimeout) {
-      clearTimeout(b._safetyTimeout);
-      b._safetyTimeout = null;
-    }
+  if(b){
+    if(b._safetyTimeout){ clearTimeout(b._safetyTimeout); b._safetyTimeout=null; }
+    if(b._glowTO) clearTimeout(b._glowTO);
+    b._glowTO=setTimeout(()=>{ if(!activeManualNotes.has(d)) b.classList.remove('active'); b._glowTO=null; },500);
   }
   if(!activeManualNotes.has(d)) return;
   activeManualNotes.delete(d);
@@ -1588,14 +1585,13 @@ function handleGlobalUp(e) {
   const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
   const btn = findManualBtn(x, y);
   
-  if (btn) {
+   if (btn) {
     const d = parseInt(btn.dataset.degree);
     deactivateManualNote(d);
   } else {
-    // Si no trobem el botó (ex. el dit ha lliscat), netegem tot per seguretat
-    clearAllManualNotes();
+    // Si no trobem el botó (ex. el dit ha lliscat), alliberem tot amb afterglow
+    Array.from(activeManualNotes).forEach(dd=>deactivateManualNote(dd));
   }
-}
 
 // 5. Registre d'esdeveniments al DOCUMENT (no als botons)
 // Això garanteix que l'iPad sempre rebi el senyal de "fi de toc"
@@ -1605,6 +1601,7 @@ document.addEventListener('touchcancel', handleGlobalUp, { passive: true });
 
 document.addEventListener('mousedown', handleGlobalDown);
 document.addEventListener('mouseup', handleGlobalUp);
+document.addEventListener('pointercancel', handleGlobalUp, { passive: true });
 btnToggleManual.addEventListener('click',toggleManualPanel);
 btnToggleManualEar.addEventListener('click',toggleManualPanel);
 
