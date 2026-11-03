@@ -429,10 +429,28 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
   display: none !important; 
 }
 
-/* ══ FIX TABLET: el verd omple tota la meitat del marcador, sense contorn propi ══ */
-#battle-scoreboard { padding: 0 !important; overflow: hidden !important; }
-#battle-scoreboard > * { flex: 1 1 50% !important; margin: 0 !important; }
-#battle-p1-display, #battle-p2-display { outline: none !important; box-shadow: none !important; margin: 0 !important; }
+/* ══ FIX TABLET v3: el verd omple TOT el requadre taronja, sense trossos laterals ══ */
+#battle-scoreboard {
+  display: flex !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+#battle-scoreboard > * {
+  flex: 1 1 50% !important;
+  width: 50% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+#battle-p1-display, #battle-p2-display {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 #battle-p1-display.active, #battle-p2-display.active,
 #battle-scoreboard .battle-display.active {
   outline: none !important;
@@ -441,8 +459,6 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
   background-image: none !important;
   background-color: rgba(57,217,138,.20) !important;
 }
-#battle-p1-display.active { border-radius: 14px 0 0 14px !important; }
-#battle-p2-display.active { border-radius: 0 14px 14px 0 !important; }
 </style>
 </head>
 <body>
