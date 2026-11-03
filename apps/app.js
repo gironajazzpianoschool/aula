@@ -1,5 +1,5 @@
 /**
- * TONAL EMOTIONS - v25
+ * TONAL EMOTIONS - v26
  */
 
 /* ══ 1. CONFIGURACIÓ ══ */
@@ -1588,10 +1588,11 @@ function handleGlobalUp(e) {
    if (btn) {
     const d = parseInt(btn.dataset.degree);
     deactivateManualNote(d);
-  } else {
+    } else {
     // Si no trobem el botó (ex. el dit ha lliscat), alliberem tot amb afterglow
     Array.from(activeManualNotes).forEach(dd=>deactivateManualNote(dd));
   }
+}
 
 // 5. Registre d'esdeveniments al DOCUMENT (no als botons)
 // Això garanteix que l'iPad sempre rebi el senyal de "fi de toc"
