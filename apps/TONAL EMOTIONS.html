@@ -429,15 +429,20 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
   display: none !important; 
 }
 
-/* ══ FIX TABLET: resalt verd arrodonit al marcador de batalla ══ */
+/* ══ FIX TABLET: el verd omple tota la meitat del marcador, sense contorn propi ══ */
+#battle-scoreboard { padding: 0 !important; overflow: hidden !important; }
+#battle-scoreboard > * { flex: 1 1 50% !important; margin: 0 !important; }
+#battle-p1-display, #battle-p2-display { outline: none !important; box-shadow: none !important; margin: 0 !important; }
 #battle-p1-display.active, #battle-p2-display.active,
-#battle-scoreboard .battle-display.active,
-#p1-box.active-turn, #p2-box.active-turn {
+#battle-scoreboard .battle-display.active {
   outline: none !important;
-  border-radius: 14px !important;
-  box-shadow: 0 0 0 2px #39d98a, 0 0 16px rgba(57,217,138,.45) !important;
-  background-color: rgba(57,217,138,.14) !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  background-image: none !important;
+  background-color: rgba(57,217,138,.20) !important;
 }
+#battle-p1-display.active { border-radius: 14px 0 0 14px !important; }
+#battle-p2-display.active { border-radius: 0 14px 14px 0 !important; }
 </style>
 </head>
 <body>
