@@ -1448,8 +1448,8 @@ function saveAsFile() {
   html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END\*\//, '/*OV-START*/' + JSON.stringify(OV) + ';/*OV-END*/');
   toggleEditMode(wasEdit);
   render();
-  // A iPad/Tablet: compartir el fitxer real per adjuntar-lo a Mail, AirDrop, etc.
-  if (isTabletDevice() && navigator.share && navigator.canShare) {
+  // A iPad/Tablet/Smartphone: compartir el fitxer real per adjuntar-lo a Mail, AirDrop, etc.
+  if (isMobileDevice() && navigator.share && navigator.canShare) {
     var fileShare = new File([html], 'index.html', { type: 'text/html' });
     if (navigator.canShare({ files: [fileShare] })) {
       navigator.share({ files: [fileShare], title: 'index.html' })
@@ -1866,8 +1866,10 @@ if (playBtn) {
   var tipT = LS.lang === 'ca' ? 'Percentatge de vídeos importants (⭐) completats del nivell' : 'Porcentaje de vídeos importantes (⭐) completados del nivel';
   BO.filter(function (b) { return b !== 'w'; }).forEach(function (b) {
     var list = imp.filter(function (x) { return vidBlock(x) === b; });
-    var p = list.length ? prog(list).p : 100;
-    h += '<div class="donut" title="' + tipB + '">' + donut(p, BC[b]) + '<div class="lbl">' + t().blocks[b] + '</div></div>';
+    var blockHasLinks = all.some(function (x) { return vidBlock(x) === b; });
+    var p = !blockHasLinks ? 0 : (list.length ? prog(list).p : 100);
+    var tip = blockHasLinks ? tipB : tipB + ' · ' + (LS.lang === 'ca' ? 'Encara no hi ha cap vídeo publicat en aquest bloc' : 'Todavía no hay ningún vídeo publicado en este bloque');
+    h += '<div class="donut" title="' + tip + '">' + donut(p, BC[b]) + '<div class="lbl">' + t().blocks[b] + '</div></div>';
   });
   var pt = imp.length ? prog(imp).p : 0;
   h += '<div class="donut tot" title="' + tipT + '">' + donut(pt, '#e8b04b') + '<div class="lbl">' + t().total + '</div></div>';
@@ -2244,8 +2246,8 @@ function setLabels() {
   
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
-  $('mSave').textContent = isTabletDevice() ? '📧' : '💾';
-  $('mSave').title = isTabletDevice()
+  $('mSave').textContent = isMobileDevice() ? '📧' : '💾';
+  $('mSave').title = isMobileDevice()
     ? (LS.lang === 'ca' ? 'Enviar index.html per email' : 'Enviar index.html por email')
     : (LS.lang === 'ca' ? 'Guardar' : 'Guardar');
   $('overlayText').textContent = t().overlayText;
