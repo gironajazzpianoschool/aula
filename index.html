@@ -131,6 +131,8 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
    ============================================================ */
 .vid { border: 1px solid var(--line); border-radius: 12px; padding: 9px 11px; background: #151a23; transition: border-color .2s; position: relative; }
 .vid:hover { border-color: var(--gold); }
+.vid.nolink { background: #10131a; border-style: dashed; opacity: .6; filter: grayscale(.6); }
+.vid.nolink .vid-number { background: var(--danger); color: #fff; box-shadow: none; }
 .stagetag { color: var(--mut); font-size: var(--fs-xs); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
 .vr { display: flex; gap: 10px; align-items: center; position: relative; }
 .vr .play { width: 32px; height: 32px; flex: none; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); background: none; cursor: pointer; font-size: 12px; transition: all .2s; }
@@ -147,6 +149,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .acts button { background: none; border: 1px solid var(--line); color: var(--mut); border-radius: 8px; padding: 4px 7px; cursor: pointer; font-size: 11px; white-space: nowrap; transition: all .2s; }
 .acts button:hover { border-color: var(--gold); color: var(--ink); }
 .acts button.done { border-color: var(--ok); color: var(--ok); }
+.now .acts button.ck:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.08); }
 .acts button.bookmarked { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
 .acts button.nt.has-notes { border-color: var(--gold); color: var(--gold); font-weight: 700; }
 .acts button.nt.active { border-color: var(--gold); color: var(--gold); animation: notePulse 2s infinite; }
@@ -585,6 +588,7 @@ body.editmode .vid { padding-left: 34px; }
 <div class="modal" id="modal">
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
+    <button class="close" id="fsPlayer" title="Pantalla completa" style="right:66px;">⛶</button>
     <div class="frame">
       <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
       <div class="video-overlay" id="videoOverlay">
@@ -1086,7 +1090,7 @@ function findNext() {
   for (var i = 0; i < OV.order.length; i++) {
     var id = OV.order[i];
     if (isGiftId(id)) continue;
-    if (!LS.done[id]) { var v = findVidById(id); if (v) return v; }
+    if (!LS.done[id]) { var v = findVidById(id); if (v && driveSrc(v.v, id)) return v; }
   }
   return null;
 }
@@ -1473,7 +1477,8 @@ function makeVid(v, id, track, tag) {
   var si = parseInt(id.split('.')[0], 10);
   var ui = parseInt(id.split('.')[1], 10);
   var row = document.createElement('div');
-  row.className = 'vid';
+  var hasLink = !!driveSrc(v, id);
+  row.className = 'vid' + (hasLink ? '' : ' nolink');
   row.id = 'v_' + id;
   row.dataset.vid = id;
   var orderNum = getVideoOrder(id);
@@ -1697,8 +1702,8 @@ function fmtDate(ts) { var d = new Date(ts); var pad = function (n) { return n <
 
 function renderTrack() {
   initializeOrder();
-  var all = allVids();
-  var imp = all.filter(function (x) { return getVideoImportance(x.id) === 'important'; });
+  var all = allVids().filter(function (x) { return !!driveSrc(x.v, x.id); });
+     var imp = all.filter(function (x) { return getVideoImportance(x.id) === 'important'; });
   var next = findNext();
   var tv = $('trackView');
   tv.innerHTML = '';
@@ -1767,9 +1772,52 @@ function renderTrack() {
           render();
         };
         
+        var adjBtn = document.createElement('button');
+        adjBtn.type = 'button';
+        adjBtn.textContent = '📎';
+        adjBtn.title = LS.lang === 'ca' ? 'Afegir document adjunt' : 'Añadir documento adjunto';
+        adjBtn.style.cssText = 'background:rgba(10,12,16,.85);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;';
+        adjBtn.onclick = function (e) {
+          e.stopPropagation();
+          var name = prompt(LS.lang === 'ca' ? 'Nom del document adjunt:' : 'Nombre del documento adjunto:', '');
+          if (!name) return;
+          var link = prompt('ID / URL de Google Drive:', '');
+          if (!link) return;
+          var pid = parseDriveId(link);
+          if (!pid) { alert(LS.lang === 'ca' ? '⚠️ Format no vàlid.' : '⚠️ Formato no válido.'); return; }
+          OV.madj = OV.madj || {};
+          OV.madj['gift.' + i] = OV.madj['gift.' + i] || [];
+          OV.madj['gift.' + i].push({ n: name, l: pid });
+          render();
+        };
         editBar.appendChild(lkBtn);
         editBar.appendChild(tBtn);
+        editBar.appendChild(adjBtn);
         card.appendChild(editBar);
+      }
+      var madj = (OV.madj && OV.madj['gift.' + i]) || [];
+      if (madj.length) {
+        var pillBox = document.createElement('div');
+        pillBox.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;';
+        madj.forEach(function (a, ai) {
+          var pill = document.createElement(editModeOn ? 'span' : 'a');
+          if (!editModeOn) { pill.href = 'https://drive.google.com/file/d/' + a.l + '/view'; pill.target = '_blank'; }
+          pill.style.cssText = 'background:rgba(232,176,75,0.1);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;';
+          pill.innerHTML = '📎 ' + esc(a.n) + (editModeOn ? ' <b style="color:var(--danger)" data-del="' + ai + '">✕</b>' : '');
+          if (editModeOn) {
+            pill.onclick = function (e) {
+              e.stopPropagation();
+              if (e.target.dataset && e.target.dataset.del !== undefined) {
+                if (!confirm(LS.lang === 'ca' ? 'Eliminar aquest adjunt?' : '¿Eliminar este adjunto?')) return;
+                OV.madj['gift.' + i].splice(ai, 1);
+                if (!OV.madj['gift.' + i].length) delete OV.madj['gift.' + i];
+                render();
+              }
+            };
+          }
+          pillBox.appendChild(pill);
+        });
+        card.appendChild(pillBox);
       }
       giftGrid.appendChild(card);
     });
@@ -2304,13 +2352,17 @@ function openFullscreenVideo(src) {
         setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
       }
       document.documentElement.style.zoom = '1';
-    } else {
+        } else {
       modal.classList.remove('ios-device');
       var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1&authuser=0' : currentVideoSrc + '?autoplay=1&authuser=0';
       player.src = finalSrc;
       player.classList.add('active');
       if (overlay) overlay.classList.add('hidden');
       document.documentElement.style.zoom = '1';
+      showCloseBtn();
+      var wrapEl = document.querySelector('.wrap');
+      if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
+      else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
     }
   } else {
     player.src = '';
@@ -2352,10 +2404,21 @@ if (frameEl) {
 }
 
 $('xPlayer').onclick = closeVideoPlayer;
+$('fsPlayer').onclick = function () {
+  var wrapEl = document.querySelector('.wrap');
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  } else {
+    if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
+    else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
+  }
+};
 $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') closeVideoPlayer(); });
 document.addEventListener('fullscreenchange', function () {
   if (!document.fullscreenElement) {
     document.documentElement.style.zoom = '';
+    if (isMobileDevice()) return; /* en tablet/mòbil NO tanquem el modal si es perd el fullscreen */
     $('player').src = '';
     $('modal').classList.remove('on');
   }
