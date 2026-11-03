@@ -72,6 +72,7 @@ let cadenceTimeouts=[], inAnswerPhase=false, hardcoreTimeout=null;
 let lastNoteOnTime={}, physicalHeld=new Set(), wrappers={};
 let editData=null, pressedStack=[], normalSustainHold=null, testSustainTimeout=null, testExploringNoImage=false;
 let battleMode=false, battlePlayer1Name='', battlePlayer2Name='', battleCurrentPlayer=1;
+let battleAborted=false;
 let bp1={correct:0,total:0,times:[]}, bp2={correct:0,total:0,times:[]};
 let turnIndicatorTimeout=null, battleLastQ=0, battleResultTimeout=null;
 let sdActive=false, sdCount=0, sdWinner=null, sdPairMiss=[false,false], sdPairAns=0, sdTotalPairs=0;
@@ -745,7 +746,7 @@ function resumeEarTraining(){
   isPaused=false; pauseModal.classList.remove('visible'); consecutivePauses=0;
   if(tonicPedalMasterGain&&sharedCtx){ const now=sharedCtx.currentTime; tonicPedalMasterGain.gain.cancelScheduledValues(now); tonicPedalMasterGain.gain.setValueAtTime(tonicPedalMasterGain.gain.value,now); tonicPedalMasterGain.gain.linearRampToValueAtTime(1,now+1); }
 }
-function abortEarTraining(){ if(!isPaused) return; isPaused=false; pauseModal.classList.remove('visible'); stopEarTraining(false); }
+function abortEarTraining(){ if(!isPaused) return; isPaused=false; pauseModal.classList.remove('visible'); battleAborted=true; stopEarTraining(false); }
 function showResultMessage(){
   if(earModeType!=='test'||!earUserHasPlayed) return;
   const p=earTotalNotes>0?Math.round(earCorrectNotes/earTotalNotes*100):0;
@@ -772,7 +773,7 @@ function startBattle(){
   battlePlayer2Name=$('battle-player2-name').value.trim()||(t('player')+' 2');
   bp1={correct:0,total:0,times:[]}; bp2={correct:0,total:0,times:[]};
   battleCurrentPlayer=1; battleMode=true;
-  sdActive=false; sdCount=0; sdWinner=null; sdPairMiss=[false,false]; sdPairAns=0; sdTotalPairs=0; naturalEnd=false;
+  sdActive=false; sdCount=0; sdWinner=null; sdPairMiss=[false,false]; sdPairAns=0; sdTotalPairs=0; naturalEnd=false; battleAborted=false;
   hideBattleModal(); document.body.classList.add('battle-on');
   battleScoreboard.classList.add('visible'); p1Box.classList.add('visible'); p2Box.classList.add('visible');
   proposedAnswerBox.classList.remove('visible'); accuracyPanel.classList.remove('visible'); resultModal.classList.remove('visible'); hideAllFeedback();
@@ -867,6 +868,7 @@ function battleResultImageFile(){
      sdActive=false;
      console.log('[BATTLE] fi:', bp1.correct, '-', bp2.correct, '| sdCount=', sdCount, '| sdWinner=', sdWinner);
      stopAllPedalSounds(); stopAllEarPianoNotes(); stopCadence();
+     if(battleAborted){ battleAborted=false; showFinalResult(bp1.correct===bp2.correct?null:(bp1.correct>bp2.correct?1:2)); return; }
      if(sdWinner){ const w=sdWinner; sdWinner=null; showFinalResult(w); return; }
      
      // SI HI HA EMPAT (FINS I TOT 0-0) I NO HEM ARREBAT A 2 MORTS SÚBITES, ACTIVEM-LA
@@ -1105,7 +1107,12 @@ function toggleManualPanel(){
   updateManualButtonsVisibility();
 }
 
-function activateManualNote(d){
+function releaseAllManualNotes(){
+  Array.from(activeManualNotes).forEach(dd=>deactivateManualNote(dd));
+}
+function activateManualNote(d, exclusive){
+  /* Si ve del tacte/ratolí (exclusive), garantim UN SOL botó il·luminat */
+  if(exclusive) Array.from(activeManualNotes).forEach(od=>{ if(od!==d) deactivateManualNote(od); });
   const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
   if(b){ if(b._glowTO){ clearTimeout(b._glowTO); b._glowTO=null; } b.classList.add('active'); }
   if(activeManualNotes.has(d)) return;
@@ -1561,42 +1568,47 @@ function findManualBtn(x, y) {
 }
 
 // 3. Listener global per a l'inici del toc (Tàctil i Ratolí)
+let manualTouchId=null, manualTouchBtn=null;
 function handleGlobalDown(e) {
-  // Només intervenim si el toc comença dins del panell manual
   const panel = $('manual-panel');
   if (!panel || !panel.contains(e.target)) return;
-
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  const t = e.touches ? e.touches[0] : null;
+  const x = t ? t.clientX : e.clientX;
+  const y = t ? t.clientY : e.clientY;
   const btn = findManualBtn(x, y);
-  
   if (btn) {
-    if (e.cancelable) e.preventDefault(); // Evita scroll i events de ratolí sintètics
-    const d = parseInt(btn.dataset.degree);
-    activateManualNote(d);
+    if (e.cancelable) e.preventDefault();
+    if (t) { manualTouchId = t.identifier; manualTouchBtn = btn; }
+    activateManualNote(parseInt(btn.dataset.degree), true);
   }
 }
 
-// 4. Listener global per al final del toc (Tàctil i Ratolí)
-function handleGlobalUp(e) {
-  // Apaguem TOTS els botons sempre que s'aixequi el dit/ratolí fora d'un botó,
-  // o intentem apagar el específic si el podem localitzar.
-  const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-  const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
-  const btn = findManualBtn(x, y);
-  
-   if (btn) {
-    const d = parseInt(btn.dataset.degree);
-    deactivateManualNote(d);
-    } else {
-    // Si no trobem el botó (ex. el dit ha lliscat), alliberem tot amb afterglow
-    Array.from(activeManualNotes).forEach(dd=>deactivateManualNote(dd));
+// 3b. Si el dit llisca fora del botó, l'apaguem (mai més d'un il·luminat)
+function handleGlobalMove(e) {
+  if (manualTouchId === null || !e.changedTouches) return;
+  let t = null;
+  for (const tc of e.changedTouches) { if (tc.identifier === manualTouchId) { t = tc; break; } }
+  if (!t) return;
+  if (findManualBtn(t.clientX, t.clientY) !== manualTouchBtn) {
+    releaseAllManualNotes();
+    manualTouchId = null; manualTouchBtn = null;
   }
+}
+
+// 4. Fi del toc: alliberem TOT (només hi pot haver un botó actiu)
+function handleGlobalUp(e) {
+  if (e.changedTouches) {
+    let mine = (manualTouchId === null);
+    for (const tc of e.changedTouches) { if (tc.identifier === manualTouchId) { mine = true; break; } }
+    if (!mine) return;
+  }
+  manualTouchId = null; manualTouchBtn = null;
+  releaseAllManualNotes();
 }
 
 // 5. Registre d'esdeveniments al DOCUMENT (no als botons)
-// Això garanteix que l'iPad sempre rebi el senyal de "fi de toc"
 document.addEventListener('touchstart', handleGlobalDown, { passive: false });
+document.addEventListener('touchmove', handleGlobalMove, { passive: true });
 document.addEventListener('touchend', handleGlobalUp, { passive: true });
 document.addEventListener('touchcancel', handleGlobalUp, { passive: true });
 
