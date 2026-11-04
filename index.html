@@ -2422,6 +2422,27 @@ function openFullscreenVideo(src) {
   }
 }
 
+/* ══ iPad: la ✕ es fa fantasma al cap d'1,2 s i reapareix 1,2 s en tocar ══ */
+(function () {
+  var m = $('modal'), btn = $('xPlayer');
+  if (!m || !btn) return;
+  var ghostTO = null;
+  function ghost() { btn.style.opacity = '0.15'; btn.style.pointerEvents = 'auto'; }
+  function flash() {
+    if (!m.classList.contains('on')) return;
+    if (ghostTO) clearTimeout(ghostTO);
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+    ghostTO = setTimeout(ghost, 1200);
+  }
+  var origShow = window.showCloseBtn;
+  window.showCloseBtn = function () { if (origShow) origShow(); if (isIOSDevice) flash(); };
+  btn.addEventListener('touchstart', flash, { passive: true });
+  var pl = $('player');
+  if (pl) pl.addEventListener('focus', function () { if (isIOSDevice) flash(); });
+  document.addEventListener('touchstart', function () { if (isIOSDevice && m.classList.contains('on')) flash(); }, { passive: true, capture: true });
+})();
+
 var videoHistoryGuard = false;
 function pushVideoState(){ if (!videoHistoryGuard) { videoHistoryGuard = true; try { history.pushState({ video: 1 }, ''); } catch (e) {} } }
 window.addEventListener('popstate', function () {
