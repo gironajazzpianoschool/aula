@@ -158,6 +158,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
   .acts button:hover:not(.done):not(.bookmarked), .now .acts button.ck:hover:not(.done) { border-color: var(--line); color: var(--mut); background: none; }
   .acts button.done:hover, .now .acts button.ck.done:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.10); }
   .acts button.bookmarked:hover { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
+  .blkcol button:hover:not(.on) { border-color: var(--line); color: var(--ink); background: var(--card); }
 }
 .acts button.bookmarked { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
 .acts button.nt.has-notes { border-color: var(--gold); color: var(--gold); font-weight: 700; }
@@ -2364,7 +2365,13 @@ function openFullscreenVideo(src) {
   var modal = $('modal');
   var isIOSDevice = isIOS();
 
-    pushVideoState();
+    if (isMobileDevice() && !isIOSDevice) {
+    /* Android: reproductor natiu de Drive en pestanya nova.
+       Controls, rotació i pantalla completa natius; ENRERE torna al web. */
+    window.open(currentVideoSrc, '_blank');
+    return;
+  }
+  pushVideoState();
   if (isMobileDevice()) {
     modal.classList.add('on');
     if (isIOSDevice) {
@@ -2372,23 +2379,11 @@ function openFullscreenVideo(src) {
       var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&authuser=0' : currentVideoSrc + '?authuser=0';
       player.src = finalSrc;
       player.classList.add('active');
-      if (overlay) {
-        overlay.classList.remove('hidden');
-        if (LS.lang === 'ca') {
-          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Quan desaparegui aquest missatge, clica sobre la pantalla per reproduir el vídeo.</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">Per sortir, clica la icona de sortida <span style="color:var(--gold);font-weight:700;font-size:16px;">↗</span> a la cantonada superior dreta.</div>';
-        } else {
-          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Cuando desaparezca este mensaje, toca la pantalla para reproducir el vídeo.</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">Para salir, toca el icono de salida <span style="color:var(--gold);font-weight:700;font-size:16px;">↗</span> en la esquina superior derecha.</div>';
-        }
-        setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
-      }
+      if (overlay) overlay.classList.add('hidden'); /* a l'iPad ja no cal missatge previ */
       document.documentElement.style.zoom = '1';
       var wrapEl = document.querySelector('.wrap');
       if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
       else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
-      /* Un cop dins de pantalla completa, forcem l'orientació horitzontal */
-      setTimeout(function () {
-        try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {}); } catch (e) {}
-      }, 350);
         } else {
       /* ── ANDROID: mòbil no-iOS ── Sense Fullscreen API: el botó ENRERE del sistema
          tanca el vídeo al primer toc (gràcies a pushState/popstate). ── */
@@ -2464,7 +2459,7 @@ $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal')
 document.addEventListener('fullscreenchange', function () {
   if (!document.fullscreenElement) {
     document.documentElement.style.zoom = '';
-    if (isMobileDevice()) return; /* en tablet/mòbil NO tanquem el modal si es perd el fullscreen */
+    if (isMobileDevice() && !isIOSDevice) return; /* només Android (que ja no usa fullscreen) ignora aquest event */
     $('player').src = '';
     $('modal').classList.remove('on');
     if (videoHistoryGuard) { videoHistoryGuard = false; try { history.back(); } catch (e) {} }
