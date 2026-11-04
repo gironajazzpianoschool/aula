@@ -133,6 +133,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .vid:hover { border-color: var(--gold); }
 .vid.nolink { background: #10131a; border-style: dashed; opacity: .6; filter: grayscale(.6); }
 .vid.nolink .vid-number { background: var(--danger); color: #fff; box-shadow: none; }
+.donut.dim { opacity: .35; filter: grayscale(.9); }
 .stagetag { color: var(--mut); font-size: var(--fs-xs); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
 .vr { display: flex; gap: 10px; align-items: center; position: relative; }
 .vr .play { width: 32px; height: 32px; flex: none; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); background: none; cursor: pointer; font-size: 12px; transition: all .2s; }
@@ -1894,7 +1895,7 @@ if (playBtn) {
     var blockHasLinks = all.some(function (x) { return vidBlock(x) === b; });
     var p = !blockHasLinks ? 0 : (list.length ? prog(list).p : 100);
     var tip = blockHasLinks ? tipB : tipB + ' · ' + (LS.lang === 'ca' ? 'Encara no hi ha cap vídeo publicat en aquest bloc' : 'Todavía no hay ningún vídeo publicado en este bloque');
-    h += '<div class="donut" title="' + tip + '">' + donut(p, BC[b]) + '<div class="lbl">' + t().blocks[b] + '</div></div>';
+    h += '<div class="donut' + (blockHasLinks ? '' : ' dim') + '" title="' + tip + '">' + donut(p, BC[b]) + '<div class="lbl">' + t().blocks[b] + '</div></div>';
   });
   var pt = imp.length ? prog(imp).p : 0;
   h += '<div class="donut tot" title="' + tipT + '">' + donut(pt, '#e8b04b') + '<div class="lbl">' + t().total + '</div></div>';
@@ -1949,11 +1950,11 @@ function renderFree() {
       if (b === freeBlock) btn.className = 'on';
       btn.onclick = function () { freeBlock = b; render(); };
       if (b === 'b') {
-        var n = getBookmarks().length;
+        var n = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); }).length;
         btn.title = LS.lang === 'ca' ? 'Vídeos que has marcat per repassar' : 'Vídeos que has marcado para repasar';
         btn.innerHTML = '<span class="bname">' + t().blocks.b + '</span><span class="bmini"><span class="bico">🔖</span><span class="bcount">' + n + '</span></span>';
       } else {
-        var vidsInBlock = all.filter(function (x) { return vidBlock(x) === b; });
+        var vidsInBlock = all.filter(function (x) { return vidBlock(x) === b && !!driveSrc(x.v, x.id); });
         var p = vidsInBlock.length ? prog(vidsInBlock).p : 0;
         btn.title = LS.lang === 'ca' ? 'Percentatge de tot el material d\'aquest bloc completat (importants i opcionals)' : 'Porcentaje de todo el material de este bloque completado (importantes y opcionales)';
         var miniChart = '<svg width="22" height="22" viewBox="0 0 24 24" style="flex:none"><circle cx="12" cy="12" r="11" fill="#242a35"/>' + pieSlice(12, 12, 11, p, (p === 100 ? '#39d98a' : BC[b])) + '</svg>';
@@ -1964,7 +1965,7 @@ function renderFree() {
     fv.appendChild(col);
   }
   if (freeBlock === 'b') {
-    var bm = getBookmarks();
+    var bm = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); });
     var gridB = document.createElement('div');
     gridB.className = 'vgrid';
     if (!bm.length) {
