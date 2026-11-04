@@ -84,7 +84,7 @@ let activeManualNotes=new Set(), numHeld={}, pendingAcc=0, pendingAccTO=null;
 let emotionTextEl=null, tonicBtnEl=null, tonicTipEl=null, tonicVolEl=null;
 let tonicPedalOscs=[], tonicPedalGains=[], tonicPedalMasterGain=null, tonicPedalFilter=null;
 let provaTimers=[], provaSustain=true, provaPlaying=false, provaBtnActive=null;
-
+let resultMessageTimeout=null;
 const $ = id => document.getElementById(id);
 function hideSuddenBanner(){ const s=document.getElementById('v10-sudden'); if(s){ s.classList.remove('visible'); s.style.display='none'; } }
 const startScreen=$('start-screen'), midiMode=$('midi-mode'), earMode=$('ear-mode'), multiTabWarning=$('multi-tab-warning');
@@ -313,7 +313,9 @@ function cleanupOnExit(){
   [resultModal,pauseModal,infoModal,battleModal,battleResultModal,hardcoreWarning].forEach(m=>{ if(m) m.classList.remove('visible'); });
   const im=$('instructions-modal'); if(im) im.classList.remove('visible');
   if(manualPanel){ manualPanel.classList.remove('visible','ear-position'); manualPanel.style.display='none'; }
-  manualPanelVisible=false;
+    manualPanelVisible=false;
+  if(resultMessageTimeout){ clearTimeout(resultMessageTimeout); resultMessageTimeout=null; }
+  if(manualPanel){ manualPanel.style.pointerEvents=''; }
   if($('btn-toggle-manual')) $('btn-toggle-manual').classList.remove('active');
   if($('btn-toggle-manual-ear')) $('btn-toggle-manual-ear').classList.remove('active');
   clearAllManualNotes();
@@ -446,6 +448,7 @@ function handleMIDIMessage(event){
       else if(command===0x80||(command===0x90&&velocity===0)){ if(internalPianoEnabled){ if(sustainPedalActive) heldByPedal.add(note); else stopEarPianoNote(note); } }
       return;
     }
+    if(earModeType==='practice'&&earUserAlreadyAnswered&&command===0x90&&velocity>0){ return; } /* teclat bloquejat fins a la següent pregunta */
     if(command===0x90&&velocity>0&&!earUserAlreadyAnswered){ testExploringNoImage=false; if(testSustainTimeout){clearTimeout(testSustainTimeout);testSustainTimeout=null;} }
     if(earDifficulty==='easy'){
       if(command===0x90&&velocity>0){
@@ -462,10 +465,12 @@ function handleMIDIMessage(event){
           const advMs=battleMode?BATTLE_ADVANCE_MS:(TEST_IMAGE_MS+TEST_EXPLORE_MS);
           testSustainTimeout=setTimeout(()=>{ testSustainTimeout=null; hideProposedAnswer(); stopEarPianoNote(note); testExploringNoImage=true; },hideMs);
           advanceTimeout=setTimeout(()=>{ if(earTrainingActive) advanceToNextNote(); },advMs);
-        } else if(earModeType==='practice'&&inAnswerPhase){
+        } else if(earModeType==='practice'&&inAnswerPhase&&!earUserAlreadyAnswered){
+          earUserAlreadyAnswered=true;
           const ok=pc===earCurrentTargetPitchClass;
-          if(ok){ showFeedbackCorrect(); if(advanceTimeout) clearTimeout(advanceTimeout); advanceTimeout=setTimeout(()=>{ if(earTrainingActive) advanceToNextNote(); },1200); }
-          else showFeedbackWrong();
+          if(ok){ showFeedbackCorrect(); } else { showFeedbackWrong(); }
+          if(advanceTimeout) clearTimeout(advanceTimeout);
+          advanceTimeout=setTimeout(()=>{ if(earTrainingActive) advanceToNextNote(); },1200);
         }
       } else if(command===0x80||(command===0x90&&velocity===0)){
         if(internalPianoEnabled&&!testSustainTimeout) stopEarPianoNote(note);
@@ -550,6 +555,7 @@ function generateEarSequence(){
 }
 function startEarTraining(){
   getSharedCtx(); earTrainingActive=true; earPanel.classList.add('running');
+  clearAllManualNotes(); if(manualPanel) manualPanel.style.pointerEvents='';
    // FORÇAR DELAY A 6 SEGONS PER DEFECTE
    if($('ear-delay-input-full') && $('ear-delay-input-full').value === '4') {
        $('ear-delay-input-full').value = '6';
@@ -600,7 +606,16 @@ function startMainTimer(){
         if(earTimeRemaining<=0){
           earTimeRemaining=0;
           if(!sdActive) $('ear-timer-full').textContent=formatTime(0);
-          if(battleMode&&bp1.total!==bp2.total){ battleLastQ=((inAnswerPhase&&!earUserAlreadyAnswered)||cadenceTimeouts.length>0)?2:1; clearInterval(earTimer); earTimer=null; }
+          if(battleMode&&bp1.total!==bp2.total){
+            const inFlight=((inAnswerPhase&&!earUserAlreadyAnswered)||cadenceTimeouts.length>0);
+            if(inFlight){ battleLastQ=2; }
+            else{
+              const nextIsP1=(battleCurrentPlayer===1);
+              const nextTotal=nextIsP1?bp1.total:bp2.total, otherTotal=nextIsP1?bp2.total:bp1.total;
+              battleLastQ=(nextTotal<otherTotal)?1:2;
+            }
+            clearInterval(earTimer); earTimer=null;
+          }
           else stopEarTraining(true);
         } else if(!sdActive) $('ear-timer-full').textContent=formatTime(earTimeRemaining);
       }
@@ -712,7 +727,7 @@ function stopEarTraining(fadeOut=false){
        showBattleResultModal(); 
      },600);
    } else if(earModeType==='test'&&earUserHasPlayed){
-    updateAccuracyDisplay(); accuracyPanel.classList.add('visible'); setTimeout(showResultMessage,500);
+    updateAccuracyDisplay(); accuracyPanel.classList.add('visible'); resultMessageTimeout=setTimeout(()=>{ resultMessageTimeout=null; showResultMessage(); },500);
   } else accuracyPanel.classList.remove('visible');
 }
 function playCadenceWithPedalSound(cb){
@@ -748,6 +763,7 @@ function resumeEarTraining(){
 function abortEarTraining(){ if(!isPaused) return; isPaused=false; pauseModal.classList.remove('visible'); battleAborted=true; stopEarTraining(false); }
 function showResultMessage(){
   if(earModeType!=='test'||!earUserHasPlayed) return;
+  if(!earMode.classList.contains('active')) return; /* mai fora de l'Ear Training */
   const p=earTotalNotes>0?Math.round(earCorrectNotes/earTotalNotes*100):0;
   resultPercentage.textContent=`${p}%`;
   resultDetails.textContent=`${earCorrectNotes} / ${earTotalNotes} ${t('word_notes')}`;
@@ -1584,8 +1600,11 @@ function handleGlobalDown(e) {
   const x = t ? t.clientX : e.clientX;
   const y = t ? t.clientY : e.clientY;
   const btn = findManualBtn(x, y);
-  if (btn) {
+    if (btn) {
     if (e.cancelable) e.preventDefault();
+    const nowTs=performance.now();
+    if (btn._lastDown && nowTs-btn._lastDown<120) return; /* anti-rebot tàctil */
+    btn._lastDown=nowTs;
     if (t) { manualTouchId = t.identifier; manualTouchBtn = btn; }
     activateManualNote(parseInt(btn.dataset.degree), true);
   }
@@ -1916,6 +1935,7 @@ if($('ear-delay-input-full')) $('ear-delay-input-full').value = '6';
         manualPanelVisible=false;
         clearAllManualNotes();
       } else if(inEar || inMidi){
+        panel.style.pointerEvents='';
         panel.classList.add('visible'); 
         panel.style.display='block';
         panel.classList.toggle('ear-position', inEar);
@@ -1923,6 +1943,22 @@ if($('ear-delay-input-full')) $('ear-delay-input-full').value = '6';
         updateManualButtonsVisibility(); // 👈 AFEGIT: Força que es dibuixin els botons amb números
       }
     }
+
+    // 2.0b Slider de volum del drone accessible dins del panell manual en tablet
+    (function(){
+      const panel=$('manual-panel'); if(!panel) return;
+      if(document.getElementById('tablet-drone-vol')) return;
+      const wrapDiv=document.createElement('div');
+      wrapDiv.id='tablet-drone-vol';
+      wrapDiv.style.cssText='display:flex;align-items:center;gap:8px;margin-top:10px;padding:0 6px;';
+      wrapDiv.innerHTML='<span style="font-size:11px;color:#7ff0b4;font-weight:700;white-space:nowrap;">🎵 VOL</span>';
+      const sl=document.createElement('input');
+      sl.type='range'; sl.min='0'; sl.max='100'; sl.step='5'; sl.value=Math.round(pedalVolume/0.12*100);
+      sl.style.cssText='flex:1;accent-color:#39d98a;';
+      sl.addEventListener('input',e=>updatePedalVolumeDirect(parseInt(e.target.value)));
+      wrapDiv.appendChild(sl);
+      panel.appendChild(wrapDiv);
+    })();
 
     // 2.1 Recuperar pantalla completa quan es tanca el teclat virtual
     document.addEventListener('focusout', () => {
