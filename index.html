@@ -2443,6 +2443,34 @@ function openFullscreenVideo(src) {
   document.addEventListener('touchstart', function () { if (isIOSDevice && m.classList.contains('on')) flash(); }, { passive: true, capture: true });
 })();
 
+/* ══ TÀCTIL: cap :hover enganxós enlloc (els hover només s'apliquen amb ratolí) ══ */
+(function () {
+  if (!window.matchMedia || !matchMedia('(hover: none)').matches) return;
+  try {
+    var wrap = [];
+    for (var si = 0; si < document.styleSheets.length; si++) {
+      var sheet = document.styleSheets[si];
+      var rules;
+      try { rules = sheet.cssRules; } catch (e) { continue; }
+      if (!rules) continue;
+      var del = [];
+      for (var ri = 0; ri < rules.length; ri++) {
+        var r = rules[ri];
+        if (r.type === 1 && r.selectorText && r.selectorText.indexOf(':hover') !== -1) {
+          wrap.push(r.selectorText + ' { ' + r.style.cssText + ' }');
+          del.push(ri);
+        }
+      }
+      for (var di = del.length - 1; di >= 0; di--) { try { sheet.deleteRule(del[di]); } catch (e) {} }
+    }
+    if (wrap.length) {
+      var st = document.createElement('style');
+      st.textContent = '@media (hover: hover) { ' + wrap.join(' ') + ' }';
+      document.head.appendChild(st);
+    }
+  } catch (e) {}
+})();
+
 var videoHistoryGuard = false;
 function pushVideoState(){ if (!videoHistoryGuard) { videoHistoryGuard = true; try { history.pushState({ video: 1 }, ''); } catch (e) {} } }
 window.addEventListener('popstate', function () {
