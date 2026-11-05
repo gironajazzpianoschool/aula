@@ -477,7 +477,7 @@ body.editmode .vid { padding-left: 34px; }
   /* FAQ amb fons correcte (NOMÉS en mode fosc) */
   html[data-theme="dark"] #mInfo,
   html:not([data-theme="light"]) #mInfo {
-    background: linear-gradient(135deg, rgba(232,176,75,0.15), rgba(232,176,75,0.05)) !important;
+    background: linear-gradient(135deg, rgba(232,176,75,0.25), rgba(232,176,75,0.10)) !important;
     color: #f2f2f2 !important;
     border: 1.5px solid #2a2f3a !important;
   }
@@ -1006,8 +1006,9 @@ html[data-theme="light"] .now .acts button.ck[style*="border-color"] {
     margin: 0 !important;
     line-height: 1 !important;
   }
-  /* Títol més petit al mòbil */
-  html[data-theme="light"] .hbrand h1 {
+  /* Títol més petit al mòbil (també en mode fosc) */
+  html[data-theme="light"] .hbrand h1,
+  html:not([data-theme="light"]) .hbrand h1 {
     font-size: 18px !important;
   }
 }
