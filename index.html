@@ -571,571 +571,125 @@ body.editmode .vid { padding-left: 34px; }
   .userblock { width: 100%; justify-content: space-between; }
   #who { max-width: 65%; }
 }
+
 /* ══════════════════════════════════════════════════════════════
-   TEMA ÀMBAR/SEPIA OPCIONAL (ACCESSIBILITAT)
+   TEMA CLAR (ÀMBAR/SEPIA) — BLOC NET ÚNIC
    ══════════════════════════════════════════════════════════════ */
 html[data-theme="light"] {
-  --bg: #e2d4b0;       /* Fons general càlid i llegible */
-  --card: #f2e6c8;     /* Targetes una mica més clares per contrastar */
-  --line: #c9a85a;     /* Vores àmbar */
-  --ink: #1a1408;      /* Text principal molt fosc (quasi negre) per màxim contrast */
-  --mut: #5a4830;      /* Text secundari marró fosc */
-  --gold: #8a5300;     /* Daurat fosc per a accents */
-  --ok: #0d6b41;
-  --danger: #b0003a;
-  --purple: #5f2bab;
-  --cyan: #0a5f6e;
+  --bg: #e2d4b0; --card: #f2e6c8; --line: #c9a85a;
+  --ink: #1a1408; --mut: #5a4830; --gold: #8a5300;
+  --ok: #0d6b41; --danger: #b0003a;
 }
 html[data-theme="light"] body { background: var(--bg); }
 html[data-theme="light"] * { text-shadow: none !important; }
 
-/* === TÍTOL DE L'ESCOLA: degradat subtil marró-daurat fosc (llegible sobre crema) === */
+/* Marca d'aigua més suau sobre fons crema */
+html[data-theme="light"] #wm { opacity: .12; }
+html[data-theme="light"] #wm::after { background: radial-gradient(ellipse at center, rgba(226,212,176,0) 0%, rgba(226,212,176,.85) 78%); }
+
+/* Títol de l'escola: degradat fosc llegible */
 html[data-theme="light"] .hbrand h1 {
-  background: linear-gradient(90deg, #2a1a08 0%, #6b3f00 55%, #8a5300 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.18)) !important;
+  background: linear-gradient(90deg, #2a1a08 0%, #6b3f00 55%, #8a5300 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.18));
+}
+@media (max-width: 767px) {
+  .hbrand h1 { font-size: 18px !important; }
 }
 
-/* === CONTENIDORS PRINCIPALS: fons clar === */
+/* Contenidors amb color dur codificat */
 html[data-theme="light"] .vid,
-html[data-theme="light"] .blkhead,
-html[data-theme="light"] .lvls,
-html[data-theme="light"] .blkcol,
-html[data-theme="light"] .wipbox,
-html[data-theme="light"] .faq-item,
-html[data-theme="light"] .faq-answer,
-html[data-theme="light"] .lbox,
-html[data-theme="light"] .aselbox {
-  background: var(--card) !important;
-  border-color: var(--line) !important;
-  color: var(--ink) !important;
+html[data-theme="light"] .note,
+html[data-theme="light"] .donut { background: var(--card); }
+html[data-theme="light"] .ritem { background: var(--bg); }
+html[data-theme="light"] .donut svg circle:first-child { stroke: #c9b896; }
+html[data-theme="light"] .donut svg text { fill: var(--ink); }
+html[data-theme="light"] .blkcol button .bmini svg circle { fill: #c9b896; }
+
+/* Elements daurats foscos → text crema per contrast */
+html[data-theme="light"] .appcard button,
+html[data-theme="light"] .save-note-btn,
+html[data-theme="light"] .lbox .go:not(.secondary),
+html[data-theme="light"] .aselbox .actions .go:not(.secondary),
+html[data-theme="light"] .vid-number { color: #f2e6c8; }
+
+/* Fletxa del selector de nivell en daurat fosc */
+html[data-theme="light"] .lvls select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a5300' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
-/* === TARGETES DE VÍDEO: text i botons === */
-html[data-theme="light"] .vid .vid-title {
-  color: var(--ink) !important;
-  font-weight: 700;
-}
-html[data-theme="light"] .vid .vid-desc {
-  color: var(--mut) !important;
-}
-html[data-theme="light"] .vid button {
-  background: var(--card) !important;
-  border-color: var(--line) !important;
-  color: var(--ink) !important;
-}
-html[data-theme="light"] .vid .star-icon {
-  color: var(--gold) !important;
-}
+/* Botons de navegació (inclòs FAQ): crema; actiu = daurat fosc */
+html[data-theme="light"] .modes button { background: var(--card); color: var(--ink); border-color: var(--line); }
+html[data-theme="light"] .modes button:hover { border-color: var(--gold); color: var(--gold); background: var(--card); }
+html[data-theme="light"] .modes button.on { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 800; }
 
-/* === BOTONS DE NAVEGACIÓ: enfosquir quan està actiu === */
-html[data-theme="light"] .modes button {
-  background: var(--card) !important;
-  color: var(--ink) !important;
-  border-color: var(--line) !important;
-}
-/* Quan NO està actiu: il·luminat/normal */
-html[data-theme="light"] .modes button:not(.on) {
-  background: var(--card) !important;
-  color: var(--ink) !important;
-  border-color: var(--line) !important;
-}
-html[data-theme="light"] .modes button:not(.on):hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(232,176,75,0.1) !important;
-}
-/* Quan ESTÀ actiu (.on): enfosquit/apagat */
-html[data-theme="light"] .modes button.on {
-  background: rgba(0,0,0,0.15) !important;
-  color: var(--mut) !important;
-  border-color: var(--mut) !important;
-  opacity: 0.7;
-}
-
-/* === BOTÓ FAQ: mateix comportament que l'interrogant === */
-html[data-theme="light"] #mInfo {
-  background: var(--card) !important;
-  color: var(--ink) !important;
-  border: 1.5px solid var(--line) !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-}
-html[data-theme="light"] #mInfo:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
-}
-/* Quan ESTÀ actiu (.on): enfosquit */
-html[data-theme="light"] #mInfo.on {
-  background: rgba(0,0,0,0.15) !important;
-  color: var(--mut) !important;
-  border-color: var(--mut) !important;
-  opacity: 0.7;
-}
-
-/* Anul·lar COMPLETAMENT la regla del media query de PC per al FAQ */
-@media (min-width: 768px) {
-  html[data-theme="light"] #mInfo,
-  html[data-theme="light"] #mInfo:hover,
-  html[data-theme="light"] #mInfo.on,
-  html[data-theme="light"] #mInfo:active,
-  html[data-theme="light"] #mInfo:focus {
-    background: var(--card) !important;
-    color: var(--ink) !important;
-    border: 1.5px solid var(--line) !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-    opacity: 1 !important;
-    background-image: none !important; /* Eliminar qualsevol gradient */
-  }
-  html[data-theme="light"] #mInfo:hover {
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
-    background-image: none !important;
-  }
-  html[data-theme="light"] #mInfo.on {
-    background: rgba(0,0,0,0.15) !important;
-    color: var(--mut) !important;
-    border-color: var(--mut) !important;
-    opacity: 0.7 !important;
-    background-image: none !important;
-  }
-}
-
-/* === BOTÓ D'AJUDA (INTERROGANT): mateix comportament que el FAQ === */
+/* Botó d'ajuda: targeta com les altres; icona "?" via SVG */
 html[data-theme="light"] #mHelp {
   background: var(--card) !important;
   border: 1.5px solid var(--line) !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
   border-radius: var(--rad) !important;
-  color: var(--mut) !important; /* Color apagat per defecte */
+  box-shadow: none !important;
 }
-/* Amagar la imatge en tema clar */
-html[data-theme="light"] #mHelp img {
-  display: none !important;
-}
-/* Mostrar interrogant com a text (no SVG) per poder canviar el color */
-html[data-theme="light"] #mHelp::before {
-  content: '?';
-  font-size: 20px;
-  font-weight: 800;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--mut) !important; /* Apagat per defecte */
-  display: block;
-  line-height: 1;
-}
-/* Quan està actiu (.on), destacar en daurat */
-html[data-theme="light"] #mHelp.on::before {
-  color: var(--gold) !important;
-}
-html[data-theme="light"] #mHelp.on {
-  border-color: var(--gold) !important;
-  background: linear-gradient(135deg, rgba(232,176,75,0.15), rgba(232,176,75,0.05)) !important;
-}
-/* Hover: sempre que passi el ratolí, destacar una mica */
-html[data-theme="light"] #mHelp:hover {
-  border-color: var(--gold) !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
-}
-html[data-theme="light"] #mHelp:hover::before {
-  color: var(--gold) !important;
-}
-/* Amagar la imatge en tema clar */
-html[data-theme="light"] #mHelp img {
-  display: none !important;
-}
-/* Mostrar interrogant SVG en tema clar */
+html[data-theme="light"] #mHelp img { display: none !important; }
 html[data-theme="light"] #mHelp::before {
   content: '';
-  display: block;
-  width: 24px;
-  height: 24px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1408' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  display: block; width: 22px; height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1408' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E") center/contain no-repeat;
 }
+html[data-theme="light"] #mHelp:hover { border-color: var(--gold) !important; }
 html[data-theme="light"] #mHelp:hover::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a5300' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
 }
-html[data-theme="light"] #mHelp:hover {
-  border-color: var(--gold) !important;
-  background: var(--card) !important;
-}
-
-/* === DONUTS: anular els colors inline del SVG generat per JS === */
-html[data-theme="light"] .donut {
-  background: var(--card) !important;
-}
-/* El primer cercle és el fons (abans #242a35, ara gris-beix suau) */
-html[data-theme="light"] .donut svg circle:first-child {
-  stroke: #c9b896 !important;
-  fill: none !important;
-}
-/* El segon cercle és el progrés */
-html[data-theme="light"] .donut svg circle:last-child {
-  stroke: var(--gold) !important;
-  fill: none !important;
-}
-/* El text del percentatge (abans fill="#f2f2f2") */
-html[data-theme="light"] .donut svg text {
-  fill: var(--ink) !important;
-  font-weight: 700 !important;
-  font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 10px !important;
-}
-html[data-theme="light"] .donut .lbl {
-  color: var(--ink) !important;
-  font-weight: 600;
-  font-family: 'Inter', system-ui, sans-serif !important;
-}
-/* === LLISTA DE REPÀS: fons clar i text llegible === */
-html[data-theme="light"] .reviewbox {
-  background: var(--card) !important;
-  border-color: var(--gold) !important;
-}
-html[data-theme="light"] .reviewbox h3 {
-  color: var(--gold) !important;
-}
-html[data-theme="light"] .ritem {
-  background: var(--bg) !important;
-  border-color: var(--line) !important;
-}
-html[data-theme="light"] .ritem .rtitle {
-  color: var(--ink) !important;
-}
-html[data-theme="light"] .ritem .rblk {
-  color: var(--mut) !important;
-}
-html[data-theme="light"] .ritem button {
-  background: var(--card) !important;
-  border-color: var(--line) !important;
-  color: var(--ink) !important;
-}
-html[data-theme="light"] .ritem button:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-
-/* === BOTONS DE BLOC A NAVEGACIÓ LLIURE === */
-html[data-theme="light"] .blkcol button {
-  background: var(--card) !important;
-  border-color: var(--line) !important;
-  color: var(--ink) !important;
-}
-html[data-theme="light"] .blkcol button:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-html[data-theme="light"] .blkcol button.on {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(232,176,75,0.1) !important;
-}
-html[data-theme="light"] .blkcol button .bmini .bpct {
-  color: var(--mut) !important;
-}
-/* === ELIMINAR FRANGES HORITZONTALS QUE TAQUEN EL LOGO === */
-html[data-theme="light"] .blkhead,
-html[data-theme="light"] .vgrid::before,
-html[data-theme="light"] .vgrid::after {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* === BOTÓ "I" D'INFORMACIÓ: fer-lo transparent === */
-html[data-theme="light"] #mInfo,
-html[data-theme="light"] #mInfo:hover,
-html[data-theme="light"] #mInfo.on {
-  background: transparent !important;
-  border: 1.5px solid var(--line) !important;
-  color: var(--ink) !important;
-  box-shadow: none !important;
-}
-html[data-theme="light"] #mInfo:hover,
-html[data-theme="light"] #mInfo.on {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-
-/* Anul·lar la regla del media query de PC que forçava el groc */
+html[data-theme="light"] #mHelp.on { border-color: var(--gold) !important; background: rgba(138,83,0,.12) !important; }
 @media (min-width: 768px) {
-  html[data-theme="light"] #mInfo {
-    background: transparent !important;
-    color: var(--ink) !important;
-    border: 1.5px solid var(--line) !important;
-  }
-  html[data-theme="light"] #mInfo:hover,
-  html[data-theme="light"] #mInfo.on {
-    background: transparent !important;
-    color: var(--gold) !important;
-    border-color: var(--gold) !important;
-  }
-}
-
-/* === MILLORAR CONTRAST DELS BOTONS SELECCIONATS === */
-html[data-theme="light"] .modes button.on {
-  background: var(--gold) !important;
-  color: var(--bg) !important;
-  border-color: var(--gold) !important;
-  font-weight: 800 !important;
-}
-html[data-theme="light"] .blkcol button.on {
-  background: var(--gold) !important;
-  color: var(--bg) !important;
-  border-color: var(--gold) !important;
-  font-weight: 800 !important;
-}
-html[data-theme="light"] .blkcol button.on .bname {
-  color: var(--bg) !important;
-}
-html[data-theme="light"] .blkcol button.on .bmini .bpct {
-  color: var(--bg) !important;
-}
-/* === ELIMINAR TOTES LES FRANGES HORITZONTALS QUE TAQUEN EL LOGO === */
-html[data-theme="light"] .lvls,
-html[data-theme="light"] .blkcol,
-html[data-theme="light"] .blkhead,
-html[data-theme="light"] .vgrid,
-html[data-theme="light"] main > div {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* === BOTÓ "I" D'INFORMACIÓ: eliminar el groc brillant === */
-html[data-theme="light"] #mInfo,
-html[data-theme="light"] #mInfo:hover,
-html[data-theme="light"] #mInfo.on {
-  background: var(--bg) !important;
-  border: 1.5px solid var(--line) !important;
-  color: var(--ink) !important;
-  box-shadow: none !important;
-}
-html[data-theme="light"] #mInfo:hover,
-html[data-theme="light"] #mInfo.on {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-
-/* Anul·lar específicament la regla del media query de PC */
-@media (min-width: 768px) {
-  html[data-theme="light"] #mInfo {
-    background: var(--bg) !important;
-    color: var(--ink) !important;
-    border: 1.5px solid var(--line) !important;
-  }
-  html[data-theme="light"] #mInfo:hover,
-  html[data-theme="light"] #mInfo.on {
-    background: var(--bg) !important;
-    color: var(--gold) !important;
-    border-color: var(--gold) !important;
-  }
-}
-/* === ANUL·LAR LES REGLAS DE MEDIA QUERY QUE FORÇAVEN FOSC === */
-@media (min-width: 768px) {
-  html[data-theme="light"] #mInfo {
-    background: var(--bg) !important;
-    color: var(--ink) !important;
-    border: 1.5px solid var(--line) !important;
-    box-shadow: none !important;
-  }
-  html[data-theme="light"] #mInfo:hover,
-  html[data-theme="light"] #mInfo.on {
-    background: var(--card) !important;
-    color: var(--gold) !important;
-    border-color: var(--gold) !important;
-  }
-  /* Forçar que la imatge del botó "i" s'adapti al tema clar */
-  html[data-theme="light"] #mHelp img {
-    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2891%) hue-rotate(358deg) brightness(93%) contrast(93%) !important;
-  }
-}
-/* === BOTÓ D'ADJUNTS: fons sòlid i ben visible en mode clar === */
-html[data-theme="light"] .adjb {
-  background: var(--card) !important;
-  border: 1px solid var(--line) !important;
-  color: var(--ink) !important;
-  opacity: 1 !important;
-}
-html[data-theme="light"] .adjb:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-/* === FAQ: forçar fons clar (aquesta regla guanya perquè és l'última) === */
-html[data-theme="light"] #mInfo { background: var(--card) !important; background-image: none !important; }
-/* ══ CORRECCIONS MODE CLAR ══ */
-
-/* 1. Tooltip del play: fons clar en mode clar */
-html[data-theme="light"] .now .vr[data-tip]::after {
-  background: var(--card) !important;
-  color: var(--ink) !important;
-  border-color: var(--line) !important;
-}
-html[data-theme="light"] .now .vr[data-tip]::before {
-  border-top-color: var(--line) !important;
-}
-
-/* 2. Color del play en Seguiment Continuat: daurat en lloc de verd */
-html[data-theme="light"] .now .play {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  animation-name: playGlowGold !important;
-}
-@keyframes playGlowGold {
-  0%   { box-shadow: 0 0 0 0 rgba(138,83,0,0.5); background: rgba(138,83,0,0.08); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(138,83,0,0), 0 0 14px 3px rgba(138,83,0,0.4); background: rgba(138,83,0,0.2); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(138,83,0,0); background: rgba(138,83,0,0.05); transform: scale(1); }
-}
-
-/* 3. Flash verd del botó "FET I CONTINUAR": daurat en mode clar */
-html[data-theme="light"] .now .acts button.ck[style*="border-color"] {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(138,83,0,0.15) !important;
-}
-
-/* 4. Interrogant centrat al mòbil */
-@media (max-width: 767px) {
   html[data-theme="light"] #mHelp {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  html[data-theme="light"] #mHelp::before {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    line-height: 1 !important;
-  }
-  /* Títol més petit al mòbil (també en mode fosc) */
-  html[data-theme="light"] .hbrand h1,
-  html:not([data-theme="light"]) .hbrand h1 {
-    font-size: 18px !important;
-  }
-}
-/* ══ CORRECCIONS MODE FOSC: fons dels botons de la capçalera ══ */
-
-/* Botó d'informació (i): forçar fons del color de la capçalera */
-html:not([data-theme="light"]) #mHelp {
-  background: var(--bg) !important;
-  border-radius: var(--rad) !important;
-}
-html:not([data-theme="light"]) #mHelp img {
-  /* Si encara hi ha la imatge, fer-la rodona i adaptar-la */
-  border-radius: 50% !important;
-  background: transparent !important;
-}
-
-/* Botó interrogant al mòbil: mateix fons que FAQ */
-@media (max-width: 767px) {
-  html:not([data-theme="light"]) #mHelp {
-    background: var(--card) !important;
-    border: 1px solid var(--line) !important;
-  }
-  /* Botó d'idioma al mòbil: mateix fons que FAQ */
-  html:not([data-theme="light"]) #langToggle {
-    background: var(--card) !important;
-    border: 1px solid var(--line) !important;
-  }
-}
-/* ══ PC: amagar el SVG del JS i mostrar només la imatge ══ */
-@media (min-width: 768px) {
-  #mHelp svg {
-    display: none !important;
-  }
-}
-/* ══ Smartphone: amagar el SVG blau i mostrar només el ? vermell ══ */
-@media (max-width: 767px) {
-  #mHelp svg {
-    display: none !important;
-  }
-}
-/* ══ TABLET/PC MODE FOSC: botó "i" amb estil FAQ ══ */
-@media (min-width: 768px) {
-  html:not([data-theme="light"]) #mHelp {
-    background: var(--card) !important;
-    border: 1.5px solid var(--line) !important;
-    color: var(--ink) !important;
-    border-radius: var(--rad) !important;
-    min-width: 52px !important;
-    height: var(--hbtn) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-weight: 700 !important;
-    font-size: var(--fs-btn) !important;
-  }
-  html:not([data-theme="light"]) #mHelp::before {
-    content: '?';
-    font-size: 22px;
-    font-weight: 900;
-    font-family: 'Inter', system-ui, sans-serif;
-    color: var(--ink) !important;
-  }
-  html:not([data-theme="light"]) #mHelp:hover::before {
-    color: var(--gold) !important;
-  }
-  html:not([data-theme="light"]) #mHelp.on::before {
-    color: var(--mut) !important;
-  }
-  html:not([data-theme="light"]) #mHelp:hover {
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-  }
-  html:not([data-theme="light"]) #mHelp.on {
-    background: rgba(255,255,255,0.1) !important;
-    color: var(--mut) !important;
-    border-color: var(--mut) !important;
-    opacity: 0.7;
-  }
-  html:not([data-theme="light"]) #mHelp.on::before {
-    color: var(--mut) !important;
+    width: var(--hbtn) !important; height: var(--hbtn) !important;
+    margin: 0 !important; display: inline-flex !important;
+    align-items: center; justify-content: center;
   }
 }
 
-/* ══ MODE CLAR: botons dels vídeos amb contrast visible ══ */
-/* Botó "Fet i continuar" quan s'acaba de clicar (flash) */
-html[data-theme="light"] .vid .acts button.ck[style*="border-color"],
-html[data-theme="light"] .now .acts button.ck[style*="border-color"] {
-  border-color: #6b3f00 !important;
-  color: #fff !important;
-  background: #8a5300 !important;
-  font-weight: 700 !important;
+/* Botons d'acció dels vídeos */
+html[data-theme="light"] .acts button { background: var(--card); border-color: var(--line); color: var(--ink); }
+html[data-theme="light"] .acts button:hover { border-color: var(--gold); color: var(--gold); }
+html[data-theme="light"] .acts button.done,
+html[data-theme="light"] .acts button.done:disabled { background: var(--ok) !important; border-color: var(--ok) !important; color: #fff !important; opacity: 1; }
+html[data-theme="light"] .acts button.bk.bookmarked { background: #0d9488 !important; border-color: #0d9488 !important; color: #fff !important; }
+html[data-theme="light"] .acts button.nt.has-notes,
+html[data-theme="light"] .acts button.nt.active { border-color: var(--gold); color: var(--gold); background: rgba(138,83,0,.12); }
+html[data-theme="light"] .acts button:disabled { background: var(--card); color: var(--mut); }
+
+/* Botó "Més tard" actiu (ambdós temes): blau il·luminat */
+.acts button.skip.skipped { background: #4cc9f0 !important; border-color: #4cc9f0 !important; color: #0a2e38 !important; font-weight: 700; box-shadow: 0 0 10px rgba(76,201,240,.35); }
+
+/* Play del Seguiment Continuat: daurat en clar */
+html[data-theme="light"] .now .play { border-color: var(--gold); color: var(--gold); animation-name: playGlowGold; }
+@keyframes playGlowGold {
+  0%   { box-shadow: 0 0 0 0 rgba(138,83,0,.5);  background: rgba(138,83,0,.08); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(138,83,0,0), 0 0 14px 3px rgba(138,83,0,.4); background: rgba(138,83,0,.2); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(138,83,0,0);  background: rgba(138,83,0,.05); transform: scale(1); }
 }
 
-/* Botó "Repassar" marcat */
-html[data-theme="light"] .vid .acts button.bk.bookmarked,
-html[data-theme="light"] .now .acts button.bk.bookmarked {
-  border-color: #8a5300 !important;
-  color: #fff !important;
-  background: #a06200 !important;
-  font-weight: 700 !important;
-}
+/* Tooltip del play en clar */
+html[data-theme="light"] .now .vr[data-tip]::after { background: var(--card); color: var(--ink); border-color: var(--line); }
+html[data-theme="light"] .now .vr[data-tip]::before { border-top-color: var(--line); }
 
-/* Botó "Notes" actiu */
-html[data-theme="light"] .vid .acts button.nt.active,
-html[data-theme="light"] .now .acts button.nt.active {
-  border-color: #8a5300 !important;
-  color: #fff !important;
-  background: #a06200 !important;
-  font-weight: 700 !important;
-}
+/* Llista de repàs */
+html[data-theme="light"] .reviewbox { background: var(--card); border-color: var(--gold); }
+html[data-theme="light"] .ritem button { background: var(--card); border-color: var(--line); color: var(--ink); }
+html[data-theme="light"] .ritem button.done { background: var(--ok) !important; border-color: var(--ok) !important; color: #fff !important; }
 
-/* Hover dels botons en mode clar */
-html[data-theme="light"] .vid .acts button:hover:not(.done):not(.bookmarked):not(.active),
-html[data-theme="light"] .now .acts button:hover:not(.done):not(.bookmarked):not(.active) {
-  border-color: #8a5300 !important;
-  color: #8a5300 !important;
-  background: rgba(138,83,0,0.15) !important;
-}
+/* Blocs de Navegació Lliure */
+html[data-theme="light"] .blkcol button { background: var(--card); border-color: var(--line); color: var(--ink); }
+html[data-theme="light"] .blkcol button:hover { border-color: var(--gold); color: var(--gold); }
+html[data-theme="light"] .blkcol button.on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+html[data-theme="light"] .blkcol button.on .bname,
+html[data-theme="light"] .blkcol button.on .bmini .bpct { color: var(--bg); }
+
+/* Adjunts */
+html[data-theme="light"] .adjb { background: var(--card); border-color: var(--line); color: var(--ink); }
+
 </style>
 </head>
 <body>
@@ -1229,7 +783,8 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} }LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
+var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
+LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
 var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true;
 
 function isMobileDevice() {
@@ -2121,9 +1676,20 @@ function makeVid(v, id, track, tag) {
   try { hasNotes = lsJSON(nkey, []).length > 0; } catch (e) {}
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
   var siTag = parseInt(id.split('.')[0], 10);
+  // Construir el botó "Més tard" si estem en mode seguiment
+  var skipBtnHtml = '';
+  if (track && !LS.done[id]) {
+    var isSkipped = LS.skipped && LS.skipped.indexOf(id) >= 0;
+    if (isSkipped) {
+      skipBtnHtml = '<button class="skip skipped">↺ ' + (LS.lang === 'ca' ? 'Recuperar' : 'Recuperar') + '</button>';
+    } else {
+      skipBtnHtml = '<button class="skip">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>';
+    }
+  }
+  
   row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + numberHtml + importanceHtml +
     '<div style="position:relative" class="vr"><button class="play">▶</button><div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div></div>' +
-    '<div class="acts"><button class="ck' + (LS.done[id] ? ' done' : '') + '">' + (LS.done[id] ? t().undo : (track ? t().doneCont : t().mark)) + '</button>' + (track && !LS.done[id] ? '<button class="skip" style="border-color:var(--mut);color:var(--mut);">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>' : '') + '<button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '">' + (isBookmarked(id) ? t().bookmarked : t().bookmark) + '</button><button class="' + ntClass + '">' + ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '') + '</button></div>' +
+    '<div class="acts"><button class="ck' + (LS.done[id] ? ' done' : '') + '">' + (LS.done[id] ? t().undo : (track ? t().doneCont : t().mark)) + '</button>' + skipBtnHtml + '<button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '">' + (isBookmarked(id) ? t().bookmarked : t().bookmark) + '</button><button class="' + ntClass + '">' + ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '') + '</button></div>' +
     '<div class="inl"><iframe allow="autoplay" src=""></iframe><div class="inlb"><button class="mx">⛶</button><button class="cl"></button></div></div>' +
     '<div class="vd" data-ovid="' + id + '" data-ovk="d">' + vidDesc(v, id, b) + '</div>' +
     '<div class="notes"><div class="ntitle">' + t().notesTitle + '</div><div class="nlist"></div><textarea placeholder="' + t().notesPh + '"></textarea><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;"><button class="save-note-btn" style="display:none;margin-top:0;">' + t().saveNote + '</button><button class="send-notes-btn" style="display:none;margin-top:0;padding:6px 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;">' + ICON_MAIL + ' ' + (LS.lang === 'ca' ? 'Enviar al professor' : 'Enviar al profesor') + '</button></div></div>';
@@ -2146,15 +1712,23 @@ function makeVid(v, id, track, tag) {
   };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
-  // Handler del botó "Més tard" (saltar vídeo)
+  // Handler del botó "Més tard" (toggle: afegir/treure de saltats)
   var skipBtn = row.querySelector('.skip');
   if (skipBtn) {
     skipBtn.onclick = function () {
       if (editModeOn) return;
       LS.skipped = LS.skipped || [];
-      if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
+      var idx = LS.skipped.indexOf(id);
+      if (idx >= 0) {
+        // Ja estava saltat: treure'l (recuperar)
+        LS.skipped.splice(idx, 1);
+        showToast(LS.lang === 'ca' ? '↺ Vídeo recuperat' : '↺ Vídeo recuperado');
+      } else {
+        // No estava saltat: afegir-lo
+        LS.skipped.push(id);
+        showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
+      }
       lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
-      showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
       setTimeout(function () { render(); }, 300);
     };
   }
@@ -2284,10 +1858,23 @@ function renderReviewBox(container) {
     item.className = 'ritem';
     var ti = document.createElement('span'); ti.className = 'rtitle'; ti.textContent = vidTitle(v.v, v.id);
     var blk = document.createElement('span'); blk.className = 'rblk'; blk.textContent = blockName(v.b);
-    var lbl = LS.lang === 'ca' ? { d: 'Fet', o: 'Obrir', r: 'Treure' } : { d: 'Hecho', o: 'Abrir', r: 'Quitar' };
-
-    var bD = document.createElement('button'); bD.innerHTML = '✔ ' + lbl.d; bD.title = tt().done;
-bD.onclick = function () { LS.done[id] = 1; saveDone(); /* NO treure de repàs */ render(); };
+    var lbl = LS.lang === 'ca' ? { d: 'Fet', u: 'Desfer', o: 'Obrir', r: 'Treure' } : { d: 'Hecho', u: 'Deshacer', o: 'Abrir', r: 'Quitar' };
+    var isDone = !!LS.done[id];
+    
+    var bD = document.createElement('button');
+    bD.innerHTML = isDone ? '↺ ' + lbl.u : '✔ ' + lbl.d;
+    bD.title = isDone ? (LS.lang === 'ca' ? 'Desfer' : 'Deshacer') : tt().done;
+    if (isDone) bD.classList.add('done');
+    
+    bD.onclick = function () {
+      if (LS.done[id]) {
+        delete LS.done[id];
+      } else {
+        LS.done[id] = 1;
+      }
+      saveDone();
+      render();
+    };
     
     var bO = document.createElement('button'); bO.innerHTML = '▶ ' + lbl.o; bO.title = tt().open;
     bO.onclick = function () { var src = driveSrc(v.v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
@@ -2870,21 +2457,19 @@ $('btnUser').onclick = function () {
 function setLabels() {
   var helpWasActive = $('mHelp').classList.contains('on');
   var infoWasActive = $('mInfo').classList.contains('on');
-  
+
   $('mTrack').innerHTML = ICON_TARGET + ' ' + t().mTrack.replace(/^\s*🎯\s*/, '');
   $('mFree').innerHTML = ICON_FOLDER + ' ' + t().mFree.replace(/^\s*📁\s*/, '');
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
-  
-  // Imatge d'interrogant (el CSS s'encarrega d'amagar-la o mostrar-la segons el dispositiu)
-  // Al mòbil: mostrar SVG. Al PC/tablet: deixar buit (el CSS s'encarrega)
-if (window.innerWidth <= 767) {
-  $('mHelp').innerHTML = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(125,211,252,0.6));"><circle cx="12" cy="12" r="10" stroke="#7dd3fc" stroke-width="1.5" opacity="0.3"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
-} else {
-  $('mHelp').innerHTML = '';
-}
+
+  // Botó d'ajuda: PC/tablet = imatge original (el CSS la gestiona segons tema); mòbil = "?" via CSS
+  if (window.innerWidth <= 767) {
+    $('mHelp').innerHTML = '';
+  } else {
+    $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació">';
+  }
   $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
-  
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
   $('mSave').textContent = isMobileDevice() ? '📧' : '💾';
@@ -2893,7 +2478,7 @@ if (window.innerWidth <= 767) {
     : (LS.lang === 'ca' ? 'Guardar' : 'Guardar');
   $('overlayText').textContent = t().overlayText;
   $('langCur').textContent = (LS.lang === 'ca') ? 'CAT' : 'ESP';
-  
+
   if (helpWasActive) $('mHelp').classList.add('on');
   if (infoWasActive) $('mInfo').classList.add('on');
 }
