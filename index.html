@@ -690,6 +690,73 @@ html[data-theme="light"] .blkcol button.on .bmini .bpct { color: var(--bg); }
 /* Adjunts */
 html[data-theme="light"] .adjb { background: var(--card); border-color: var(--line); color: var(--ink); }
 
+/* ══ AJUSTOS FINALS MODE CLAR: colors més dolços ══ */
+
+/* MARCAT: taronja cremat suau (abans turquesa)
+   (si prefereixes groc apagat: canvia #c2410c per #a16207 i #9a3412 per #854d0e) */
+html[data-theme="light"] .acts button.bk.bookmarked {
+  background: #c2410c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] .acts button.bk.bookmarked:hover {
+  background: #9a3412 !important;
+  border-color: #9a3412 !important;
+}
+
+/* DESFER: verd pastel suau (abans verd fort) */
+html[data-theme="light"] .acts button.done,
+html[data-theme="light"] .acts button.done:disabled,
+html[data-theme="light"] .ritem button.done {
+  background: #e6efdd !important;
+  border-color: #7f9f72 !important;
+  color: #38663b !important;
+  opacity: 1 !important;
+}
+html[data-theme="light"] .acts button.done:hover,
+html[data-theme="light"] .ritem button.done:hover {
+  background: #dbe8d0 !important;
+  border-color: #6a8f60 !important;
+  color: #2f5a32 !important;
+}
+
+/* ══ MARCA D'AIGUA MODE CLAR: logo blanc difuminat ══ */
+html[data-theme="light"] #wm {
+  opacity: .99 !important;
+  filter: brightness(0) invert(1) blur(0px) !important;
+}
+html[data-theme="light"] #wm::after { display: none !important; }
+
+/* El contingut sempre per sobre del vel */
+html[data-theme="light"] main { position: relative; z-index: 1; }
+
+/* ══ AJUSTOS DE COLOR v2 (MODE CLAR) ══ */
+/* DESFER: verd mitjà apagat (ni fort ni pastel) */
+html[data-theme="light"] .acts button.done,
+html[data-theme="light"] .acts button.done:disabled,
+html[data-theme="light"] .ritem button.done {
+  background: #557f60 !important;
+  border-color: #557f60 !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+html[data-theme="light"] .acts button.done:hover,
+html[data-theme="light"] .ritem button.done:hover {
+  background: #4a6f54 !important;
+  border-color: #4a6f54 !important;
+}
+/* MARCAT: lila clar (ni marró, ni taronja, ni turquesa) */
+html[data-theme="light"] .acts button.bk.bookmarked {
+  background: #e9e3f7 !important;
+  border-color: #9b8bd0 !important;
+  color: #5b489e !important;
+}
+html[data-theme="light"] .acts button.bk.bookmarked:hover {
+  background: #ded5f2 !important;
+  border-color: #8a79c4 !important;
+  color: #4c3a8c !important;
+}
+
 </style>
 </head>
 <body>
@@ -785,6 +852,7 @@ function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSO
 
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
+LS.skipAfter = lsJSON('gjps_skipafter_' + (LS.user || 'guest'), {});
 var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true;
 
 function isMobileDevice() {
@@ -1231,31 +1299,40 @@ function allVids() {
   return o;
 }
 function findVidById(id) { var all = allVids(); for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; } return null; }
-function findNext() {
-  initializeOrder();
-  // 1. Primer: si hi ha un vídeo saltat pendent, tornar-lo a mostrar
-  if (LS.skipped && LS.skipped.length > 0) {
-    for (var s = 0; s < LS.skipped.length; s++) {
-      var sid = LS.skipped[s];
-      if (!LS.done[sid]) {
-        var sv = findVidById(sid);
-        if (sv && driveSrc(sv.v, sid)) {
-          // Treure'l de la llista de saltats
-          LS.skipped.splice(s, 1);
-          lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
-          return sv;
-        }
-      } else {
-        LS.skipped.splice(s, 1);
-        lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
-      }
-    }
-  }
-  // 2. Sinó, el següent normal
+function firstPlainNext() {
+  var skipped = LS.skipped || [];
   for (var i = 0; i < OV.order.length; i++) {
     var id = OV.order[i];
-    if (isGiftId(id)) continue;
-    if (!LS.done[id]) { var v = findVidById(id); if (v && driveSrc(v.v, id)) return v; }
+    if (isGiftId(id) || LS.done[id] || skipped.indexOf(id) >= 0) continue;
+    var v = findVidById(id);
+    if (v && driveSrc(v.v, id)) return id;
+  }
+  return null;
+}
+function findNext() {
+  initializeOrder();
+  var skipped = LS.skipped || [];
+  LS.skipAfter = LS.skipAfter || {};
+  /* 1. Recordatori: vídeo saltat cuyo "substitut" ja està validat */
+  for (var s = 0; s < skipped.length; s++) {
+    var sid = skipped[s];
+    if (LS.done[sid]) continue;
+    var after = LS.skipAfter[sid];
+    if (after && LS.done[after]) {
+      var sv = findVidById(sid);
+      if (sv && driveSrc(sv.v, sid)) return sv;
+    }
+  }
+  /* 2. Següent normal (no fet, no saltat) */
+  var plain = firstPlainNext();
+  if (plain) { var pv = findVidById(plain); if (pv && driveSrc(pv.v, plain)) return pv; }
+  /* 3. Només queden saltats: recorda el primer */
+  for (var s2 = 0; s2 < skipped.length; s2++) {
+    var sid2 = skipped[s2];
+    if (!LS.done[sid2]) {
+      var sv2 = findVidById(sid2);
+      if (sv2 && driveSrc(sv2.v, sid2)) return sv2;
+    }
   }
   return null;
 }
@@ -1679,12 +1756,7 @@ function makeVid(v, id, track, tag) {
   // Construir el botó "Més tard" si estem en mode seguiment
   var skipBtnHtml = '';
   if (track && !LS.done[id]) {
-    var isSkipped = LS.skipped && LS.skipped.indexOf(id) >= 0;
-    if (isSkipped) {
-      skipBtnHtml = '<button class="skip skipped">↺ ' + (LS.lang === 'ca' ? 'Recuperar' : 'Recuperar') + '</button>';
-    } else {
-      skipBtnHtml = '<button class="skip">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>';
-    }
+    skipBtnHtml = '<button class="skip">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>';
   }
   
   row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + numberHtml + importanceHtml +
@@ -1702,6 +1774,8 @@ function makeVid(v, id, track, tag) {
     var btn = this;
     if (LS.done[id]) { delete LS.done[id]; saveDone(); render(); return; }
     LS.done[id] = 1; saveDone();
+    if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped)); }
+    if (LS.skipAfter) { delete LS.skipAfter[id]; lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter)); }
     btn.classList.add('done');   /* flash verd */
     btn.style.borderColor = 'var(--ok)';
     btn.style.color = 'var(--ok)';
@@ -1712,24 +1786,26 @@ function makeVid(v, id, track, tag) {
   };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
-  // Handler del botó "Més tard" (toggle: afegir/treure de saltats)
+    // Handler del botó "Més tard": només marca i passa al següent
   var skipBtn = row.querySelector('.skip');
   if (skipBtn) {
     skipBtn.onclick = function () {
       if (editModeOn) return;
+      var btn = this;
       LS.skipped = LS.skipped || [];
-      var idx = LS.skipped.indexOf(id);
-      if (idx >= 0) {
-        // Ja estava saltat: treure'l (recuperar)
-        LS.skipped.splice(idx, 1);
-        showToast(LS.lang === 'ca' ? '↺ Vídeo recuperat' : '↺ Vídeo recuperado');
-      } else {
-        // No estava saltat: afegir-lo
-        LS.skipped.push(id);
-        showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
-      }
+      LS.skipAfter = LS.skipAfter || {};
+      if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
+      LS.skipAfter[id] = firstPlainNext();
       lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
-      setTimeout(function () { render(); }, 300);
+      lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter));
+      /* flash blau, com el flash verd de FET */
+      btn.style.borderColor = '#4cc9f0';
+      btn.style.color = '#0a2e38';
+      btn.style.background = '#4cc9f0';
+      btn.style.opacity = '1';
+      btn.disabled = true;
+      showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
+      setTimeout(function () { render(); }, 250);
     };
   }
   if (editModeOn && !isGiftId(id)) {
