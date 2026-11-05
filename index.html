@@ -1229,7 +1229,7 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} }LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);;
+var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} }LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
 var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true;
 
 function isMobileDevice() {
