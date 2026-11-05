@@ -1012,6 +1012,31 @@ html[data-theme="light"] .now .acts button.ck[style*="border-color"] {
     font-size: 18px !important;
   }
 }
+/* ══ CORRECCIONS MODE FOSC: fons dels botons de la capçalera ══ */
+
+/* Botó d'informació (i): forçar fons del color de la capçalera */
+html:not([data-theme="light"]) #mHelp {
+  background: var(--bg) !important;
+  border-radius: var(--rad) !important;
+}
+html:not([data-theme="light"]) #mHelp img {
+  /* Si encara hi ha la imatge, fer-la rodona i adaptar-la */
+  border-radius: 50% !important;
+  background: transparent !important;
+}
+
+/* Botó interrogant al mòbil: mateix fons que FAQ */
+@media (max-width: 767px) {
+  html:not([data-theme="light"]) #mHelp {
+    background: var(--card) !important;
+    border: 1px solid var(--line) !important;
+  }
+  /* Botó d'idioma al mòbil: mateix fons que FAQ */
+  html:not([data-theme="light"]) #langToggle {
+    background: var(--card) !important;
+    border: 1px solid var(--line) !important;
+  }
+}
 </style>
 </head>
 <body>
