@@ -477,9 +477,9 @@ body.editmode .vid { padding-left: 34px; }
   /* FAQ amb fons correcte (NOMÉS en mode fosc) */
   html[data-theme="dark"] #mInfo,
   html:not([data-theme="light"]) #mInfo {
-    background: linear-gradient(135deg, rgba(232,176,75,0.25), rgba(232,176,75,0.10)) !important;
+    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
     color: #f2f2f2 !important;
-    border: 1.5px solid #2a2f3a !important;
+    border: 1.5px solid var(--line) !important;
   }
   html[data-theme="dark"] #mInfo:hover,
   html[data-theme="dark"] #mInfo.on,
@@ -1074,11 +1074,17 @@ html:not([data-theme="light"]) #mHelp img {
     font-size: var(--fs-btn) !important;
   }
   html:not([data-theme="light"]) #mHelp::before {
-    content: 'i';
-    font-size: 20px;
-    font-weight: 800;
-    font-style: italic;
+    content: '?';
+    font-size: 22px;
+    font-weight: 900;
     font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink) !important;
+  }
+  html:not([data-theme="light"]) #mHelp:hover::before {
+    color: var(--gold) !important;
+  }
+  html:not([data-theme="light"]) #mHelp.on::before {
+    color: var(--mut) !important;
   }
   html:not([data-theme="light"]) #mHelp:hover {
     border-color: var(--gold) !important;
@@ -1095,37 +1101,40 @@ html:not([data-theme="light"]) #mHelp img {
   }
 }
 
-/* ══ MODE CLAR: il·luminar botons dels vídeos amb daurat ══ */
-/* Botó "Marcar fet" */
+/* ══ MODE CLAR: botons dels vídeos amb contrast visible ══ */
+/* Botó "Fet i continuar" quan s'acaba de clicar (flash) */
 html[data-theme="light"] .vid .acts button.ck[style*="border-color"],
 html[data-theme="light"] .now .acts button.ck[style*="border-color"] {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(138,83,0,0.15) !important;
+  border-color: #6b3f00 !important;
+  color: #fff !important;
+  background: #8a5300 !important;
+  font-weight: 700 !important;
 }
 
-/* Botó "Repassar" */
+/* Botó "Repassar" marcat */
 html[data-theme="light"] .vid .acts button.bk.bookmarked,
 html[data-theme="light"] .now .acts button.bk.bookmarked {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(138,83,0,0.1) !important;
+  border-color: #8a5300 !important;
+  color: #fff !important;
+  background: #a06200 !important;
+  font-weight: 700 !important;
 }
 
-/* Botó "Notes" */
+/* Botó "Notes" actiu */
 html[data-theme="light"] .vid .acts button.nt.active,
 html[data-theme="light"] .now .acts button.nt.active {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(138,83,0,0.1) !important;
+  border-color: #8a5300 !important;
+  color: #fff !important;
+  background: #a06200 !important;
+  font-weight: 700 !important;
 }
 
 /* Hover dels botons en mode clar */
 html[data-theme="light"] .vid .acts button:hover:not(.done):not(.bookmarked):not(.active),
 html[data-theme="light"] .now .acts button:hover:not(.done):not(.bookmarked):not(.active) {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: rgba(138,83,0,0.08) !important;
+  border-color: #8a5300 !important;
+  color: #8a5300 !important;
+  background: rgba(138,83,0,0.15) !important;
 }
 </style>
 </head>
@@ -1220,7 +1229,7 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
+var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} }LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);;
 var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true;
 
 function isMobileDevice() {
@@ -1669,6 +1678,25 @@ function allVids() {
 function findVidById(id) { var all = allVids(); for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; } return null; }
 function findNext() {
   initializeOrder();
+  // 1. Primer: si hi ha un vídeo saltat pendent, tornar-lo a mostrar
+  if (LS.skipped && LS.skipped.length > 0) {
+    for (var s = 0; s < LS.skipped.length; s++) {
+      var sid = LS.skipped[s];
+      if (!LS.done[sid]) {
+        var sv = findVidById(sid);
+        if (sv && driveSrc(sv.v, sid)) {
+          // Treure'l de la llista de saltats
+          LS.skipped.splice(s, 1);
+          lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
+          return sv;
+        }
+      } else {
+        LS.skipped.splice(s, 1);
+        lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
+      }
+    }
+  }
+  // 2. Sinó, el següent normal
   for (var i = 0; i < OV.order.length; i++) {
     var id = OV.order[i];
     if (isGiftId(id)) continue;
@@ -2095,7 +2123,7 @@ function makeVid(v, id, track, tag) {
   var siTag = parseInt(id.split('.')[0], 10);
   row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + numberHtml + importanceHtml +
     '<div style="position:relative" class="vr"><button class="play">▶</button><div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div></div>' +
-    '<div class="acts"><button class="ck' + (LS.done[id] ? ' done' : '') + '">' + (LS.done[id] ? t().undo : (track ? t().doneCont : t().mark)) + '</button><button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '">' + (isBookmarked(id) ? t().bookmarked : t().bookmark) + '</button><button class="' + ntClass + '">' + ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '') + '</button></div>' +
+    '<div class="acts"><button class="ck' + (LS.done[id] ? ' done' : '') + '">' + (LS.done[id] ? t().undo : (track ? t().doneCont : t().mark)) + '</button>' + (track && !LS.done[id] ? '<button class="skip" style="border-color:var(--mut);color:var(--mut);">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>' : '') + '<button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '">' + (isBookmarked(id) ? t().bookmarked : t().bookmark) + '</button><button class="' + ntClass + '">' + ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '') + '</button></div>' +
     '<div class="inl"><iframe allow="autoplay" src=""></iframe><div class="inlb"><button class="mx">⛶</button><button class="cl"></button></div></div>' +
     '<div class="vd" data-ovid="' + id + '" data-ovk="d">' + vidDesc(v, id, b) + '</div>' +
     '<div class="notes"><div class="ntitle">' + t().notesTitle + '</div><div class="nlist"></div><textarea placeholder="' + t().notesPh + '"></textarea><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;"><button class="save-note-btn" style="display:none;margin-top:0;">' + t().saveNote + '</button><button class="send-notes-btn" style="display:none;margin-top:0;padding:6px 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;">' + ICON_MAIL + ' ' + (LS.lang === 'ca' ? 'Enviar al professor' : 'Enviar al profesor') + '</button></div></div>';
@@ -2118,6 +2146,18 @@ function makeVid(v, id, track, tag) {
   };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
+  // Handler del botó "Més tard" (saltar vídeo)
+  var skipBtn = row.querySelector('.skip');
+  if (skipBtn) {
+    skipBtn.onclick = function () {
+      if (editModeOn) return;
+      LS.skipped = LS.skipped || [];
+      if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
+      lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
+      showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
+      setTimeout(function () { render(); }, 300);
+    };
+  }
   if (editModeOn && !isGiftId(id)) {
     var numEl = row.querySelector('.vid-number.editable');
     if (numEl) {
@@ -2247,7 +2287,7 @@ function renderReviewBox(container) {
     var lbl = LS.lang === 'ca' ? { d: 'Fet', o: 'Obrir', r: 'Treure' } : { d: 'Hecho', o: 'Abrir', r: 'Quitar' };
 
     var bD = document.createElement('button'); bD.innerHTML = '✔ ' + lbl.d; bD.title = tt().done;
-    bD.onclick = function () { LS.done[id] = 1; saveDone(); toggleBookmark(id); render(); };
+bD.onclick = function () { LS.done[id] = 1; saveDone(); /* NO treure de repàs */ render(); };
     
     var bO = document.createElement('button'); bO.innerHTML = '▶ ' + lbl.o; bO.title = tt().open;
     bO.onclick = function () { var src = driveSrc(v.v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
