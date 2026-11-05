@@ -2365,14 +2365,11 @@ function openFullscreenVideo(src) {
   var modal = $('modal');
   var isIOSDevice = isIOS();
 
-    if (isMobileDevice() && !isIOSDevice) {
-    /* Android: pestanya contenidor amb el reproductor de Drive en un iframe.
-       La barra d'adreces NO mostra mai l'enllaç real; ENRERE torna al web. */
-    var w = window.open('', '_blank');
-    if (!w) { window.open(currentVideoSrc, '_blank'); return; }
-    w.document.open();
-    w.document.write('<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Girona Jazz Piano School®</title><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}iframe{position:fixed;inset:0;width:100%;height:100%;border:0}</style></head><body><iframe src="' + currentVideoSrc + '" allow="autoplay; fullscreen" allowfullscreen></iframe></body></html>');
-    w.document.close();
+    if (isMobileDevice()) {
+    /* iPad i Android: pestanya nova amb el reproductor natiu de Drive.
+       Pantalla completa real, controls que s'amaguen sols i sessió de Google;
+       el gest de tornar / ENRERE et retorna al web al punt on eres. */
+    window.open(currentVideoSrc, '_blank');
     return;
   }
   pushVideoState();
@@ -2381,14 +2378,14 @@ function openFullscreenVideo(src) {
     if (isIOSDevice) {
       modal.classList.add('ios-device');
       var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&authuser=0' : currentVideoSrc + '?authuser=0';
+      player.setAttribute('allow', 'autoplay; fullscreen; storage-access-by-user-activation');
       player.src = finalSrc;
       player.classList.add('active');
       if (overlay) overlay.classList.add('hidden'); /* a l'iPad ja no cal missatge previ */
       document.documentElement.style.zoom = '1';
       showCloseBtn(); /* mostra la ✕ pròpia també a l'iPad, com al PC */
-      var wrapEl = document.querySelector('.wrap');
-      if (wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(function () {});
-      else if (wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
+      if (player.requestFullscreen) player.requestFullscreen().catch(function () {});
+      else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
         } else {
       /* ── ANDROID: mòbil no-iOS ── Sense Fullscreen API: el botó ENRERE del sistema
          tanca el vídeo al primer toc (gràcies a pushState/popstate). ── */
