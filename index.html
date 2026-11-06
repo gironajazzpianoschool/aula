@@ -917,6 +917,22 @@ header #langToggle, .hdr #langToggle { display: inline-flex !important; }
     border: 1.5px solid var(--line) !important;
   }
 }
+
+/* ══ RESSALTAT DE CERCA ══ */
+.search-highlight {
+  background: rgba(232, 176, 75, 0.35);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 0 2px;
+  box-shadow: 0 0 4px rgba(232,176,75,0.5);
+}
+html[data-theme="light"] .search-highlight {
+  background: rgba(138, 83, 0, 0.25);
+  color: #1a1408;
+  box-shadow: none;
+}
+
 </style>
 </head>
 <body>
@@ -2418,13 +2434,28 @@ function updateBlockHighlights() {
 function filterFreeGrid(q) {
   var nq = normTxt(q || '');
   var isSearching = nq.length >= 2;
+  /* Escapem caràcters especials per a l'expressió regular */
+  var safeQ = q ? q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '';
+  
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
     g.querySelectorAll('.vid').forEach(function (card) {
-      var tit = card.querySelector('.vt');
-      var textMatch = !nq || normTxt(tit ? tit.textContent : '').indexOf(nq) >= 0;
+      var vt = card.querySelector('.vt');
+      var origText = vt ? (vt.dataset.origTitle || vt.textContent) : '';
+      var textMatch = !nq || normTxt(origText).indexOf(nq) >= 0;
       var blockMatch = isSearching || (card.dataset.block === freeBlock);
       var show = textMatch && blockMatch;
+      
+      /* Aplicar o treure el ressaltat */
+      if (vt) {
+        if (show && isSearching && safeQ && !editModeOn) {
+          var regex = new RegExp('(' + safeQ + ')', 'gi');
+          vt.innerHTML = origText.replace(regex, '<span class="search-highlight">$1</span>');
+        } else {
+          vt.textContent = origText; /* Restaurem el text original */
+        }
+      }
+      
       card.style.display = show ? '' : 'none';
       if (show) visibles++;
     });
@@ -2579,6 +2610,8 @@ function renderFree() {
   vids.forEach(function (x) {
     var vidEl = makeVid(x.v, x.id, false, x.tag);
     vidEl.dataset.block = x.b; /* Etiquetem amb el seu bloc real */
+    var vtEl = vidEl.querySelector('.vt');
+    if (vtEl) vtEl.dataset.origTitle = vtEl.textContent; /* Guardem el títol original */
     if (!freeQuery && x.b !== freeBlock) vidEl.style.display = 'none'; /* Amaguem els que no toquen */
     if (editModeOn) {
       var vIdx = -1;
