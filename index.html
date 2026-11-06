@@ -628,15 +628,14 @@ html[data-theme="light"] .donut svg text { fill: var(--ink); }
 html[data-theme="light"] .blkcol button .bmini svg circle { fill: #c9b896; }
 
 /* Elements daurats foscos → text crema per contrast */
-html[data-theme="light"] .appcard button,
 html[data-theme="light"] .save-note-btn,
 html[data-theme="light"] .lbox .go:not(.secondary),
 html[data-theme="light"] .aselbox .actions .go:not(.secondary),
-html[data-theme="light"] .vid-number { color: #f2e6c8; }
-
-/* Fletxa del selector de nivell en daurat fosc */
-html[data-theme="light"] .lvls select {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a5300' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+html[data-theme="light"] .vid-number {
+  color: #f2e6c8;
+}
+html[data-theme="light"] .appcard button {
+  color: var(--ink) !important;
 }
 
 /* Botons de navegació (inclòs FAQ): crema; actiu = daurat fosc */
@@ -931,6 +930,13 @@ html[data-theme="light"] .search-highlight {
   background: rgba(138, 83, 0, 0.25);
   color: #1a1408;
   box-shadow: none;
+}
+
+/* Amagar el ::before del boto ajuda en mode clar per a tablet */
+@media (min-width: 768px) and (pointer: coarse) {
+  html[data-theme="light"] #mHelp::before {
+    display: none !important;
+  }
 }
 
 </style>
@@ -2875,10 +2881,12 @@ function setLabels() {
   
   if (isTablet) {
     if (isLight) {
-      $('mHelp').innerHTML = ''; /* El CSS dibuixa el "?" negre via ::before */
+      /* Injectem el SVG directament per evitar el doble interrogant del CSS */
+      $('mHelp').innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1a1408" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
     } else {
       $('mHelp').innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
     }
+  }
   } else if (isSmartphone()) {
     $('mHelp').innerHTML = ''; /* El CSS dibuixa el "?" vermell */
   } else {
