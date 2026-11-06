@@ -20,7 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+
 /* ============================================================
    1. VARIABLES I RESET
    ============================================================ */
@@ -746,7 +748,7 @@ html[data-theme="light"] #wm {
 html[data-theme="light"] #wm::after { display: none !important; }
 
 /* El contingut sempre per sobre del vel */
-html[data-theme="light"] main { position: relative; z-index: 1; }
+html[data-theme="light"] main { position: relative; }
 
 /* ══ AJUSTOS DE COLOR v2 (MODE CLAR) ══ */
 /* DESFER: verd mitjà apagat (ni fort ni pastel) */
@@ -866,6 +868,25 @@ html[data-theme="light"] .now .play {
   /* Evitem que el CSS dibuixi un segon interrogant fantasma */
   html:not([data-theme="light"]) #mHelp::before {
     display: none !important;
+  }
+}
+
+/* ══ CORRECCIÓ FINAL: Botons Edició i Ajuda Tablet ══ */
+
+/* 1. Forçar botons d'edició per sobre de TOT (inclòs el fons del mode clar) */
+#mEdit, #mSave {
+  z-index: 9999999 !important;
+  pointer-events: auto !important;
+  isolation: isolate !important;
+}
+
+/* 2. Tablet mode fosc: Il·luminar el botó d'ajuda quan està actiu (.on), igual que el FAQ */
+@media (min-width: 768px) and (pointer: coarse) {
+  html:not([data-theme="light"]) #mHelp.on {
+    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
+    color: #e8b04b !important;
+    border-color: #e8b04b !important;
+    box-shadow: 0 0 14px rgba(232,176,75,0.22) !important;
   }
 }
 
