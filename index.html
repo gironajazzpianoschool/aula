@@ -2487,8 +2487,15 @@ function filterFreeGrid(q) {
   if (isSearching && !allVideosLoaded) {
     allVideosLoaded = true;
     render(); /* Re-renderitza amb tots els vídeos */
-    /* Després de renderitzar, aplicar el filtre immediatament */
-    setTimeout(function() { filterFreeGrid(q); }, 0);
+    /* Després de renderitzar, recuperar el focus i aplicar el filtre */
+    setTimeout(function() {
+      var inp = $('freeSearch');
+      if (inp) {
+        inp.focus();
+        inp.setSelectionRange(inp.value.length, inp.value.length);
+      }
+      filterFreeGrid(q);
+    }, 0);
     return;
   }
   
