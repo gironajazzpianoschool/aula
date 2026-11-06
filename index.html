@@ -881,9 +881,11 @@ html[data-theme="light"] .now .play {
 #langToggle { display: none !important; }
 header #langToggle, .hdr #langToggle { display: inline-flex !important; }
 
-/* 2. Smartphone mode fosc: color de la lupa sempre visible */
+/* Smartphone mode fosc: color i fons de la lupa igual que FAQ */
 @media (max-width: 767px) {
   html:not([data-theme="light"]) #mSearch {
+    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
+    border: 1.5px solid var(--line) !important;
     color: #f2f2f2 !important;
   }
   html:not([data-theme="light"]) #mSearch svg {
@@ -2882,8 +2884,8 @@ function setLabels() {
   if (isTablet) {
     if (isLight) {
       $('mHelp').innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1a1408" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-    } else {
-      $('mHelp').innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+        } else {
+      $('mHelp').innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
     }
   } else if (isSmartphone()) {
     $('mHelp').innerHTML = '';
