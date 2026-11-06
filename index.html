@@ -2417,13 +2417,16 @@ function updateBlockHighlights() {
 
 function filterFreeGrid(q) {
   var nq = normTxt(q || '');
+  var isSearching = nq.length >= 2;
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
     g.querySelectorAll('.vid').forEach(function (card) {
       var tit = card.querySelector('.vt');
-      var match = !nq || normTxt(tit ? tit.textContent : '').indexOf(nq) >= 0;
-      card.style.display = match ? '' : 'none';
-      if (match) visibles++;
+      var textMatch = !nq || normTxt(tit ? tit.textContent : '').indexOf(nq) >= 0;
+      var blockMatch = isSearching || (card.dataset.block === freeBlock);
+      var show = textMatch && blockMatch;
+      card.style.display = show ? '' : 'none';
+      if (show) visibles++;
     });
     var empty = g.querySelector('.search-empty');
     if (!empty) {
@@ -2468,49 +2471,18 @@ function renderFree() {
   sb.className = 'searchbox';
   sb.innerHTML = '<span class="sb-ico">' + ICON_SEARCH + '</span><input id="freeSearch" type="search" placeholder="' + (LS.lang === 'ca' ? 'Cerca un vídeo d\'aquest nivell…' : 'Busca un vídeo de este nivel…') + '" value="' + esc(freeQuery) + '">';
   lr.appendChild(sb);
-  setTimeout(function () {
+    setTimeout(function () {
     var inp = $('freeSearch');
     if (!inp) return;
     
     inp.oninput = function () { 
-      var newValue = this.value;
-      var wasActive = (freeQuery.length >= 2);
-      var isActive = (newValue.length >= 2);
-      
-      freeQuery = newValue; 
-      freeSearchFocus = true; 
-      
-      if (wasActive !== isActive) {
-        // S'ha creuat el llindar de 2 lletres (en un sentit o l'altre)
-        // Cal reconstruir el DOM: o carregar tots els vídeos, o tornar al bloc actiu
-        render();
-        // Recuperem el focus just després que el DOM s'hagi pintat
-        requestAnimationFrame(function () {
-          var currentInp = $('freeSearch');
-          if (currentInp) {
-            currentInp.focus(); 
-            currentInp.setSelectionRange(currentInp.value.length, currentInp.value.length); 
-          }
-        });
-      } else if (isActive) {
-        // Ja estàvem en mode cerca i seguim estant-hi: només filtrem (sense tocar el DOM)
-        filterFreeGrid(newValue);
-      }
-      // Si isActive === false i wasActive === false (0 o 1 lletra): no fem res
+      freeQuery = this.value; 
+      filterFreeGrid(this.value);
     };
     
     inp.onblur = function () { freeSearchFocus = false; };
     
-    if (freeQuery.length >= 2) filterFreeGrid(freeQuery);
-    if (freeSearchFocus) { 
-      requestAnimationFrame(function () {
-        var currentInp = $('freeSearch');
-        if (currentInp) {
-          currentInp.focus(); 
-          currentInp.setSelectionRange(currentInp.value.length, currentInp.value.length); 
-        }
-      });
-    }
+    if (freeQuery) filterFreeGrid(freeQuery);
   }, 0);
   var LV = null;
   LEVELS.forEach(function (L) { if (L.id === freeLevel) LV = L; });
@@ -2571,8 +2543,7 @@ function renderFree() {
         var bl = u[bb];
         if (bl && bl.v) bl.v.forEach(function (v, vi) {
           var id = si + '.' + ui + '.' + bb + '.' + vi;
-          /* Amb cerca activa: inclou tots els blocs del nivell. Sense cerca: només el bloc actiu. */
-          if (!freeQuery && vidBlockById(id) !== freeBlock) return;
+          /* Carreguem TOTS els vídeos del nivell per no haver de reconstruir el DOM en cercar */
           var key = v[li()];
           if (seen[key]) return;
           seen[key] = 1;
@@ -2607,7 +2578,8 @@ function renderFree() {
   grid.dataset.block = freeBlock;
   vids.forEach(function (x) {
     var vidEl = makeVid(x.v, x.id, false, x.tag);
-    vidEl.dataset.block = freeBlock;
+    vidEl.dataset.block = x.b; /* Etiquetem amb el seu bloc real */
+    if (!freeQuery && x.b !== freeBlock) vidEl.style.display = 'none'; /* Amaguem els que no toquen */
     if (editModeOn) {
       var vIdx = -1;
       for (var i = 0; i < vids.length; i++) { if (vids[i].id === x.id) { vIdx = i; break; } }
