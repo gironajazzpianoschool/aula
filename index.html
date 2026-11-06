@@ -890,6 +890,23 @@ html[data-theme="light"] .now .play {
   }
 }
 
+/* CORRECCIO BUGS - Idioma duplicat i Lupa smartphone */
+
+/* 1. Amagar qualsevol boto idioma fora del header */
+#langToggle { display: none !important; }
+header #langToggle, .hdr #langToggle { display: inline-flex !important; }
+
+/* 2. Smartphone mode fosc: assegurar que la icona lupa es vegi quan esta actiu */
+@media (max-width: 767px) {
+  html:not([data-theme="light"]) #mSearch.on {
+    background: rgba(232,176,75,0.15) !important;
+    color: #e8b04b !important;
+  }
+  html:not([data-theme="light"]) #mSearch.on svg {
+    stroke: #e8b04b !important;
+  }
+}
+
 </style>
 </head>
 <body>
