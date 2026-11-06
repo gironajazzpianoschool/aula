@@ -2431,11 +2431,26 @@ function updateBlockHighlights() {
   btns.forEach(function (btn) { btn.classList.toggle('on', !!hits[btn.dataset.b]); });
 }
 
+function highlightText(text, query) {
+  if (!query) return esc(text);
+  var normText = normTxt(text);
+  var normQuery = normTxt(query);
+  var result = '';
+  var lastIndex = 0;
+  var idx = normText.indexOf(normQuery);
+  while (idx !== -1) {
+    result += esc(text.substring(lastIndex, idx));
+    result += '<span class="search-highlight">' + esc(text.substring(idx, idx + normQuery.length)) + '</span>';
+    lastIndex = idx + normQuery.length;
+    idx = normText.indexOf(normQuery, lastIndex);
+  }
+  result += esc(text.substring(lastIndex));
+  return result;
+}
+
 function filterFreeGrid(q) {
   var nq = normTxt(q || '');
   var isSearching = nq.length >= 2;
-  /* Escapem caràcters especials per a l'expressió regular */
-  var safeQ = q ? q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '';
   
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
@@ -2446,13 +2461,12 @@ function filterFreeGrid(q) {
       var blockMatch = isSearching || (card.dataset.block === freeBlock);
       var show = textMatch && blockMatch;
       
-      /* Aplicar o treure el ressaltat */
+      /* Aplicar o treure el ressaltat intel·ligent */
       if (vt) {
-        if (show && isSearching && safeQ && !editModeOn) {
-          var regex = new RegExp('(' + safeQ + ')', 'gi');
-          vt.innerHTML = origText.replace(regex, '<span class="search-highlight">$1</span>');
+        if (show && isSearching && q && !editModeOn) {
+          vt.innerHTML = highlightText(origText, q);
         } else {
-          vt.textContent = origText; /* Restaurem el text original */
+          vt.textContent = origText;
         }
       }
       
