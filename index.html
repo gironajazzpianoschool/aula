@@ -882,8 +882,15 @@ html[data-theme="light"] .now .play {
 #langToggle { display: none !important; }
 header #langToggle, .hdr #langToggle { display: inline-flex !important; }
 
-/* 2. Smartphone mode fosc: assegurar que la icona lupa es vegi quan esta actiu */
+/* 2. Smartphone mode fosc: color de la lupa sempre visible */
 @media (max-width: 767px) {
+  html:not([data-theme="light"]) #mSearch {
+    color: #f2f2f2 !important;
+  }
+  html:not([data-theme="light"]) #mSearch svg {
+    stroke: #f2f2f2 !important;
+  }
+  /* Quan esta actiu, daurat */
   html:not([data-theme="light"]) #mSearch.on {
     background: rgba(232,176,75,0.15) !important;
     color: #e8b04b !important;
