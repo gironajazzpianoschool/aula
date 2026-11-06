@@ -1063,7 +1063,7 @@ var APP_VERSION = '2.0', APP_BUILD = '2026-11-06';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
 LS.skipAfter = lsJSON('gjps_skipafter_' + (LS.user || 'guest'), {});
-var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false;
+var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false, allVideosLoaded = false;
 
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2483,6 +2483,14 @@ function highlightText(text, query) {
 function filterFreeGrid(q) {
   var nq = normTxt(q || '');
   var isSearching = nq.length >= 2;
+  /* Si comencem a cercar i encara no hem carregat tots els vídeos, fer-ho ara */
+  if (isSearching && !allVideosLoaded) {
+    allVideosLoaded = true;
+    render(); /* Re-renderitza amb tots els vídeos */
+    /* Després de renderitzar, aplicar el filtre immediatament */
+    setTimeout(function() { filterFreeGrid(q); }, 0);
+    return;
+  }
   
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
@@ -2540,6 +2548,7 @@ function renderFree() {
     if (freeLevel !== 0 && freeBlock === 'w') freeBlock = 't';
     if (freeLevel === 0) freeBlock = 'w';
     autoLevelPending = false;
+    allVideosLoaded = false; /* Reiniciem en canviar de nivell */
     render();
   };
   lr.appendChild(sel);
@@ -2580,7 +2589,7 @@ function renderFree() {
       var btn = document.createElement('button');
       btn.dataset.b = b;
       if (b === freeBlock) btn.className = 'on';
-      btn.onclick = function () { freeBlock = b; if (freeQuery) freeQuery = ''; render(); };
+      btn.onclick = function () { freeBlock = b; if (freeQuery) freeQuery = ''; allVideosLoaded = false; render(); };
       if (b === 'b') {
         var n = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); }).length;
         btn.title = LS.lang === 'ca' ? 'Vídeos que has marcat per repassar' : 'Vídeos que has marcado para repasar';
@@ -2620,7 +2629,8 @@ function renderFree() {
         var bl = u[bb];
         if (bl && bl.v) bl.v.forEach(function (v, vi) {
           var id = si + '.' + ui + '.' + bb + '.' + vi;
-          /* Carreguem TOTS els vídeos del nivell per no haver de reconstruir el DOM en cercar */
+          /* Per defecte: només el bloc actiu. Si estem cercant o ja hem carregat tot: tots els blocs */
+          if (!allVideosLoaded && !freeQuery && bb !== freeBlock) return;
           var key = v[li()];
           if (seen[key]) return;
           seen[key] = 1;
