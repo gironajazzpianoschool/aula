@@ -900,6 +900,23 @@ header #langToggle, .hdr #langToggle { display: inline-flex !important; }
   }
 }
 
+/* CORRECCIO BUGS - Centrat interrogant i Fons FAQ al mobil */
+
+/* 1. Centrar el ? dins del boto al mobil */
+@media (max-width: 767px) {
+  #mHelp {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+
+/* 2. Fons del boto ? al mobil en mode fosc (igual que FAQ) */
+@media (max-width: 767px) {
+  html:not([data-theme="light"]) #mHelp {
+    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
+    border: 1.5px solid var(--line) !important;
+  }
+}
 </style>
 </head>
 <body>
