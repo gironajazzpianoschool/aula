@@ -2739,8 +2739,8 @@ function setLabels() {
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
 
-  // Botó d'ajuda: PC/tablet = imatge original (el CSS la gestiona segons tema); mòbil = "?" via CSS
-  if (window.innerWidth <= 767) {
+  // Botó d'ajuda: només PC (>1024px) = imatge original; tablet i mòbil = "?" via CSS
+  if (window.innerWidth <= 1024) {
     $('mHelp').innerHTML = '';
   } else {
     $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació">';
