@@ -11,7 +11,7 @@
      ═══════════════════════════════════════════════ -->
 <html lang="ca">
 <head>
-<meta name="theme-color" content="#1a1d27">
+<meta name="theme-color" content="#e2d4b0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta charset="UTF-8">
@@ -3088,7 +3088,7 @@ function openFullscreenVideo(src) {
   }
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  apply(saved === 'light' ? 'light' : 'dark');
+            apply(saved === 'dark' ? 'dark' : 'light');
   function paint(b) {
     var light = document.documentElement.getAttribute('data-theme') === 'light';
     b.innerHTML = light ? MOON : SUN;
