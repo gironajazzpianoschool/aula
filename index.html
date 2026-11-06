@@ -1,6 +1,19 @@
 <!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════
+     GJPS · index.html
+     v2.0 · 2026-11-06
+       · Tema clar net, marca d'aigua blanca, logos petits negres
+       · Botó "Més tard" amb recordatori + flash blau
+       · Diploma imprimible, cercador a Navegació Lliure
+       · Favicon, theme-color dinàmic, versió visible
+       · SW network-first (sw.js v2) + manifest actualitzat
+     v1.x · Prova pilot inicial
+     ═══════════════════════════════════════════════ -->
 <html lang="ca">
 <head>
+<meta name="theme-color" content="#1a1d27">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Girona Jazz Piano School®</title>
@@ -519,13 +532,18 @@ body.editmode .vid { padding-left: 34px; }
   
   /* FILA 1: Seguiment Continuat (sencer) */
   #mTrack { order: 1; flex: 1 1 100%; min-width: 0; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  /* FILA 2: Navegació Lliure | Apps */
-  #mFree  { order: 2; flex: 1 1 calc(50% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
-  #mApps  { order: 3; flex: 1 1 calc(50% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
-  /* FILA 3: FAQ | Interrogant | Idioma (3 botons en una sola fila) */
-  #mInfo      { order: 4; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 2px; }
-  #mHelp      { order: 5; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--rad); }
-  #langToggle { order: 6; flex: 1 1 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; justify-content: center; gap: 4px; }
+  /* FILA 2: Navegació Lliure | FAQ */
+  #mFree  { order: 2; flex: 1 1 calc(50% - 2px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
+  #mInfo  { order: 3; flex: 1 1 calc(50% - 2px); min-width: 0; height: 36px; font-size: 11px; padding: 0 2px; }
+  /* FILA 3: Apps | Interrogant | Lupa | Idioma (l'idioma manté la mida) */
+  #mApps  { order: 4; flex: 1 1 0; min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
+  #mHelp  { order: 5; flex: 1 1 0; min-width: 0; height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--rad); }
+  #mSearch{ order: 6; flex: 1 1 0; min-width: 0; height: 36px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--rad); display: inline-flex; align-items: center; }
+  #mSearch.on { border-color: var(--gold); color: var(--gold); }
+  #langToggle { order: 7; flex: 0 0 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; justify-content: center; gap: 4px; }
+  /* La caixa de cerca, plegada per defecte al mòbil */
+  .searchbox { display: none; flex: 1 1 100%; min-width: 0; margin: 0; }
+  body.search-on .searchbox { display: block; }
 
   /* Botó d'ajuda: interrogant vermell */
   #mHelp img { display: none; }
@@ -763,6 +781,61 @@ html[data-theme="light"] .faq-item h3 .faqico img {
   filter: brightness(0) !important;
 }
 
+/* ══ v2.0: CERCA, DIPLOMA, VERSIÓ, ACCESSIBILITAT ══ */
+.searchbox { flex: 0 1 360px; min-width: 180px; margin: 0 0 0 auto; position: relative; }
+.sb-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); display: flex; color: var(--mut); pointer-events: none; transition: color .2s; }
+.searchbox:focus-within .sb-ico { color: var(--gold); } /* 240px + 50%, empenyida a la dreta */
+@media (min-width: 768px) { #mSearch { display: none !important; } } /* al PC la lupa no cal */
+.searchbox input {
+  width: 100%; background: var(--card); border: 1px solid var(--line);
+  border-radius: 999px; padding: 9px 16px 9px 38px; color: var(--ink);
+  font-size: var(--fs-btn); font-family: inherit; transition: border-color .2s;
+}
+.searchbox input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 2px rgba(232,176,75,.2); }
+#appVer { position: fixed; left: 10px; bottom: 8px; z-index: 5; font-size: 10px; letter-spacing: .5px; color: var(--mut); opacity: .55; pointer-events: none; }
+.diploma-btn { margin-top: 14px; background: var(--gold); color: #141414; border: none; border-radius: 9px; padding: 10px 22px; font-weight: 800; font-size: var(--fs-btn); cursor: pointer; transition: all .2s; }
+.diploma-btn:hover { filter: brightness(1.1); }
+html[data-theme="light"] .diploma-btn { color: #f2e6c8; }
+#diploma { display: none; }
+@media print {
+  body > *:not(#diploma) { display: none !important; }
+  #diploma { display: block !important; }
+  .dip-frame { font-family: Georgia, 'Times New Roman', serif; color: #1a1408; background: #fff; padding: 46px 30px; border: 6px double #8a5300; text-align: center; }
+  .dip-logo { width: 92px; filter: brightness(0); }
+  .dip-frame h1 { letter-spacing: 2px; font-size: 22px; margin: 12px 0 4px; }
+  .dip-cert { margin: 34px 0 6px; font-size: 14px; }
+  .dip-name { font-size: 34px; font-weight: 700; border-bottom: 1px solid #8a5300; display: inline-block; padding: 0 34px 6px; margin: 0 0 20px; }
+  .dip-text { max-width: 540px; margin: 0 auto 28px; font-size: 14px; line-height: 1.65; }
+  .dip-date { font-size: 12px; color: #5a4830; }
+  .dip-sign { margin: 78px auto 0; width: 230px; border-top: 1px solid #1a1408; padding-top: 6px; font-size: 12px; }
+}
+/* ══ EFECTE DE PULSACIÓ DEL PLAY (ambdós modes) ══ */
+.now .play {
+  position: relative;
+  animation: playGlow 3.8s ease-in-out infinite !important;
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.now .play:hover { border-color: #6ff0b0; color: #6ff0b0; }
+html[data-theme="light"] .now .play {
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  animation: playGlowGold 3.8s ease-in-out infinite !important;
+}
+@keyframes playGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); transform: scale(1); }
+}
+@keyframes playGlowGold {
+  0%   { box-shadow: 0 0 0 0 rgba(138,83,0,0.5);  background: rgba(138,83,0,0.08); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(138,83,0,0), 0 0 14px 3px rgba(138,83,0,0.4); background: rgba(138,83,0,0.2); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(138,83,0,0);  background: rgba(138,83,0,0.05); transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -786,6 +859,7 @@ html[data-theme="light"] .faq-item h3 .faqico img {
       <button id="mInfo" title="Preguntes freqüents">FAQ</button>
     </span>
     <button id="mHelp" title="Com funciona / Cómo funciona"></button>
+    <button id="mSearch" title="Cercar / Buscar"></button>
     <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
     <button id="mEdit" title="Mode edició">⚙️</button>
     <button id="mSave" title="Guardar">💾</button>
@@ -856,10 +930,11 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
+var APP_VERSION = '2.0', APP_BUILD = '2026-11-06';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
 LS.skipAfter = lsJSON('gjps_skipafter_' + (LS.user || 'guest'), {});
-var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true;
+var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false;
 
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -895,6 +970,7 @@ const ICON_HEADPHONES = '<svg viewBox="0 0 24 24" width="15" height="15" fill="n
 const ICON_GRADUATION = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>';
 const ICON_FLASK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg>';
 const ICON_CHART = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>';
+const ICON_SEARCH = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
 
 function t() { return UI[LS.lang]; }
 function li() { return LS.lang === 'ca' ? 0 : 1; }
@@ -2007,6 +2083,25 @@ function sendNotesByEmail(videoId) {
 }
 function fmtDate(ts) { var d = new Date(ts); var pad = function (n) { return n < 10 ? '0' + n : n; }; return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
 
+function showDiploma() {
+  var ca = LS.lang === 'ca';
+  var d = new Date(), f = function (n) { return (n < 10 ? '0' : '') + n; };
+  var dataStr = f(d.getDate()) + '/' + f(d.getMonth() + 1) + '/' + d.getFullYear();
+  $('diploma').innerHTML =
+    '<div class="dip-frame">' +
+    '<img src="img/LOGO.png" class="dip-logo" alt="">' +
+    '<h1>GIRONA JAZZ PIANO SCHOOL®</h1>' +
+    '<p class="dip-cert">' + (ca ? 'Certifica que' : 'Certifica que') + '</p>' +
+    '<p class="dip-name">' + esc(LS.user) + '</p>' +
+    '<p class="dip-text">' + (ca
+      ? 'ha completat amb èxit el <b>Nivell Fonamental</b> de piano modern i jazz, incloent-hi tècnica, teoria, ritme, entrenament auditiu i pràctica funcional.'
+      : 'ha completado con éxito el <b>Nivel Fundamental</b> de piano moderno y jazz, incluyendo técnica, teoría, ritmo, entrenamiento auditivo y práctica funcional.') + '</p>' +
+    '<p class="dip-date">' + (ca ? 'Data: ' : 'Fecha: ') + dataStr + '</p>' +
+    '<div class="dip-sign">' + (ca ? 'El professor' : 'El profesor') + '</div>' +
+    '</div>';
+  window.print();
+}
+
 function renderTrack() {
   initializeOrder();
   var all = allVids().filter(function (x) { return !!driveSrc(x.v, x.id); });
@@ -2129,6 +2224,11 @@ function renderTrack() {
       giftGrid.appendChild(card);
     });
     celebration.appendChild(giftGrid);
+    var dipBtn = document.createElement('button');
+    dipBtn.className = 'diploma-btn';
+    dipBtn.textContent = LS.lang === 'ca' ? '🎓 Obtenir diploma' : '🎓 Obtener diploma';
+    dipBtn.onclick = showDiploma;
+    celebration.appendChild(dipBtn);
     tv.appendChild(celebration);
   } else if (next) {
     var now = document.createElement('div');
@@ -2184,6 +2284,49 @@ if (playBtn) {
   renderReviewBox(tv);
 }
 
+function normTxt(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+function updateBlockHighlights() {
+  var col = document.querySelector('#freeView .blkcol');
+  if (!col) return;
+  var btns = col.querySelectorAll('button[data-b]');
+  /* Sense cerca: il·lumina només el bloc actiu (com sempre) */
+  if (!freeQuery) {
+    btns.forEach(function (btn) { btn.classList.toggle('on', btn.dataset.b === freeBlock); });
+    return;
+  }
+  /* Amb cerca: il·lumina només els blocs amb coincidències visibles */
+  var hits = {};
+  document.querySelectorAll('#freeView .vgrid .vid').forEach(function (card) {
+    if (card.style.display === 'none') return;
+    hits[vidBlockById(card.dataset.vid)] = true;
+  });
+  btns.forEach(function (btn) { btn.classList.toggle('on', !!hits[btn.dataset.b]); });
+}
+
+function filterFreeGrid(q) {
+  var nq = normTxt(q || '');
+  document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
+    var visibles = 0;
+    g.querySelectorAll('.vid').forEach(function (card) {
+      var tit = card.querySelector('.vt');
+      var match = !nq || normTxt(tit ? tit.textContent : '').indexOf(nq) >= 0;
+      card.style.display = match ? '' : 'none';
+      if (match) visibles++;
+    });
+    var empty = g.querySelector('.search-empty');
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.className = 'search-empty';
+      empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:26px;color:var(--mut);display:none;';
+      empty.textContent = LS.lang === 'ca' ? 'Cap vídeo coincideix amb la cerca.' : 'Ningún vídeo coincide con la búsqueda.';
+      g.appendChild(empty);
+    }
+    empty.style.display = (nq && visibles === 0) ? 'block' : 'none';
+  });
+  updateBlockHighlights();
+}
+
 function renderFree() {
   if (autoLevelPending) { smartFreeLevel(); autoLevelPending = false; }
   var fv = $('freeView');
@@ -2210,6 +2353,54 @@ function renderFree() {
   };
   lr.appendChild(sel);
   fv.appendChild(lr);
+  var sb = document.createElement('div');
+  sb.className = 'searchbox';
+  sb.innerHTML = '<span class="sb-ico">' + ICON_SEARCH + '</span><input id="freeSearch" type="search" placeholder="' + (LS.lang === 'ca' ? 'Cerca un vídeo d\'aquest nivell…' : 'Busca un vídeo de este nivel…') + '" value="' + esc(freeQuery) + '">';
+  lr.appendChild(sb);
+  setTimeout(function () {
+    var inp = $('freeSearch');
+    if (!inp) return;
+    
+    inp.oninput = function () { 
+      var newValue = this.value;
+      var wasActive = (freeQuery.length >= 2);
+      var isActive = (newValue.length >= 2);
+      
+      freeQuery = newValue; 
+      freeSearchFocus = true; 
+      
+      if (wasActive !== isActive) {
+        // S'ha creuat el llindar de 2 lletres (en un sentit o l'altre)
+        // Cal reconstruir el DOM: o carregar tots els vídeos, o tornar al bloc actiu
+        render();
+        // Recuperem el focus just després que el DOM s'hagi pintat
+        requestAnimationFrame(function () {
+          var currentInp = $('freeSearch');
+          if (currentInp) {
+            currentInp.focus(); 
+            currentInp.setSelectionRange(currentInp.value.length, currentInp.value.length); 
+          }
+        });
+      } else if (isActive) {
+        // Ja estàvem en mode cerca i seguim estant-hi: només filtrem (sense tocar el DOM)
+        filterFreeGrid(newValue);
+      }
+      // Si isActive === false i wasActive === false (0 o 1 lletra): no fem res
+    };
+    
+    inp.onblur = function () { freeSearchFocus = false; };
+    
+    if (freeQuery.length >= 2) filterFreeGrid(freeQuery);
+    if (freeSearchFocus) { 
+      requestAnimationFrame(function () {
+        var currentInp = $('freeSearch');
+        if (currentInp) {
+          currentInp.focus(); 
+          currentInp.setSelectionRange(currentInp.value.length, currentInp.value.length); 
+        }
+      });
+    }
+  }, 0);
   var LV = null;
   LEVELS.forEach(function (L) { if (L.id === freeLevel) LV = L; });
   if (!LV || !LV.active) {
@@ -2227,8 +2418,9 @@ function renderFree() {
     BO.concat(['b']).forEach(function (b) {
       if (b === 'w') return;
       var btn = document.createElement('button');
+      btn.dataset.b = b;
       if (b === freeBlock) btn.className = 'on';
-      btn.onclick = function () { freeBlock = b; render(); };
+      btn.onclick = function () { freeBlock = b; if (freeQuery) freeQuery = ''; render(); };
       if (b === 'b') {
         var n = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); }).length;
         btn.title = LS.lang === 'ca' ? 'Vídeos que has marcat per repassar' : 'Vídeos que has marcado para repasar';
@@ -2244,7 +2436,7 @@ function renderFree() {
     });
     fv.appendChild(col);
   }
-  if (freeBlock === 'b') {
+  if (freeBlock === 'b' && !freeQuery) {
     var bm = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); });
     var gridB = document.createElement('div');
     gridB.className = 'vgrid';
@@ -2268,7 +2460,8 @@ function renderFree() {
         var bl = u[bb];
         if (bl && bl.v) bl.v.forEach(function (v, vi) {
           var id = si + '.' + ui + '.' + bb + '.' + vi;
-          if (vidBlockById(id) !== freeBlock) return;
+          /* Amb cerca activa: inclou tots els blocs del nivell. Sense cerca: només el bloc actiu. */
+          if (!freeQuery && vidBlockById(id) !== freeBlock) return;
           var key = v[li()];
           if (seen[key]) return;
           seen[key] = 1;
@@ -2552,7 +2745,8 @@ function setLabels() {
   } else {
     $('mHelp').innerHTML = '<img src="img/info-icon.png" alt="Informació">';
   }
-  $('mHelp').title = LS.lang === 'ca' ? 'Com funciona' : 'Cómo funciona';
+     $('mSearch').innerHTML = ICON_SEARCH;
+  $('mSearch').title = LS.lang === 'ca' ? 'Cercar vídeos' : 'Buscar vídeos';
   $('mInfo').title = LS.lang === 'ca' ? 'Preguntes freqüents' : 'Preguntas frecuentes';
   $('mEdit').textContent = t().edit;
   $('mSave').textContent = isMobileDevice() ? '📧' : '💾';
@@ -2624,6 +2818,18 @@ $('mFree').onclick = function () { setMode('free'); };
 $('mApps').onclick = function () { setMode('apps'); };
 $('mInfo').onclick = function () { setMode('info'); };
 $('mHelp').onclick = function () { setMode('help'); };
+$('mSearch').onclick = function () {
+  if (LS.mode !== 'free') setMode('free');
+  var on = document.body.classList.toggle('search-on');
+  this.classList.toggle('on', on);
+  if (on) {
+    setTimeout(function () { var i = $('freeSearch'); if (i) i.focus(); }, 0);
+  } else {
+    freeQuery = '';
+    var i2 = $('freeSearch');
+    if (i2) { i2.value = ''; filterFreeGrid(''); }
+  }
+};
 $('mEdit').onclick = function () { toggleEditMode(); };
 $('mSave').onclick = function () { saveAsFile(); };
 $('langToggle').onclick = function () {
@@ -2755,7 +2961,11 @@ function openFullscreenVideo(src) {
   var KEY = 'gjps_theme';
   var SUN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
   var MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
-  function apply(th) { document.documentElement.setAttribute('data-theme', th); }
+  function apply(th) {
+    document.documentElement.setAttribute('data-theme', th);
+    var mt = document.querySelector('meta[name="theme-color"]');
+    if (mt) mt.setAttribute('content', th === 'light' ? '#e2d4b0' : '#1a1d27');
+  }
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
   apply(saved === 'light' ? 'light' : 'dark');
@@ -3130,6 +3340,8 @@ document.addEventListener('mouseout', function (e) {
    12. ARRENCADA
    ================================================================ */
 try {
+  if ($('appVer')) $('appVer').textContent = 'GJPS v' + APP_VERSION + ' (' + APP_BUILD + ')';
+  console.log('🎹 GJPS v' + APP_VERSION + ' · ' + APP_BUILD);
   setLabels();
   loadDone();
   initDragDrop();
@@ -3139,6 +3351,9 @@ try {
   f.textContent = '️ Error init: ' + e.message;
 }
 </script>
+
+<div id="appVer"></div>
+<div id="diploma"></div>
 
 <!-- Modal de FAQ per a visitants (sense login) -->
 <div class="lgin" id="faqModal">

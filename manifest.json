@@ -1,0 +1,12 @@
+{
+  "name": "Girona Jazz Piano School",
+  "short_name": "GJPS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1d27",
+  "theme_color": "#1a1d27",
+  "icons": [
+    { "src": "img/LOGO.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/LOGO.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+  ]
+}
