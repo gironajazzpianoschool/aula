@@ -757,6 +757,12 @@ html[data-theme="light"] .acts button.bk.bookmarked:hover {
   color: #4c3a8c !important;
 }
 
+/* ══ LOGO PETIT MODE CLAR: negre per contrastar sobre el crema ══ */
+html[data-theme="light"] .appcard .ae img,
+html[data-theme="light"] .faq-item h3 .faqico img {
+  filter: brightness(0) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1096,7 +1102,8 @@ var FAQS = [
 ];
 
 var HELP = [
-  { ico: ICON_TARGET, t: { ca: 'Seguiment Continuat', es: 'Seguimiento Continuo' }, p: { ca: 'És el teu itinerari guiat. La targeta «Ara et toca» t\'indica el següent vídeo que has de mirar. Quan l\'hagis vist i practicat, prem «Marcar fet» i l\'aula et proposarà automàticament el següent pas.', es: 'Es tu itinerario guiado. La tarjeta «Ahora te toca» te indica el siguiente vídeo que debes ver. Cuando lo hayas visto y practicado, pulsa «Marcar hecho» y el aula te propondrá automáticamente el siguiente paso.' } },
+  { ico: ICON_TARGET, t: { ca: 'Seguiment Continuat', es: 'Seguimiento Continuo' }, p: { ca: 'És el teu itinerari guiat. La targeta «Ara et toca» t\'indica el següent vídeo que has de mirar. Quan l\'hagis vist i practicat, prem «Marcar fet» i l\'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.', es: 'Es tu itinerario guiado. La tarjeta «Ahora te toca» te indica el siguiente vídeo que debes ver. Cuando lo hayas visto y practicado, pulsa «Marcar hecho» y el aula te propondrá automáticamente el siguiente paso. Y si un día no te apetece el vídeo que toca, pulsa «⏭ Más tarde» para aplazarlo sin romper el ritmo.' } },
+  { ico: '⏭', t: { ca: 'Deixar un vídeo per a més tard', es: 'Dejar un vídeo para más tarde' }, p: { ca: 'Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l\'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l\'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.', es: 'Cuando pulses «⏭ Más tarde» en la tarjeta «Ahora te toca», el Seguimiento Continuo te propondrá inmediatamente el vídeo siguiente del itinerario, como si nada. El vídeo aplazado no se pierde ni se marca como hecho: cuando valides el vídeo que lo ha sustituido, lo volverás a encontrar delante como recordatorio, para que lo hagas cuando te vaya mejor. Aplazar un vídeo no afecta a tu porcentaje de progreso, a la lista de repaso ni a las notas personales: simplemente reordena el día a día de tu recorrido.' } },
   { ico: ICON_FOLDER, t: { ca: 'Navegació Lliure', es: 'Navegación Libre' }, p: { ca: 'Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure\'n tots els vídeos i materials.', es: 'Para explorar a tu aire: elige el nivel en el desplegable y el bloque (Técnica, Teoría, Ritmo, Auditivo o Práctica) para ver todos sus vídeos y materiales.' } },
   { ico: '⭐', t: { ca: 'Vídeos importants i opcionals', es: 'Vídeos importantes y opcionales' }, p: { ca: 'Cada vídeo porta una icona: ⭐ important (no te\'l saltis) o ⭕ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure\'n el significat.', es: 'Cada vídeo lleva un icono: ⭐ importante (no te lo saltes) o ⭕ opcional (puedes dejarlo para más adelante si tienes prisa). Pasa el ratón por encima para ver su significado.' } },
   { ico: '🔖', t: { ca: 'La teva llista de repàs', es: 'Tu lista de repaso' }, p: { ca: 'Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.', es: 'Con el botón «Repasar» marcas un vídeo para tenerlo siempre a mano. Los encontrarás todos reunidos en la lista de repaso, debajo de cada vista.' } },
