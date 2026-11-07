@@ -626,6 +626,43 @@ html[data-theme="blue"] .hbrand h1 {
   animation: none !important;
 }
 
+/* Interrogant BLANC quan el botó d'ajuda està actiu (mode clar) */
+html[data-theme="blue"] #mHelp.on svg,
+html[data-theme="blue"] #mHelp:active svg,
+html[data-theme="blue"] #mHelp:focus svg {
+  stroke: #ffffff !important;
+}
+
+/* Smartphone mode clar: lupa i interrogant amb colors unificats */
+@media (max-width: 767px) {
+  /* Lupa desactivada: negre (no blanc) */
+  html[data-theme="blue"] #mSearch {
+    color: #1a2030 !important;
+  }
+  html[data-theme="blue"] #mSearch svg {
+    stroke: #1a2030 !important;
+  }
+  
+  /* Lupa activada: fons blau + lupa blanca (com l'interrogant) */
+  html[data-theme="blue"] #mSearch.on {
+    background: #3d5a80 !important;
+    border-color: #3d5a80 !important;
+    color: #ffffff !important;
+  }
+  html[data-theme="blue"] #mSearch.on svg {
+    stroke: #ffffff !important;
+  }
+  
+  /* Interrogant vermell activat: fons vermell + interrogant blanc */
+  html[data-theme="blue"] #mHelp.on {
+    background: #ff5577 !important;
+    border-color: #ff5577 !important;
+  }
+  html[data-theme="blue"] #mHelp.on::before {
+    color: #ffffff !important;
+  }
+}
+
 </style>
 </head>
 <body>
