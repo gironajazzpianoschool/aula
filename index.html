@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <!-- ═══════════════════════════════════════════════
      GJPS · index.html
-     v2.0 · 2026-11-06
-       · Tema clar net, marca d'aigua blanca, logos petits negres
-       · Botó "Més tard" amb recordatori + flash blau
-       · Diploma imprimible, cercador a Navegació Lliure
-       · Favicon, theme-color dinàmic, versió visible
-       · SW network-first (sw.js v2) + manifest actualitzat
-     v1.x · Prova pilot inicial
+     v2.0 · 2026-11-07 · Codi net i definitiu
      ═══════════════════════════════════════════════ -->
 <html lang="ca">
 <head>
-<meta name="theme-color" content="#e2d4b0">
+<meta name="theme-color" content="#1a1d27">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta charset="UTF-8">
@@ -22,7 +16,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 /* ============================================================
    1. VARIABLES I RESET
    ============================================================ */
@@ -33,24 +26,22 @@
   --fs-h1: clamp(19px, 2.3vw, 26px); --fs-h2: 24px;
   --hbtn: 42px; --rad: 10px; --rad-lg: 14px; --wm-op: .4;
 }
-@media (min-width: 1600px) {
-  :root { --fs: 16px; --fs-sm: 14px; --fs-btn: 15px; }
-}
-@media (min-width: 2200px) {
-  :root { --fs: 18px; --fs-sm: 15px; --fs-btn: 16px; }
-}
+@media (min-width: 1600px) { :root { --fs: 16px; --fs-sm: 14px; --fs-btn: 15px; } }
+@media (min-width: 2200px) { :root { --fs: 18px; --fs-sm: 15px; --fs-btn: 16px; } }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { overflow-y: scroll; }
 @media (min-width: 769px) and (max-width: 1600px) { html { zoom: .95; } }
 @media (min-width: 1601px) { html { zoom: 1.35; } }
 body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.55; font-size: var(--fs); }
+body, header, .vid, .now, .donut, .blkcol button, .modes button, .appcard, .faq-item {
+  transition: background-color .35s ease, color .35s ease, border-color .35s ease;
+}
 
 /* ============================================================
-   2. ELEMENTS GENERALS I CAPÇALERA
+   2. MARCA D'AIGUA I CAPÇALERA
    ============================================================ */
 #wm { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: url('img/LOGO.png') center/42% no-repeat; filter: blur(0) brightness(1.05) contrast(1.15) saturate(1.05); opacity: var(--wm-op); }
 #wm::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(10,12,16,.10) 0%, rgba(10,12,16,.85) 78%); }
-
 header { position: relative; z-index: 1; background: var(--bg); padding: 13px 5vw; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 13px; }
 .hbrand { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .hbrand h1 { font-size: var(--fs-h1); letter-spacing: 1.2px; font-weight: 800; background: linear-gradient(90deg, #f7dc9a 0%, var(--gold) 45%, #c98f3a 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
@@ -62,6 +53,9 @@ header { position: relative; z-index: 1; background: var(--bg); padding: 13px 5v
 .ubtn.logoutbtn { height: 26px; padding: 0 10px; font-size: 11px; letter-spacing: .5px; color: var(--mut); }
 .ubtn.logoutbtn:hover { color: var(--danger); border-color: var(--danger); }
 
+/* ============================================================
+   3. BOTONS DE NAVEGACIÓ (HEADER)
+   ============================================================ */
 .hdr { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .modes { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .modes button { height: var(--hbtn); line-height: 1; padding: 0 9px; background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)); border: 1.5px solid var(--line); color: var(--ink); border-radius: var(--rad); cursor: pointer; font-weight: 700; font-size: var(--fs-btn); display: inline-flex; align-items: center; justify-content: center; gap: 7px; transition: all .2s; text-shadow: 0 1px 2px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden; }
@@ -71,19 +65,21 @@ header { position: relative; z-index: 1; background: var(--bg); padding: 13px 5v
 #mFree { min-width: 165px; }
 #mApps { min-width: 82px; }
 #mInfo { min-width: 52px; }
-
 .langbtn { height: 34px; padding: 0 14px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--mut); cursor: pointer; font-weight: 800; font-size: var(--fs-sm); letter-spacing: 1px; display: inline-flex; align-items: center; gap: 7px; transition: all .2s; }
 .langbtn:hover { border-color: var(--gold); color: var(--ink); }
 .langbtn #langCur { color: var(--gold); }
 
-#mEdit { position: fixed; right: 18px; bottom: 18px; z-index: 999999; width: 46px; height: 46px; border-radius: 50%; background: var(--card); border: 1.5px solid var(--line); color: var(--ink); cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; transition: all .2s; box-shadow: 0 6px 18px rgba(0,0,0,.45); pointer-events: auto !important; isolation: isolate; }
+/* ============================================================
+   4. BOTONS D'EDICIÓ (FIXOS)
+   ============================================================ */
+#mEdit { position: fixed; right: 18px; bottom: 18px; z-index: 9999999; width: 46px; height: 46px; border-radius: 50%; background: var(--card); border: 1.5px solid var(--line); color: var(--ink); cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; transition: all .2s; box-shadow: 0 6px 18px rgba(0,0,0,.45); pointer-events: auto !important; isolation: isolate; }
 #mEdit:hover { border-color: var(--gold); transform: translateY(-2px); }
 #mEdit.on { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.1); }
-#mSave { position: fixed; right: 18px; bottom: 72px; z-index: 9999; width: 46px; height: 46px; border-radius: 50%; background: #39d98a; border: none; color: #0a0c10; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,.5); transition: all .2s; pointer-events: auto !important; }
+#mSave { position: fixed; right: 18px; bottom: 72px; z-index: 9999999; width: 46px; height: 46px; border-radius: 50%; background: #39d98a; border: none; color: #0a0c10; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,.5); transition: all .2s; pointer-events: auto !important; }
 #mSave:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(57,217,138,.45); }
 
 /* ============================================================
-   3. LAYOUT PRINCIPAL I SELECTOR DE NIVELL
+   5. LAYOUT PRINCIPAL I SELECTOR DE NIVELL
    ============================================================ */
 main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .lvls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -98,7 +94,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .wipbox .wipicon { font-size: 44px; margin-bottom: 10px; }
 
 /* ============================================================
-   4. SEGMENT CONTINUAT
+   6. SEGMENT CONTINUAT
    ============================================================ */
 .now { background: var(--card); border: 1px solid var(--gold); border-radius: var(--rad-lg); padding: 16px; margin-bottom: 24px; box-shadow: 0 6px 24px rgba(232,176,75,0.12); }
 .ctx { color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 800; }
@@ -109,6 +105,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .donut .lbl { font-size: var(--fs-xs); color: var(--mut); letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
 .donut.tot { border-color: var(--gold); }
 .donut.tot .lbl { color: var(--gold); }
+.donut.dim { opacity: .35; filter: grayscale(.9); }
 .reviewbox { background: var(--card); border: 1px solid var(--gold); border-radius: var(--rad-lg); padding: 16px; margin-top: 24px; box-shadow: 0 6px 24px rgba(232,176,75,0.12); }
 .reviewbox h3 { color: var(--gold); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
 .reviewbox h3 .toggle { font-size: 18px; transition: transform .2s; }
@@ -122,7 +119,7 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .ritem button:hover { border-color: var(--gold); color: var(--ink); }
 
 /* ============================================================
-   5. NAVEGACIÓ LLIURE
+   7. NAVEGACIÓ LLIURE
    ============================================================ */
 .blkcol { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
 .blkcol button { background: var(--card); border: 1px solid var(--line); color: var(--mut); border-radius: 12px; padding: 11px 12px; cursor: pointer; font-weight: 700; font-size: var(--fs-btn); letter-spacing: 1px; text-transform: uppercase; transition: all .2s; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 42px; }
@@ -142,13 +139,12 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 12px; }
 
 /* ============================================================
-   6. TARGETA DE VÍDEO
+   8. TARGETA DE VÍDEO
    ============================================================ */
 .vid { border: 1px solid var(--line); border-radius: 12px; padding: 9px 11px; background: #151a23; transition: border-color .2s; position: relative; }
 .vid:hover { border-color: var(--gold); }
 .vid.nolink { background: #10131a; border-style: dashed; opacity: .6; filter: grayscale(.6); }
 .vid.nolink .vid-number { background: var(--danger); color: #fff; box-shadow: none; }
-.donut.dim { opacity: .35; filter: grayscale(.9); }
 .stagetag { color: var(--mut); font-size: var(--fs-xs); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
 .vr { display: flex; gap: 10px; align-items: center; position: relative; }
 .vr .play { width: 32px; height: 32px; flex: none; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); background: none; cursor: pointer; font-size: 12px; transition: all .2s; }
@@ -164,21 +160,9 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .acts { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
 .acts button { background: none; border: 1px solid var(--line); color: var(--mut); border-radius: 8px; padding: 4px 7px; cursor: pointer; font-size: 11px; white-space: nowrap; transition: all .2s; }
 .acts button:hover { border-color: var(--gold); color: var(--ink); }
-.acts button.done { border-color: var(--ok); color: var(--ok); }
-.now .acts button.ck:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.08); }
 .acts button:disabled { opacity: .35; cursor: not-allowed; }
 .acts button:disabled:hover { border-color: var(--line); color: var(--mut); background: none; }
 .acts button.done:disabled { opacity: 1; cursor: default; }
-@media (hover: none) {
-  .acts button:hover:not(.done):not(.bookmarked), .now .acts button.ck:hover:not(.done) { border-color: var(--line); color: var(--mut); background: none; }
-  .acts button.done:hover, .now .acts button.ck.done:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.10); }
-  .acts button.bookmarked:hover { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
-  .blkcol button:hover:not(.on) { border-color: var(--line); color: var(--ink); background: var(--card); }
-}
-.acts button.bookmarked { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,0.08); }
-.acts button.nt.has-notes { border-color: var(--gold); color: var(--gold); font-weight: 700; }
-.acts button.nt.active { border-color: var(--gold); color: var(--gold); animation: notePulse 2s infinite; }
-@keyframes notePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,176,75,0.7); } 50% { box-shadow: 0 0 0 6px rgba(232,176,75,0); } }
 .vidadjpills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-start; }
 .inl { display: none; margin-top: 10px; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; position: relative; }
 .inl.on { display: block; }
@@ -201,11 +185,29 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .note .ndel:hover { opacity: 1; }
 .notes textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; color: var(--ink); padding: 8px 10px; font-size: var(--fs-btn); margin-top: 6px; font-family: inherit; resize: vertical; min-height: 60px; transition: border-color .2s; }
 .notes textarea:focus { border-color: var(--gold); outline: none; }
-.save-note-btn { margin-top: 8px; padding: 6px 12px; background: var(--gold); color: #141414; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12px; }
-.save-note-btn:hover { background: #f0c060; }
 
 /* ============================================================
-   7. BOTONS D'EDICIÓ
+   9. BOTONS D'ACCIÓ (UNIFICATS)
+   ============================================================ */
+/* FET (verd) */
+.acts button.done { border-color: var(--ok); color: var(--ok); }
+.now .acts button.ck:hover { border-color: var(--ok); color: var(--ok); background: rgba(57,217,138,0.08); }
+/* MARCAT (groc suau) */
+.acts button.bk.bookmarked { background: rgba(232,176,75,0.16); border-color: rgba(232,176,75,0.55); color: #e8b04b; }
+.acts button.bk.bookmarked:hover { background: rgba(232,176,75,0.26); }
+/* NOTES (lila suau) */
+.acts button.nt.has-notes,
+.acts button.nt.active { background: rgba(155,139,208,0.16); border-color: rgba(155,139,208,0.55); color: #b9a8e8; }
+.acts button.nt.active { animation: notePulse 2s infinite; }
+@keyframes notePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,176,75,0.7); } 50% { box-shadow: 0 0 0 6px rgba(232,176,75,0); } }
+/* MÉS TARD (blau) */
+.acts button.skip.skipped { background: #4cc9f0 !important; border-color: #4cc9f0 !important; color: #0a2e38 !important; font-weight: 700; box-shadow: 0 0 10px rgba(76,201,240,.35); }
+/* GUARDAR NOTA (lila) */
+.save-note-btn { margin-top: 8px; padding: 6px 12px; background: rgba(155,139,208,0.20); color: #b9a8e8; border: 1px solid rgba(155,139,208,0.55); border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12px; }
+.save-note-btn:hover { background: rgba(155,139,208,0.32); }
+
+/* ============================================================
+   10. DRAG & DROP I BOTONS D'EDICIÓ
    ============================================================ */
 .vid-del-btn { background: var(--danger); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; flex-shrink: 0; }
 .vid-del-btn:hover { transform: scale(1.1); }
@@ -214,7 +216,6 @@ main { position: relative; padding: 20px 5vw; max-width: 1300px; margin: auto; }
 .vid-order-btn svg { width: 14px; height: 14px; }
 .add-vid-btn { border: 2px dashed var(--gold); background: rgba(232,176,75,0.05); border-radius: 12px; padding: 20px; color: var(--gold); cursor: pointer; font-weight: 700; font-size: 13px; transition: all .2s; display: flex; align-items: center; justify-content: center; min-height: 100px; }
 .add-vid-btn:hover { background: rgba(232,176,75,0.15); }
-/* ── Drag & Drop ── */
 .vid-drag { position: absolute; top: 10px; left: 8px; width: 20px; height: 20px; border-radius: 5px; background: transparent; border: none; color: var(--mut); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: grab; z-index: 7; user-select: none; touch-action: none; transition: all .2s; opacity: .5; }
 .vid-drag:hover { opacity: 1; color: var(--gold); transform: scale(1.15); }
 body.editmode .vid { padding-left: 34px; }
@@ -228,7 +229,10 @@ body.editmode .vid { padding-left: 34px; }
 #drag-blockbar.on { display: flex; }
 .drag-blockbtn { background: var(--bg); border: 1px solid var(--line); color: var(--mut); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; }
 .drag-blockbtn.over { border-color: var(--gold); color: var(--gold); background: rgba(232,176,75,.12); }
-/* ── Editor de Partitures ── */
+
+/* ============================================================
+   11. EDITOR DE PARTITURES
+   ============================================================ */
 .docsmodal { position: fixed; inset: 0; background: rgba(5,6,10,.96); z-index: 70; display: none; align-items: center; justify-content: center; padding: 4vw; }
 .docsmodal.on { display: flex; }
 .docsbox { background: var(--card); border: 1px solid var(--gold); border-radius: var(--rad-lg); padding: 22px; width: min(760px, 94vw); max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 32px rgba(232,176,75,.2); }
@@ -248,7 +252,7 @@ body.editmode .vid { padding-left: 34px; }
 .docsbox .addrow:hover { background: rgba(232,176,75,.15); }
 
 /* ============================================================
-   8. APPS I FAQ
+   12. APPS I FAQ
    ============================================================ */
 .appgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
 .appcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--rad-lg); padding: 18px; text-align: center; transition: border-color .2s; }
@@ -274,7 +278,7 @@ body.editmode .vid { padding-left: 34px; }
 .faq-item.open p { display: block; }
 
 /* ============================================================
-   9. REPRODUCTOR A PANTALLA COMPLETA
+   13. REPRODUCTOR A PANTALLA COMPLETA
    ============================================================ */
 .modal { position: fixed; inset: 0; background: #000; display: none; z-index: 99999; padding: 0; margin: 0; overflow: hidden; }
 .modal.on { display: block; }
@@ -282,33 +286,17 @@ body.editmode .vid { padding-left: 34px; }
 .frame { position: absolute; inset: 0; background: #000; overflow: hidden; }
 .frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; background: #000; }
 .frame iframe.active { pointer-events: auto; }
-
-.close {
-  position: absolute; top: 14px; right: 14px;
-  background: rgba(0,0,0,0.85); border: 2px solid var(--gold);
-  color: var(--gold); font-size: 20px; font-weight: 900;
-  line-height: 1; width: 44px; height: 44px; border-radius: 50%;
-  cursor: pointer; z-index: 100000;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .3s; 
-  opacity: 0; 
-  pointer-events: auto; 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
+.close { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.85); border: 2px solid var(--gold); color: var(--gold); font-size: 20px; font-weight: 900; line-height: 1; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 100000; display: flex; align-items: center; justify-content: center; transition: all .3s; opacity: 0; pointer-events: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 .modal.show-controls .close { opacity: 1; }
 .close:hover { background: var(--gold); color: #000; transform: scale(1.1); }
-
 .video-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; cursor: pointer; transition: opacity .3s; touch-action: manipulation; }
 .video-overlay.hidden { opacity: 0; pointer-events: none; }
 .video-overlay .icon { font-size: 58px; color: var(--gold); margin-bottom: 16px; animation: pulse 1.5s infinite; pointer-events: none; }
-.video-overlay .text {
-  color: #fff; text-align: center; max-width: 85%; pointer-events: none;
-  line-height: 1.6; font-family: 'Inter', system-ui, sans-serif;
-}
+.video-overlay .text { color: #fff; text-align: center; max-width: 85%; pointer-events: none; line-height: 1.6; font-family: 'Inter', system-ui, sans-serif; }
 @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: .8; } }
 
 /* ============================================================
-   10. MODALS
+   14. MODALS
    ============================================================ */
 .lgin, .adjsel { position: fixed; inset: 0; background: rgba(5,6,10,.98); z-index: 60; display: none; align-items: center; justify-content: center; padding: 5vw; }
 .lgin.on, .adjsel.on { display: flex; }
@@ -339,14 +327,61 @@ body.editmode .vid { padding-left: 34px; }
 .aselbox .actions .go.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .aselbox .actions .go.secondary:hover { border-color: var(--gold); }
 
+/* Celebració graduació */
 .celebration { background: linear-gradient(135deg, rgba(232,176,75,0.05), rgba(232,176,75,0.02)); border: 2px solid var(--gold); border-radius: var(--rad-lg); padding: 14px 18px; text-align: center; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(232,176,75,0.2); }
 .celebration h2 { font-size: 20px; color: var(--gold); margin-bottom: 4px; font-weight: 800; text-shadow: 0 2px 8px rgba(232,176,75,0.3); }
 .celebration .subtitle { font-size: 13px; color: var(--mut); margin-bottom: 6px; }
-.trophy-container { position: relative; display: inline-block; margin: 6px 0; perspective: 1000px; }
-.trophy { font-size: 44px; animation: trophyRotate 6s linear infinite; filter: drop-shadow(0 0 12px rgba(232,176,75,0.6)); display: inline-block; }
-@keyframes trophyRotate { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-.trophy-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(232,176,75,0.3) 0%, transparent 70%); border-radius: 50%; animation: glowPulse 2s ease-in-out infinite; pointer-events: none; }
-@keyframes glowPulse { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+/* ── TROFEU ESPECTACULAR: gira, flota, brilla i llença espurnes ── */
+.trophy-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px 0;
+  perspective: 700px;
+  animation: trophyFloat 3.2s ease-in-out infinite;
+}
+@keyframes trophyFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.trophy-container::before,
+.trophy-container::after {
+  content: '✦';
+  position: absolute;
+  color: var(--gold);
+  font-size: 15px;
+  animation: sparkle 1.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+.trophy-container::before { top: -8px; left: -16px; }
+.trophy-container::after { bottom: -6px; right: -16px; animation-delay: 0.9s; }
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.25) rotate(180deg); }
+}
+.trophy {
+  font-size: 54px;
+  display: inline-block;
+  animation: trophySpin 5.5s linear infinite;
+  filter: drop-shadow(0 0 16px rgba(232,176,75,0.85)) drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+  transform-style: preserve-3d;
+}
+@keyframes trophySpin {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.trophy-glow {
+  position: absolute;
+  inset: -24px;
+  background: radial-gradient(circle, rgba(232,176,75,0.5) 0%, rgba(232,176,75,0.18) 45%, transparent 72%);
+  border-radius: 50%;
+  animation: glowPulse 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
 .gift-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 14px; }
 .gift-card { background: var(--card); border: 2px solid var(--gold); border-radius: var(--rad-lg); padding: 14px; text-align: center; transition: all .3s; cursor: pointer; }
 .gift-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(232,176,75,0.3); border-color: #f0c060; }
@@ -357,177 +392,66 @@ body.editmode .vid { padding-left: 34px; }
 .help-item h3 { color: var(--gold); font-size: 14px; margin-bottom: 4px; }
 .help-item p { color: var(--mut); font-size: var(--fs-sm); line-height: 1.6; }
 
+/* Toast */
 #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--gold); color: var(--ink); padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 999999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: center; max-width: 90vw; }
 
 /* ============================================================
-   11. RESPONSIVE - NET I ENDREÇAT
+   15. ANIMACIONS (PLAY, TOOLTIP, OBRE)
    ============================================================ */
-
-/* ── PLAY DESTACAT v4 (Seguiment Continuat) ── */
-.now .play {
-  position: relative;
-  animation: playGlow 3.8s ease-in-out infinite;
-  border-color: var(--ok);
-  color: var(--ok);
-}
+.now .play { position: relative; animation: playGlow 3.8s ease-in-out infinite; border-color: var(--ok); color: var(--ok); }
 @keyframes playGlow {
   0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); transform: scale(1); }
   50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); transform: scale(1.06); }
   100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); transform: scale(1); }
 }
-.now .play:hover {
-  animation-play-state: running;
-  border-color: #6ff0b0;
-  color: #6ff0b0;
-}
-.now .vr[data-tip]::after {
-  content: attr(data-tip);
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 0;
-  transform: none;
-  width: max-content;
-  max-width: min(340px, 78vw);
-  white-space: normal;
-  text-align: center;
-  background: #1a1f28;
-  color: #c3c9d4;
-  border: 1px solid var(--line);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .3px;
-  opacity: 0;
-  clip-path: inset(0 100% 0 0);
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,.45), 0 0 15px rgba(232,176,75, 0.25);
-  z-index: 100;
-}
-.now .vr[data-tip]::before {
-  content: '';
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 11px;
-  transform: none;
-  border: 5px solid transparent;
-  border-top-color: var(--line);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .15s ease;
-  z-index: 100;
-}
-.now .vr.tip-on::after {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
-  transition: clip-path 1.05s steps(26, end), opacity .08s linear;
-}
+.now .play:hover { animation-play-state: running; border-color: #6ff0b0; color: #6ff0b0; }
+.now .vr[data-tip]::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 12px); left: 0; transform: none; width: max-content; max-width: min(340px, 78vw); white-space: normal; text-align: center; background: #1a1f28; color: #c3c9d4; border: 1px solid var(--line); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: .3px; opacity: 0; clip-path: inset(0 100% 0 0); pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.45), 0 0 15px rgba(232,176,75, 0.25); z-index: 100; }
+.now .vr[data-tip]::before { content: ''; position: absolute; bottom: calc(100% + 6px); left: 11px; transform: none; border: 5px solid transparent; border-top-color: var(--line); opacity: 0; pointer-events: none; transition: opacity .15s ease; z-index: 100; }
+.now .vr.tip-on::after { opacity: 1; clip-path: inset(0 0 0 0); transition: clip-path 1.05s steps(26, end), opacity .08s linear; }
 .now .vr.tip-on::before { opacity: 1; }
-.now .vr.tip-fade::after {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.now .vr.tip-fade::before {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-/* ── BOTÓ "OBRE" DESTACAT (TONAL EMOTIONS) ── */
-.appcard button.obre-destacat {
-  animation: obreGlow 3.8s ease-in-out infinite;
-}
+.now .vr.tip-fade::after { opacity: 0; transition: opacity 0.5s ease; }
+.now .vr.tip-fade::before { opacity: 0; transition: opacity 0.5s ease; }
+.appcard button.obre-destacat { animation: obreGlow 3.8s ease-in-out infinite; }
 @keyframes obreGlow {
   0%   { box-shadow: 0 0 0 0 rgba(232,176,75,0.5); transform: scale(1); filter: brightness(1); }
   50%  { box-shadow: 0 0 0 4px rgba(232,176,75,0), 0 0 10px 2px rgba(232,176,75,0.28); transform: scale(1.02); filter: brightness(1.10); }
   100% { box-shadow: 0 0 0 0 rgba(232,176,75,0); transform: scale(1); filter: brightness(0.85); }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   PC / TABLET (> 767px)
-   ══════════════════════════════════════════════════════════════ */
+/* ============================================================
+   16. RESPONSIVE — PC / TABLET (> 767px)
+   ============================================================ */
 @media (min-width: 768px) {
-  /* Botó d'ajuda PC: estil base (mode fosc = com FAQ) */
   #mHelp {
     background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
     border: 1.5px solid var(--line) !important;
     border-radius: var(--rad) !important;
     color: #f2f2f2 !important;
-    box-shadow: none !important;
-    outline: none !important;
-    padding: 0 !important;
-    margin: 0 4px !important;
-    width: 42px !important;
-    height: 42px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    overflow: visible !important;
+    box-shadow: none !important; outline: none !important;
+    padding: 0 !important; margin: 0 4px !important;
+    width: 42px !important; height: 42px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    cursor: pointer; position: relative; z-index: 1; overflow: visible !important;
     transition: all .2s !important;
   }
-  #mHelp:hover {
-    transform: scale(1.1);
-    background: linear-gradient(135deg, rgba(232,176,75,0.18), rgba(232,176,75,0.06)) !important;
-    border-color: var(--gold) !important;
-  }
+  #mHelp:hover { transform: scale(1.1); background: linear-gradient(135deg, rgba(232,176,75,0.18), rgba(232,176,75,0.06)) !important; border-color: var(--gold) !important; }
   #mHelp img { display: none !important; }
   #mHelp svg { width: 20px !important; height: 20px !important; }
-  /* Quan està actiu, daurat (com FAQ) */
-  #mHelp.on,
-  #mHelp:active,
-  #mHelp:focus {
+  #mHelp.on, #mHelp:active, #mHelp:focus {
     background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-    box-shadow: 0 0 14px rgba(232,176,75,0.22) !important;
-    outline: none !important;
+    border-color: var(--gold) !important; color: var(--gold) !important;
+    box-shadow: 0 0 14px rgba(232,176,75,0.22) !important; outline: none !important;
   }
-
-  /* PC mode clar: botó integrat amb el fons crema */
-  html:not([data-theme="dark"]) #mHelp {
-    background: var(--card) !important;
-    border-color: var(--line) !important;
-    color: #1a1408 !important;
-  }
-  html:not([data-theme="dark"]) #mHelp:hover {
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-  }
-  html:not([data-theme="dark"]) #mHelp.on,
-  html:not([data-theme="dark"]) #mHelp:active,
-  html:not([data-theme="dark"]) #mHelp:focus {
-    background: rgba(138,83,0,.12) !important;
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-    box-shadow: none !important;
-  }
-  #mInfo { position: relative !important; z-index: 3 !important; }
-  #langToggle { position: relative !important; z-index: 3 !important; }
-  
-  /* FAQ amb fons correcte (NOMÉS en mode fosc) */
-  html[data-theme="dark"] #mInfo,
-  html:not([data-theme="light"]) #mInfo {
-    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
-    color: #f2f2f2 !important;
-    border: 1.5px solid var(--line) !important;
-  }
-  html[data-theme="dark"] #mInfo:hover,
-  html[data-theme="dark"] #mInfo.on,
-  html:not([data-theme="light"]) #mInfo:hover,
-  html:not([data-theme="light"]) #mInfo.on {
-    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
-    color: #e8b04b !important;
-    border-color: #e8b04b !important;
-  }
+  #mInfo, #langToggle { position: relative !important; z-index: 3 !important; }
+  html[data-theme="dark"] #mInfo, html:not([data-theme="light"]) #mInfo { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; color: #f2f2f2 !important; border: 1.5px solid var(--line) !important; }
+  html[data-theme="dark"] #mInfo:hover, html[data-theme="dark"] #mInfo.on, html:not([data-theme="light"]) #mInfo:hover, html:not([data-theme="light"]) #mInfo.on { background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important; color: #e8b04b !important; border-color: #e8b04b !important; }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SMARTPHONE (≤ 767px)
-   ══════════════════════════════════════════════════════════════ */
+/* ============================================================
+   17. RESPONSIVE — SMARTPHONE (≤ 767px)
+   ============================================================ */
 @media (max-width: 767px) {
-  /* Grids */
+  .hbrand h1 { font-size: 18px !important; }
   .donuts { grid-template-columns: repeat(3, 1fr); }
   .blkcol { grid-template-columns: repeat(3, 1fr); }
   .vgrid { grid-template-columns: 1fr; }
@@ -537,62 +461,32 @@ body.editmode .vid { padding-left: 34px; }
   .faq-item h3 { font-size: 15px; }
   .vidadjpills { flex-direction: column; }
   .vidadjpills a { width: 100%; justify-content: center; }
-  
-  /* Header: distribució en 2 files */
-  .hdr { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 4px;
-    width: 100%; 
-    align-items: stretch; 
-    padding: 0; 
-  }
+  .hdr { display: flex; flex-wrap: wrap; gap: 4px; width: 100%; align-items: stretch; padding: 0; }
   .modes { display: contents; }
-  
-  /* FILA 1: Seguiment Continuat (sencer) */
   #mTrack { order: 1; flex: 1 1 100%; min-width: 0; height: 42px; font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  /* FILA 2: Navegació Lliure | FAQ */
   #mFree  { order: 2; flex: 1 1 calc(50% - 2px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
   #mInfo  { order: 3; flex: 1 1 calc(50% - 2px); min-width: 0; height: 36px; font-size: 11px; padding: 0 2px; }
-  /* FILA 3: Apps | Interrogant | Lupa | Idioma (l'idioma manté la mida) */
   #mApps  { order: 4; flex: 1 1 0; min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; }
   #mHelp  { order: 5; flex: 1 1 0; min-width: 0; height: 36px; font-size: 12px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--rad); }
   #mSearch{ order: 6; flex: 1 1 0; min-width: 0; height: 36px; padding: 0; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--rad); display: inline-flex; align-items: center; }
   #mSearch.on { border-color: var(--gold); color: var(--gold); }
   #langToggle { order: 7; flex: 0 0 calc(33.333% - 3px); min-width: 0; height: 36px; font-size: 11px; padding: 0 4px; justify-content: center; gap: 4px; }
-  /* La caixa de cerca, plegada per defecte al mòbil */
   .searchbox { display: none; flex: 1 1 100%; min-width: 0; margin: 0; }
   body.search-on .searchbox { display: block; }
-
-  /* Botó d'ajuda: interrogant vermell */
   #mHelp img { display: none; }
-  #mHelp::before {
-    content: '?';
-    color: var(--danger);
-    font-size: 22px;
-    font-weight: 900;
-    line-height: 1;
-  }
+  #mHelp::before { content: '?'; color: var(--danger); font-size: 22px; font-weight: 900; line-height: 1; }
   #mHelp:hover { border-color: var(--danger); background: rgba(255, 85, 119, 0.1); }
   #mHelp.on { background: rgba(255, 85, 119, 0.15); border: 1.5px solid var(--danger); box-shadow: 0 0 14px rgba(255, 85, 119, 0.3); }
-  /* Forçar fons correcte per ? i CAT en mode fosc */
-  html:not([data-theme="light"]) #mHelp {
-    background: var(--card) !important;
-    border: 1px solid var(--line) !important;
-  }
-  html:not([data-theme="light"]) #langToggle {
-    background: var(--card) !important;
-    border: 1px solid var(--line) !important;
-  }
-  
-  /* Reproductor a pantalla completa */
+  html:not([data-theme="light"]) #mHelp { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; }
+  html:not([data-theme="light"]) #mSearch { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; color: #f2f2f2 !important; }
+  html:not([data-theme="light"]) #mSearch svg { stroke: #f2f2f2 !important; }
+  html:not([data-theme="light"]) #mSearch.on { background: rgba(232,176,75,0.15) !important; color: #e8b04b !important; }
+  html:not([data-theme="light"]) #mSearch.on svg { stroke: #e8b04b !important; }
+  #mHelp { display: inline-flex !important; align-items: center !important; }
   html { zoom: 1; }
   .wrap { width: 100dvw; height: 100dvh; }
   .modal.on .close { display: none !important; }
-  .modal.on.ios-device .close {
-    display: flex !important; opacity: 0 !important; pointer-events: auto !important;
-    background: transparent !important; border: none !important; box-shadow: none !important;
-  }
+  .modal.on.ios-device .close { display: flex !important; opacity: 0 !important; pointer-events: auto !important; background: transparent !important; border: none !important; box-shadow: none !important; }
   @media (orientation: portrait) {
     .modal.on .wrap { width: 100vh !important; height: 100vw !important; transform: rotate(90deg); transform-origin: top left; position: fixed; top: 0; left: 100vw; }
     .modal.on .close { top: 14px !important; right: 14px !important; }
@@ -609,427 +503,127 @@ body.editmode .vid { padding-left: 34px; }
   #who { max-width: 65%; }
 }
 
-/* ══ TEMA PAPER ANTIC ══ */
-html[data-theme="paper"] {
-  --bg: #e8e4dc; --card: #f5f2ec; --line: #b8b0a0;
-  --ink: #2a2520; --mut: #6b6358; --gold: #6b4f2e;
-  --ok: #3d6b4f; --danger: #8b3a3a;
-}
-/* ══ TEMA BLAU NIT ══ */
+/* ============================================================
+   18. TEMA BLAU NIT (variables i ajustos)
+   ============================================================ */
 html[data-theme="blue"] {
   --bg: #d8dde4; --card: #eef1f5; --line: #9ba3b0;
   --ink: #1a2030; --mut: #5a6578; --gold: #3d5a80;
   --ok: #2d6a4f; --danger: #9b2c2c;
 }
-/* ══ TEMA LILA ══ */
-html[data-theme="lilac"] {
-  --bg: #e8e0f0; --card: #f3eef8; --line: #b8a8d0;
-  --ink: #2a1f3a; --mut: #6b5a80; --gold: #6b4f8a;
-  --ok: #4a7a5a; --danger: #8b3a5a;
-}
-/* ══ TEMA VERD ══ */
-html[data-theme="green"] {
-  --bg: #dde8e0; --card: #eef5f0; --line: #a0b8a8;
-  --ink: #1f2a22; --mut: #586b5e; --gold: #4a6b4f;
-  --ok: #2d6b4a; --danger: #8b4a3a;
-}
-/* ══ TEMA CREMA (antic "light") ══ */
-html[data-theme="cream"] {
-  --bg: #e2d4b0; --card: #f2e6c8; --line: #c9a85a;
-  --ink: #1a1408; --mut: #5a4830; --gold: #8a5300;
-  --ok: #0d6b41; --danger: #b0003a;
-}
 html:not([data-theme="dark"]) body { background: var(--bg); }
 html:not([data-theme="dark"]) * { text-shadow: none !important; }
-
-/* Marca d'aigua més suau sobre fons crema */
-html:not([data-theme="dark"]) #wm { opacity: .12; }
-html:not([data-theme="dark"]) #wm::after { background: radial-gradient(ellipse at center, rgba(226,212,176,0) 0%, rgba(226,212,176,.85) 78%); }
-
-/* Títol de l'escola: degradat fosc llegible */
-html:not([data-theme="dark"]) .hbrand h1 {
-  background: linear-gradient(90deg, #2a1a08 0%, #6b3f00 55%, #8a5300 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,.18));
-}
-@media (max-width: 767px) {
-  .hbrand h1 { font-size: 18px !important; }
-}
-
-/* Contenidors amb color dur codificat */
+html:not([data-theme="dark"]) #wm { opacity: .99 !important; filter: brightness(0) invert(1) blur(0px) !important; }
+html:not([data-theme="dark"]) #wm::after { display: none !important; }
+html:not([data-theme="dark"]) main { position: relative; }
 html:not([data-theme="dark"]) .vid,
 html:not([data-theme="dark"]) .note,
 html:not([data-theme="dark"]) .donut { background: var(--card); }
 html:not([data-theme="dark"]) .ritem { background: var(--bg); }
-html:not([data-theme="dark"]) .donut svg circle:first-child { stroke: #c9b896; }
+html:not([data-theme="dark"]) .donut svg circle:first-child { stroke: #c3ccd9; }
 html:not([data-theme="dark"]) .donut svg text { fill: var(--ink); }
-html:not([data-theme="dark"]) .blkcol button .bmini svg circle { fill: #c9b896; }
-
-/* Elements daurats foscos → text crema per contrast */
+html:not([data-theme="dark"]) .blkcol button .bmini svg circle { fill: #c3ccd9; }
 html:not([data-theme="dark"]) .save-note-btn,
 html:not([data-theme="dark"]) .lbox .go:not(.secondary),
 html:not([data-theme="dark"]) .aselbox .actions .go:not(.secondary),
-html:not([data-theme="dark"]) .vid-number {
-  color: #f2e6c8;
-}
-html:not([data-theme="dark"]) .appcard button {
-  color: var(--ink) !important;
-}
-
-/* Botons de navegació (FAQ, Apps, etc.) en modes clars */
-html:not([data-theme="dark"]) body .modes button,
-html:not([data-theme="dark"]) body .hdr .modes button {
-  background: var(--card) !important;
-  color: #1a1408 !important;
-  border-color: var(--line) !important;
-}
-html:not([data-theme="dark"]) body .modes button:hover,
-html:not([data-theme="dark"]) body .hdr .modes button:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  background: var(--card) !important;
-}
-html:not([data-theme="dark"]) body .modes button.on,
-html:not([data-theme="dark"]) body .hdr .modes button.on {
-  background: var(--gold) !important;
-  color: #ffffff !important;
-  border-color: var(--gold) !important;
-  font-weight: 800 !important;
-}
-
-/* Botó d'ajuda: targeta com les altres; icona "?" via SVG */
-html:not([data-theme="dark"]) #mHelp {
-  background: var(--card) !important;
-  border: 1.5px solid var(--line) !important;
-  border-radius: var(--rad) !important;
-  box-shadow: none !important;
-}
-html:not([data-theme="dark"]) #mHelp img { display: none !important; }
-html:not([data-theme="dark"]) #mHelp::before {
-  content: '';
-  display: block; width: 22px; height: 22px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1408' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E") center/contain no-repeat;
-}
-html:not([data-theme="dark"]) #mHelp:hover { border-color: var(--gold) !important; }
-html:not([data-theme="dark"]) #mHelp:hover::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a5300' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
-}
-html:not([data-theme="dark"]) #mHelp.on { border-color: var(--gold) !important; background: rgba(138,83,0,.12) !important; }
-@media (min-width: 768px) {
-  html:not([data-theme="dark"]) #mHelp {
-    width: var(--hbtn) !important; height: var(--hbtn) !important;
-    margin: 0 !important; display: inline-flex !important;
-    align-items: center; justify-content: center;
-  }
-}
-
-/* Botons d'acció dels vídeos */
-html:not([data-theme="dark"]) .acts button { background: var(--card); border-color: var(--line); color: var(--ink); }
-html:not([data-theme="dark"]) .acts button:hover { border-color: var(--gold); color: var(--gold); }
-html:not([data-theme="dark"]) .acts button.done,
-html:not([data-theme="dark"]) .acts button.done:disabled { background: var(--ok) !important; border-color: var(--ok) !important; color: #fff !important; opacity: 1; }
-html:not([data-theme="dark"]) .acts button.bk.bookmarked { background: #0d9488 !important; border-color: #0d9488 !important; color: #fff !important; }
-html:not([data-theme="dark"]) .acts button.nt.has-notes,
-html:not([data-theme="dark"]) .acts button.nt.active { border-color: var(--gold); color: var(--gold); background: rgba(138,83,0,.12); }
-html:not([data-theme="dark"]) .acts button:disabled { background: var(--card); color: var(--mut); }
-
-/* Botó "Més tard" actiu (ambdós temes): blau il·luminat */
-.acts button.skip.skipped { background: #4cc9f0 !important; border-color: #4cc9f0 !important; color: #0a2e38 !important; font-weight: 700; box-shadow: 0 0 10px rgba(76,201,240,.35); }
-
-/* Play del Seguiment Continuat: daurat en clar */
-html:not([data-theme="dark"]) .now .play { border-color: var(--gold); color: var(--gold); animation-name: playGlowGold; }
-@keyframes playGlowGold {
-  0%   { box-shadow: 0 0 0 0 rgba(138,83,0,.5);  background: rgba(138,83,0,.08); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(138,83,0,0), 0 0 14px 3px rgba(138,83,0,.4); background: rgba(138,83,0,.2); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(138,83,0,0);  background: rgba(138,83,0,.05); transform: scale(1); }
-}
-
-/* Tooltip del play en clar */
-html:not([data-theme="dark"]) .now .vr[data-tip]::after { background: var(--card); color: var(--ink); border-color: var(--line); }
-html:not([data-theme="dark"]) .now .vr[data-tip]::before { border-top-color: var(--line); }
-
-/* Llista de repàs */
-html:not([data-theme="dark"]) .reviewbox { background: var(--card); border-color: var(--gold); }
-html:not([data-theme="dark"]) .ritem button { background: var(--card); border-color: var(--line); color: var(--ink); }
-html:not([data-theme="dark"]) .ritem button.done { background: var(--ok) !important; border-color: var(--ok) !important; color: #fff !important; }
-
-/* Blocs de Navegació Lliure */
-html:not([data-theme="dark"]) .blkcol button { background: var(--card); border-color: var(--line); color: var(--ink); }
-html:not([data-theme="dark"]) .blkcol button:hover { border-color: var(--gold); color: var(--gold); }
-html:not([data-theme="dark"]) .blkcol button.on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
-html:not([data-theme="dark"]) .blkcol button.on .bname,
-html:not([data-theme="dark"]) .blkcol button.on .bmini .bpct { color: var(--bg); }
-
-/* Adjunts */
-html:not([data-theme="dark"]) .adjb { background: var(--card); border-color: var(--line); color: var(--ink); }
-
-/* ══ AJUSTOS FINALS MODE CLAR: colors més dolços ══ */
-
-/* MARCAT: taronja cremat suau (abans turquesa)
-   (si prefereixes groc apagat: canvia #c2410c per #a16207 i #9a3412 per #854d0e) */
-html:not([data-theme="dark"]) .acts button.bk.bookmarked {
-  background: #c2410c !important;
-  border-color: #c2410c !important;
-  color: #ffffff !important;
-}
-html:not([data-theme="dark"]) .acts button.bk.bookmarked:hover {
-  background: #9a3412 !important;
-  border-color: #9a3412 !important;
-}
-
-/* DESFER: verd pastel suau (abans verd fort) */
-html:not([data-theme="dark"]) .acts button.done,
-html:not([data-theme="dark"]) .acts button.done:disabled,
-html:not([data-theme="dark"]) .ritem button.done {
-  background: #e6efdd !important;
-  border-color: #7f9f72 !important;
-  color: #38663b !important;
-  opacity: 1 !important;
-}
-html:not([data-theme="dark"]) .acts button.done:hover,
-html:not([data-theme="dark"]) .ritem button.done:hover {
-  background: #dbe8d0 !important;
-  border-color: #6a8f60 !important;
-  color: #2f5a32 !important;
-}
-
-/* ══ MARCA D'AIGUA MODE CLAR: logo blanc difuminat ══ */
-html:not([data-theme="dark"]) #wm {
-  opacity: .99 !important;
-  filter: brightness(0) invert(1) blur(0px) !important;
-}
-html:not([data-theme="dark"]) #wm::after { display: none !important; }
-
-/* El contingut sempre per sobre del vel */
-html:not([data-theme="dark"]) main { position: relative; }
-
-/* ══ AJUSTOS DE COLOR v2 (MODE CLAR) ══ */
-/* DESFER: verd mitjà apagat (ni fort ni pastel) */
-html:not([data-theme="dark"]) .acts button.done,
-html:not([data-theme="dark"]) .acts button.done:disabled,
-html:not([data-theme="dark"]) .ritem button.done {
-  background: #557f60 !important;
-  border-color: #557f60 !important;
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-html:not([data-theme="dark"]) .acts button.done:hover,
-html:not([data-theme="dark"]) .ritem button.done:hover {
-  background: #4a6f54 !important;
-  border-color: #4a6f54 !important;
-}
-/* MARCAT: lila clar (ni marró, ni taronja, ni turquesa) */
-html:not([data-theme="dark"]) .acts button.bk.bookmarked {
-  background: #e9e3f7 !important;
-  border-color: #9b8bd0 !important;
-  color: #5b489e !important;
-}
-html:not([data-theme="dark"]) .acts button.bk.bookmarked:hover {
-  background: #ded5f2 !important;
-  border-color: #8a79c4 !important;
-  color: #4c3a8c !important;
-}
-
-/* ══ LOGO PETIT MODE CLAR: negre per contrastar sobre el crema ══ */
+html:not([data-theme="dark"]) .vid-number { color: #f2e6c8; }
+html:not([data-theme="dark"]) .appcard button { color: var(--ink) !important; }
 html:not([data-theme="dark"]) .appcard .ae img,
-html:not([data-theme="dark"]) .faq-item h3 .faqico img {
-  filter: brightness(0) !important;
-}
+html:not([data-theme="dark"]) .faq-item h3 .faqico img { filter: brightness(0) !important; }
+html[data-theme="blue"] #mHelp svg { stroke: #1a2030 !important; }
+html[data-theme="blue"] .acts button.bk.bookmarked { background: rgba(200,160,40,0.20) !important; border-color: rgba(160,125,30,0.60) !important; color: #7a5c10 !important; }
+html[data-theme="blue"] .acts button.bk.bookmarked:hover { background: rgba(200,160,40,0.30) !important; }
+html[data-theme="blue"] .acts button.nt.has-notes,
+html[data-theme="blue"] .acts button.nt.active { background: #e9e3f7 !important; border-color: #9b8bd0 !important; color: #5b489e !important; }
+html[data-theme="blue"] .save-note-btn { background: #e9e3f7 !important; color: #5b489e !important; border: 1px solid #9b8bd0 !important; }
+html[data-theme="blue"] .save-note-btn:hover { background: #ded5f2 !important; }
 
-/* ══ v2.0: CERCA, DIPLOMA, VERSIÓ, ACCESSIBILITAT ══ */
+/* Botons nav amb transparència en mode Blau nit */
+html[data-theme="blue"] header { background: rgba(216,221,228,0.85) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+html[data-theme="blue"] #mTrack,
+html[data-theme="blue"] #mFree,
+html[data-theme="blue"] #mApps,
+html[data-theme="blue"] #mInfo,
+html[data-theme="blue"] #mHelp { background: linear-gradient(135deg, rgba(61,90,128,0.12), rgba(61,90,128,0.05)) !important; color: var(--ink) !important; border-color: var(--line) !important; text-shadow: none !important; backdrop-filter: blur(4px); }
+html[data-theme="blue"] #mTrack:hover,
+html[data-theme="blue"] #mFree:hover,
+html[data-theme="blue"] #mApps:hover,
+html[data-theme="blue"] #mInfo:hover,
+html[data-theme="blue"] #mHelp:hover { background: linear-gradient(135deg, rgba(61,90,128,0.22), rgba(61,90,128,0.10)) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+html[data-theme="blue"] #mTrack.on,
+html[data-theme="blue"] #mFree.on,
+html[data-theme="blue"] #mApps.on,
+html[data-theme="blue"] #mInfo.on,
+html[data-theme="blue"] #mHelp.on { background: var(--gold) !important; color: #ffffff !important; border-color: var(--gold) !important; }
+html[data-theme="blue"] .blkcol button { background: linear-gradient(135deg, rgba(61,90,128,0.10), rgba(61,90,128,0.04)) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+html[data-theme="blue"] .blkcol button:hover { background: linear-gradient(135deg, rgba(61,90,128,0.18), rgba(61,90,128,0.08)) !important; }
+html[data-theme="blue"] .blkcol button.on { background: var(--gold) !important; color: #ffffff !important; }
+
+/* Play verd en mode Blau nit */
+html[data-theme="blue"] .now .play { border-color: #2e9e6b !important; color: #2e9e6b !important; animation: playGlow 3.8s ease-in-out infinite !important; }
+
+/* ============================================================
+   19. CERCA, DIPLOMA, VERSIÓ
+   ============================================================ */
 .searchbox { flex: 0 1 360px; min-width: 180px; margin: 0 0 0 auto; position: relative; }
 .sb-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); display: flex; color: var(--mut); pointer-events: none; transition: color .2s; }
-.searchbox:focus-within .sb-ico { color: var(--gold); } /* 240px + 50%, empenyida a la dreta */
-@media (min-width: 768px) { #mSearch { display: none !important; } } /* al PC la lupa no cal */
-.searchbox input {
-  width: 100%; background: var(--card); border: 1px solid var(--line);
-  border-radius: 999px; padding: 9px 16px 9px 38px; color: var(--ink);
-  font-size: var(--fs-btn); font-family: inherit; transition: border-color .2s;
-}
+.searchbox:focus-within .sb-ico { color: var(--gold); }
+@media (min-width: 768px) { #mSearch { display: none !important; } }
+.searchbox input { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 9px 16px 9px 38px; color: var(--ink); font-size: var(--fs-btn); font-family: inherit; transition: border-color .2s; }
 .searchbox input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 2px rgba(232,176,75,.2); }
 #appVer { position: fixed; left: 10px; bottom: 8px; z-index: 5; font-size: 10px; letter-spacing: .5px; color: var(--mut); opacity: .55; pointer-events: none; }
-.diploma-btn { margin-top: 14px; background: var(--gold); color: #141414; border: none; border-radius: 9px; padding: 10px 22px; font-weight: 800; font-size: var(--fs-btn); cursor: pointer; transition: all .2s; }
-.diploma-btn:hover { filter: brightness(1.1); }
-html:not([data-theme="dark"]) .diploma-btn { color: #f2e6c8; }
-#diploma { display: none; }
-@media print {
-  body > *:not(#diploma) { display: none !important; }
-  #diploma { display: block !important; }
-  .dip-frame { font-family: Georgia, 'Times New Roman', serif; color: #1a1408; background: #fff; padding: 46px 30px; border: 6px double #8a5300; text-align: center; }
-  .dip-logo { width: 92px; filter: brightness(0); }
-  .dip-frame h1 { letter-spacing: 2px; font-size: 22px; margin: 12px 0 4px; }
-  .dip-cert { margin: 34px 0 6px; font-size: 14px; }
-  .dip-name { font-size: 34px; font-weight: 700; border-bottom: 1px solid #8a5300; display: inline-block; padding: 0 34px 6px; margin: 0 0 20px; }
-  .dip-text { max-width: 540px; margin: 0 auto 28px; font-size: 14px; line-height: 1.65; }
-  .dip-date { font-size: 12px; color: #5a4830; }
-  .dip-sign { margin: 78px auto 0; width: 230px; border-top: 1px solid #1a1408; padding-top: 6px; font-size: 12px; }
-}
-/* ══ EFECTE DE PULSACIÓ DEL PLAY (ambdós modes) ══ */
-.now .play {
-  position: relative;
-  animation: playGlow 3.8s ease-in-out infinite !important;
-  border-color: var(--ok);
-  color: var(--ok);
-}
-.now .play:hover { border-color: #6ff0b0; color: #6ff0b0; }
-html:not([data-theme="dark"]) .now .play {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-  animation: playGlowGold 3.8s ease-in-out infinite !important;
-}
-@keyframes playGlow {
-  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); transform: scale(1); }
-}
-@keyframes playGlowGold {
-  0%   { box-shadow: 0 0 0 0 rgba(138,83,0,0.5);  background: rgba(138,83,0,0.08); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(138,83,0,0), 0 0 14px 3px rgba(138,83,0,0.4); background: rgba(138,83,0,0.2); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(138,83,0,0);  background: rgba(138,83,0,0.05); transform: scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
+
+.search-highlight { background: rgba(232, 176, 75, 0.35); color: #fff; font-weight: 700; border-radius: 3px; padding: 0 2px; box-shadow: 0 0 4px rgba(232,176,75,0.5); }
+html:not([data-theme="dark"]) .search-highlight { background: rgba(61, 90, 128, 0.25); color: #1a2030; box-shadow: none; }
+
+/* ============================================================
+   20. TÍTOL MODE CLAR — SHIMMER (únic bloc)
+   ============================================================ */
+@keyframes titleShine {
+  0%   { background-position: 200% 0; }
+  60%  { background-position: -200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* ══ TABLET MODE FOSC: botó d'ajuda amb estil FAQ ══ */
-@media (min-width: 768px) and (pointer: coarse) {
-  html:not([data-theme="light"]) #mHelp {
-    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
-    border: 1.5px solid var(--line) !important;
-    border-radius: var(--rad) !important;
-    color: #f2f2f2 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 42px !important;
-    height: 42px !important;
-  }
-  /* Evitem que el CSS dibuixi un segon interrogant fantasma */
-  html:not([data-theme="light"]) #mHelp::before {
-    display: none !important;
-  }
-}
+/* ═══ REPARACIÓ: tooltip clar, barrido i títol en moviment ═══ */
 
-/* ══ CORRECCIÓ FINAL: Botons Edició i Ajuda Tablet ══ */
-
-/* 1. Forçar botons d'edició per sobre de TOT (inclòs el fons del mode clar) */
-#mEdit, #mSave {
-  z-index: 9999999 !important;
-  pointer-events: auto !important;
-  isolation: isolate !important;
-}
-
-/* 2. Tablet mode fosc: Il·luminar el botó d'ajuda quan està actiu (.on), igual que el FAQ */
-@media (min-width: 768px) and (pointer: coarse) {
-  html:not([data-theme="light"]) #mHelp.on {
-    background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important;
-    color: #e8b04b !important;
-    border-color: #e8b04b !important;
-    box-shadow: 0 0 14px rgba(232,176,75,0.22) !important;
-  }
-}
-
-/* CORRECCIO BUGS - Idioma duplicat i Lupa smartphone */
-
-/* 1. Amagar qualsevol boto idioma fora del header */
-#langToggle { display: none !important; }
-header #langToggle, .hdr #langToggle { display: inline-flex !important; }
-
-/* Smartphone mode fosc: color i fons de la lupa igual que FAQ */
-@media (max-width: 767px) {
-  html:not([data-theme="light"]) #mSearch {
-    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
-    border: 1.5px solid var(--line) !important;
-    color: #f2f2f2 !important;
-  }
-  html:not([data-theme="light"]) #mSearch svg {
-    stroke: #f2f2f2 !important;
-  }
-  /* Quan esta actiu, daurat */
-  html:not([data-theme="light"]) #mSearch.on {
-    background: rgba(232,176,75,0.15) !important;
-    color: #e8b04b !important;
-  }
-  html:not([data-theme="light"]) #mSearch.on svg {
-    stroke: #e8b04b !important;
-  }
-}
-
-/* CORRECCIO BUGS - Centrat interrogant i Fons FAQ al mobil */
-
-/* 1. Centrar el ? dins del boto al mobil */
-@media (max-width: 767px) {
-  #mHelp {
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-}
-
-/* 2. Fons del boto ? al mobil en mode fosc (igual que FAQ) */
-@media (max-width: 767px) {
-  html:not([data-theme="light"]) #mHelp {
-    background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
-    border: 1.5px solid var(--line) !important;
-  }
-}
-
-/* ══ RESSALTAT DE CERCA ══ */
-.search-highlight {
-  background: rgba(232, 176, 75, 0.35);
-  color: #fff;
-  font-weight: 700;
-  border-radius: 3px;
-  padding: 0 2px;
-  box-shadow: 0 0 4px rgba(232,176,75,0.5);
-}
-html:not([data-theme="dark"]) .search-highlight {
-  background: rgba(138, 83, 0, 0.25);
-  color: #1a1408;
-  box-shadow: none;
-}
-
-/* Tablet mode clar: forçar color fosc al SVG de l'ajuda */
-@media (min-width: 768px) and (pointer: coarse) {
-  html:not([data-theme="dark"]) #mHelp {
-    color: #1a1408 !important;
-  }
-}
-
-/* Amagar el ::before del boto ajuda en mode clar (tablet i PC) */
-@media (min-width: 768px) {
-  html:not([data-theme="dark"]) #mHelp::before {
-    display: none !important;
-  }
-}
-
-/* ══ BOTONS NAV EN MODES CLARS (forçat) ══ */
-html:not([data-theme="dark"]) #mTrack,
-html:not([data-theme="dark"]) #mFree,
-html:not([data-theme="dark"]) #mApps,
-html:not([data-theme="dark"]) #mInfo,
-html:not([data-theme="dark"]) #mHelp {
+/* 1. Tooltip del play en mode clar: fons CLAR (no fosc) */
+html:not([data-theme="dark"]) .now .vr[data-tip]::after {
   background: var(--card) !important;
   color: var(--ink) !important;
   border-color: var(--line) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15) !important;
+}
+html:not([data-theme="dark"]) .now .vr[data-tip]::before {
+  border-top-color: var(--line) !important;
+}
+
+/* 2. Barrido del tooltip: reforçat (revelat progressiu) */
+.now .vr[data-tip]::after {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+.now .vr.tip-on::after {
+  opacity: 1 !important;
+  clip-path: inset(0 0 0 0) !important;
+  transition: clip-path 1.05s steps(26, end), opacity .08s linear !important;
+}
+.now .vr.tip-fade::after {
+  opacity: 0 !important;
+  transition: opacity 0.5s ease !important;
+}
+
+/* ══ TÍTOL MODE CLAR: blau net i estable ══ */
+html[data-theme="blue"] body header .hbrand h1,
+html[data-theme="blue"] .hbrand h1 {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: #1f3a5f !important;
+  filter: none !important;
   text-shadow: none !important;
-}
-html:not([data-theme="dark"]) #mTrack:hover,
-html:not([data-theme="dark"]) #mFree:hover,
-html:not([data-theme="dark"]) #mApps:hover,
-html:not([data-theme="dark"]) #mInfo:hover,
-html:not([data-theme="dark"]) #mHelp:hover {
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
-}
-html:not([data-theme="dark"]) #mTrack.on,
-html:not([data-theme="dark"]) #mFree.on,
-html:not([data-theme="dark"]) #mApps.on,
-html:not([data-theme="dark"]) #mInfo.on,
-html:not([data-theme="dark"]) #mHelp.on {
-  background: var(--gold) !important;
-  color: #ffffff !important;
-  border-color: var(--gold) !important;
+  animation: none !important;
 }
 
 </style>
@@ -1041,7 +635,7 @@ html:not([data-theme="dark"]) #mHelp.on {
 
 <header>
   <div class="hbrand">
-    <h1>GIRONA JAZZ PIANO SCHOOL®</h1>
+    <h1 data-text="GIRONA JAZZ PIANO SCHOOL®">GIRONA JAZZ PIANO SCHOOL®</h1>
     <div class="userblock">
       <span id="who"></span>
       <button id="btnUser" class="ubtn logoutbtn" title="Tanca sessió / Cerrar sesión">Logout</button>
@@ -1057,8 +651,6 @@ html:not([data-theme="dark"]) #mHelp.on {
     <button id="mHelp" title="Com funciona / Cómo funciona"></button>
     <button id="mSearch" title="Cercar / Buscar"></button>
     <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
-    <button id="mEdit" title="Mode edició">⚙️</button>
-    <button id="mSave" title="Guardar">💾</button>
   </div>
 </header>
 
@@ -1106,14 +698,14 @@ html:not([data-theme="dark"]) #mHelp.on {
   </div>
 </div>
 
+<button id="mEdit" title="Mode edició">⚙️</button>
+<button id="mSave" title="Guardar">💾</button>
+
 <script>
 /* ================================================================
    1. UTILITATS I ESTAT GLOBAL
    ================================================================ */
 window.onerror = function (m, s, l) {
-  /* Ignorem els "Script error." sense origen (línia 0): són soroll de Safari,
-     extensions o processos del sistema (ex. botó Compartir de l'iPad),
-     no errors del nostre codi. Els errors reals (amb fitxer i línia) es mostren. */
   if (m === 'Script error.' || m === 'Script error' || (!s && (l === 0 || l === undefined))) return false;
   var f = document.getElementById('fatal');
   f.style.display = 'block';
@@ -1126,19 +718,18 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var APP_VERSION = '2.0', APP_BUILD = '2026-11-06';
+var APP_VERSION = '2.0', APP_BUILD = '2026-11-07';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
 LS.skipAfter = lsJSON('gjps_skipafter_' + (LS.user || 'guest'), {});
-var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false, allVideosLoaded = false;
+var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false, allVideosLoaded = false, autoTipPending = false;
 
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 var isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 function isSmartphone() {
   var ua = navigator.userAgent;
@@ -1146,9 +737,7 @@ function isSmartphone() {
   if (/Android/.test(ua) && /Mobile/.test(ua)) return true;
   return false;
 }
-function isTabletDevice() {
-  return isMobileDevice() && !isSmartphone();
-}
+function isTabletDevice() { return isMobileDevice() && !isSmartphone(); }
 
 var BO = ['w', 't', 'g', 'r', 'a', 'p'];
 var BC = { t: '#e8b04b', g: '#39d98a', r: '#4cc9f0', a: '#8c52ff', p: '#ff2bd6' };
@@ -1167,6 +756,7 @@ const ICON_GRADUATION = '<svg viewBox="0 0 24 24" width="15" height="15" fill="n
 const ICON_FLASK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg>';
 const ICON_CHART = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>';
 const ICON_SEARCH = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+const ICON_THEME = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><circle cx="7" cy="12" r="3.2"></circle><line x1="7" y1="6.6" x2="7" y2="5.2"></line><line x1="7" y1="17.4" x2="7" y2="18.8"></line><line x1="1.6" y1="12" x2="3" y2="12"></line><line x1="3.2" y1="8.2" x2="4.2" y2="9.2"></line><line x1="3.2" y1="15.8" x2="4.2" y2="14.8"></line><g transform="translate(11.5,6) scale(0.5)"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="4"></path></g></svg>';
 
 function t() { return UI[LS.lang]; }
 function li() { return LS.lang === 'ca' ? 0 : 1; }
@@ -1180,7 +770,7 @@ function showToast(msg, duration) {
   setTimeout(function() { toast.style.opacity = '0'; }, duration);
 }
 
-var GUEST_BASE = 42; /* ⚠️ mira la nota matemàtica més avall */
+var GUEST_BASE = 42;
 function getDailyPassword() {
   var avui = new Date();
   var d = avui.getDate(), m = avui.getMonth() + 1;
@@ -1220,14 +810,13 @@ function getBookmarks() { return lsJSON('gjps_bookmarks_' + LS.user, []); }
 function setBookmarks(arr) { lsSet('gjps_bookmarks_' + LS.user, JSON.stringify(arr)); }
 function isBookmarked(id) { return getBookmarks().indexOf(id) >= 0; }
 function toggleBookmark(id) {
-  var b = getBookmarks();
-  var i = b.indexOf(id);
+  var b = getBookmarks(); var i = b.indexOf(id);
   if (i >= 0) b.splice(i, 1); else b.push(id);
   setBookmarks(b);
 }
 
 /* ================================================================
-   2. DADES DEL CURS (amb marcadors dinàmics per a links)
+   2. DADES DEL CURS
    ================================================================ */
 var LEVELS = [
   { id: 0, n: { ca: 'Vídeos de benvinguda', es: 'Vídeos de bienvenida' }, active: true },
@@ -1252,7 +841,7 @@ var LINKS = {
     cat: ['1Jk1odT5P1JEeX_UZBFjmX1YfFgYMuYPT','1rUZZckM1muEFKNPP6GQdOh7BGnjW6qoY','1OQMVd-DMxvH-Y9TRv4I8GZH-z_cv1APq','1mE1mD-mPJeiVVBD-aStek6u7MFLLc832','1MQHBogWbvjm9y9vKnEHISdaN--yZMJbU','1GTK-UaZ__wx5Msg1qp9-hedBZdDl4q-D','1BXkDyB59_uFPQjkHM1dxDbT2D1Lxd2tE','14uPrMyyKLlOQIzbHWlMbq6rPGIOlLoPx','12hgmR9rtRNGqML6AEdKXm7YMl2vSZP43','1JZNTwfzkNfbzodfNWTLK4ETNME5HkT_N','1uaIbVGqpQpgRoG7N3HiFtHQTFWxcYgZe'],
     sp: ['1q1uGcQnCcJs05AiaZCoFATTXwazP1H1O','1e5K8CNKCpbyxwzHewyK0FmJbHDtHFetM','1AAtCHcDOk3dRH2fIPDYGmhxeSH8vBtvf','1xAcozy8FLHhVL2FHXqgbrItbj4EAlMP9','15LvqjTo6zQUGpDW52_LPAcCJ_7FnztML','1noTW5PdsWPp0M-plkaNVmJVy-7QeBDlW','1PHOJiHVaTaEQivhZY4rYIcDf_AXg0s9h','1bR1QqucC6eOATqWNYEP_yvs6HAsPjL42','1re1JZXvw-bnPEn4beaIrS_prrigbpjBF','1U1DnI2DLtB0WUmyln9AkRzv0wCMU7kE-','19Tcxnhl9cAX1Mj3G7PvjXTtQIFDe0Wl2']
   },
-   t: {
+  t: {
     cat: ['1VeU8NSwOsN_eubIbfoQsKo4YFDnlqM5F','1GAbFwRM9HEhGVTkQ4LxveFnbK6hj_gww','1VAjy_fhDiHK7QacaqRAggjCkJNlTq5r6','1rC-hzFKjkNSlBhfzbNKuXr-zuSxikuW1','1zN7p0do8nezfm1zClu1IggfoPEPA9O1H','1x7I-fDE0SSsv-8SnyraMCtjFJ5zwgFV5','1OFYINMfF6suImcrg2d4SxfaPlJ_PUG7x','1-njSXFDDHnaRCYZ7MRZAeXjbUPSk5PaE','','',''],
     sp: ['1pfzM2lUFMe0p1D90i_m79SXHgtKOhAUK','1mZw0Qkhl2H_YkQuw8i2g_ia_PvkDU0D_','19bXw4EyI_u2eD6o8xMQxcZx3yM47_zqH','16t3LcAE3E6EWCSmY2Z2_WtTWe1y3TRih','1RlHXbwc2_A6cA-JSmljCJUyFsWhDp9rl','1z4osLC6yqSQgTRafjv_ocq4rSgHZJED_','1ar_I6xcrSZm38ySNsSJxvSC8sJ5BMPhi','1sOayWKQ-28Y7NkE7H0wXNA9QzH4P70DY','','','']
   },
@@ -1383,7 +972,8 @@ var HELP = [
   { ico: ICON_HEADPHONES, t: { ca: 'Aplicacions d\'entrenament', es: 'Aplicaciones de entrenamiento' }, p: { ca: 'A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l\'oïda jugant.', es: 'En la pestaña Apps encontrarás laboratorios exclusivos como TONAL EMOTIONS, para entrenar el oído jugando.' } },
   { ico: ICON_GRADUATION, t: { ca: 'I en acabar el nivell…', es: 'Y al terminar el nivel…' }, p: { ca: 'Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉', es: 'Cuando completes todos los vídeos del nivel recibirás un regalo de graduación muy especial. Pero eso… ¡mejor descúbrelo tú mismo! 😉' } },
   { ico: ICON_CHART, t: { ca: 'Els percentatges de progrés', es: 'Los porcentajes de progreso' }, p: { ca: 'Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (⭕) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t\'explicarà exactament què està mesurant.', es: 'En el Seguimiento Continuo, los donuts de progreso solo tienen en cuenta los vídeos importantes (⭐): cuando los completes todos, verás el 100% y recibirás el regalo de graduación, aunque queden vídeos opcionales (⭕) pendientes. En la Navegación Libre, en cambio, el porcentaje de cada bloque refleja todo el material del bloque (importantes y opcionales). Y si pasas el ratón por encima de cualquier donut o botón de bloque, te explicará exactamente qué está midiendo.' } },
-  { ico: ICON_FLASK, t: { ca: 'Prova pilot: on es guarda el teu progrés?', es: 'Prueba piloto: ¿dónde se guarda tu progreso?' }, p: { ca: 'Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d\'un altre dispositiu, no hi veuràs el progrés actualitzat: no s\'ha perdut, simplement viu a l\'altre navegador. Aquesta limitació desapareixerà d\'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.', es: 'Esta web es todavía una prueba piloto con un máximo de 30 usuarios. Por eso, tu progreso (vídeos completados, notas personales y lista de repaso) queda guardado únicamente en el navegador del dispositivo que estés utilizando. Si entras con tu usuario desde otro dispositivo, no verás el progreso actualizado: no se ha perdido, simplemente vive en el otro navegador. Esta limitación desaparecerá en unos meses, cuando la web se publique oficialmente y el progreso se guarde en la nube.' } }
+  { ico: ICON_FLASK, t: { ca: 'Prova pilot: on es guarda el teu progrés?', es: 'Prueba piloto: ¿dónde se guarda tu progreso?' }, p: { ca: 'Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d\'un altre dispositiu, no hi veuràs el progrés actualitzat: no s\'ha perdut, simplement viu a l\'altre navegador. Aquesta limitació desapareixerà d\'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.', es: 'Esta web es todavía una prueba piloto con un máximo de 30 usuarios. Por eso, tu progreso (vídeos completados, notas personales y lista de repaso) queda guardado únicamente en el navegador del dispositivo que estés utilizando. Si entras con tu usuario desde otro dispositivo, no verás el progreso actualizado: no se ha perdido, simplemente vive en el otro navegador. Esta limitación desaparecerá en unos meses, cuando la web se publique oficialmente y el progreso se guarde en la nube.' } },
+  { ico: ICON_THEME, t: { ca: 'Canviar entre mode fosc i mode clar', es: 'Cambiar entre modo oscuro y modo claro' }, p: { ca: 'A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l\'últim tema que vas triar. Per defecte, la primera visita sempre s\'obre en mode fosc.', es: 'En la esquina superior derecha encontrarás un botón con un icono de sol o de luna. Al hacer clic, conmutarás entre el modo oscuro y el modo claro (azul noche). Tu preferencia se guarda automáticamente: la próxima vez que abras el web, se mostrará con el último tema que elegiste. Por defecto, la primera visita siempre se abre en modo oscuro.' } }
 ];
 
 /* ================================================================
@@ -1419,44 +1009,31 @@ function secName(si) {
 }
 function vidDesc(v, id, b) { var o = OV.d[id]; return (o && o[LS.lang]) ? esc(o[LS.lang]) : t().desc[b]; }
 
-/* ================================================================
-   FUNCIÓ DINÀMICA: Resol links en el moment del clic
-   ================================================================ */
 function resolveLink(marker) {
-  // Format: 'LK:tipus:índex' (ex: 'LK:t:0', 'LK:gift:classic')
   if (!marker || marker.indexOf('LK:') !== 0) return marker;
   var parts = marker.split(':');
   if (parts.length < 3) return null;
   var tipus = parts[1];
-  var index = parts.slice(2).join(':'); // Per si el tipus té ':' (ex: 'gift:classic')
-  
+  var index = parts.slice(2).join(':');
   var lang = LS.lang === 'ca' ? 'cat' : 'sp';
-  
   if (tipus === 'gift') {
-    var giftType = index; // 'classic' o 'jazz'
+    var giftType = index;
     return LINKS.gift[giftType] && LINKS.gift[giftType][lang] ? LINKS.gift[giftType][lang] : null;
   }
-  
   var idx = parseInt(index, 10);
   var links = LINKS[tipus] && LINKS[tipus][lang];
   if (links && links[idx]) return links[idx];
-  
-  // Fallback a l'altre idioma si no existeix
   var otherLang = lang === 'cat' ? 'sp' : 'cat';
   var otherLinks = LINKS[tipus] && LINKS[tipus][otherLang];
   if (otherLinks && otherLinks[idx]) return otherLinks[idx];
-  
   return null;
 }
 
 function driveSrc(v, id) {
-  // 1. Primer comprovar si hi ha un link personalitzat a OV
   var L = (OV.l[id] && OV.l[id][LS.lang]) || OV.l[id];
   if (L !== undefined && L !== '') {
-    // Si és un objecte {ca: '...', es: '...'}, agafar l'idioma correcte
     if (typeof L === 'object' && L[LS.lang]) L = L[LS.lang];
     else if (typeof L === 'object') L = L.ca || L.es || null;
-    
     if (L) {
       if (/^https?:\/\//.test(L)) {
         var m = L.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -1467,8 +1044,6 @@ function driveSrc(v, id) {
       return 'https://drive.google.com/file/d/' + L + '/preview';
     }
   }
-  
-  // 2. Si no hi ha personalitzat, resoldre el marcador dinàmic
   var linkId = v[2];
   if (linkId) {
     if (linkId.indexOf('LK:') === 0) {
@@ -1477,12 +1052,11 @@ function driveSrc(v, id) {
     }
     return 'https://drive.google.com/file/d/' + linkId + '/preview';
   }
-  
   return null;
 }
 
 /* ================================================================
-   5. SISTEMA D'ORDRE GLOBAL DE REPRODUCCIÓ
+   5. SISTEMA D'ORDRE GLOBAL
    ================================================================ */
 function isWelcomeId(id) { return parseInt(id.split('.')[0], 10) === 0; }
 function isGiftId(id) { return id.indexOf('gift.') === 0; }
@@ -1525,9 +1099,6 @@ function reorderVideo(videoId, newOrder) {
   swapOrder(videoId, numbered[target]);
 }
 
-/* ================================================================
-   5b. BLOC VIRTUAL (OV.bl) I MOVIMENT DE VÍDEOS
-   ================================================================ */
 function vidBlockById(id) { return (OV.bl && OV.bl[id]) || id.split('.')[2]; }
 function vidBlock(x) { return vidBlockById(x.id); }
 
@@ -1592,7 +1163,6 @@ function findNext() {
   initializeOrder();
   var skipped = LS.skipped || [];
   LS.skipAfter = LS.skipAfter || {};
-  /* 1. Recordatori: vídeo saltat cuyo "substitut" ja està validat */
   for (var s = 0; s < skipped.length; s++) {
     var sid = skipped[s];
     if (LS.done[sid]) continue;
@@ -1602,10 +1172,8 @@ function findNext() {
       if (sv && driveSrc(sv.v, sid)) return sv;
     }
   }
-  /* 2. Següent normal (no fet, no saltat) */
   var plain = firstPlainNext();
   if (plain) { var pv = findVidById(plain); if (pv && driveSrc(pv.v, plain)) return pv; }
-  /* 3. Només queden saltats: recorda el primer */
   for (var s2 = 0; s2 < skipped.length; s2++) {
     var sid2 = skipped[s2];
     if (!LS.done[sid2]) {
@@ -1619,10 +1187,8 @@ function smartFreeLevel() {
   var all = allVids();
   var welcome = all.filter(function (x) { return x.si === 0; });
   var welcomeWithLink = welcome.filter(function (x) { return !!driveSrc(x.v, x.id); });
-  /* Si la Benvinguda no té cap vídeo amb link, entrem directament al Nivell 1 */
   var welcomeDone = (welcomeWithLink.length === 0) || (welcome.length > 0 && welcome.every(function (x) { return LS.done[x.id]; }));
   if (!welcomeDone) { freeLevel = 0; freeBlock = 'w'; return; }
-  
   initializeOrder();
   var found = false;
   for (var i = 0; i < OV.order.length; i++) {
@@ -1640,11 +1206,7 @@ function smartFreeLevel() {
       }
     }
   }
-  
-  if (!found) {
-    freeLevel = 1;
-  }
-  
+  if (!found) { freeLevel = 1; }
   if (freeBlock === 'w') freeBlock = 't';
 }
 function prog(l) { var d = 0; l.forEach(function (x) { if (LS.done[x.id]) d++; }); return { d: d, n: l.length, p: l.length ? Math.round(d / l.length * 100) : 0 }; }
@@ -1797,7 +1359,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ================================================================
-   7. MODE EDICIÓ I GUARDAT DEL FITXER
+   7. MODE EDICIÓ I GUARDAT
    ================================================================ */
 function collectAll() {
   document.querySelectorAll('[data-ovid]').forEach(function (el) {
@@ -1842,7 +1404,6 @@ function applyLinkLabel(row, id) {
   var b = row.querySelector('.lkbtn');
   if (!b) return;
   var hasCustom = OV.l[id] && OV.l[id][LS.lang];
-  var hasFallback = OV.l[id];
   if (hasCustom) {
     b.textContent = '🔗✔';
     b.title = LS.lang === 'ca' ? 'Link personalitzat (clica per editar)' : 'Link personalizado (clic para editar)';
@@ -1877,7 +1438,6 @@ function applyEditState() {
           var val = prompt(t().linkPrompt + '\n\n' + (LS.lang === 'ca' ? 'Actual:' : 'Actual:') + '\n' + (cur || '—'), cur);
           if (val === null) return;
           val = val.trim();
-          // Validació bàsica de format Google Drive
           if (val && !(/^https?:\/\//.test(val) || /^[a-zA-Z0-9_-]{20,}$/.test(val))) {
             alert(LS.lang === 'ca' ? '⚠️ Format no vàlid. Ha de ser un ID de Drive (ex: 1B0keL0UC...) o una URL completa.' : '⚠️ Formato no válido. Debe ser un ID de Drive o una URL completa.');
             return;
@@ -1951,7 +1511,8 @@ function toggleEditMode(force) {
   render();
 }
 
-function fallbackDownload(html) {  var b = new Blob([html], { type: 'text/html' });
+function fallbackDownload(html) {
+  var b = new Blob([html], { type: 'text/html' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(b);
   a.download = 'index.html';
@@ -1970,7 +1531,6 @@ function saveAsFile() {
   html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END\*\//, '/*OV-START*/' + JSON.stringify(OV) + ';/*OV-END*/');
   toggleEditMode(wasEdit);
   render();
-  // A iPad/Tablet/Smartphone: compartir el fitxer real per adjuntar-lo a Mail, AirDrop, etc.
   if (isMobileDevice() && navigator.share && navigator.canShare) {
     var fileShare = new File([html], 'index.html', { type: 'text/html' });
     if (navigator.canShare({ files: [fileShare] })) {
@@ -1993,7 +1553,7 @@ function saveAsFile() {
 }
 
 /* ================================================================
-   8. CONSTRUCCIÓ DE LA TARGETA DE VÍDEO
+   8. CONSTRUCCIÓ TARGETA VÍDEO
    ================================================================ */
 function makeVid(v, id, track, tag) {
   var b = id.split('.')[2];
@@ -2032,7 +1592,6 @@ function makeVid(v, id, track, tag) {
   try { hasNotes = lsJSON(nkey, []).length > 0; } catch (e) {}
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
   var siTag = parseInt(id.split('.')[0], 10);
-  // Construir el botó "Més tard" si estem en mode seguiment
   var skipBtnHtml = '';
   if (track && !LS.done[id]) {
     skipBtnHtml = '<button class="skip">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>';
@@ -2055,17 +1614,16 @@ function makeVid(v, id, track, tag) {
     LS.done[id] = 1; saveDone();
     if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped)); }
     if (LS.skipAfter) { delete LS.skipAfter[id]; lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter)); }
-    btn.classList.add('done');   /* flash verd */
+    btn.classList.add('done');
     btn.style.borderColor = 'var(--ok)';
     btn.style.color = 'var(--ok)';
     btn.style.background = 'rgba(57,217,138,0.12)';
     btn.style.opacity = '1';
-    btn.disabled = true;         /* evita doble toc */
+    btn.disabled = true;
     setTimeout(function () { render(); }, 250);
   };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
-    // Handler del botó "Més tard": només marca i passa al següent
   var skipBtn = row.querySelector('.skip');
   if (skipBtn) {
     skipBtn.onclick = function () {
@@ -2077,7 +1635,6 @@ function makeVid(v, id, track, tag) {
       LS.skipAfter[id] = firstPlainNext();
       lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
       lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter));
-      /* flash blau, com el flash verd de FET */
       btn.style.borderColor = '#4cc9f0';
       btn.style.color = '#0a2e38';
       btn.style.background = '#4cc9f0';
@@ -2168,14 +1725,8 @@ function makeVid(v, id, track, tag) {
       };
     }
 
-    if (sendBtn) {
-      sendBtn.onclick = function() { sendNotesByEmail(id); };
-    }
-
-    if (saveBtn) {
-      saveBtn.onclick = saveNote;
-    }
-
+    if (sendBtn) { sendBtn.onclick = function() { sendNotesByEmail(id); }; }
+    if (saveBtn) { saveBtn.onclick = saveNote; }
     if (nta) {
       nta.addEventListener('keydown', function (e) { 
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { 
@@ -2184,7 +1735,6 @@ function makeVid(v, id, track, tag) {
         } 
       });
     }
-    
     updateNoteButton();
   }
   var adjSection = document.createElement('div');
@@ -2245,25 +1795,16 @@ function renderReviewBox(container) {
     var blk = document.createElement('span'); blk.className = 'rblk'; blk.textContent = blockName(v.b);
     var lbl = LS.lang === 'ca' ? { d: 'Fet', u: 'Desfer', o: 'Obrir', r: 'Treure' } : { d: 'Hecho', u: 'Deshacer', o: 'Abrir', r: 'Quitar' };
     var isDone = !!LS.done[id];
-    
     var bD = document.createElement('button');
     bD.innerHTML = isDone ? '↺ ' + lbl.u : '✔ ' + lbl.d;
     bD.title = isDone ? (LS.lang === 'ca' ? 'Desfer' : 'Deshacer') : tt().done;
     if (isDone) bD.classList.add('done');
-    
     bD.onclick = function () {
-      if (LS.done[id]) {
-        delete LS.done[id];
-      } else {
-        LS.done[id] = 1;
-      }
-      saveDone();
-      render();
+      if (LS.done[id]) { delete LS.done[id]; } else { LS.done[id] = 1; }
+      saveDone(); render();
     };
-    
     var bO = document.createElement('button'); bO.innerHTML = '▶ ' + lbl.o; bO.title = tt().open;
     bO.onclick = function () { var src = driveSrc(v.v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
-    
     var bX = document.createElement('button'); bX.innerHTML = '✕ ' + lbl.r; bX.title = tt().remove;
     bX.onclick = function () { toggleBookmark(id); render(); };
     item.appendChild(ti); item.appendChild(blk); item.appendChild(bD); item.appendChild(bO); item.appendChild(bX);
@@ -2309,29 +1850,10 @@ function sendNotesByEmail(videoId) {
 }
 function fmtDate(ts) { var d = new Date(ts); var pad = function (n) { return n < 10 ? '0' + n : n; }; return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
 
-function showDiploma() {
-  var ca = LS.lang === 'ca';
-  var d = new Date(), f = function (n) { return (n < 10 ? '0' : '') + n; };
-  var dataStr = f(d.getDate()) + '/' + f(d.getMonth() + 1) + '/' + d.getFullYear();
-  $('diploma').innerHTML =
-    '<div class="dip-frame">' +
-    '<img src="img/LOGO.png" class="dip-logo" alt="">' +
-    '<h1>GIRONA JAZZ PIANO SCHOOL®</h1>' +
-    '<p class="dip-cert">' + (ca ? 'Certifica que' : 'Certifica que') + '</p>' +
-    '<p class="dip-name">' + esc(LS.user) + '</p>' +
-    '<p class="dip-text">' + (ca
-      ? 'ha completat amb èxit el <b>Nivell Fonamental</b> de piano modern i jazz, incloent-hi tècnica, teoria, ritme, entrenament auditiu i pràctica funcional.'
-      : 'ha completado con éxito el <b>Nivel Fundamental</b> de piano moderno y jazz, incluyendo técnica, teoría, ritmo, entrenamiento auditivo y práctica funcional.') + '</p>' +
-    '<p class="dip-date">' + (ca ? 'Data: ' : 'Fecha: ') + dataStr + '</p>' +
-    '<div class="dip-sign">' + (ca ? 'El professor' : 'El profesor') + '</div>' +
-    '</div>';
-  window.print();
-}
-
 function renderTrack() {
   initializeOrder();
   var all = allVids().filter(function (x) { return !!driveSrc(x.v, x.id); });
-     var imp = all.filter(function (x) { return getVideoImportance(x.id) === 'important'; });
+  var imp = all.filter(function (x) { return getVideoImportance(x.id) === 'important'; });
   var next = findNext();
   var tv = $('trackView');
   tv.innerHTML = '';
@@ -2349,15 +1871,14 @@ function renderTrack() {
       var card = document.createElement('div');
       card.className = 'gift-card';
       card.style.position = 'relative';
-      card.innerHTML = '<h3 data-ovid="gift.' + i + '" data-ovk="t">' + vidTitle(g, 'gift.' + i) + '</h3><p>' + (LS.lang === 'ca' ? 'Masterclass exclusiva' : 'Masterclass exclusiva') + '</p>';      card.onclick = function () { var src = driveSrc(g, 'gift.' + i); if (src) openFullscreenVideo(src); else showToast(t().soon); };
+      card.innerHTML = '<h3 data-ovid="gift.' + i + '" data-ovk="t">' + vidTitle(g, 'gift.' + i) + '</h3><p>' + (LS.lang === 'ca' ? 'Masterclass exclusiva' : 'Masterclass exclusiva') + '</p>';
+      card.onclick = function () { var src = driveSrc(g, 'gift.' + i); if (src) openFullscreenVideo(src); else showToast(t().soon); };
       
       if (editModeOn) {
         var editBar = document.createElement('div');
         editBar.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:5;';
-        
         var lkBtn = document.createElement('button');
-        lkBtn.className = 'lkbtn';
-        lkBtn.type = 'button';
+        lkBtn.className = 'lkbtn'; lkBtn.type = 'button';
         var curGift = (OV.l['gift.' + i] && OV.l['gift.' + i][LS.lang]) || OV.l['gift.' + i] || '';
         if (typeof curGift === 'object') curGift = curGift[LS.lang] || curGift.ca || curGift.es || '';
         lkBtn.textContent = curGift ? '🔗✔' : '🔗';
@@ -2383,7 +1904,6 @@ function renderTrack() {
           lkBtn.textContent = '🔗✔'; lkBtn.style.borderColor = '#39d98a'; lkBtn.style.color = '#39d98a';
           showToast(LS.lang === 'ca' ? '✔ Link de la masterclass actualitzat' : '✔ Link de la masterclass actualizado');
         };
-        
         var tBtn = document.createElement('button');
         tBtn.type = 'button';
         tBtn.textContent = '✏️';
@@ -2399,7 +1919,6 @@ function renderTrack() {
           OV.t['gift.' + i][LS.lang] = newTitle.trim();
           render();
         };
-        
         var adjBtn = document.createElement('button');
         adjBtn.type = 'button';
         adjBtn.textContent = '📎';
@@ -2450,43 +1969,39 @@ function renderTrack() {
       giftGrid.appendChild(card);
     });
     celebration.appendChild(giftGrid);
-    var dipBtn = document.createElement('button');
-    dipBtn.className = 'diploma-btn';
-    dipBtn.textContent = LS.lang === 'ca' ? '🎓 Obtenir diploma' : '🎓 Obtener diploma';
-    dipBtn.onclick = showDiploma;
-    celebration.appendChild(dipBtn);
     tv.appendChild(celebration);
   } else if (next) {
     var now = document.createElement('div');
     now.className = 'now';
     now.innerHTML = '<div class="ctx">' + D[next.si].n[LS.lang] + ' · ' + t().unit + ' ' + (next.ui + 1) + '</div><div class="nowlbl">' + t().now + ' ' + t().blocks[next.b] + '</div>';
-now.appendChild(makeVid(next.v, next.id, true, '')); var playBtn = now.querySelector('.play');
-if (playBtn) {
-  var vrWrap = playBtn.closest('.vr');
-  var totalDone = Object.keys(LS.done).length;
-  var tipText = '';
-  if (LS.lang === 'ca') {
-    tipText = totalDone === 0 ? '▶ Comença aquí el teu recorregut' : '▶ Continua progressant amb aquest vídeo';
-  } else {
-    tipText = totalDone === 0 ? '▶ Comienza aquí tu recorrido' : '▶ Continúa progresando con este vídeo';
-  }
-  if (vrWrap) {
-    vrWrap.setAttribute('data-tip', tipText);
-    /* ── TÀCTIL: mostrar el tooltip automàticament durant 3,5 s ── */
-    if (isSmartphone() || isTabletDevice()) {
-      setTimeout(function () {
-        vrWrap.classList.add('tip-on');
-        vrWrap.classList.remove('tip-fade');
-        setTimeout(function () {
-          vrWrap.classList.add('tip-fade');
+    now.appendChild(makeVid(next.v, next.id, true, ''));
+    var playBtn = now.querySelector('.play');
+    if (playBtn) {
+      var vrWrap = playBtn.closest('.vr');
+      var totalDone = Object.keys(LS.done).length;
+      var tipText = '';
+      if (LS.lang === 'ca') {
+        tipText = totalDone === 0 ? '▶ Comença aquí el teu recorregut' : '▶ Continua progressant amb aquest vídeo';
+      } else {
+        tipText = totalDone === 0 ? '▶ Comienza aquí tu recorrido' : '▶ Continúa progresando con este vídeo';
+      }
+      if (vrWrap) {
+        vrWrap.setAttribute('data-tip', tipText);
+        if (isSmartphone() || isTabletDevice() || autoTipPending) {
+          autoTipPending = false;
           setTimeout(function () {
-            vrWrap.classList.remove('tip-on', 'tip-fade');
-          }, 500);
-        }, 3500);
-      }, 400);
+            vrWrap.classList.add('tip-on');
+            vrWrap.classList.remove('tip-fade');
+            setTimeout(function () {
+              vrWrap.classList.add('tip-fade');
+              setTimeout(function () {
+                vrWrap.classList.remove('tip-on', 'tip-fade');
+              }, 500);
+            }, 3500);
+          }, 400);
+        }
+      }
     }
-  }
-}
     var ap = adjParts(next.si, next.ui, next.b);
     if (ap) { now.appendChild(ap.btn); now.appendChild(ap.box); }
     tv.appendChild(now);
@@ -2516,12 +2031,10 @@ function updateBlockHighlights() {
   var col = document.querySelector('#freeView .blkcol');
   if (!col) return;
   var btns = col.querySelectorAll('button[data-b]');
-  /* Sense cerca: il·lumina només el bloc actiu (com sempre) */
   if (!freeQuery) {
     btns.forEach(function (btn) { btn.classList.toggle('on', btn.dataset.b === freeBlock); });
     return;
   }
-  /* Amb cerca: il·lumina només els blocs amb coincidències visibles */
   var hits = {};
   document.querySelectorAll('#freeView .vgrid .vid').forEach(function (card) {
     if (card.style.display === 'none') return;
@@ -2550,11 +2063,9 @@ function highlightText(text, query) {
 function filterFreeGrid(q) {
   var nq = normTxt(q || '');
   var isSearching = nq.length >= 2;
-  /* Si comencem a cercar i encara no hem carregat tots els vídeos, fer-ho ara */
   if (isSearching && !allVideosLoaded) {
     allVideosLoaded = true;
-    render(); /* Re-renderitza amb tots els vídeos */
-    /* Després de renderitzar, recuperar el focus i aplicar el filtre */
+    render();
     setTimeout(function() {
       var inp = $('freeSearch');
       if (inp) {
@@ -2565,7 +2076,6 @@ function filterFreeGrid(q) {
     }, 0);
     return;
   }
-  
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
     g.querySelectorAll('.vid').forEach(function (card) {
@@ -2574,8 +2084,6 @@ function filterFreeGrid(q) {
       var textMatch = !nq || normTxt(origText).indexOf(nq) >= 0;
       var blockMatch = isSearching || (card.dataset.block === freeBlock);
       var show = textMatch && blockMatch;
-      
-      /* Aplicar o treure el ressaltat intel·ligent */
       if (vt) {
         if (show && isSearching && q && !editModeOn) {
           vt.innerHTML = highlightText(origText, q);
@@ -2583,7 +2091,6 @@ function filterFreeGrid(q) {
           vt.textContent = origText;
         }
       }
-      
       card.style.display = show ? '' : 'none';
       if (show) visibles++;
     });
@@ -2622,7 +2129,7 @@ function renderFree() {
     if (freeLevel !== 0 && freeBlock === 'w') freeBlock = 't';
     if (freeLevel === 0) freeBlock = 'w';
     autoLevelPending = false;
-    allVideosLoaded = false; /* Reiniciem en canviar de nivell */
+    allVideosLoaded = false;
     render();
   };
   lr.appendChild(sel);
@@ -2631,17 +2138,11 @@ function renderFree() {
   sb.className = 'searchbox';
   sb.innerHTML = '<span class="sb-ico">' + ICON_SEARCH + '</span><input id="freeSearch" type="search" placeholder="' + (LS.lang === 'ca' ? 'Cerca un vídeo d\'aquest nivell…' : 'Busca un vídeo de este nivel…') + '" value="' + esc(freeQuery) + '">';
   lr.appendChild(sb);
-    setTimeout(function () {
+  setTimeout(function () {
     var inp = $('freeSearch');
     if (!inp) return;
-    
-    inp.oninput = function () { 
-      freeQuery = this.value; 
-      filterFreeGrid(this.value);
-    };
-    
+    inp.oninput = function () { freeQuery = this.value; filterFreeGrid(this.value); };
     inp.onblur = function () { freeSearchFocus = false; };
-    
     if (freeQuery) filterFreeGrid(freeQuery);
   }, 0);
   var LV = null;
@@ -2703,7 +2204,6 @@ function renderFree() {
         var bl = u[bb];
         if (bl && bl.v) bl.v.forEach(function (v, vi) {
           var id = si + '.' + ui + '.' + bb + '.' + vi;
-          /* Per defecte: només el bloc actiu. Si estem cercant o ja hem carregat tot: tots els blocs */
           if (!allVideosLoaded && !freeQuery && bb !== freeBlock) return;
           var key = v[li()];
           if (seen[key]) return;
@@ -2739,16 +2239,17 @@ function renderFree() {
   grid.dataset.block = freeBlock;
   vids.forEach(function (x) {
     var vidEl = makeVid(x.v, x.id, false, x.tag);
-    vidEl.dataset.block = x.b; /* Etiquetem amb el seu bloc real */
+    vidEl.dataset.block = x.b;
     var vtEl = vidEl.querySelector('.vt');
-    if (vtEl) vtEl.dataset.origTitle = vtEl.textContent; /* Guardem el títol original */
-    if (!freeQuery && x.b !== freeBlock) vidEl.style.display = 'none'; /* Amaguem els que no toquen */
+    if (vtEl) vtEl.dataset.origTitle = vtEl.textContent;
+    if (!freeQuery && x.b !== freeBlock) vidEl.style.display = 'none';
     if (editModeOn) {
       var vIdx = -1;
       for (var i = 0; i < vids.length; i++) { if (vids[i].id === x.id) { vIdx = i; break; } }
       var editBtns = document.createElement('div');
       editBtns.style.cssText = 'position:absolute;top:48px;right:8px;display:flex;gap:8px;z-index:10';
-      var delBtn = document.createElement('button');      delBtn.className = 'vid-del-btn';
+      var delBtn = document.createElement('button');
+      delBtn.className = 'vid-del-btn';
       delBtn.innerHTML = '🗑️';
       delBtn.title = (LS.lang === 'ca' ? 'Eliminar vídeo' : 'Eliminar vídeo');
       delBtn.onclick = function (e) {
@@ -2985,10 +2486,6 @@ function setLabels() {
   $('mApps').innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Apps';
   $('mInfo').textContent = 'FAQ';
 
-  // Botó d'ajuda:
-  var isTablet = isMobileDevice() && !isSmartphone();
-  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  
   if (isSmartphone()) {
     $('mHelp').innerHTML = '';
   } else {
@@ -3063,7 +2560,7 @@ function setMode(m) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-$('mTrack').onclick = function () { setMode('track'); };
+$('mTrack').onclick = function () { autoTipPending = true; setMode('track'); };
 $('mFree').onclick = function () { setMode('free'); };
 $('mApps').onclick = function () { setMode('apps'); };
 $('mInfo').onclick = function () { setMode('info'); };
@@ -3103,10 +2600,7 @@ function openFullscreenVideo(src) {
   var modal = $('modal');
   var isIOSDevice = isIOS();
 
-    if (isMobileDevice()) {
-    /* iPad i Android: pestanya nova amb el reproductor natiu de Drive.
-       Pantalla completa real, controls que s'amaguen sols i sessió de Google;
-       el gest de tornar / ENRERE et retorna al web al punt on eres. */
+  if (isMobileDevice()) {
     window.open(currentVideoSrc, '_blank');
     return;
   }
@@ -3119,21 +2613,18 @@ function openFullscreenVideo(src) {
       player.setAttribute('allow', 'autoplay; fullscreen; storage-access-by-user-activation');
       player.src = finalSrc;
       player.classList.add('active');
-      if (overlay) overlay.classList.add('hidden'); /* a l'iPad ja no cal missatge previ */
+      if (overlay) overlay.classList.add('hidden');
       document.documentElement.style.zoom = '1';
-      showCloseBtn(); /* mostra la ✕ pròpia també a l'iPad, com al PC */
+      showCloseBtn();
       if (player.requestFullscreen) player.requestFullscreen().catch(function () {});
       else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
-        } else {
-      /* ── ANDROID: mòbil no-iOS ── Sense Fullscreen API: el botó ENRERE del sistema
-         tanca el vídeo al primer toc (gràcies a pushState/popstate). ── */
+    } else {
       modal.classList.remove('ios-device');
       var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1&authuser=0' : currentVideoSrc + '?autoplay=1&authuser=0';
       player.src = finalSrc;
       player.classList.add('active');
       document.documentElement.style.zoom = '1';
       showCloseBtn();
-      /* Missatge d'ajuda per a Android: indicar com posar pantalla completa */
       if (overlay) {
         overlay.classList.remove('hidden');
         if (LS.lang === 'ca') {
@@ -3144,7 +2635,7 @@ function openFullscreenVideo(src) {
         setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
       }
     }
-    } else {
+  } else {
     pushVideoState();
     player.src = '';
     player.classList.remove('active');
@@ -3157,7 +2648,6 @@ function openFullscreenVideo(src) {
   }
 }
 
-/* ══ iPad: la ✕ es fa fantasma al cap d'1,2 s i reapareix 1,2 s en tocar ══ */
 (function () {
   var m = $('modal'), btn = $('xPlayer');
   if (!m || !btn) return;
@@ -3178,7 +2668,6 @@ function openFullscreenVideo(src) {
   document.addEventListener('touchstart', function () { if (isIOSDevice && m.classList.contains('on')) flash(); }, { passive: true, capture: true });
 })();
 
-/* ══ TÀCTIL: cap :hover enganxós enlloc (els hover només s'apliquen amb ratolí) ══ */
 (function () {
   if (!window.matchMedia || !matchMedia('(hover: none)').matches) return;
   try {
@@ -3208,23 +2697,9 @@ function openFullscreenVideo(src) {
 
 (function () {
   var KEY = 'gjps_theme';
-  var THEMES = ['dark', 'cream', 'paper', 'blue', 'lilac', 'green'];
-  var THEME_NAMES = {
-    dark: 'Fosc',
-    cream: 'Crema',
-    paper: 'Paper antic',
-    blue: 'Blau nit',
-    lilac: 'Lila',
-    green: 'Verd'
-  };
-  var THEME_COLORS = {
-    dark: '#1a1d27',
-    cream: '#e2d4b0',
-    paper: '#e8e4dc',
-    blue: '#d8dde4',
-    lilac: '#e8e0f0',
-    green: '#dde8e0'
-  };
+  var THEMES = ['dark', 'blue'];
+  var THEME_NAMES = { dark: 'Fosc', blue: 'Blau nit' };
+  var THEME_COLORS = { dark: '#1a1d27', blue: '#d8dde4' };
   var SUN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
   var MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
   function apply(th) {
@@ -3309,7 +2784,7 @@ $('modal').addEventListener('click', function (e) { if (e.target.id === 'modal')
 document.addEventListener('fullscreenchange', function () {
   if (!document.fullscreenElement) {
     document.documentElement.style.zoom = '';
-    if (isMobileDevice() && !isIOSDevice) return; /* només Android (que ja no usa fullscreen) ignora aquest event */
+    if (isMobileDevice() && !isIOSDevice) return;
     $('player').src = '';
     $('modal').classList.remove('on');
     if (videoHistoryGuard) { videoHistoryGuard = false; try { history.back(); } catch (e) {} }
@@ -3334,7 +2809,7 @@ document.addEventListener('mouseleave', function () {
 });
 
 /* ================================================================
-   11b. DRAG & DROP DE VÍDEOS (Pointer Events: ratolí + tàctil)
+   11b. DRAG & DROP
    ================================================================ */
 var dragState = null;
 var blockBar = null;
@@ -3355,7 +2830,8 @@ function ensureBlockBar() {
   return blockBar;
 }
 
-function initDragDrop() {  document.addEventListener('pointerdown', function (e) {
+function initDragDrop() {
+  document.addEventListener('pointerdown', function (e) {
     if (!editModeOn) return;
     var handle = e.target.closest('.vid-drag');
     if (!handle) return;
@@ -3391,7 +2867,8 @@ function initDragDrop() {  document.addEventListener('pointerdown', function (e)
       clearDropHints();
       bbtn.classList.add('over');
       dragState.over = { type: 'blockbtn', block: bbtn.dataset.b };
-    } else if (target && target !== dragState.row && target.dataset.vid) {      var r = target.getBoundingClientRect();
+    } else if (target && target !== dragState.row && target.dataset.vid) {
+      var r = target.getBoundingClientRect();
       var before = (e.clientX < r.left + r.width / 2);
       target.classList.add(before ? 'drop-before' : 'drop-after');
       dragState.over = { type: 'vid', id: target.dataset.vid, before: before };
@@ -3435,7 +2912,8 @@ function initDragDrop() {  document.addEventListener('pointerdown', function (e)
   document.addEventListener('pointercancel', function () {
     if (!dragState) return;
     if (blockBar) blockBar.classList.remove('on');
-    if (dragState.ghost) dragState.ghost.remove();    dragState.row.classList.remove('dragging-src');
+    if (dragState.ghost) dragState.ghost.remove();
+    dragState.row.classList.remove('dragging-src');
     clearDropHints();
     dragState = null;
   });
@@ -3463,11 +2941,11 @@ function nextVidIdInDom(id) {
   }
   return null;
 }
+
 /* ================================================================
-   11c. EDITOR DE PARTITURES / ADJUNTS
+   11c. EDITOR DE PARTITURES
    ================================================================ */
 function openDocsEditor(level, uiUnused, b) {
-  // Recórrer TOTS els nivells (igual que el botó "Adjunts (N)") i deduplicar per nom
   var items = [], seen = {};
   D.forEach(function (s, si) {
     if (!s.u) return;
@@ -3576,7 +3054,6 @@ function openDocsEditor(level, uiUnused, b) {
   };
 }
 
-/* Tooltip del play: s'encén al botó però viu a la fila (no es mou amb el puls) */
 var tipTimeout = null;
 document.addEventListener('mouseover', function (e) {
   var btn = e.target.closest ? e.target.closest('.now .play') : null;
@@ -3614,14 +3091,14 @@ try {
   loadDone();
   initDragDrop();
   render();
-} catch (e) {  var f = document.getElementById('fatal');
+} catch (e) {
+  var f = document.getElementById('fatal');
   f.style.display = 'block';
   f.textContent = '️ Error init: ' + e.message;
 }
 </script>
 
 <div id="appVer"></div>
-<div id="diploma"></div>
 
 <!-- Modal de FAQ per a visitants (sense login) -->
 <div class="lgin" id="faqModal">
