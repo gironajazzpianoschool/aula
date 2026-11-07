@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<!-- ═══════════════════════════════════════════════
-     GJPS · index.html
-     v2.0 · 2026-11-07 · Codi net i definitiu
-     ═══════════════════════════════════════════════ -->
-<html lang="ca">
-<head>
+<html lang="ca" data-theme="dark"><head>
 <meta name="theme-color" content="#1a1d27">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Girona Jazz Piano School®</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
@@ -665,7 +660,7 @@ html[data-theme="blue"] #mHelp:focus svg {
 
 </style>
 </head>
-<body>
+<body class="">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
 <div id="toast"></div>
@@ -674,26 +669,26 @@ html[data-theme="blue"] #mHelp:focus svg {
   <div class="hbrand">
     <h1 data-text="GIRONA JAZZ PIANO SCHOOL®">GIRONA JAZZ PIANO SCHOOL®</h1>
     <div class="userblock">
-      <span id="who"></span>
+      <span id="who">Hola, <b>admin</b></span>
       <button id="btnUser" class="ubtn logoutbtn" title="Tanca sessió / Cerrar sesión">Logout</button>
     </div>
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack">🎯 Seguiment Continuat</button>
-      <button id="mFree"> Navegació Lliure</button>
-      <button id="mApps"></button>
+      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
+      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+      <button id="mApps"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
       <button id="mInfo" title="Preguntes freqüents">FAQ</button>
     </span>
-    <button id="mHelp" title="Com funciona / Cómo funciona"></button>
-    <button id="mSearch" title="Cercar / Buscar"></button>
+    <button id="mHelp" title="Com funciona / Cómo funciona"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
+    <button id="mSearch" title="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
     <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
 
 <main>
-  <div id="trackView" style="display:none"></div>
-  <div id="freeView" style="display:none"></div>
+  <div id="trackView" style="display: none;"></div>
+  <div id="freeView" style="display: block;"></div>
   <div id="appsView" style="display:none"></div>
   <div id="infoView" style="display:none"></div>
   <div id="helpView" style="display:none"></div>
@@ -703,8 +698,8 @@ html[data-theme="blue"] #mHelp:focus svg {
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
     <div class="frame">
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
-      <div class="video-overlay" id="videoOverlay">
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class="active"></iframe>
+      <div class="video-overlay hidden" id="videoOverlay">
         <div class="icon">▶</div>
         <div class="text" id="overlayText">Fes clic per reproduir</div>
       </div>
@@ -735,8 +730,8 @@ html[data-theme="blue"] #mHelp:focus svg {
   </div>
 </div>
 
-<button id="mEdit" title="Mode edició">⚙️</button>
-<button id="mSave" title="Guardar">💾</button>
+<button id="mEdit" title="Mode edició" class="" style="display: flex;">⚙️</button>
+<button id="mSave" title="Guardar" style="display: none;">💾</button>
 
 <script>
 /* ================================================================
@@ -1016,7 +1011,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ================================================================ */
-var OV = /*OV-START*/{"t":{},"d":{},"l":{},"f":{},"a":{},"adj":{},"va":{},"order":[],"imp":{},"h":{},"c":{}};/*OV-END*/
+var OV = /*OV-START*/{"t":{"1.3.a.0":{"ca":"Evita Memoritzar Intervals"},"1.0.g.0":{"ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"ca":"Introducció a les Tríades"},"3.0.g.0":{"ca":"Escala Major: Patró Universal"},"3.2.g.0":{"ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"ca":"Introducció al Solfeig"},"6.0.g.0":{"ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"ca":"Introducció a la Connexió de Tríades"}},"d":{"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."},"1.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."}},"l":{"5.0.g.0":{"ca":"1wHl7EjdIrYOfxpgvcOOkSuT_xAISqv4b"}},"f":{},"a":{},"adj":{},"va":{},"order":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"imp":{},"h":{},"c":{},"n":{"1":{"ca":"FONAMENTS"},"2":{"ca":"CONSOLIDACIÓ"},"3":{"ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}}};/*OV-END*/
 
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
@@ -3171,5 +3166,5 @@ try {
     }
   }
 </script>
-</body>
-</html>
+
+<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></body></html>
