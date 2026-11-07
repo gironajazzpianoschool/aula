@@ -2751,11 +2751,15 @@ function openFullscreenVideo(src) {
   }
   function makeBtn() {
     var b = document.getElementById('mTheme');
-    if (b && b.parentNode) { paint(b); return; }
-    b = document.createElement('button');
-    b.type = 'button';
-    b.id = 'mTheme';
-    b.style.cssText = 'position:fixed;top:10px;right:12px;z-index:9990;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;opacity:.65;transition:opacity .2s;padding:0;';
+    /* Si no existeix, el creem */
+    if (!b || !b.parentNode) {
+      b = document.createElement('button');
+      b.type = 'button';
+      b.id = 'mTheme';
+      b.style.cssText = 'position:fixed;top:10px;right:12px;z-index:9990;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;opacity:.65;transition:opacity .2s;padding:0;';
+      document.body.appendChild(b);
+    }
+    /* Re-apliquem els events SEMPRE (necessari si el botó ve d'un HTML guardat) */
     b.onmouseenter = function () { b.style.opacity = '1'; };
     b.onmouseleave = function () { b.style.opacity = '.65'; };
     b.onclick = function () {
@@ -2767,9 +2771,7 @@ function openFullscreenVideo(src) {
       paint(b);
     };
     paint(b);
-    document.body.appendChild(b);
-  }
-  function ensure() { var b = document.getElementById('mTheme'); if (!b || !b.parentNode) makeBtn(); }
+  }  function ensure() { var b = document.getElementById('mTheme'); if (!b || !b.parentNode) makeBtn(); }
   function start() { makeBtn(); setInterval(ensure, 1000); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
