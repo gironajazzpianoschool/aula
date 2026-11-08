@@ -754,8 +754,25 @@ function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSO
 
 var APP_VERSION = '2.0', APP_BUILD = '2026-11-07';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
-LS.skipped = lsJSON('gjps_skipped_' + (LS.user || 'guest'), null);
-LS.skipAfter = lsJSON('gjps_skipafter_' + (LS.user || 'guest'), {});
+function loadSkip() {
+  var u = LS.user || 'guest';
+  var rs = lsJSON('gjps_skipped_' + u, null);
+  if (rs && !Array.isArray(rs)) LS.skippedFull = { ca: Array.isArray(rs.ca) ? rs.ca : [], es: Array.isArray(rs.es) ? rs.es : [] };
+  else { var legS = Array.isArray(rs) ? rs : []; LS.skippedFull = { ca: legS.slice(), es: legS.slice() }; } /* MIGRACIÓ */
+  LS.skipped = LS.skippedFull[LS.lang];
+  var ra = lsJSON('gjps_skipafter_' + u, null);
+  if (ra && (ra.ca !== undefined || ra.es !== undefined)) LS.skipAfterFull = { ca: ra.ca || {}, es: ra.es || {} };
+  else { var legA = (ra && typeof ra === 'object') ? ra : {}; LS.skipAfterFull = { ca: Object.assign({}, legA), es: Object.assign({}, legA) }; } /* MIGRACIÓ */
+  LS.skipAfter = LS.skipAfterFull[LS.lang];
+}
+function saveSkip() {
+  var u = LS.user || 'guest';
+  LS.skippedFull[LS.lang] = LS.skipped;
+  LS.skipAfterFull[LS.lang] = LS.skipAfter;
+  lsSet('gjps_skipped_' + u, JSON.stringify(LS.skippedFull));
+  lsSet('gjps_skipafter_' + u, JSON.stringify(LS.skipAfterFull));
+}
+loadSkip();
 var freeBlock = 'w', freeLevel = 0, autoLevelPending = true, editModeOn = false, faqOpen = {}, helpOpen = {}, reviewCollapsed = true, freeQuery = '', freeSearchFocus = false, allVideosLoaded = false, autoTipPending = false;
 
 function isMobileDevice() {
@@ -838,10 +855,37 @@ function findUser(name) {
   return null;
 }
 function currentUserRole() { var u = findUser(LS.user); return u ? u.role : 'guest'; }
-function loadDone() { LS.done = LS.user ? lsJSON('gjps_done_' + LS.user, {}) : {}; }
-function saveDone() { if (LS.user) lsSet('gjps_done_' + LS.user, JSON.stringify(LS.done)); }
-function getBookmarks() { return lsJSON('gjps_bookmarks_' + LS.user, []); }
-function setBookmarks(arr) { lsSet('gjps_bookmarks_' + LS.user, JSON.stringify(arr)); }
+var doneFull = { ca: {}, es: {} };
+function loadDone() {
+  if (!LS.user) { doneFull = { ca: {}, es: {} }; LS.done = {}; return; }
+  var raw = lsJSON('gjps_done_' + LS.user, {});
+  if (raw && (raw.ca !== undefined || raw.es !== undefined)) {
+    doneFull = { ca: raw.ca || {}, es: raw.es || {} };
+  } else {
+    /* MIGRACIÓ: el progrés antic es copia als dos idiomes */
+    doneFull = { ca: Object.assign({}, raw), es: Object.assign({}, raw) };
+  }
+  LS.done = doneFull[LS.lang] || (doneFull[LS.lang] = {});
+}
+function saveDone() {
+  if (!LS.user) return;
+  doneFull[LS.lang] = LS.done;
+  lsSet('gjps_done_' + LS.user, JSON.stringify(doneFull));
+}
+function getBookmarks() {
+  var raw = lsJSON('gjps_bookmarks_' + LS.user, null);
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw; /* encara no migrat: es migrarà al guardar */
+  return Array.isArray(raw[LS.lang]) ? raw[LS.lang] : [];
+}
+function setBookmarks(arr) {
+  var raw = lsJSON('gjps_bookmarks_' + LS.user, null);
+  var full;
+  if (raw && !Array.isArray(raw)) full = { ca: Array.isArray(raw.ca) ? raw.ca.slice() : [], es: Array.isArray(raw.es) ? raw.es.slice() : [] };
+  else { var leg = Array.isArray(raw) ? raw.slice() : []; full = { ca: leg.slice(), es: leg.slice() }; } /* MIGRACIÓ */
+  full[LS.lang] = arr;
+  lsSet('gjps_bookmarks_' + LS.user, JSON.stringify(full));
+}
 function isBookmarked(id) { return getBookmarks().indexOf(id) >= 0; }
 function toggleBookmark(id) {
   var b = getBookmarks(); var i = b.indexOf(id);
@@ -1008,7 +1052,8 @@ var HELP = [
   { ico: ICON_CHART, t: { ca: 'Els percentatges de progrés', es: 'Los porcentajes de progreso' }, p: { ca: 'Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t\'explicarà exactament què està mesurant.', es: 'En el Seguimiento Continuo, los donuts de progreso solo tienen en cuenta los vídeos importantes (⭐): cuando los completes todos, verás el 100% y recibirás el regalo de graduación, aunque queden vídeos opcionales (☆) pendientes. En la Navegación Libre, en cambio, el porcentaje de cada bloque refleja todo el material del bloque (importantes y opcionales). Y si pasas el ratón por encima de cualquier donut o botón de bloque, te explicará exactamente qué está midiendo.' } },
   { ico: ICON_FLASK, t: { ca: 'Prova pilot: on es guarda el teu progrés?', es: 'Prueba piloto: ¿dónde se guarda tu progreso?' }, p: { ca: 'Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d\'un altre dispositiu, no hi veuràs el progrés actualitzat: no s\'ha perdut, simplement viu a l\'altre navegador. Aquesta limitació desapareixerà d\'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.', es: 'Esta web es todavía una prueba piloto con un máximo de 30 usuarios. Por eso, tu progreso (vídeos completados, notas personales y lista de repaso) queda guardado únicamente en el navegador del dispositivo que estés utilizando. Si entras con tu usuario desde otro dispositivo, no verás el progreso actualizado: no se ha perdido, simplemente vive en el otro navegador. Esta limitación desaparecerá en unos meses, cuando la web se publique oficialmente y el progreso se guarde en la nube.' } },
   { ico: ICON_THEME, t: { ca: 'Canviar entre mode fosc i mode clar', es: 'Cambiar entre modo oscuro y modo claro' }, p: { ca: 'A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l\'últim tema que vas triar. Per defecte, la primera visita sempre s\'obre en mode fosc.', es: 'En la esquina superior derecha encontrarás un botón con un icono de sol o de luna. Al hacer clic, conmutarás entre el modo oscuro y el modo claro (azul noche). Tu preferencia se guarda automáticamente: la próxima vez que abras el web, se mostrará con el último tema que elegiste. Por defecto, la primera visita siempre se abre en modo oscuro.' } },
-  { ico: '📲', mobileOnly: true, t: { ca: 'Instal·la l\'aula al teu mòbil o tablet', es: 'Instala el aula en tu móvil o tablet' }, p: { ca: 'Pots tenir l\'aula com si fos una aplicació: a Android (Chrome), obre el menú ⋮ de dalt i tria «Afegeix a la pantalla d\'inici» o «Instal·la l\'aplicació»; a iPad (Safari), prem el botó Compartir (el quadrat amb fletxa) i tria «Afegeix a la pantalla d\'inici». La drecera es mostrarà amb el logo de l\'escola i, en obrir-la, veuràs l\'aula a pantalla completa, sense barres del navegador.', es: 'Puedes tener el aula como si fuera una aplicación: en Android (Chrome), abre el menú ⋮ de arriba y elige «Añadir a pantalla de inicio» o «Instalar aplicación»; en iPad (Safari), pulsa el botón Compartir (el cuadrado con flecha) y elige «Añadir a pantalla de inicio». El acceso se mostrará con el logo de la escuela y, al abrirlo, verás el aula a pantalla completa, sin barras del navegador.' } }
+  { ico: '📲', mobileOnly: true, t: { ca: 'Instal·la l\'aula al teu mòbil o tablet', es: 'Instala el aula en tu móvil o tablet' }, p: { ca: 'Pots tenir l\'aula com si fos una aplicació: a Android (Chrome), obre el menú ⋮ de dalt i tria «Afegeix a la pantalla d\'inici» o «Instal·la l\'aplicació»; a iPad (Safari), prem el botó Compartir (el quadrat amb fletxa) i tria «Afegeix a la pantalla d\'inici». La drecera es mostrarà amb el logo de l\'escola i, en obrir-la, veuràs l\'aula a pantalla completa, sense barres del navegador.', es: 'Puedes tener el aula como si fuera una aplicación: en Android (Chrome), abre el menú ⋮ de arriba y elige «Añadir a pantalla de inicio» o «Instalar aplicación»; en iPad (Safari), pulsa el botón Compartir (el cuadrado con flecha) y elige «Añadir a pantalla de inicio». El acceso se mostrará con el logo de la escuela y, al abrirlo, verás el aula a pantalla completa, sin barras del navegador.' } },
+  { ico: '🌐', t: { ca: 'Català i castellà: dos cursos independents', es: 'Catalán y castellano: dos cursos independientes' }, p: { ca: 'Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l\'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d\'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.', es: 'Aunque el material de ambos idiomas es muy parecido, cada idioma funciona como un curso independiente: los vídeos completados, los porcentajes, la lista de repaso, las notas y el orden de los vídeos se gestionan por separado. Así, si completas un bloque en catalán, tu progreso en catalán estará al 100% mientras que en castellano seguirá su propio ritmo. La celebración 🏆 y el regalo de graduación también se desbloquean por separado en cada idioma. Puedes cambiar de idioma cuando quieras con el botón 🌐 de la cabecera: tu progreso de cada idioma se conserva siempre.' } }
 ];
 
 /* ================================================================
@@ -1114,27 +1159,44 @@ function currentLinkId(v, id) {
 function isWelcomeId(id) { return parseInt(id.split('.')[0], 10) === 0; }
 function isGiftId(id) { return id.indexOf('gift.') === 0; }
 
+function ensureOrderObj() {
+  if (!OV.order || Array.isArray(OV.order)) {
+    var arr = Array.isArray(OV.order) ? OV.order : [];
+    OV.order = { ca: arr.slice(), es: arr.slice() };
+  }
+  return OV.order;
+}
+function orderList() {
+  ensureOrderObj();
+  if (!Array.isArray(OV.order[LS.lang])) OV.order[LS.lang] = [];
+  return OV.order[LS.lang];
+}
 function initializeOrder() {
-  if (!OV.order || !Array.isArray(OV.order)) OV.order = [];
-  var all = allVids();
-  OV.order = OV.order.filter(function (id) { for (var i = 0; i < all.length; i++) { if (all[i].id === id) return true; } return false; });
-  all.forEach(function (v) { if (OV.order.indexOf(v.id) === -1) OV.order.push(v.id); });
+  ensureOrderObj();
+  ['ca', 'es'].forEach(function (lg) {
+    if (!Array.isArray(OV.order[lg])) OV.order[lg] = [];
+    var exist = {}; allVidsLang(lg).forEach(function (v) { exist[v.id] = 1; });
+    OV.order[lg] = OV.order[lg].filter(function (id) { return exist[id]; });
+    allVidsLang(lg).forEach(function (v) { if (OV.order[lg].indexOf(v.id) === -1) OV.order[lg].push(v.id); });
+  });
 }
 function swapOrder(idA, idB) {
   if (editModeOn) collectAll();
   initializeOrder();
-  var ia = OV.order.indexOf(idA), ib = OV.order.indexOf(idB);
+  var list = orderList();
+  var ia = list.indexOf(idA), ib = list.indexOf(idB);
   if (ia === -1 || ib === -1) return;
-  OV.order[ia] = idB; OV.order[ib] = idA;
+  list[ia] = idB; list[ib] = idA;
   render();
 }
 function getVideoOrder(videoId) {
   initializeOrder();
   if (isWelcomeId(videoId)) return 0;
   if (isGiftId(videoId)) return 9998;
+  var list = orderList();
   var count = 0;
-  for (var i = 0; i < OV.order.length; i++) {
-    var id = OV.order[i];
+  for (var i = 0; i < list.length; i++) {
+    var id = list[i];
     if (isWelcomeId(id) || isGiftId(id)) continue;
     count++;
     if (id === videoId) return count;
@@ -1144,7 +1206,7 @@ function getVideoOrder(videoId) {
 function reorderVideo(videoId, newOrder) {
   if (editModeOn) collectAll();
   initializeOrder();
-  var numbered = OV.order.filter(function (id) { return !isWelcomeId(id) && !isGiftId(id); });
+  var numbered = orderList().filter(function (id) { return !isWelcomeId(id) && !isGiftId(id); });
   var cur = numbered.indexOf(videoId);
   if (cur === -1) return;
   var target = newOrder - 1;
@@ -1177,35 +1239,45 @@ function resetVideoBlock(id) {
 }
 function getVideoImportance(videoId) {
   if (!OV.imp || typeof OV.imp !== 'object') OV.imp = {};
-  return OV.imp[videoId] === 'optional' ? 'optional' : 'important';
+  var v = OV.imp[videoId + ':' + LS.lang];
+  if (v === undefined) v = OV.imp[videoId]; /* dades antigues: valen per als dos idiomes */
+  return v === 'optional' ? 'optional' : 'important';
 }
 function toggleVideoImportance(videoId) {
   if (!OV.imp || typeof OV.imp !== 'object') OV.imp = {};
   if (editModeOn) collectAll();
-  OV.imp[videoId] = (getVideoImportance(videoId) === 'important') ? 'optional' : 'important';
-  showToast(OV.imp[videoId] === 'important'
+  OV.imp[videoId + ':' + LS.lang] = (getVideoImportance(videoId) === 'important') ? 'optional' : 'important';
+  showToast(OV.imp[videoId + ':' + LS.lang] === 'important'
     ? (LS.lang === 'ca' ? '⭐ Vídeo marcat com a IMPORTANT' : '⭐ Vídeo marcado como IMPORTANTE')
     : (LS.lang === 'ca' ? '☆ Vídeo marcat com a OPCIONAL' : '☆ Vídeo marcado como OPCIONAL'));
   render();
 }
-function allVids() {
+function allVidsLang(lang) {
+  var idx = (lang === 'ca') ? 0 : 1;
   var o = [];
   D.forEach(function (s, si) {
     if (!s.u) return;
     s.u.forEach(function (u, ui) {
       BO.forEach(function (b) {
         var bl = u[b];
-        if (bl && bl.v) bl.v.forEach(function (v, vi) { if (!v[li()]) return; o.push({ id: si + '.' + ui + '.' + b + '.' + vi, v: v, si: si, ui: ui, b: b }); });
+        if (bl && bl.v) bl.v.forEach(function (v, vi) { if (!v[idx]) return; o.push({ id: si + '.' + ui + '.' + b + '.' + vi, v: v, si: si, ui: ui, b: b }); });
       });
     });
   });
   return o;
 }
+function allVids() { return allVidsLang(LS.lang); }
+function allVidsUnion() {
+  var seen = {}, o = [];
+  allVidsLang('ca').concat(allVidsLang('es')).forEach(function (x) { if (!seen[x.id]) { seen[x.id] = 1; o.push(x); } });
+  return o;
+}
 function findVidById(id) { var all = allVids(); for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; } return null; }
 function firstPlainNext() {
   var skipped = LS.skipped || [];
-  for (var i = 0; i < OV.order.length; i++) {
-    var id = OV.order[i];
+  var list = orderList();
+  for (var i = 0; i < list.length; i++) {
+    var id = list[i];
     if (isGiftId(id) || LS.done[id] || skipped.indexOf(id) >= 0) continue;
     var v = findVidById(id);
     if (v && driveSrc(v.v, id)) return id;
@@ -1244,8 +1316,9 @@ function smartFreeLevel() {
   if (!welcomeDone) { freeLevel = 0; freeBlock = 'w'; return; }
   initializeOrder();
   var found = false;
-  for (var i = 0; i < OV.order.length; i++) {
-    var id = OV.order[i];
+  var list = orderList();
+  for (var i = 0; i < list.length; i++) {
+    var id = list[i];
     if (isWelcomeId(id) || isGiftId(id)) continue;
     if (!LS.done[id]) {
       var v = findVidById(id);
@@ -1653,7 +1726,12 @@ function makeVid(v, id, track, tag) {
       importanceHtml = '<div class="vid-importance" title="' + importanceTitle + '">' + importanceIcon + '</div>';
     }
   }
-  var nkey = 'gjps_notes_' + LS.user + '_' + id;
+  var nkeyBase = 'gjps_notes_' + LS.user + '_' + id;
+  var nkey = nkeyBase + ':' + LS.lang;
+  if (lsGet(nkey) === null) {
+    var oldNotes = lsGet(nkeyBase);
+    if (oldNotes) { lsSet(nkeyBase + ':ca', oldNotes); lsSet(nkeyBase + ':es', oldNotes); lsSet(nkeyBase, ''); } /* MIGRACIÓ */
+  }
   var hasNotes = false;
   try { hasNotes = lsJSON(nkey, []).length > 0; } catch (e) {}
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
@@ -1678,8 +1756,9 @@ function makeVid(v, id, track, tag) {
     var btn = this;
     if (LS.done[id]) { delete LS.done[id]; saveDone(); render(); return; }
     LS.done[id] = 1; saveDone();
-    if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped)); }
-    if (LS.skipAfter) { delete LS.skipAfter[id]; lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter)); }
+    if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); }
+    if (LS.skipAfter) { delete LS.skipAfter[id]; }
+    saveSkip();
     btn.classList.add('done');
     btn.style.borderColor = 'var(--ok)';
     btn.style.color = 'var(--ok)';
@@ -1699,8 +1778,7 @@ function makeVid(v, id, track, tag) {
       LS.skipAfter = LS.skipAfter || {};
       if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
       LS.skipAfter[id] = firstPlainNext();
-      lsSet('gjps_skipped_' + LS.user, JSON.stringify(LS.skipped));
-      lsSet('gjps_skipafter_' + LS.user, JSON.stringify(LS.skipAfter));
+      saveSkip();
       btn.style.borderColor = '#4cc9f0';
       btn.style.color = '#0a2e38';
       btn.style.background = '#4cc9f0';
@@ -1892,7 +1970,7 @@ function pieSlice(cx, cy, r, pct, color) {
   return '<path d="M ' + cx + ' ' + cy + ' L ' + x1 + ' ' + y1 + ' A ' + r + ' ' + r + ' 0 ' + largeArc + ' 1 ' + x2 + ' ' + y2 + ' Z" fill="' + color + '"/>';
 }
 function sendNotesByEmail(videoId) {
-  var nkey = 'gjps_notes_' + LS.user + '_' + videoId;
+  var nkey = 'gjps_notes_' + LS.user + '_' + videoId + ':' + LS.lang;
   var notes = lsJSON(nkey, []);
   if (!notes.length) {
     showToast(LS.lang === 'ca' ? 'No hi ha notes per enviar.' : 'No hay notas para enviar.');
@@ -2327,7 +2405,11 @@ function renderFree() {
         if (bl3 && bl3.v) {
           var vIdx2 = -1;
           for (var j = 0; j < bl3.v.length; j++) { if (bl3.v[j][li()] === x.v[li()]) { vIdx2 = j; break; } }
-          if (vIdx2 >= 0) { bl3.v.splice(vIdx2, 1); if (bl3.v.length === 0 && !bl3.d) delete D[x.si].u[x.ui][x.id.split('.')[2]]; }
+          if (vIdx2 >= 0) {
+            bl3.v[vIdx2][li()] = ''; /* NOMÉS s'esborra el títol d'aquest idioma */
+            if (!bl3.v[vIdx2][0] && !bl3.v[vIdx2][1] && vIdx2 === bl3.v.length - 1) bl3.v.splice(vIdx2, 1);
+            if (bl3.v.length === 0 && !bl3.d) delete D[x.si].u[x.ui][x.id.split('.')[2]];
+          }
         }
         render();
       };
@@ -2528,7 +2610,7 @@ function startSession(n) {
   }
   LS.mode = 'track';
   lsSet('gjps_mode', 'track');
-  loadDone();
+  loadDone(); loadSkip();
   $('login').classList.remove('on');
   render();
 }
@@ -2664,6 +2746,7 @@ $('langToggle').onclick = function () {
   if (editModeOn) collectAll();
   LS.lang = (LS.lang === 'ca') ? 'es' : 'ca';
   lsSet('gjps_lang', LS.lang);
+  loadDone(); loadSkip();
   setLabels();
   if (!LS.user) showLogin();
   render();
