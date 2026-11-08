@@ -827,26 +827,52 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
 <script src="app.js?v=26"></script>
 
 <script>
-/* Patch per a iOS standalone: redirigeix window.open a window.location */
-if (window.navigator.standalone) {
-  var _origOpen = window.open;
-  window.open = function(url, target) {
-    if (!url) return null;
-    if (target === '_blank' || !target) {
-      window.location.href = url;
-      return null;
-    }
-    return _origOpen.apply(this, arguments);
-  };
-  /* També forcem que els enllaços externs s'obrin al mateix context */
-  document.addEventListener('click', function(e) {
-    var a = e.target.closest('a');
-    if (a && a.target === '_blank') {
-      e.preventDefault();
-      window.location.href = a.href;
-    }
-  }, true);
-}
+(function() {
+  // ═══════════════════════════════════════════
+  // 1. BOTÓ "TORNAR A L'AULA" (només en standalone)
+  // ═══════════════════════════════════════════
+  if (window.navigator.standalone) {
+    var backBtn = document.createElement('button');
+    backBtn.textContent = '← Tornar a l\'aula';
+    backBtn.style.cssText = 'position:fixed;top:10px;left:10px;z-index:99999;padding:8px 14px;background:#e8b04b;color:#141414;border:none;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-family:inherit;';
+    backBtn.onmouseover = function() { this.style.background = '#f0c060'; };
+    backBtn.onmouseout = function() { this.style.background = '#e8b04b'; };
+    backBtn.onclick = function() {
+      window.location.href = '../index.html'; 
+    };
+    document.body.appendChild(backBtn);
+  }
+
+  // ═══════════════════════════════════════════
+  // 2. PATCH SUAU PER A iOS STANDALONE
+  // ═══════════════════════════════════════════
+  if (window.navigator.standalone) {
+    // 2a. Intercepta window.open per evitar que falli o no faci res
+    var _origOpen = window.open;
+    window.open = function(url, target) {
+      if (!url) return null;
+      // Si intenta obrir en una pestanya nova, ho convertim en navegació directa
+      if (target === '_blank' || !target) {
+        window.location.href = url;
+        return null;
+      }
+      return _origOpen.apply(this, arguments);
+    };
+
+    // 2b. Intercepta enllaços <a> amb target="_blank"
+    document.addEventListener('click', function(e) {
+      var a = e.target.closest('a');
+      if (a && a.target === '_blank') {
+        e.preventDefault();
+        window.location.href = a.href;
+      }
+    }, true);
+    
+    // NOTA: No interceptem pushState ni replaceState perquè si l'app 
+    // utilitza navegació interna per JavaScript, forçar un window.location.href 
+    // la trencaria. Així deixem que l'app gestioni les seves vistes lliurement.
+  }
+})();
 </script>
 
 </body>
