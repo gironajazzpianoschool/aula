@@ -856,14 +856,33 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
       };
     }
 
+    // A2. POLYFILL PER A requestFullscreen (EVITA L'ERROR DE LÍNIA 1382)
+    if (!document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen = function() {
+        console.warn("Fullscreen no suportat a iOS - ignorat");
+        return Promise.resolve(); // Retorna promesa vàlida per no trencar el codi
+      };
+    }
+    if (!document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen = function() {
+        console.warn("webkitRequestFullscreen no suportat a iOS - ignorat");
+      };
+    }
+    // També afegim el polyfill a qualsevol element (per si criden .requestFullscreen() en un div)
+    if (typeof Element !== 'undefined' && !Element.prototype.requestFullscreen) {
+      Element.prototype.requestFullscreen = function() {
+        console.warn("Element.requestFullscreen no suportat a iOS - ignorat");
+        return Promise.resolve();
+      };
+    }
+
     // B. Desbloquejar l'Audio Context d'iOS amb el primer toc
     var audioUnlocked = false;
     document.addEventListener('click', function unlockAudio() {
       if (!audioUnlocked) {
-        if (window.audioContext) {
-          window.audioContext.resume().then(function() {
-            console.log("Audio Context desbloquejat");
-          });
+        if (window.AudioContext) {
+          var ctx = new window.AudioContext();
+          ctx.resume();
         } else if (window.webkitAudioContext) {
           var ctx = new window.webkitAudioContext();
           ctx.resume();
@@ -886,18 +905,15 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
   }
 
   // ═══════════════════════════════════════════
-  // 3. DETECTOR D'ERRORS EN PANTALLA (Només per depurar)
-  // Si l'app falla, veurem el missatge d'error en vermell a sota de tot.
+  // 3. DETECTOR D'ERRORS EN PANTALLA (Depuració)
   // ═══════════════════════════════════════════
   window.onerror = function(message, source, lineno, colno, error) {
     var errBox = document.createElement('div');
     errBox.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#ff3b30;color:white;padding:15px;z-index:999999;font-family:monospace;font-size:12px;border-top:3px solid white;';
     errBox.innerHTML = '<strong>⚠️ ERROR DE JAVASCRIPT:</strong><br>' + message + '<br>Línia: ' + lineno;
     document.body.appendChild(errBox);
-    
-    // Ocultar el missatge després de 10 segons
     setTimeout(function() { errBox.style.display = 'none'; }, 10000);
-    return true; // Evita que l'error aturi tot el sistema
+    return true;
   };
 
 })();
