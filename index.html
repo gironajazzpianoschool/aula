@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ca" data-theme="dark"><head>
+<html lang="ca">
+<head>
 <meta name="theme-color" content="#1a1d27">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Girona Jazz Piano School®</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
@@ -19,7 +20,7 @@
   --gold: #e8b04b; --ok: #39d98a; --line: #2a2f3a; --danger: #ff5577;
   --fs: 14px; --fs-sm: 12.5px; --fs-xs: 11px; --fs-btn: 13px;
   --fs-h1: clamp(19px, 2.3vw, 26px); --fs-h2: 24px;
-  --hbtn: 42px; --rad: 10px; --rad-lg: 14px; --wm-op: .4;
+  --hbtn: 42px; --rad: 10px; --rad-lg: 14px; --wm-op: .3;
 }
 @media (min-width: 1600px) { :root { --fs: 16px; --fs-sm: 14px; --fs-btn: 15px; } }
 @media (min-width: 2200px) { :root { --fs: 18px; --fs-sm: 15px; --fs-btn: 16px; } }
@@ -508,7 +509,7 @@ html[data-theme="blue"] {
 }
 html:not([data-theme="dark"]) body { background: var(--bg); }
 html:not([data-theme="dark"]) * { text-shadow: none !important; }
-html:not([data-theme="dark"]) #wm { opacity: .99 !important; filter: brightness(0) invert(1) blur(0px) !important; }
+html:not([data-theme="dark"]) #wm { opacity: .6 !important; filter: brightness(0) invert(1) blur(0px) !important; }
 html:not([data-theme="dark"]) #wm::after { display: none !important; }
 html:not([data-theme="dark"]) main { position: relative; }
 html:not([data-theme="dark"]) .vid,
@@ -660,7 +661,7 @@ html[data-theme="blue"] #mHelp:focus svg {
 
 </style>
 </head>
-<body class="">
+<body>
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
 <div id="toast"></div>
@@ -669,26 +670,26 @@ html[data-theme="blue"] #mHelp:focus svg {
   <div class="hbrand">
     <h1 data-text="GIRONA JAZZ PIANO SCHOOL®">GIRONA JAZZ PIANO SCHOOL®</h1>
     <div class="userblock">
-      <span id="who">Hola, <b>admin</b></span>
+      <span id="who"></span>
       <button id="btnUser" class="ubtn logoutbtn" title="Tanca sessió / Cerrar sesión">Logout</button>
     </div>
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
-      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
-      <button id="mApps"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
-      <button id="mInfo" title="Preguntas frecuentes">FAQ</button>
+      <button id="mTrack">🎯 Seguiment Continuat</button>
+      <button id="mFree"> Navegació Lliure</button>
+      <button id="mApps"></button>
+      <button id="mInfo" title="Preguntes freqüents">FAQ</button>
     </span>
-    <button id="mHelp" title="Com funciona / Cómo funciona"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
-    <button id="mSearch" title="Buscar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">ESP</span></button>
+    <button id="mHelp" title="Com funciona / Cómo funciona"></button>
+    <button id="mSearch" title="Cercar / Buscar"></button>
+    <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
 
 <main>
-  <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: block;"></div>
+  <div id="trackView" style="display:none"></div>
+  <div id="freeView" style="display:none"></div>
   <div id="appsView" style="display:none"></div>
   <div id="infoView" style="display:none"></div>
   <div id="helpView" style="display:none"></div>
@@ -698,10 +699,10 @@ html[data-theme="blue"] #mHelp:focus svg {
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
     <div class="frame">
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class="active"></iframe>
-      <div class="video-overlay hidden" id="videoOverlay">
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
+      <div class="video-overlay" id="videoOverlay">
         <div class="icon">▶</div>
-        <div class="text" id="overlayText">Haz clic para reproducir</div>
+        <div class="text" id="overlayText">Fes clic per reproduir</div>
       </div>
     </div>
   </div>
@@ -730,8 +731,8 @@ html[data-theme="blue"] #mHelp:focus svg {
   </div>
 </div>
 
-<button id="mEdit" title="Mode edició" class="" style="display: flex;">⚙️</button>
-<button id="mSave" title="Guardar" style="display: none;">💾</button>
+<button id="mEdit" title="Mode edició">⚙️</button>
+<button id="mSave" title="Guardar">💾</button>
 
 <script>
 /* ================================================================
@@ -1011,7 +1012,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ================================================================ */
-var OV = /*OV-START*/{"t":{"1.3.a.0":{"ca":"Evita Memoritzar Intervals"},"1.0.g.0":{"ca":"Notes al piano: Introducció Essencial","es":"Notas en el piano: Introducción Esencial"},"1.0.g.1":{"ca":"Claus musicals: Com Llegir i Col·locar Mans","es":"Claves musicales: Cómo Leer y Colocar las Manos"},"2.0.g.0":{"ca":"Introducció a les Tríades","es":"Introducción a las Tríadas"},"3.0.g.0":{"ca":"Escala Major: Patró Universal","es":"Escala Mayor: Patrón Universal"},"3.2.g.0":{"ca":"Introducció al Sistema Tonal","es":"Introducción al Sistema Tonal"},"4.0.g.0":{"ca":"Inversió de Tríades Majors i Menors","es":"Inversión de Tríadas Mayores y Menores"},"4.2.g.0":{"ca":"Tríades Majors i Menors en Posició Oberta","es":"Tríadas Mayores y Menores en Posición Abierta"},"5.0.g.0":{"ca":"Voicings Triàdics a Dues Mans","es":"Voicings Triádicos a Dos Manos"},"5.2.g.0":{"ca":"Introducció al Solfeig","es":"Introducción al Solfeo"},"6.0.g.0":{"ca":"Funcions Tonals Bàsiques","es":"Funciones Tonales Básicas"},"6.2.g.0":{"ca":"Introducció a la Connexió de Tríades","es":"Introducción a la Conexión de Tríades"}},"d":{"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."},"1.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"1.0.g.1":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"2.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"3.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"3.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"4.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"4.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"5.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"5.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"6.0.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."},"6.2.g.0":{"ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.","es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo."}},"l":{"5.0.g.0":{"ca":"1wHl7EjdIrYOfxpgvcOOkSuT_xAISqv4b"},"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD"}},"f":{},"a":{},"adj":{},"va":{},"order":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"imp":{},"h":{},"c":{},"n":{"1":{"ca":"FONAMENTS","es":"FUNDAMENTOS"},"2":{"ca":"CONSOLIDACIÓ","es":"CONSOLIDACIÓN"},"3":{"ca":"DESCOBRIMENT DEL SISTEMA TONAL","es":"DESCUBRIMIENTO DEL SISTEMA TONAL"},"4":{"ca":"DESENVOLUPAMENT HARMÒNIC","es":"DESARROLLO ARMÓNICO"},"5":{"ca":"DOMINI DEL NIVELL FONAMENTAL","es":"DOMINIO DEL NIVEL FUNDAMENTAL"},"6":{"ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES","es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS"}}};/*OV-END*/
+var OV = /*OV-START*/{"t":{},"d":{},"l":{},"f":{},"a":{},"adj":{},"va":{},"order":[],"imp":{},"h":{},"c":{}};/*OV-END*/
 
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
@@ -1062,19 +1063,20 @@ function resolveLink(marker) {
 }
 
 function driveSrc(v, id) {
-  var L = (OV.l[id] && OV.l[id][LS.lang]) || OV.l[id];
-  if (L !== undefined && L !== '') {
-    if (typeof L === 'object' && L[LS.lang]) L = L[LS.lang];
-    else if (typeof L === 'object') L = L.ca || L.es || null;
-    if (L) {
-      if (/^https?:\/\//.test(L)) {
-        var m = L.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        var m2 = L.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-        var pid = m ? m[1] : (m2 ? m2[1] : null);
-        return pid ? 'https://drive.google.com/file/d/' + pid + '/preview' : L;
-      }
-      return 'https://drive.google.com/file/d/' + L + '/preview';
+  var ov = OV.l[id];
+  var L = null;
+  if (ov) {
+    if (typeof ov === 'string') L = ov;
+    else if (ov[LS.lang]) L = ov[LS.lang];
+  }
+  if (L) {
+    if (/^https?:\/\//.test(L)) {
+      var m = L.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      var m2 = L.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      var pid = m ? m[1] : (m2 ? m2[1] : null);
+      return pid ? 'https://drive.google.com/file/d/' + pid + '/preview' : L;
     }
+    return 'https://drive.google.com/file/d/' + L + '/preview';
   }
   var linkId = v[2];
   if (linkId) {
@@ -1174,7 +1176,7 @@ function allVids() {
     s.u.forEach(function (u, ui) {
       BO.forEach(function (b) {
         var bl = u[b];
-        if (bl && bl.v) bl.v.forEach(function (v, vi) { o.push({ id: si + '.' + ui + '.' + b + '.' + vi, v: v, si: si, ui: ui, b: b }); });
+        if (bl && bl.v) bl.v.forEach(function (v, vi) { if (!v[li()]) return; o.push({ id: si + '.' + ui + '.' + b + '.' + vi, v: v, si: si, ui: ui, b: b }); });
       });
     });
   });
@@ -1247,8 +1249,24 @@ function prog(l) { var d = 0; l.forEach(function (x) { if (LS.done[x.id]) d++; }
    6. ADJUNTS
    ================================================================ */
 function docsOf(si, ui, b) { if (!D[si] || !D[si].u || !D[si].u[ui]) return []; var bl = D[si].u[ui][b]; return (bl && bl.d) ? bl.d : []; }
-function getAdjLink(si, ui, b, docIdx) { var key = si + '.' + ui + '.' + b + '.' + docIdx; return OV.adj && OV.adj[key] ? OV.adj[key] : null; }
-function setAdjLink(si, ui, b, docIdx, val) { OV.adj = OV.adj || {}; var key = si + '.' + ui + '.' + b + '.' + docIdx; if (val === null || val === '') delete OV.adj[key]; else OV.adj[key] = val; }
+function getAdjLink(si, ui, b, docIdx) {
+  var key = si + '.' + ui + '.' + b + '.' + docIdx;
+  var val = OV.adj && OV.adj[key];
+  if (!val) return null;
+  if (typeof val === 'string') return val;
+  return val[LS.lang] || null;
+}
+function setAdjLink(si, ui, b, docIdx, val) {
+  OV.adj = OV.adj || {};
+  var key = si + '.' + ui + '.' + b + '.' + docIdx;
+  var ex = OV.adj[key];
+  if (typeof ex === 'string') ex = OV.adj[key] = { ca: ex, es: ex };
+  if (!ex || typeof ex !== 'object') ex = OV.adj[key] = {};
+  if (val === null || val === '') {
+    delete ex[LS.lang];
+    if (!ex.ca && !ex.es) delete OV.adj[key];
+  } else ex[LS.lang] = val;
+}
 function getVidAdjKeys(id) { var keys = (OV.va && OV.va[id]) || []; if (keys.length > 0 && typeof keys[0] === 'number') return []; return keys; }
 function setVidAdjKeys(id, keysArr) { OV.va = OV.va || {}; if (!keysArr || !keysArr.length) delete OV.va[id]; else OV.va[id] = keysArr; }
 function parseDriveId(val) {
@@ -1435,7 +1453,8 @@ function collectAll() {
 function applyLinkLabel(row, id) {
   var b = row.querySelector('.lkbtn');
   if (!b) return;
-  var hasCustom = OV.l[id] && OV.l[id][LS.lang];
+  var ovL = OV.l[id];
+  var hasCustom = ovL && (typeof ovL === 'string' ? true : !!ovL[LS.lang]);
   if (hasCustom) {
     b.textContent = '🔗✔';
     b.title = LS.lang === 'ca' ? 'Link personalitzat (clica per editar)' : 'Link personalizado (clic para editar)';
@@ -1465,8 +1484,8 @@ function applyEditState() {
         b.className = 'lkbtn'; b.type = 'button';
         b.onclick = function (e) {
           e.stopPropagation();
-          var cur = (OV.l[id] && OV.l[id][LS.lang]) || OV.l[id] || '';
-          if (typeof cur === 'object') cur = cur[LS.lang] || cur.ca || cur.es || '';
+          var ovL = OV.l[id];
+          var cur = ovL ? (typeof ovL === 'string' ? ovL : (ovL[LS.lang] || '')) : '';
           var val = prompt(t().linkPrompt + '\n\n' + (LS.lang === 'ca' ? 'Actual:' : 'Actual:') + '\n' + (cur || '—'), cur);
           if (val === null) return;
           val = val.trim();
@@ -1510,14 +1529,10 @@ function applyEditState() {
         pv.title = LS.lang === 'ca' ? 'Preview del vídeo (comprovar que és el correcte)' : 'Preview del vídeo (comprobar que es el correcto)';
         pv.onclick = function (e) {
           e.stopPropagation();
-          var inl = row.querySelector('.inl');
-          var ifr = inl.querySelector('iframe');
-          if (inl.classList.contains('on')) { inl.classList.remove('on'); ifr.src = ''; return; }
           var vobj = findVidById(id);
           var src = vobj ? driveSrc(vobj.v, id) : null;
           if (!src) { showToast(t().soon); return; }
-          ifr.src = src;
-          inl.classList.add('on');
+          openFullscreenVideo(src);
         };
         acts.appendChild(pv);
       }
@@ -1911,8 +1926,8 @@ function renderTrack() {
         editBar.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:5;';
         var lkBtn = document.createElement('button');
         lkBtn.className = 'lkbtn'; lkBtn.type = 'button';
-        var curGift = (OV.l['gift.' + i] && OV.l['gift.' + i][LS.lang]) || OV.l['gift.' + i] || '';
-        if (typeof curGift === 'object') curGift = curGift[LS.lang] || curGift.ca || curGift.es || '';
+        var ovG = OV.l['gift.' + i];
+        var curGift = ovG ? (typeof ovG === 'string' ? ovG : (ovG[LS.lang] || '')) : '';
         lkBtn.textContent = curGift ? '🔗✔' : '🔗';
         lkBtn.style.cssText = 'background:rgba(10,12,16,.85);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;';
         if (curGift) { lkBtn.style.borderColor = '#39d98a'; lkBtn.style.color = '#39d98a'; }
@@ -2236,6 +2251,7 @@ function renderFree() {
         var bl = u[bb];
         if (bl && bl.v) bl.v.forEach(function (v, vi) {
           var id = si + '.' + ui + '.' + bb + '.' + vi;
+          if (!v[li()]) return;
           if (!allVideosLoaded && !freeQuery && bb !== freeBlock) return;
           var key = v[li()];
           if (seen[key]) return;
@@ -2313,7 +2329,13 @@ function renderFree() {
       var bl = D[lastSi].u[lastUi][freeBlock];
       if (!bl) bl = D[lastSi].u[lastUi][freeBlock] = { v: [] };
       if (!bl.v) bl.v = [];
-      bl.v.push([name, name, link || '']);
+      var nm = ['', '']; nm[li()] = name;
+      bl.v.push([nm[0], nm[1], '']);
+      if (link && link.trim()) {
+        var newId = lastSi + '.' + lastUi + '.' + freeBlock + '.' + (bl.v.length - 1);
+        OV.l = OV.l || {}; OV.l[newId] = OV.l[newId] || {};
+        OV.l[newId][LS.lang] = parseDriveId(link);
+      }
       render();
     };
     grid.appendChild(addVidBtn);
@@ -2355,7 +2377,12 @@ function renderApps() {
     var iconHtml = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
     var statsHtml = (a.url && a.url.indexOf('TONAL') >= 0) ? tonalStatsHtml() : '';
     c.innerHTML = '<div class="ae">' + iconHtml + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3><p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + statsHtml + '<button>' + t().appsOpen + '</button>';
-    c.querySelector('button').onclick = function () { if (a.url) window.open(a.url + (a.url.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LS.lang, '_blank'); else alert(t().appsSoon); };
+    c.querySelector('button').onclick = function () {
+      if (!a.url) { alert(t().appsSoon); return; }
+      var u = a.url + (a.url.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LS.lang;
+      if (isMobileDevice()) window.location.href = u;
+      else window.open(u, '_blank');
+    };
     g.appendChild(c);
   });
   av.appendChild(g);
@@ -2751,7 +2778,6 @@ function openFullscreenVideo(src) {
   }
   function makeBtn() {
     var b = document.getElementById('mTheme');
-    /* Si no existeix, el creem */
     if (!b || !b.parentNode) {
       b = document.createElement('button');
       b.type = 'button';
@@ -2759,7 +2785,6 @@ function openFullscreenVideo(src) {
       b.style.cssText = 'position:fixed;top:10px;right:12px;z-index:9990;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;opacity:.65;transition:opacity .2s;padding:0;';
       document.body.appendChild(b);
     }
-    /* Re-apliquem els events SEMPRE (necessari si el botó ve d'un HTML guardat) */
     b.onmouseenter = function () { b.style.opacity = '1'; };
     b.onmouseleave = function () { b.style.opacity = '.65'; };
     b.onclick = function () {
@@ -2771,7 +2796,8 @@ function openFullscreenVideo(src) {
       paint(b);
     };
     paint(b);
-  }  function ensure() { var b = document.getElementById('mTheme'); if (!b || !b.parentNode) makeBtn(); }
+  }
+  function ensure() { var b = document.getElementById('mTheme'); if (!b || !b.parentNode) makeBtn(); }
   function start() { makeBtn(); setInterval(ensure, 1000); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
@@ -3115,6 +3141,12 @@ document.addEventListener('mouseout', function (e) {
   }
 });
 
+/* Refresca els rècords de TONAL EMOTIONS en tornar de l'app */
+function refreshTonal() { if (LS.user && LS.mode === 'apps') render(); }
+window.addEventListener('storage', function (e) { if (e.key && e.key.indexOf('gjps_tonal_stats_') === 0) refreshTonal(); });
+document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshTonal(); });
+window.addEventListener('pageshow', refreshTonal);
+
 /* ================================================================
    12. ARRENCADA
    ================================================================ */
@@ -3168,5 +3200,5 @@ try {
     }
   }
 </script>
-
-<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></body></html>
+</body>
+</html>
