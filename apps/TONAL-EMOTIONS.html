@@ -844,34 +844,62 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
   }
 
   // ═══════════════════════════════════════════
-  // 2. PATCH SUAU PER A iOS STANDALONE
+  // 2. PATCHS CRÍTICS PER A iOS (Standalone i Safari)
   // ═══════════════════════════════════════════
-  if (window.navigator.standalone) {
-    // 2a. Intercepta window.open per evitar que falli o no faci res
+  if (window.navigator.standalone || /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    
+    // A. Evitar que l'app es trenqui per falta de MIDI
+    if (!navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess = function() {
+        console.warn("MIDI no suportat a iOS (simulat per evitar errors)");
+        return Promise.reject(new Error("MIDI not supported on iOS"));
+      };
+    }
+
+    // B. Desbloquejar l'Audio Context d'iOS amb el primer toc
+    var audioUnlocked = false;
+    document.addEventListener('click', function unlockAudio() {
+      if (!audioUnlocked) {
+        if (window.audioContext) {
+          window.audioContext.resume().then(function() {
+            console.log("Audio Context desbloquejat");
+          });
+        } else if (window.webkitAudioContext) {
+          var ctx = new window.webkitAudioContext();
+          ctx.resume();
+        }
+        audioUnlocked = true;
+        document.removeEventListener('click', unlockAudio);
+      }
+    }, true);
+
+    // C. Patch de window.open (per si de cas)
     var _origOpen = window.open;
     window.open = function(url, target) {
       if (!url) return null;
-      // Si intenta obrir en una pestanya nova, ho convertim en navegació directa
       if (target === '_blank' || !target) {
         window.location.href = url;
         return null;
       }
       return _origOpen.apply(this, arguments);
     };
-
-    // 2b. Intercepta enllaços <a> amb target="_blank"
-    document.addEventListener('click', function(e) {
-      var a = e.target.closest('a');
-      if (a && a.target === '_blank') {
-        e.preventDefault();
-        window.location.href = a.href;
-      }
-    }, true);
-    
-    // NOTA: No interceptem pushState ni replaceState perquè si l'app 
-    // utilitza navegació interna per JavaScript, forçar un window.location.href 
-    // la trencaria. Així deixem que l'app gestioni les seves vistes lliurement.
   }
+
+  // ═══════════════════════════════════════════
+  // 3. DETECTOR D'ERRORS EN PANTALLA (Només per depurar)
+  // Si l'app falla, veurem el missatge d'error en vermell a sota de tot.
+  // ═══════════════════════════════════════════
+  window.onerror = function(message, source, lineno, colno, error) {
+    var errBox = document.createElement('div');
+    errBox.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#ff3b30;color:white;padding:15px;z-index:999999;font-family:monospace;font-size:12px;border-top:3px solid white;';
+    errBox.innerHTML = '<strong>⚠️ ERROR DE JAVASCRIPT:</strong><br>' + message + '<br>Línia: ' + lineno;
+    document.body.appendChild(errBox);
+    
+    // Ocultar el missatge després de 10 segons
+    setTimeout(function() { errBox.style.display = 'none'; }, 10000);
+    return true; // Evita que l'error aturi tot el sistema
+  };
+
 })();
 </script>
 
