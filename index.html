@@ -1781,7 +1781,22 @@ function makeVid(v, id, track, tag) {
   };
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
   row.querySelector('.bk').title = isBookmarked(id) ? tt().bkOff : tt().bkOn;
+  
+  /* Tooltip per al botó "Fet i continuar" */
+  var ckBtn = row.querySelector('.ck');
+  if (ckBtn) {
+    if (LS.done[id]) {
+      ckBtn.title = LS.lang === 'ca' ? 'Desfés el marcatge d\'aquest vídeo' : 'Deshacer el marcado de este vídeo';
+    } else {
+      ckBtn.title = LS.lang === 'ca' ? 'Marca aquest vídeo com a completat i passa automàticament al següent' : 'Marca este vídeo como completado y pasa automáticamente al siguiente';
+    }
+  }
+  
+  /* Tooltip per al botó "Més tard" */
   var skipBtn = row.querySelector('.skip');
+  if (skipBtn) {
+    skipBtn.title = LS.lang === 'ca' ? 'Ajorna aquest vídeo i passa al següent de l\'itinerari' : 'Aplaza este vídeo y pasa al siguiente del itinerario';
+  }
   if (skipBtn) {
     skipBtn.onclick = function () {
       if (editModeOn) return;
