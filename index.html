@@ -2741,6 +2741,7 @@ function render() {
   $('appsView').style.display = LS.mode === 'apps' ? 'block' : 'none';
   $('infoView').style.display = LS.mode === 'info' ? 'block' : 'none';
   $('helpView').style.display = LS.mode === 'help' ? 'block' : 'none';
+  if (isSmartphone() && LS.mode === 'apps') LS.mode = 'free'; /* al mòbil les apps estan amagades */
   if (LS.mode === 'track') renderTrack();
   else if (LS.mode === 'free') renderFree();
   else if (LS.mode === 'apps') renderApps();
