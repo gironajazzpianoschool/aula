@@ -59,6 +59,7 @@ header { position: relative; z-index: 1; background: var(--bg); padding: 13px 5v
 .modes button:hover { border-color: var(--gold); background: linear-gradient(135deg, rgba(232,176,75,0.18), rgba(232,176,75,0.06)); }
 .modes button.on { border-color: var(--gold); color: var(--gold); background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)); box-shadow: 0 0 14px rgba(232,176,75,0.22), inset 0 1px 0 rgba(255,255,255,0.05); }
 #mTrack { min-width: 205px; font-weight: 800; letter-spacing: .3px; }
+#mTrack svg { width: 18px; height: 18px; }
 #mFree { min-width: 165px; }
 #mApps { min-width: 82px; }
 #mInfo { min-width: 52px; }
@@ -2754,6 +2755,12 @@ function setMode(m) {
   LS.mode = m;
   lsSet('gjps_mode', m);
   if (m === 'free') autoLevelPending = true;
+  else {
+    /* En sortir de la Navegació Lliure, desactivem la lupa automàticament */
+    freeQuery = '';
+    document.body.classList.remove('search-on');
+    $('mSearch').classList.remove('on');
+  }
   if (m === 'track') reviewCollapsed = true;
   if (m === 'info') faqOpen = {};
   if (m === 'help') helpOpen = {};
