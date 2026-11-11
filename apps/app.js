@@ -353,6 +353,23 @@ function compactBattleResult(){
   const b=$('btn-battle-close'); if(b){ b.style.padding='10px 30px'; b.style.fontSize='14px'; b.style.marginTop='14px'; }
 }
 
+/* ══ DESCRIPCIÓ EMOCIONAL DE CADA NOTA (mode Normal) ══ */
+function ensureEmotionText(){
+  if(emotionTextEl) return emotionTextEl;
+  emotionTextEl=document.createElement('div');
+  emotionTextEl.id='emotion-text';
+  emotionTextEl.style.cssText='position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:120;background:rgba(18,18,26,0.88);border:1px solid rgba(140,82,255,0.45);border-radius:14px;padding:10px 24px;color:#f0f0f5;font-size:17px;font-weight:700;text-align:center;display:none;pointer-events:none;max-width:82vw;';
+  document.body.appendChild(emotionTextEl);
+  return emotionTextEl;
+}
+function showEmotionText(idx){
+  if(!midiMode.classList.contains('active')) return;
+  const el=ensureEmotionText();
+  el.innerHTML='<span style="color:#8c52ff;">'+t('emo_title')+':</span> '+t('emo_'+idx);
+  el.style.display='block';
+}
+function hideEmotionText(){ if(emotionTextEl) emotionTextEl.style.display='none'; }
+
 /* ══ 6. DELAYS I COMPTADORS ══ */
 function stopDelayCountdown(){ if(delayCountdownInterval){clearInterval(delayCountdownInterval);delayCountdownInterval=null;} if(delayCountdownEl) delayCountdownEl.classList.remove('visible'); }
 function startDelayCountdown(sec){
@@ -516,7 +533,7 @@ function handleMIDIMessage(event){
     if(exclusiveMode==='delay'){ const pr=[...physicalHeld]; if(pr.length===1) startDelayProcess(pr[0]); else cancelDelayProcess(); }
     if(exclusiveMode==='normal'||exclusiveMode==='lead'||exclusiveMode==='bass'){
       const nt=getNoteToShow();
-      if(nt!==null){ const n=CONFIG.NOTE_IMAGES[getTransposedIndex(nt%12)]; if(n){ imgElement.src=CONFIG.IMAGE_PATH+n; imgElement.classList.add('visible'); } }
+      if(nt!==null){ const idx=getTransposedIndex(nt%12); const n=CONFIG.NOTE_IMAGES[idx]; if(n){ imgElement.src=CONFIG.IMAGE_PATH+n; imgElement.classList.add('visible'); showEmotionText(idx); } }
     }
   } else if(command===0x80||(command===0x90&&velocity===0)){
     pressedStack=pressedStack.filter(n=>n!==note); physicalHeld.delete(note);
@@ -530,8 +547,8 @@ function handleMIDIMessage(event){
       if(exclusiveMode==='delay') cancelDelayProcess();
       if(exclusiveMode==='normal'||exclusiveMode==='lead'||exclusiveMode==='bass'){
         const nt=getNoteToShow();
-        if(nt===null) imgElement.classList.remove('visible');
-        else{ const n=CONFIG.NOTE_IMAGES[getTransposedIndex(nt%12)]; if(n){ imgElement.src=CONFIG.IMAGE_PATH+n; imgElement.classList.add('visible'); } }
+        if(nt===null){ imgElement.classList.remove('visible'); hideEmotionText(); }
+        else{ const idx=getTransposedIndex(nt%12); const n=CONFIG.NOTE_IMAGES[idx]; if(n){ imgElement.src=CONFIG.IMAGE_PATH+n; imgElement.classList.add('visible'); showEmotionText(idx); } }
       }
     }
   }
@@ -1047,7 +1064,13 @@ function hideFilterInfo(){ if(filterInfoEl) filterInfoEl.style.display='none'; }
 function clearAllManualNotes() {
   activeManualNotes.forEach(d => {
     const b = document.querySelector(`.manual-btn[data-degree="${d}"]`);
-    if (b) b.classList.remove('active');
+    if (b) {
+      if (b._safetyTimeout) { clearTimeout(b._safetyTimeout); b._safetyTimeout = null; }
+      if (b._glowTO) { clearTimeout(b._glowTO); b._glowTO = null; }
+      b.classList.remove('active');
+    }
+    /* Enviem el note-off perquè no quedin notes fantasma a la pila */
+    handleMIDIMessage({data:[0x80,currentKeyRoot+d+60,0]});
   });
   activeManualNotes.clear();
   numHeld = {};
@@ -1194,7 +1217,7 @@ function setExclusiveMode(mode){
   const b=$('btn-'+mode); if(b) b.classList.add('active');
   if(showTimeout){clearTimeout(showTimeout);showTimeout=null;}
   activeNotes.clear(); heldByPedal.clear(); pressedStack=[]; normalSustainHold=null;
-  imgElement.classList.remove('visible'); cancelDelayProcess();
+  imgElement.classList.remove('visible'); hideEmotionText(); cancelDelayProcess();
   $('zoom-controls').style.display=(mode==='complete')?'flex':'none';
   $('sound-controls').style.display=(mode==='complete')?'flex':'none';
   Object.values(wrappers).forEach(w=>{ w.classList.remove('visible'); w.style.opacity='0'; if(w.noteNumber){ w.noteNumber.classList.remove('visible'); w.noteNumber.classList.remove('active-note'); } });
@@ -1734,7 +1757,7 @@ document.addEventListener('keyup',e=>{
   if(!$('password-modal').classList.contains('hidden')) return;
   const el=e.target;
   if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA')){ if(el.getClientRects().length>0) return; }
-  if(numHeld[e.code]!==undefined){ const d=numHeld[e.code]; delete numHeld[e.code]; deactivateManualNote(d); }
+  if(numHeld[e.code]!==undefined){ const d=numHeld[e.code]; delete numHeld[e.code]; deactivateManualNote(d); if(e.code.includes('8')) handleMIDIMessage({data:[0x80,currentKeyRoot+12+60,0]}); }
 });
 window.addEventListener('resize',()=>{
   if($('zoom-controls').style.display!=='none') positionZoomControls();
