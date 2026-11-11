@@ -1,4 +1,4 @@
-/* TONAL EMOTIONS - v32 */
+/* TONAL EMOTIONS - v35 */
 
 /* ══ 1. CONFIGURACIÓ ══ */
 const CONFIG = {
@@ -1107,16 +1107,7 @@ function toggleManualPanel(){
   }
   if($('btn-toggle-manual')) $('btn-toggle-manual').classList.toggle('active', manualPanelVisible);
   if($('btn-toggle-manual-ear')) $('btn-toggle-manual-ear').classList.toggle('active', manualPanelVisible);
-  if(manualPanelVisible && !internalPianoEnabled){
-    internalPianoEnabled = true;
-    updatePianoButtons();
-    if(earMode.classList.contains('active')) {
-      if($('btn-ear-piano')) $('btn-ear-piano').classList.add('active');
-    } else {
-      if($('btn-piano')) $('btn-piano').classList.add('active');
-    }
-    getSharedCtx();
-  }
+  /* El teclat manual NO ha de reactivar el piano intern: respectem la preferència de l'usuari */
   updateManualButtonsVisibility();
 }
 
@@ -1734,14 +1725,7 @@ hideSuddenBanner();
     let d=numDegree();
     if(pendingAcc){ d=(d+pendingAcc+12)%12; pendingAcc=0; if(pendingAccTO){clearTimeout(pendingAccTO);pendingAccTO=null;} }
     numHeld[e.code]=d; 
-    
-    // 1. SEMPRE il·luminem el botó corresponent (grau 0 per a la tecla 8)
     activateManualNote(d);
-    
-    // 2. A més, si és la tecla 8, toquem la nota de l'octava superior
-    if(e.code.includes('8')){
-      handleMIDIMessage({data:[0x90,currentKeyRoot+12+60,100]});
-    }
     return;
   }
 });
@@ -2152,7 +2136,7 @@ function syncEmotionText(){
   if(!emotionTextEl){
     emotionTextEl=document.createElement('div');
     emotionTextEl.id='emotion-text';
-    emotionTextEl.style.cssText='position:fixed;right:4%;top:45%;transform:translateY(-50%);max-width:340px;min-width:260px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
+    emotionTextEl.style.cssText='position:fixed;right:20%;top:58%;transform:translateY(-50%);max-width:320px;min-width:240px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
     document.body.appendChild(emotionTextEl);
   }
   const vis=(exclusiveMode==='normal')&&!earTrainingActive&&imgElement.classList.contains('visible');
