@@ -1,4 +1,4 @@
-/* TONAL EMOTIONS - v36 */
+/* TONAL EMOTIONS - v38 */
 
 /* ══ 1. CONFIGURACIÓ ══ */
 const CONFIG = {
@@ -67,7 +67,7 @@ let cadenceTimeouts=[], inAnswerPhase=false, hardcoreTimeout=null;
 let lastNoteOnTime={}, physicalHeld=new Set(), wrappers={};
 let editData=null, pressedStack=[], normalSustainHold=null, testSustainTimeout=null, testExploringNoImage=false;
 let battleMode=false, battlePlayer1Name='', battlePlayer2Name='', battleCurrentPlayer=1;
-let battleAborted=false;
+let battleAborted=false, battleRealStart=false;
 let bp1={correct:0,total:0,times:[]}, bp2={correct:0,total:0,times:[]};
 let turnIndicatorTimeout=null, battleLastQ=0, battleResultTimeout=null;
 let sdActive=false, sdCount=0, sdWinner=null, sdPairMiss=[false,false], sdPairAns=0, sdTotalPairs=0;
@@ -597,6 +597,7 @@ function startWarmup(){
   },1000);
 }
 function startMainTimer(){
+  if(battleMode) battleRealStart=true;
   if(!sdActive){
     earTimer=setInterval(()=>{
       if(!isPaused){
@@ -719,11 +720,17 @@ function stopEarTraining(fadeOut=false){
      if(wasBattle){
      cleanupBattleUI();
      updateBattleAccuracy();
-     // MOSTRAR RESULTAT SEMPRE, TANT SI S'HA JUGAT COM SI NO (per detectar empat 0-0)
-     battleResultTimeout=setTimeout(()=>{ 
-       battleResultTimeout=null; 
-       showBattleResultModal(); 
-     },600);
+     if(!battleRealStart && !earUserHasPlayed){
+       /* Batalla cancel·lada abans de començar (p.ex. ESC al warmup): cap resultat i cap mort súbita */
+       sdActive=false; sdCount=0; sdWinner=null; battleAborted=false;
+     } else {
+       /* Mostrem el resultat sempre que la batalla s'hagi jugat (inclòs l'empat 0-0 real) */
+       battleResultTimeout=setTimeout(()=>{ 
+         battleResultTimeout=null; 
+         if(!earMode.classList.contains('active')) return; /* si l'usuari ja ha sortit, no mostrem res */
+         showBattleResultModal(); 
+       },600);
+     }
    } else if(earModeType==='test'&&earUserHasPlayed){
     updateAccuracyDisplay(); accuracyPanel.classList.add('visible'); resultMessageTimeout=setTimeout(()=>{ resultMessageTimeout=null; showResultMessage(); },500);
   } else accuracyPanel.classList.remove('visible');
@@ -785,7 +792,7 @@ function startBattle(){
   battlePlayer1Name=$('battle-player1-name').value.trim()||(t('player')+' 1');
   battlePlayer2Name=$('battle-player2-name').value.trim()||(t('player')+' 2');
   bp1={correct:0,total:0,times:[]}; bp2={correct:0,total:0,times:[]};
-  battleCurrentPlayer=1; battleMode=true;
+  battleCurrentPlayer=1; battleMode=true; battleRealStart=false;
   sdActive=false; sdCount=0; sdWinner=null; sdPairMiss=[false,false]; sdPairAns=0; sdTotalPairs=0; naturalEnd=false; battleAborted=false;
   hideBattleModal(); document.body.classList.add('battle-on');
   battleScoreboard.classList.add('visible'); p1Box.classList.add('visible'); p2Box.classList.add('visible');
@@ -1043,11 +1050,9 @@ function updateFilterInfo(){
 function hideFilterInfo(){ if(filterInfoEl) filterInfoEl.style.display='none'; }
 
 function clearAllManualNotes() {
-  activeManualNotes.forEach(d => {
-    const b = document.querySelector(`.manual-btn[data-degree="${d}"]`);
-    if (b) b.classList.remove('active');
-  });
+  Array.from(activeManualNotes).forEach(d => deactivateManualNote(d));
   activeManualNotes.clear();
+  manualOctUp = {};
   numHeld = {};
 }
 
@@ -1114,14 +1119,16 @@ function toggleManualPanel(){
 function releaseAllManualNotes(){
   Array.from(activeManualNotes).forEach(dd=>deactivateManualNote(dd));
 }
-function activateManualNote(d, exclusive){
+let manualOctUp={};
+function activateManualNote(d, exclusive, octUp){
   /* Si ve del tacte/ratolí (exclusive), garantim UN SOL botó il·luminat */
   if(exclusive) Array.from(activeManualNotes).forEach(od=>{ if(od!==d) deactivateManualNote(od); });
   const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
   if(b){ if(b._glowTO){ clearTimeout(b._glowTO); b._glowTO=null; } b.classList.add('active'); }
   if(activeManualNotes.has(d)) return;
   activeManualNotes.add(d);
-  handleMIDIMessage({data:[0x90,currentKeyRoot+d+60,100]});
+  manualOctUp[d]=octUp?12:0;
+  handleMIDIMessage({data:[0x90,currentKeyRoot+d+60+(octUp?12:0),100]});
   if(b){ b._safetyTimeout=setTimeout(()=>{ deactivateManualNote(d); },1500); }
 }
 function deactivateManualNote(d){
@@ -1132,8 +1139,9 @@ function deactivateManualNote(d){
     b._glowTO=setTimeout(()=>{ if(!activeManualNotes.has(d)) b.classList.remove('active'); b._glowTO=null; },500);
   }
   if(!activeManualNotes.has(d)) return;
+  const off=manualOctUp[d]||0; delete manualOctUp[d];
   activeManualNotes.delete(d);
-  handleMIDIMessage({data:[0x80,currentKeyRoot+d+60,0]});
+  handleMIDIMessage({data:[0x80,currentKeyRoot+d+60+off,0]});
 }
 
 /* ══ 11. LAYOUT DE NOTES I DRAG ══ */
@@ -1724,8 +1732,9 @@ hideSuddenBanner();
     e.preventDefault(); if(!manualPanelVisible) toggleManualPanel();
     let d=numDegree();
     if(pendingAcc){ d=(d+pendingAcc+12)%12; pendingAcc=0; if(pendingAccTO){clearTimeout(pendingAccTO);pendingAccTO=null;} }
-    numHeld[e.code]=d; 
-    activateManualNote(d);
+    numHeld[e.code]=d;
+    /* La tecla 8 fa tot el mateix que la 1, però sonant una octava més amunt */
+    activateManualNote(d, false, e.code.slice(-1)==='8');
     return;
   }
 });
@@ -2024,33 +2033,10 @@ if($('ear-delay-input-full')) $('ear-delay-input-full').value = '6';
 })();
 console.log('🎹 TONAL EMOTIONS v13 (Estable) carregat correctament.');
 
-/* ══ 16. ESCALA GLOBAL AUTOMÀTICA + PERSISTENT ══ */
+/* ══ 16. ESCALA GLOBAL (desactivada: s'usa el zoom del navegador) ══ */
 (function(){
-  const KEY='tonal_global_scale';
-  const REF_WIDTH=2133; /* Amplada de referència: calibrada perquè a casa es vegi igual que amb el zoom 90% */
-  function autoScale(){ if(IS_TABLET) return 1; return Math.min(1.6, Math.max(0.8, innerWidth/REF_WIDTH)); }
-  let manual=parseFloat(localStorage.getItem(KEY));
-  let s=isNaN(manual) ? autoScale() : manual;
-  document.documentElement.style.zoom=String(s);
-  const box=document.createElement('div');
-  box.style.cssText='position:fixed;top:10px;right:10px;z-index:99990;display:none;gap:6px;align-items:center;background:rgba(18,18,26,0.85);border:1px solid rgba(140,82,255,0.4);border-radius:12px;padding:6px 10px;font-size:12px;color:#f0f0f5;';
-  const lbl=document.createElement('span');
-  function updateLabels(){ lbl.textContent=Math.round(s*100)+'%'+(isNaN(manual)?' (auto)':''); }
-  function apply(v){ v=Math.min(1.6, Math.max(0.8, Math.round(v*20)/20)); manual=v; s=v; localStorage.setItem(KEY,String(v)); document.documentElement.style.zoom=String(v); updateLabels(); }
-  function applyAuto(){ manual=NaN; localStorage.removeItem(KEY); s=autoScale(); document.documentElement.style.zoom=String(s); updateLabels(); }
-  const bm=document.createElement('button'); bm.textContent='A−'; bm.style.cssText='background:#222831;color:#fff;border:1px solid #8c52ff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
-  const bp=document.createElement('button'); bp.textContent='A+'; bp.style.cssText='background:#222831;color:#fff;border:1px solid #8c52ff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
-  const ba=document.createElement('button'); ba.textContent='AUTO'; ba.style.cssText='background:#222831;color:#7ff0b4;border:1px solid #39d98a;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
-  box.appendChild(bm); box.appendChild(lbl); box.appendChild(bp); box.appendChild(ba);
-  document.body.appendChild(box);
-  updateLabels();
-  bm.addEventListener('click',()=>apply(s-0.1));
-  bp.addEventListener('click',()=>apply(s+0.1));
-  ba.addEventListener('click',applyAuto);
-  window.addEventListener('resize',()=>{ if(isNaN(manual)){ s=autoScale(); document.documentElement.style.zoom=String(s); updateLabels(); } });
-  document.addEventListener('keydown',e=>{
-    if(e.key==='F2'){ e.preventDefault(); box.style.display=(box.style.display==='none')?'flex':'none'; }
-  });
+  try{ localStorage.removeItem('tonal_global_scale'); }catch(e){}
+  document.documentElement.style.zoom='';
 })();
 /* ══ 20. MANUAL BLOQUEJAT EN MODE ESCOLTA (tots els dispositius) ══ */
 (function(){
@@ -2141,7 +2127,7 @@ function syncEmotionText(){
   if(!emotionTextEl){
     emotionTextEl=document.createElement('div');
     emotionTextEl.id='emotion-text';
-    emotionTextEl.style.cssText='position:fixed;right:4%;top:58%;transform:translateY(-50%);max-width:320px;min-width:240px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
+    emotionTextEl.style.cssText='position:fixed;right:4%;top:45%;transform:translateY(-50%);max-width:320px;min-width:240px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
     document.body.appendChild(emotionTextEl);
   }
   const vis=(exclusiveMode==='normal')&&!earTrainingActive&&imgElement.classList.contains('visible');
