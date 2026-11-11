@@ -841,6 +841,13 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
       window.location.href = '../index.html'; 
     };
     document.body.appendChild(backBtn);
+    /* Només visible a la pantalla principal (dins dels modes ja hi ha el botó "Enrere") */
+    var ss = document.getElementById('start-screen');
+    if (ss) {
+      var syncBack = function(){ backBtn.style.display = ss.classList.contains('hidden') ? 'none' : 'block'; };
+      new MutationObserver(syncBack).observe(ss, {attributes:true, attributeFilter:['class']});
+      syncBack();
+    }
   }
 
   // ═══════════════════════════════════════════

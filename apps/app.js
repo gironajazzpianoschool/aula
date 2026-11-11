@@ -1,4 +1,4 @@
-/* TONAL EMOTIONS - v35 */
+/* TONAL EMOTIONS - v36 */
 
 /* ══ 1. CONFIGURACIÓ ══ */
 const CONFIG = {
@@ -2024,25 +2024,30 @@ if($('ear-delay-input-full')) $('ear-delay-input-full').value = '6';
 })();
 console.log('🎹 TONAL EMOTIONS v13 (Estable) carregat correctament.');
 
-/* ══ 16. ESCALA GLOBAL PERSISTENT (per monitor) ══ */
+/* ══ 16. ESCALA GLOBAL AUTOMÀTICA + PERSISTENT ══ */
 (function(){
   const KEY='tonal_global_scale';
-  let s=parseFloat(localStorage.getItem(KEY));
-  if(!s || isNaN(s)) s=1;
+  const REF_WIDTH=2133; /* Amplada de referència: calibrada perquè a casa es vegi igual que amb el zoom 90% */
+  function autoScale(){ if(IS_TABLET) return 1; return Math.min(1.6, Math.max(0.8, innerWidth/REF_WIDTH)); }
+  let manual=parseFloat(localStorage.getItem(KEY));
+  let s=isNaN(manual) ? autoScale() : manual;
   document.documentElement.style.zoom=String(s);
   const box=document.createElement('div');
   box.style.cssText='position:fixed;top:10px;right:10px;z-index:99990;display:none;gap:6px;align-items:center;background:rgba(18,18,26,0.85);border:1px solid rgba(140,82,255,0.4);border-radius:12px;padding:6px 10px;font-size:12px;color:#f0f0f5;';
   const lbl=document.createElement('span');
-  function updateLabels(){ lbl.textContent=Math.round(s*100)+'%'; }
-  function apply(v){ v=Math.min(1.6, Math.max(0.8, Math.round(v*20)/20)); s=v; localStorage.setItem(KEY,String(v)); document.documentElement.style.zoom=String(v); updateLabels(); }
+  function updateLabels(){ lbl.textContent=Math.round(s*100)+'%'+(isNaN(manual)?' (auto)':''); }
+  function apply(v){ v=Math.min(1.6, Math.max(0.8, Math.round(v*20)/20)); manual=v; s=v; localStorage.setItem(KEY,String(v)); document.documentElement.style.zoom=String(v); updateLabels(); }
+  function applyAuto(){ manual=NaN; localStorage.removeItem(KEY); s=autoScale(); document.documentElement.style.zoom=String(s); updateLabels(); }
   const bm=document.createElement('button'); bm.textContent='A−'; bm.style.cssText='background:#222831;color:#fff;border:1px solid #8c52ff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
   const bp=document.createElement('button'); bp.textContent='A+'; bp.style.cssText='background:#222831;color:#fff;border:1px solid #8c52ff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
-  box.appendChild(bm); box.appendChild(lbl); box.appendChild(bp);
+  const ba=document.createElement('button'); ba.textContent='AUTO'; ba.style.cssText='background:#222831;color:#7ff0b4;border:1px solid #39d98a;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px;';
+  box.appendChild(bm); box.appendChild(lbl); box.appendChild(bp); box.appendChild(ba);
   document.body.appendChild(box);
   updateLabels();
   bm.addEventListener('click',()=>apply(s-0.1));
   bp.addEventListener('click',()=>apply(s+0.1));
-  box.style.display='none';
+  ba.addEventListener('click',applyAuto);
+  window.addEventListener('resize',()=>{ if(isNaN(manual)){ s=autoScale(); document.documentElement.style.zoom=String(s); updateLabels(); } });
   document.addEventListener('keydown',e=>{
     if(e.key==='F2'){ e.preventDefault(); box.style.display=(box.style.display==='none')?'flex':'none'; }
   });
@@ -2136,7 +2141,7 @@ function syncEmotionText(){
   if(!emotionTextEl){
     emotionTextEl=document.createElement('div');
     emotionTextEl.id='emotion-text';
-    emotionTextEl.style.cssText='position:fixed;right:20%;top:58%;transform:translateY(-50%);max-width:320px;min-width:240px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
+    emotionTextEl.style.cssText='position:fixed;right:4%;top:58%;transform:translateY(-50%);max-width:320px;min-width:240px;background:rgba(18,22,28,0.92);border:1px solid #8c52ff;border-radius:14px;padding:18px 20px;color:#f2f2f2;font-size:19px;line-height:1.35;font-weight:bold;text-align:left;z-index:300;display:none;box-shadow:0 0 22px rgba(140,82,255,0.35);text-shadow:0 0 8px #000;';
     document.body.appendChild(emotionTextEl);
   }
   const vis=(exclusiveMode==='normal')&&!earTrainingActive&&imgElement.classList.contains('visible');
