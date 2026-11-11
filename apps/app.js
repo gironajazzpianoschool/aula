@@ -1,4 +1,4 @@
-/* TONAL EMOTIONS - v38 */
+/* TONAL EMOTIONS - v57 */
 
 /* ══ 1. CONFIGURACIÓ ══ */
 const CONFIG = {
@@ -803,9 +803,10 @@ function startBattle(){
 }
 function positionBattleBoxes(){
   if(!p1Box.classList.contains('visible')) return;
-  const r=earPanel.getBoundingClientRect(); let top=r.bottom+12;
+  const sc=currentZoom/100;
+  const r=earPanel.getBoundingClientRect(); let top=(r.bottom/sc)+12;
   const h=Math.max(p1Box.offsetHeight||220,p2Box.offsetHeight||220);
-  const maxTop=innerHeight-h-90; if(top>maxTop) top=Math.max(90,maxTop);
+  const maxTop=(innerHeight/sc)-h-90; if(top>maxTop) top=Math.max(90,maxTop);
   p1Box.style.top=top+'px'; p2Box.style.top=top+'px';
 }
 function showBattleTurn(){
@@ -1170,10 +1171,10 @@ function startDrag(e){
 function onDrag(e){
   if(!dragElement) return; e.preventDefault();
   const cx=e.touches?e.touches[0].clientX:e.clientX; const cy=e.touches?e.touches[0].clientY:e.clientY;
-  dragElement.style.left=((cx-dragOffset.x)/innerWidth)*100+'%'; dragElement.style.top=((cy-dragOffset.y)/innerHeight)*100+'%';
+  dragElement.style.left=((cx-dragOffset.x)/virtualWidth())*100+'%'; dragElement.style.top=((cy-dragOffset.y)/virtualHeight())*100+'%';
   const ni=dragElement.dataset.noteIndex;
-  (editData||noteData)[ni].x=Math.round(((cx-dragOffset.x)/innerWidth)*1000)/10;
-  (editData||noteData)[ni].y=Math.round(((cy-dragOffset.y)/innerHeight)*1000)/10;
+  (editData||noteData)[ni].x=Math.round(((cx-dragOffset.x)/virtualWidth())*1000)/10;
+  (editData||noteData)[ni].y=Math.round(((cy-dragOffset.y)/virtualHeight())*1000)/10;
 }
 function endDrag(){ if(dragElement){ dragElement.classList.remove('dragging'); dragElement=null; } }
 document.addEventListener('mousemove',onDrag); document.addEventListener('mouseup',endDrag);
@@ -1213,14 +1214,48 @@ function setExclusiveMode(mode){
   }
   updateModeDisplay(); updateTonicBtn();
 }
-function loadZoom(){ const s=localStorage.getItem(CONFIG.STORAGE_KEYS.ZOOM); if(s){ currentZoom=Math.min(120,Math.max(80,parseInt(s)||100)); applyZoom(); } }
-function saveZoom(){ localStorage.setItem(CONFIG.STORAGE_KEYS.ZOOM,currentZoom.toString()); }
-function applyZoom(){ $('zoom-value').textContent=`${currentZoom}%`; }
+function virtualWidth(){ return innerWidth / (currentZoom / 100); }
+function virtualHeight(){ return innerHeight / (currentZoom / 100); }
+function loadZoom(){ 
+  const s = localStorage.getItem(CONFIG.STORAGE_KEYS.ZOOM); 
+  // Per defecte 100%, que internament es veurà com l'antic 120%
+  currentZoom = s ? Math.min(120, Math.max(80, parseInt(s))) : 100; 
+  applyZoom(); 
+}
+
+function saveZoom(){ 
+  localStorage.setItem(CONFIG.STORAGE_KEYS.ZOOM, currentZoom.toString()); 
+}
+
+function applyZoom(){ 
+  $('zoom-value').textContent = `${currentZoom}%`; 
+  
+  // A les tablets el BASE_SCALE és 1.0 (no es modifica), al PC sí que s'aplica el 1.40
+  const BASE_SCALE = IS_TABLET ? 1.0 : 1.40;
+  const s = (currentZoom / 100) * BASE_SCALE;
+  
+  document.body.style.transform = 'scale(' + s + ')';
+  document.body.style.transformOrigin = '0 0';
+  document.body.style.width = (innerWidth / s) + 'px';
+  document.body.style.height = (innerHeight / s) + 'px';
+  
+  const vw = innerWidth / s;
+  Object.keys(wrappers).forEach(ni => {
+    const d = noteData[ni]; const w = wrappers[ni]; if(!d || !w) return;
+    const im = w.querySelector('.note-img'); 
+    if(im) im.style.width = (d.size / CONFIG.DESIGN_WIDTH) * vw + 'px';
+  });
+}
 function positionZoomControls(){
-  const scale=currentZoom/100; const p=$('sound-controls').getBoundingClientRect(); const z=$('zoom-controls');
-  z.style.position='fixed'; z.style.right='auto'; z.style.bottom='auto'; z.style.transform='none'; z.style.margin='0';
-  const h=z.getBoundingClientRect().height||120; const br=document.body.getBoundingClientRect();
-  z.style.top=((p.top-br.top-h-12)/scale)+'px'; z.style.left=((p.left-br.left)/scale)+'px';
+  const z=$('zoom-controls');
+  z.style.position='fixed';
+  z.style.right='20px';
+  z.style.left='auto';
+  z.style.bottom='auto';
+  z.style.top='100px'; // Baixat per no solapar amb el botó d'ajuda
+  z.style.transform='none';
+  z.style.margin='0';
+  z.style.zIndex='10000'; // Per sobre del panell de controls de so
 }
 function positionSustainHint(){
   const scale=currentZoom/100; const p=$('sound-controls').getBoundingClientRect(); const h=$('sustain-hint');
@@ -1403,7 +1438,7 @@ $('btn-start-midi').addEventListener('click',()=>{
   accuracyPanel.classList.remove('visible'); proposedAnswerBox.classList.remove('visible'); resultModal.classList.remove('visible'); hideAllFeedback();
   initMIDI(); setExclusiveMode('normal'); updateManualButtonsVisibility(); updatePianoButtons();
   if(internalPianoEnabled)$('btn-piano').classList.add('active');
-  setTimeout(updateFullscreenButtons, 100);
+  setTimeout(()=>{ updateFullscreenButtons(); applyZoom(); }, 100);
 });
 
 $('btn-start-ear').addEventListener('click',()=>{
@@ -1418,7 +1453,7 @@ $('btn-start-ear').addEventListener('click',()=>{
   $('btn-ear-piano').classList.add('visible'); $('btn-toggle-manual-ear').classList.add('visible'); $('ear-sustain-led').classList.add('visible'); $('ear-sustain-label').classList.add('visible');
   updatePianoButtons(); if(internalPianoEnabled)$('btn-ear-piano').classList.add('active');
   initMIDI();
-  setTimeout(updateFullscreenButtons, 100);
+  setTimeout(()=>{ updateFullscreenButtons(); applyZoom(); }, 100);
 });
 
 function exitFullscreen() {
@@ -1542,8 +1577,26 @@ $('sc-test').addEventListener('click',()=>{
   }
   if($('sustain-hint')){ $('sustain-hint').classList.add('visible'); positionSustainHint(); }
 });
-$('btn-zoom-in').addEventListener('click',()=>{ if(currentZoom<120){ currentZoom+=10; applyZoom(); saveZoom(); if($('sound-controls').style.display==='flex'){ positionZoomControls(); if($('sustain-hint').classList.contains('visible')) positionSustainHint(); } } });
-$('btn-zoom-out').addEventListener('click',()=>{ if(currentZoom>80){ currentZoom-=10; applyZoom(); saveZoom(); if($('sound-controls').style.display==='flex'){ positionZoomControls(); if($('sustain-hint').classList.contains('visible')) positionSustainHint(); } } });
+$('btn-zoom-in').addEventListener('click',()=>{ 
+  if(currentZoom < 120){ 
+    currentZoom += 10; 
+    applyZoom(); 
+    saveZoom(); 
+    if($('sound-controls').style.display === 'flex') positionZoomControls(); 
+  } 
+});
+
+$('btn-zoom-out').addEventListener('click',()=>{ 
+  if(currentZoom > 60){  // Canviat de 80 a 60 per tenir més marge cap avall
+    currentZoom -= 10; 
+    applyZoom(); 
+    saveZoom(); 
+    if($('sound-controls').style.display === 'flex'){ 
+      positionZoomControls(); 
+      if($('sustain-hint').classList.contains('visible')) positionSustainHint(); 
+    } 
+  } 
+});
 $('btn-resume').addEventListener('click',resumeEarTraining);
 $('btn-abort').addEventListener('click',abortEarTraining);
 $('btn-ear-start-full').addEventListener('click',()=>{ if(earModeType==='battle') showBattleModal(); else startEarTraining(); });
@@ -1727,8 +1780,11 @@ hideSuddenBanner();
   const numDegree=()=>{ const n=parseInt(e.code.slice(-1),10); if(n===8) return 0; return DIAT_DEG[n-1]; };
   const numModValue=()=>{ if(e.key==='-'||e.code==='Minus'||e.code==='NumpadSubtract') return -1; if(e.key==='+'||e.key==='='||e.code==='Equal'||e.code==='NumpadAdd') return 1; return 0; };
   const mod=numModValue();
-  if(mod!==0){ e.preventDefault(); if(!manualPanelVisible) toggleManualPanel(); pendingAcc=mod; if(pendingAccTO) clearTimeout(pendingAccTO); pendingAccTO=setTimeout(()=>{pendingAcc=0;pendingAccTO=null;},2000); return; }
+  /* Només acceptem modificadors i números si estem dins d'un mode actiu */
+  const inActiveMode=midiMode.classList.contains('active')||earMode.classList.contains('active');
+  if(mod!==0){ if(!inActiveMode) return; e.preventDefault(); if(!manualPanelVisible) toggleManualPanel(); pendingAcc=mod; if(pendingAccTO) clearTimeout(pendingAccTO); pendingAccTO=setTimeout(()=>{pendingAcc=0;pendingAccTO=null;},2000); return; }
   if(isNumDigitCode&&numHeld[e.code]===undefined){
+    if(!inActiveMode) return;
     e.preventDefault(); if(!manualPanelVisible) toggleManualPanel();
     let d=numDegree();
     if(pendingAcc){ d=(d+pendingAcc+12)%12; pendingAcc=0; if(pendingAccTO){clearTimeout(pendingAccTO);pendingAccTO=null;} }
@@ -1745,6 +1801,7 @@ document.addEventListener('keyup',e=>{
   if(numHeld[e.code]!==undefined){ const d=numHeld[e.code]; delete numHeld[e.code]; deactivateManualNote(d); }
 });
 window.addEventListener('resize',()=>{
+  applyZoom();
   if($('zoom-controls').style.display!=='none') positionZoomControls();
   if($('sustain-hint').classList.contains('visible')) positionSustainHint();
   if(tonicBtnEl&&tonicBtnEl.style.display!=='none') positionTonicControls();
