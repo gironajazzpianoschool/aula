@@ -1108,14 +1108,17 @@ html[data-theme="dark"] .now .play {
   body:not(.editmode) .acts .ax { display: none; }
 }
 
-/* Pantalles molt estretes: icona sola als secundaris, etiqueta només al principal */
+/* «Aplaçar» sense icona dins del requadre del Seguiment Continuat */
+.now .acts .skip .ai { display: none !important; }
+.now .acts .skip .al { letter-spacing: -.005em; }
+
+/* Pantalles molt estretes: icona sola a Repàs i Notes; Fet i Aplaçar conserven el text */
 @media (max-width: 380px) and (orientation: portrait) {
-  body:not(.editmode) .acts .skip .al,
   body:not(.editmode) .acts .bk .al,
   body:not(.editmode) .acts .nt .al { display: none; }
   body:not(.editmode) .acts .ai { font-size: 15px; }
   body:not(.editmode) .acts .ai svg { width: 16px !important; height: 16px !important; }
-  body:not(.editmode) .acts button { padding: 8px 2px !important; }
+  body:not(.editmode) .acts button { padding: 8px 2px !important; font-size: 10px !important; }
 }
 
 </style>
@@ -2207,10 +2210,10 @@ function makeVid(v, id, track, tag) {
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
   var siTag = parseInt(id.split('.')[0], 10);
   var ca = LS.lang === 'ca';
-  var skipFull = ca ? '⏭ Més tard' : '⏭ Más tarde';
+  var skipFull = ca ? 'Aplaçar aquest vídeo i passar al següent' : 'Aplazar este vídeo y pasar al siguiente';
   var skipBtnHtml = '';
   if (track && !LS.done[id]) {
-    skipBtnHtml = '<button class="skip" title="' + skipFull + '" aria-label="' + skipFull + '"><span class="ai">⏭</span><span class="al">' + (ca ? 'Tard' : 'Luego') + '</span></button>';
+    skipBtnHtml = '<button class="skip" title="' + skipFull + '" aria-label="' + skipFull + '"><span class="ai">⏭</span><span class="al">' + (ca ? 'Aplaçar' : 'Aplazar') + '</span></button>';
   }
   var ckFull = LS.done[id] ? t().undo : (track ? t().doneCont : t().mark);
   var ckIcon = LS.done[id] ? '↺' : '✔';
@@ -2285,7 +2288,7 @@ function makeVid(v, id, track, tag) {
       btn.style.background = '#4cc9f0';
       btn.style.opacity = '1';
       btn.disabled = true;
-      showToast(LS.lang === 'ca' ? '⏭ Vídeo deixat per més tard' : '⏭ Vídeo dejado para más tarde');
+      showToast(LS.lang === 'ca' ? '⏭ Vídeo aplaçat' : '⏭ Vídeo aplazado');
       setTimeout(function () { render(); }, 250);
     };
   }
