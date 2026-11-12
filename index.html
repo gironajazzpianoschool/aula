@@ -451,8 +451,20 @@ body.editmode .vid { padding-left: 34px; }
    ============================================================ */
 @media (max-width: 767px) {
   .hbrand h1 { font-size: 18px !important; }
-  .userblock { flex-wrap: nowrap !important; max-width: none !important; gap: 6px !important; }
-  .ubtn.logoutbtn { height: 24px !important; padding: 0 8px !important; font-size: 10px !important; }
+  .hbrand { flex-direction: column; align-items: flex-start; gap: 4px !important; }
+  .userblock { 
+    flex-wrap: nowrap !important; 
+    max-width: none !important; 
+    gap: 4px !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
+  .ubtn.logoutbtn { 
+    height: 22px !important; 
+    padding: 0 8px !important; 
+    font-size: 10px !important;
+    margin-left: 0 !important;
+  }
   .donuts { grid-template-columns: repeat(3, 1fr); }
   .blkcol { grid-template-columns: repeat(3, 1fr); }
   .vgrid { grid-template-columns: 1fr; }
