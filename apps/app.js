@@ -125,8 +125,13 @@ function setThumbVisible(v){ thumb.style.opacity = v?'1':'0'; }
   #battle-scoreboard .battle-player-name{min-height:2.6em;display:flex;align-items:flex-end;justify-content:center;text-align:center;line-height:1.2;max-width:100%;}
   #battle-scoreboard .battle-player-score{margin-top:2px;}
   #p1-box h4,#p2-box h4{min-height:2.4em;display:flex;align-items:flex-end;justify-content:center;text-align:center;}
-  html.tablet-mode #accuracy-panel{top:70px !important;right:12px !important;}
-  html.tablet-mode #ear-filter-info{top:16px !important;right:12px !important;}
+  #accuracy-panel,#ear-filter-info{
+    position:fixed; left:auto; bottom:auto;
+    height:auto; max-height:none; min-height:0;
+    margin:0; box-sizing:border-box; align-self:flex-start;
+  }
+  #accuracy-panel{overflow:visible;}
+  #proposed-answer-box{box-sizing:border-box;}
   *{scrollbar-width:thin;scrollbar-color:#8c52ff #12161c;}
   *::-webkit-scrollbar{width:10px;height:10px;}
   *::-webkit-scrollbar-track{background:#12161c;border-radius:8px;}
@@ -152,6 +157,63 @@ function showNoteImage(idx){
   imgElement.src=url;
   const reveal=()=>{ if(imgElement.getAttribute('src')===url) imgElement.classList.add('visible'); };
   if(cached&&cached.complete) reveal(); else imgElement.onload=reveal;
+}
+
+/* ══ 3d. HUD EAR TRAINING · filtre + percentatge + resposta, mai solapats ══ */
+var earHUDRAF=null;
+function scheduleEarHUD(){
+  if(earHUDRAF) return;
+  earHUDRAF=requestAnimationFrame(function(){ earHUDRAF=null; try{ positionEarHUD(); }catch(e){} });
+}
+function positionEarHUD(){
+  if(!earMode||!earMode.classList.contains('active')) return;
+  const s=appScale()||1;
+  const br=document.body.getBoundingClientRect();
+  const V=r=>({l:(r.left-br.left)/s,t:(r.top-br.top)/s,r:(r.right-br.left)/s,b:(r.bottom-br.top)/s,w:r.width/s,h:r.height/s});
+  const GAP=10, EDGE=IS_TABLET?12:20, TOP=IS_TABLET?14:20;
+  function pin(el){
+    if(!el) return;
+    el.style.position='fixed';
+    el.style.left='auto'; el.style.bottom='auto';
+    el.style.height='auto'; el.style.maxHeight='none'; el.style.minHeight='0';
+    el.style.margin='0'; el.style.transform='none'; el.style.boxSizing='border-box';
+  }
+  /* 1) Notes configurades: cantonada superior, compacta */
+  let fi=null;
+  if(filterInfoEl && filterInfoEl.style.display!=='none'){
+    pin(filterInfoEl);
+    filterInfoEl.style.right=EDGE+'px';
+    filterInfoEl.style.top=TOP+'px';
+    filterInfoEl.style.zIndex='420';
+    fi=V(filterInfoEl.getBoundingClientRect());
+  }
+  /* 2) Percentatge: just a sota, sense estirar-se mai cap amunt */
+  let ap=null;
+  if(accuracyPanel){
+    pin(accuracyPanel);
+    accuracyPanel.style.right=EDGE+'px';
+    accuracyPanel.style.zIndex='410';
+    accuracyPanel.style.top=((fi?fi.b:TOP)+GAP)+'px';
+    if(accuracyPanel.classList.contains('visible')) ap=V(accuracyPanel.getBoundingClientRect());
+  }
+  /* 3) Resposta de l'alumne: baixa només el necessari per no tapar res */
+  if(proposedAnswerBox && !battleMode){
+    proposedAnswerBox.style.marginTop='';
+    if(proposedAnswerBox.classList.contains('visible')){
+      const base=parseFloat(getComputedStyle(proposedAnswerBox).marginTop)||0;
+      const pb=V(proposedAnswerBox.getBoundingClientRect());
+      const hit=b=>!!b && pb.r>b.l && pb.l<b.r;
+      let safe=0;
+      if(hit(fi)) safe=Math.max(safe,fi.b+GAP);
+      if(hit(ap)) safe=Math.max(safe,ap.b+GAP);
+      let shift=safe-pb.t;
+      if(shift>0.5){
+        const room=Math.max(0, virtualHeight()-pb.b-16);
+        shift=Math.min(shift,room);
+        if(shift>0.5) proposedAnswerBox.style.marginTop=(base+shift)+'px';
+      }
+    }
+  }
 }
 
 /* ══ 4. UTILITATS ══ */
@@ -197,6 +259,7 @@ function updateAccuracyDisplay(){
   accuracyDetails.textContent=`${earCorrectNotes} / ${earTotalNotes} ${t('word_notes')}`;
   if(earModeType==='test' && earTrainingActive) accuracyPanel.classList.add('visible');
   else if(!resultModal.classList.contains('visible')) accuracyPanel.classList.remove('visible');
+  scheduleEarHUD();
 }
 function updateDifficultyButtons(){
   $('btn-easy').className='difficulty-btn'+(earDifficulty==='easy'?' active-easy':'');
@@ -209,6 +272,7 @@ function updateModeButtons(){
   $('btn-test-mode').className='mode-toggle-btn'+(earModeType==='test'?' active-test':'');
   $('btn-battle-mode').className='mode-toggle-btn'+(earModeType==='battle'?' active-battle':'');
   renderFilterPanel();
+  scheduleEarHUD();
 }
 function hideAllFeedback(){ if(feedbackHideTimeout){clearTimeout(feedbackHideTimeout);feedbackHideTimeout=null;} feedbackCorrect.className=''; feedbackWrong.className=''; }
 function showFeedbackCorrect(){
@@ -450,10 +514,12 @@ function showProposedAnswer(pc){
   } else {
     proposedAnswerImage.src=CONFIG.IMAGE_PATH+n; proposedAnswerImage.classList.add('visible'); proposedAnswerBox.classList.add('visible');
   }
+  scheduleEarHUD();
 }
 function hideProposedAnswer(){
   p1AnswerImage.classList.remove('visible'); p2AnswerImage.classList.remove('visible'); proposedAnswerImage.classList.remove('visible');
-  if(!battleMode) proposedAnswerBox.classList.remove('visible');
+  if(!battleMode){ proposedAnswerBox.classList.remove('visible'); proposedAnswerBox.style.marginTop=''; }
+  scheduleEarHUD();
 }
 function handleMIDIMessage(event){
   const [status,note,velocity]=event.data; const command=status&0xf0;
@@ -1090,8 +1156,9 @@ function updateFilterInfo(){
   else if(earNoteMode==='non-diatonic') txt=(earFilterNonDiat.size>=5)?t('filter_info_all_nondiat'):t('filter_info_some')+[1,3,6,8,10].filter(d=>earFilterNonDiat.has(d)).map(getDegreeNumber).join(' ');
   else txt=(earFilterAll.size>=12)?t('filter_info_all'):t('filter_info_some')+[0,1,2,3,4,5,6,7,8,9,10,11].filter(d=>earFilterAll.has(d)).map(getDegreeNumber).join(' ');
   el.textContent=txt; el.style.display='block';
+  scheduleEarHUD();
 }
-function hideFilterInfo(){ if(filterInfoEl) filterInfoEl.style.display='none'; }
+function hideFilterInfo(){ if(filterInfoEl) filterInfoEl.style.display='none'; scheduleEarHUD(); }
 
 function clearAllManualNotes(){
   Array.from(activeManualNotes).forEach(d=>deactivateManualNote(d));
@@ -1209,10 +1276,10 @@ document.addEventListener('mousemove',onDrag); document.addEventListener('mouseu
 document.addEventListener('touchmove',onDrag,{passive:false}); document.addEventListener('touchend',endDrag);
 function applyPositionsFrom(data){
   Object.keys(wrappers).forEach(ni=>{
-    const d=data[ni]; const w=wrappers[ni]; if(!d||!w) return;
-    w.style.left=d.x+'%'; w.style.top=d.y+'%'; w.style.zIndex=d.z||10;
-    const im=w.querySelector('.note-img'); if(im) im.style.width=(d.size/CONFIG.DESIGN_WIDTH)*virtualWidth()+'px';
+    const d=noteData[ni]; const w=wrappers[ni]; if(!d||!w) return;
+    const im=w.querySelector('.note-img'); if(im) im.style.width=(d.size/CONFIG.DESIGN_WIDTH)*vw+'px';
   });
+  scheduleEarHUD();
 }
 function setExclusiveMode(mode){
   stopProva(); exclusiveMode=mode;
