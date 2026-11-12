@@ -442,8 +442,8 @@ body.editmode .vid { padding-left: 34px; }
     box-shadow: 0 0 14px rgba(232,176,75,0.22) !important; outline: none !important;
   }
   #mInfo, #langToggle { position: relative !important; z-index: 3 !important; }
-  html[data-theme="dark"] #mInfo, html:not([data-theme="light"]) #mInfo { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; color: #f2f2f2 !important; border: 1.5px solid var(--line) !important; }
-  html[data-theme="dark"] #mInfo:hover, html[data-theme="dark"] #mInfo.on, html:not([data-theme="light"]) #mInfo:hover, html:not([data-theme="light"]) #mInfo.on { background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important; color: #e8b04b !important; border-color: #e8b04b !important; }
+  html[data-theme="dark"] #mInfo, html[data-theme="dark"] #mInfo { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; color: #f2f2f2 !important; border: 1.5px solid var(--line) !important; }
+  html[data-theme="dark"] #mInfo:hover, html[data-theme="dark"] #mInfo.on, html[data-theme="dark"] #mInfo:hover, html[data-theme="dark"] #mInfo.on { background: linear-gradient(135deg, rgba(232,176,75,0.28), rgba(232,176,75,0.1)) !important; color: #e8b04b !important; border-color: #e8b04b !important; }
 }
 
 /* ============================================================
@@ -477,11 +477,11 @@ body.editmode .vid { padding-left: 34px; }
   #mHelp::before { content: '?'; color: var(--danger); font-size: 22px; font-weight: 900; line-height: 1; }
   #mHelp:hover { border-color: var(--danger); background: rgba(255, 85, 119, 0.1); }
   #mHelp.on { background: rgba(255, 85, 119, 0.15); border: 1.5px solid var(--danger); box-shadow: 0 0 14px rgba(255, 85, 119, 0.3); }
-  html:not([data-theme="light"]) #mHelp { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; }
-  html:not([data-theme="light"]) #mSearch { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; color: #f2f2f2 !important; }
-  html:not([data-theme="light"]) #mSearch svg { stroke: #f2f2f2 !important; }
-  html:not([data-theme="light"]) #mSearch.on { background: rgba(232,176,75,0.15) !important; color: #e8b04b !important; }
-  html:not([data-theme="light"]) #mSearch.on svg { stroke: #e8b04b !important; }
+  html[data-theme="dark"] #mHelp { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; }
+  html[data-theme="dark"] #mSearch { background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important; border: 1.5px solid var(--line) !important; color: #f2f2f2 !important; }
+  html[data-theme="dark"] #mSearch svg { stroke: #f2f2f2 !important; }
+  html[data-theme="dark"] #mSearch.on { background: rgba(232,176,75,0.15) !important; color: #e8b04b !important; }
+  html[data-theme="dark"] #mSearch.on svg { stroke: #e8b04b !important; }
   #mHelp { display: inline-flex !important; align-items: center !important; }
   html { zoom: 1; }
   .wrap { width: 100dvw; height: 100dvh; }
@@ -504,63 +504,77 @@ body.editmode .vid { padding-left: 34px; }
 }
 
 /* ============================================================
-   18. TEMA BLAU NIT (variables i ajustos)
+/* ============================================================
+   18. TEMES CLARS — BLAU NIT + SÈPIA (estructura compartida)
    ============================================================ */
 html[data-theme="blue"] {
-  --bg: #c8cdd4; --card: #dde2e8; --line: #9ba3b0;
-  --ink: #1a2030; --mut: #5a6578; --gold: #3d5a80;
-  --ok: #2d6a4f; --danger: #9b2c2c;
+  --bg:#c8cdd4; --card:#dde2e8; --line:#9ba3b0;
+  --ink:#1a2030; --mut:#5a6578; --gold:#3d5a80;
+  --ok:#2d6a4f; --danger:#9b2c2c;
+  --brand-rgb:61,90,128; --header-rgb:216,221,228;
+  --track-rgb:195,204,217; --head-title:#1f3a5f;
+  --play:#2e9e6b; --star:#b8912a; --wm-op:.35;
+}
+html[data-theme="sepia"] {
+  --bg:#e8e4d9; --card:#f4f1e8; --line:#cdc4b2;
+  --ink:#3a2c1c; --mut:#7a6a55; --gold:#5c4526;
+  --ok:#4a7c57; --danger:#b3402f;
+  --brand-rgb:92,69,38; --header-rgb:232,228,217;
+  --track-rgb:214,206,190; --head-title:#4a3520;
+  --play:#4a7c57; --star:#c9971f; --wm-op:.40;
 }
 html:not([data-theme="dark"]) body { background: var(--bg); }
 html:not([data-theme="dark"]) * { text-shadow: none !important; }
-html:not([data-theme="dark"]) #wm { opacity: .35 !important; filter: brightness(0) invert(1) blur(0px) !important; }
-html:not([data-theme="dark"]) #wm::after { display: none !important; }
+html:not([data-theme="dark"]) #wm { opacity: var(--wm-op) !important; filter: brightness(0) invert(1) blur(0px) !important; }
+html:not([data-theme="dark"]) #wm::after { display:none !important; }
 html:not([data-theme="dark"]) main { position: relative; }
 html:not([data-theme="dark"]) .vid,
 html:not([data-theme="dark"]) .note,
 html:not([data-theme="dark"]) .donut { background: var(--card); }
+html:not([data-theme="dark"]) .vid.nolink { background: rgba(var(--brand-rgb),.05); }
 html:not([data-theme="dark"]) .ritem { background: var(--bg); }
-html:not([data-theme="dark"]) .donut svg circle:first-child { stroke: #c3ccd9; }
+html:not([data-theme="dark"]) .donut svg circle:first-child { stroke: rgb(var(--track-rgb)); }
 html:not([data-theme="dark"]) .donut svg text { fill: var(--ink); }
-html:not([data-theme="dark"]) .blkcol button .bmini svg circle { fill: #c3ccd9; }
+html:not([data-theme="dark"]) .blkcol button .bmini svg circle { fill: rgb(var(--track-rgb)); }
 html:not([data-theme="dark"]) .save-note-btn,
 html:not([data-theme="dark"]) .lbox .go:not(.secondary),
 html:not([data-theme="dark"]) .aselbox .actions .go:not(.secondary),
-html:not([data-theme="dark"]) .vid-number { color: #f2e6c8; }
-html:not([data-theme="dark"]) .appcard button { color: var(--ink) !important; }
+html:not([data-theme="dark"]) .vid-number { color:#f7f3e8; }
+html:not([data-theme="dark"]) .appcard button { color:#ffffff !important; }
 html:not([data-theme="dark"]) .appcard .ae img,
 html:not([data-theme="dark"]) .faq-item h3 .faqico img { filter: brightness(0) !important; }
-html[data-theme="blue"] #mHelp svg { stroke: #1a2030 !important; }
-html[data-theme="blue"] .acts button.bk.bookmarked { background: rgba(200,160,40,0.20) !important; border-color: rgba(160,125,30,0.60) !important; color: #7a5c10 !important; }
-html[data-theme="blue"] .acts button.bk.bookmarked:hover { background: rgba(200,160,40,0.30) !important; }
-html[data-theme="blue"] .acts button.nt.has-notes,
-html[data-theme="blue"] .acts button.nt.active { background: #e9e3f7 !important; border-color: #9b8bd0 !important; color: #5b489e !important; }
-html[data-theme="blue"] .save-note-btn { background: #e9e3f7 !important; color: #5b489e !important; border: 1px solid #9b8bd0 !important; }
-html[data-theme="blue"] .save-note-btn:hover { background: #ded5f2 !important; }
+html:not([data-theme="dark"]) .vid-importance { color: var(--star); }
+html:not([data-theme="dark"]) #mHelp svg { stroke: var(--ink) !important; }
 
-/* Botons nav amb transparència en mode Blau nit */
-html[data-theme="blue"] header { background: rgba(216,221,228,0.85) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-html[data-theme="blue"] #mTrack,
-html[data-theme="blue"] #mFree,
-html[data-theme="blue"] #mApps,
-html[data-theme="blue"] #mInfo,
-html[data-theme="blue"] #mHelp { background: linear-gradient(135deg, rgba(61,90,128,0.12), rgba(61,90,128,0.05)) !important; color: var(--ink) !important; border-color: var(--line) !important; text-shadow: none !important; backdrop-filter: blur(4px); }
-html[data-theme="blue"] #mTrack:hover,
-html[data-theme="blue"] #mFree:hover,
-html[data-theme="blue"] #mApps:hover,
-html[data-theme="blue"] #mInfo:hover,
-html[data-theme="blue"] #mHelp:hover { background: linear-gradient(135deg, rgba(61,90,128,0.22), rgba(61,90,128,0.10)) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
-html[data-theme="blue"] #mTrack.on,
-html[data-theme="blue"] #mFree.on,
-html[data-theme="blue"] #mApps.on,
-html[data-theme="blue"] #mInfo.on,
-html[data-theme="blue"] #mHelp.on { background: var(--gold) !important; color: #ffffff !important; border-color: var(--gold) !important; }
-html[data-theme="blue"] .blkcol button { background: linear-gradient(135deg, rgba(61,90,128,0.10), rgba(61,90,128,0.04)) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-html[data-theme="blue"] .blkcol button:hover { background: linear-gradient(135deg, rgba(61,90,128,0.18), rgba(61,90,128,0.08)) !important; }
-html[data-theme="blue"] .blkcol button.on { background: var(--gold) !important; color: #ffffff !important; }
+/* Xips d'estat (idèntics als del blau) */
+html:not([data-theme="dark"]) .acts button.bk.bookmarked { background: rgba(200,160,40,0.20) !important; border-color: rgba(160,125,30,0.60) !important; color:#7a5c10 !important; }
+html:not([data-theme="dark"]) .acts button.bk.bookmarked:hover { background: rgba(200,160,40,0.30) !important; }
+html:not([data-theme="dark"]) .acts button.nt.has-notes,
+html:not([data-theme="dark"]) .acts button.nt.active { background:#e9e3f7 !important; border-color:#9b8bd0 !important; color:#5b489e !important; }
+html:not([data-theme="dark"]) .save-note-btn { background:#e9e3f7 !important; color:#5b489e !important; border:1px solid #9b8bd0 !important; }
+html:not([data-theme="dark"]) .save-note-btn:hover { background:#ded5f2 !important; }
 
-/* Play verd en mode Blau nit */
-html[data-theme="blue"] .now .play { border-color: #2e9e6b !important; color: #2e9e6b !important; animation: playGlow 3.8s ease-in-out infinite !important; }
+/* Capçalera i navegació amb transparència (mateixos alfas) */
+html:not([data-theme="dark"]) header { background: rgba(var(--header-rgb),0.85) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+html:not([data-theme="dark"]) #mTrack,
+html:not([data-theme="dark"]) #mFree,
+html:not([data-theme="dark"]) #mApps,
+html:not([data-theme="dark"]) #mInfo,
+html:not([data-theme="dark"]) #mHelp { background: linear-gradient(135deg, rgba(var(--brand-rgb),0.12), rgba(var(--brand-rgb),0.05)) !important; color: var(--ink) !important; border-color: var(--line) !important; text-shadow:none !important; backdrop-filter: blur(4px); }
+html:not([data-theme="dark"]) #mTrack:hover,
+html:not([data-theme="dark"]) #mFree:hover,
+html:not([data-theme="dark"]) #mApps:hover,
+html:not([data-theme="dark"]) #mInfo:hover,
+html:not([data-theme="dark"]) #mHelp:hover { background: linear-gradient(135deg, rgba(var(--brand-rgb),0.22), rgba(var(--brand-rgb),0.10)) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+html:not([data-theme="dark"]) #mTrack.on,
+html:not([data-theme="dark"]) #mFree.on,
+html:not([data-theme="dark"]) #mApps.on,
+html:not([data-theme="dark"]) #mInfo.on,
+html:not([data-theme="dark"]) #mHelp.on { background: var(--gold) !important; color:#ffffff !important; border-color: var(--gold) !important; }
+html:not([data-theme="dark"]) .blkcol button { background: linear-gradient(135deg, rgba(var(--brand-rgb),0.10), rgba(var(--brand-rgb),0.04)) !important; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+html:not([data-theme="dark"]) .blkcol button:hover { background: linear-gradient(135deg, rgba(var(--brand-rgb),0.18), rgba(var(--brand-rgb),0.08)) !important; }
+html:not([data-theme="dark"]) .blkcol button.on { background: var(--gold) !important; color:#ffffff !important; }
+html:not([data-theme="dark"]) .now .play { border-color: var(--play) !important; color: var(--play) !important; animation: playGlow 3.8s ease-in-out infinite !important; }
 
 /* ============================================================
    19. CERCA, DIPLOMA, VERSIÓ
@@ -613,54 +627,368 @@ html:not([data-theme="dark"]) .now .vr[data-tip]::before {
   transition: opacity 0.5s ease !important;
 }
 
-/* ══ TÍTOL MODE CLAR: blau net i estable ══ */
-html[data-theme="blue"] body header .hbrand h1,
-html[data-theme="blue"] .hbrand h1 {
+/* ══ TÍTOL MODE CLAR: net i estable ══ */
+html:not([data-theme="dark"]) .hbrand h1 {
   background: none !important;
   -webkit-background-clip: border-box !important;
   background-clip: border-box !important;
   -webkit-text-fill-color: currentColor !important;
-  color: #1f3a5f !important;
-  filter: none !important;
-  text-shadow: none !important;
-  animation: none !important;
+  color: var(--head-title) !important;
+  filter: none !important; text-shadow: none !important; animation: none !important;
 }
+html:not([data-theme="dark"]) #mHelp.on svg,
+html:not([data-theme="dark"]) #mHelp:active svg,
+html:not([data-theme="dark"]) #mHelp:focus svg { stroke:#ffffff !important; }
+html:not([data-theme="dark"]) .search-highlight { background: rgba(var(--brand-rgb),0.25); color: var(--ink); box-shadow:none; }
 
-/* Interrogant BLANC quan el botó d'ajuda està actiu (mode clar) */
-html[data-theme="blue"] #mHelp.on svg,
-html[data-theme="blue"] #mHelp:active svg,
-html[data-theme="blue"] #mHelp:focus svg {
-  stroke: #ffffff !important;
-}
-
-/* Smartphone mode clar: lupa i interrogant amb colors unificats */
 @media (max-width: 767px) {
-  /* Lupa desactivada: negre (no blanc) */
-  html[data-theme="blue"] #mSearch {
-    color: #1a2030 !important;
+  html:not([data-theme="dark"]) #mSearch { color: var(--ink) !important; }
+  html:not([data-theme="dark"]) #mSearch svg { stroke: var(--ink) !important; }
+  html:not([data-theme="dark"]) #mSearch.on { background: var(--gold) !important; border-color: var(--gold) !important; color:#ffffff !important; }
+  html:not([data-theme="dark"]) #mSearch.on svg { stroke:#ffffff !important; }
+  html:not([data-theme="dark"]) #mHelp.on { background: var(--danger) !important; border-color: var(--danger) !important; }
+  html:not([data-theme="dark"]) #mHelp.on::before { color:#ffffff !important; }
+}
+
+/* ══ SÈPIA: botons d'estat amb fons sòlid i text blanc ══ */
+html[data-theme="sepia"] { --mark: #0b76b4; } /* blau cel */
+
+html[data-theme="sepia"] .acts button.done,
+html[data-theme="sepia"] .acts button.done:disabled,
+html[data-theme="sepia"] .acts button.done:hover,
+html[data-theme="sepia"] .ritem button.done,
+html[data-theme="sepia"] .ritem button.done:hover {
+  background: var(--ok) !important;
+  border-color: var(--ok) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+html[data-theme="sepia"] .acts button.done:hover,
+html[data-theme="sepia"] .ritem button.done:hover { filter: brightness(1.12); }
+
+html[data-theme="sepia"] .acts button.bk.bookmarked,
+html[data-theme="sepia"] .acts button.bk.bookmarked:hover {
+  background: var(--mark) !important;
+  border-color: var(--mark) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+html[data-theme="sepia"] .acts button.bk.bookmarked:hover { filter: brightness(1.15); }
+
+/* ═══════════════════════════════════════════════════════════════
+   21. CAPA DE REFINAMENT · professional i modern, sense recarregar
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 21.1 Tokens de forma, elevació i moviment ── */
+:root{
+  --r-xs:8px; --r-sm:10px; --r-md:12px; --r-lg:16px; --r-pill:999px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --t-fast:.15s; --t-mid:.24s; --t-slow:.42s;
+  --hair:rgba(255,255,255,.08);
+  --hair-2:rgba(255,255,255,.15);
+  --elev-1:0 1px 2px rgba(0,0,0,.30), 0 2px 10px rgba(0,0,0,.18);
+  --elev-2:0 3px 8px rgba(0,0,0,.32), 0 14px 34px rgba(0,0,0,.24);
+  --elev-3:0 10px 24px rgba(0,0,0,.42), 0 30px 70px rgba(0,0,0,.32);
+  --focus:0 0 0 3px rgba(232,176,75,.30);
+  --tap:rgba(255,255,255,.04);
+}
+html[data-theme="blue"]{
+  --hair:rgba(26,32,48,.10); --hair-2:rgba(26,32,48,.19);
+  --elev-1:0 1px 2px rgba(26,32,48,.07), 0 2px 10px rgba(26,32,48,.06);
+  --elev-2:0 3px 8px rgba(26,32,48,.09), 0 14px 34px rgba(26,32,48,.09);
+  --elev-3:0 10px 24px rgba(26,32,48,.12), 0 30px 70px rgba(26,32,48,.12);
+  --focus:0 0 0 3px rgba(61,90,128,.26);
+  --tap:rgba(26,32,48,.04);
+}
+html[data-theme="sepia"]{
+  --hair:rgba(58,44,28,.11); --hair-2:rgba(58,44,28,.21);
+  --elev-1:0 1px 2px rgba(74,53,32,.07), 0 2px 10px rgba(74,53,32,.06);
+  --elev-2:0 3px 8px rgba(74,53,32,.10), 0 14px 34px rgba(74,53,32,.09);
+  --elev-3:0 10px 24px rgba(74,53,32,.13), 0 30px 70px rgba(74,53,32,.12);
+  --focus:0 0 0 3px rgba(92,69,38,.24);
+  --tap:rgba(58,44,28,.04);
+}
+
+/* ── 21.2 Tipografia: kerning, xifres tabulars i jerarquia ── */
+body{
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  font-feature-settings:"kern" 1,"liga" 1,"calt" 1;
+  text-rendering:optimizeLegibility;
+}
+.hbrand h1{ letter-spacing:.015em; line-height:1.15; }
+.vt{ letter-spacing:-.004em; line-height:1.36; font-weight:650; }
+.vd{ line-height:1.62; }
+.ctx,.stagetag,.blkt,.ntitle,.donut .lbl,.rblk,.vid-specific-adj>div:first-child{
+  letter-spacing:.14em; font-weight:700;
+}
+.donut svg text,.bpct,.bcount,.vid-number,#appVer,.ndate{
+  font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
+}
+.blkt{ font-size:13px; }
+.stagetag{ font-size:10px; opacity:.62; margin-bottom:8px; }
+
+/* ── 21.3 Scrollbars pròpies ── */
+*{ scrollbar-width:thin; scrollbar-color:var(--hair-2) transparent; }
+*::-webkit-scrollbar{ width:11px; height:11px; }
+*::-webkit-scrollbar-track{ background:transparent; }
+*::-webkit-scrollbar-thumb{
+  background:var(--hair-2); border-radius:var(--r-pill);
+  border:3px solid transparent; background-clip:content-box;
+  transition:background var(--t-fast);
+}
+*::-webkit-scrollbar-thumb:hover{ background:var(--gold); background-clip:content-box; }
+*::-webkit-scrollbar-corner{ background:transparent; }
+
+/* ── 21.4 Focus visible coherent (accessibilitat) ── */
+button:focus-visible,select:focus-visible,input:focus-visible,
+textarea:focus-visible,a:focus-visible,[contenteditable="true"]:focus-visible{
+  outline:none !important; box-shadow:var(--focus) !important;
+  border-color:var(--gold) !important;
+}
+
+/* ── 21.5 Capçalera fixa amb vidre ── */
+html{ scroll-padding-top:96px; }
+header{
+  position:sticky; top:0; z-index:50;
+  padding:14px 5vw; gap:16px;
+  border-bottom:1px solid var(--hair);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:blur(16px) saturate(1.25);
+  -webkit-backdrop-filter:blur(16px) saturate(1.25);
+  box-shadow:var(--elev-1);
+}
+html:not([data-theme="dark"]) header{
+  background:rgba(var(--header-rgb),.80) !important;
+  border-bottom:1px solid var(--hair);
+}
+main{ padding-top:26px; }
+.hbrand{ gap:8px; }
+.userblock{ gap:8px; }
+#who{ font-size:12.5px; letter-spacing:.01em; }
+
+/* ── 21.6 Navegació: pastilla neta, estat actiu sòlid ── */
+.modes{ gap:6px; }
+.modes button,.ubtn,.langbtn,.adjb{
+  border-radius:var(--r-sm);
+  transition:background var(--t-mid) var(--ease), color var(--t-mid) var(--ease),
+             border-color var(--t-mid) var(--ease), transform var(--t-fast) var(--ease),
+             box-shadow var(--t-mid) var(--ease);
+}
+.modes button{
+  background:var(--tap) !important; border:1px solid var(--hair) !important;
+  text-shadow:none !important; box-shadow:none !important;
+  font-weight:650; letter-spacing:.005em;
+}
+.modes button:hover{
+  background:var(--hair) !important; border-color:var(--hair-2) !important;
+  color:var(--ink) !important; transform:translateY(-1px);
+}
+.modes button.on{
+  background:var(--gold) !important; border-color:var(--gold) !important;
+  color:#fff !important; box-shadow:var(--elev-1) !important;
+}
+html[data-theme="dark"] .modes button.on{ color:#14161c !important; }
+.modes button svg{ opacity:.9; }
+.modes button.on svg{ opacity:1; }
+.langbtn{ border-radius:var(--r-pill); border:1px solid var(--hair); background:var(--tap); }
+.langbtn:hover{ border-color:var(--hair-2); background:var(--hair); }
+.ubtn{ border:1px solid var(--hair); background:var(--tap); }
+.ubtn:hover{ border-color:var(--hair-2); background:var(--hair); }
+.ubtn.logoutbtn{ border-radius:var(--r-xs); }
+#mTheme{
+  border-radius:var(--r-pill) !important; border:1px solid var(--hair) !important;
+  background:var(--card) !important; box-shadow:var(--elev-1);
+  transition:transform var(--t-fast) var(--ease), box-shadow var(--t-mid), opacity var(--t-mid);
+}
+#mTheme:hover{ transform:translateY(-1px) scale(1.04); box-shadow:var(--elev-2); }
+
+/* ── 21.7 Controls de nivell i cerca ── */
+.lvls{ gap:12px; margin-bottom:22px; align-items:center; }
+.lvls select,.searchbox input{
+  height:42px; border-radius:var(--r-pill);
+  border:1px solid var(--hair); background:var(--card);
+  box-shadow:var(--elev-1); font-weight:600;
+  transition:border-color var(--t-mid), box-shadow var(--t-mid);
+}
+.lvls select{ padding:0 38px 0 18px; }
+.searchbox input{ padding:0 18px 0 40px; }
+.lvls select:hover,.searchbox input:hover{ border-color:var(--hair-2); }
+.searchbox{ flex:0 1 380px; }
+.sb-ico{ left:15px; opacity:.75; }
+
+/* ── 21.8 Superfícies: targetes, donuts, caixes ── */
+.vid,.donut,.appcard,.faq-item,.reviewbox,.now,.wipbox,.help-item,.docsbox,.lbox,.aselbox{
+  border-radius:var(--r-lg);
+  border:1px solid var(--hair);
+  box-shadow:var(--elev-1);
+}
+.vid{
+  padding:14px 15px;
+  transition:transform var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease),
+             border-color var(--t-mid) var(--ease);
+}
+.vid:hover{ transform:translateY(-3px); box-shadow:var(--elev-2); border-color:var(--hair-2); }
+.vid.nolink{ opacity:.5; }
+.vid.nolink:hover{ transform:none; box-shadow:var(--elev-1); }
+.vgrid{ gap:14px; }
+.now{ padding:20px; border-color:var(--hair-2); box-shadow:var(--elev-2); }
+.now .ctx{ font-size:10px; opacity:.85; }
+.nowlbl{ font-size:13px; margin-bottom:14px; }
+.donut{ padding:14px 10px; transition:transform var(--t-mid) var(--ease), box-shadow var(--t-mid); }
+.donut:hover{ transform:translateY(-2px); box-shadow:var(--elev-2); }
+.donut svg{ width:72px; height:72px; margin-bottom:9px; }
+.donut.tot{ border-color:var(--gold); }
+.donuts{ gap:14px; }
+.reviewbox{ padding:18px; margin-top:26px; border-color:var(--hair-2); }
+.reviewbox h3{ font-size:12px; letter-spacing:.14em; }
+.ritem{ border-radius:var(--r-md); border:1px solid var(--hair); padding:10px 13px; }
+
+/* ── 21.9 Botons de bloc ── */
+.blkcol{ gap:10px; margin-bottom:20px; }
+.blkcol button{
+  border-radius:var(--r-md); min-height:46px; padding:12px 14px;
+  background:var(--tap) !important; border:1px solid var(--hair) !important;
+  font-size:11.5px; letter-spacing:.11em;
+  transition:transform var(--t-fast) var(--ease), background var(--t-mid), border-color var(--t-mid), box-shadow var(--t-mid);
+}
+.blkcol button:hover{ transform:translateY(-2px); box-shadow:var(--elev-1); border-color:var(--hair-2) !important; }
+.blkcol button.on{
+  background:var(--gold) !important; border-color:var(--gold) !important;
+  color:#fff !important; box-shadow:var(--elev-1);
+}
+html[data-theme="dark"] .blkcol button.on{ color:#14161c !important; }
+.blkcol button.on .bmini .bpct,.blkcol button.on .bmini .bcount{ color:inherit !important; opacity:.9; }
+.blkcol button .bmini .bpct{ font-size:10.5px; letter-spacing:0; }
+
+/* ── 21.10 Accions de targeta ── */
+.acts{ gap:7px; margin-top:12px; }
+.acts button{
+  border-radius:var(--r-xs); padding:6px 10px;
+  font-size:11px; font-weight:600; letter-spacing:.01em;
+  border:1px solid var(--hair); background:var(--tap);
+  transition:background var(--t-fast), border-color var(--t-fast), color var(--t-fast), transform var(--t-fast);
+}
+.acts button:hover{ transform:translateY(-1px); border-color:var(--hair-2); background:var(--hair); }
+.acts button:active{ transform:translateY(0); }
+.vid-number{
+  width:28px; height:28px; font-size:12px; border-radius:var(--r-pill);
+  top:10px; right:38px; box-shadow:var(--elev-1);
+}
+.vid-importance{ top:9px; right:9px; font-size:18px; }
+.vr .play{
+  width:34px; height:34px; border-width:1.5px;
+  transition:transform var(--t-fast) var(--ease), background var(--t-mid), box-shadow var(--t-mid);
+}
+.vr .play:hover{ transform:scale(1.08); }
+.vd{ margin-top:11px; }
+.notes{ margin-top:12px; padding-top:12px; border-top:1px solid var(--hair); }
+.note{ border-radius:var(--r-md); padding:10px 12px; border:1px solid var(--hair); }
+.notes textarea{ border-radius:var(--r-md); border:1px solid var(--hair); padding:10px 12px; min-height:72px; }
+.save-note-btn,.send-notes-btn{ border-radius:var(--r-xs) !important; }
+.doc{ border-radius:var(--r-md); border:1px dashed var(--hair-2); }
+.adjb{ border:1px solid var(--hair); background:var(--tap); border-radius:var(--r-xs); font-weight:600; }
+.adjb:hover{ border-color:var(--hair-2); background:var(--hair); }
+
+/* ── 21.11 Apps, FAQ i ajuda ── */
+.appgrid{ gap:16px; }
+.appcard{ padding:24px 20px; transition:transform var(--t-mid) var(--ease), box-shadow var(--t-mid); }
+.appcard:hover{ transform:translateY(-3px); box-shadow:var(--elev-2); border-color:var(--hair-2); }
+.appcard h3{ font-size:14px; letter-spacing:.1em; margin:14px 0 8px; }
+.appcard p{ line-height:1.6; margin-bottom:16px; }
+.appcard button{
+  border-radius:var(--r-sm); padding:10px 22px; font-weight:700; letter-spacing:.06em;
+  box-shadow:var(--elev-1); transition:transform var(--t-fast) var(--ease), box-shadow var(--t-mid), filter var(--t-mid);
+}
+.appcard button:hover{ transform:translateY(-2px); box-shadow:var(--elev-2); filter:brightness(1.06); }
+.faq-item{ margin-bottom:10px; transition:border-color var(--t-mid), box-shadow var(--t-mid); }
+.faq-item:hover{ border-color:var(--hair-2); box-shadow:var(--elev-1); }
+.faq-item h3{ padding:15px 16px; font-size:13.5px; font-weight:650; }
+.faq-item h3::after{ font-size:20px; opacity:.7; transition:transform var(--t-mid) var(--ease); }
+.faq-item.open h3::after{ transform:rotate(180deg); }
+.faq-item p{ padding:0 16px 16px; line-height:1.75; }
+.info-container h2{ letter-spacing:-.01em; margin-bottom:24px; }
+.help-item{ border-radius:var(--r-md); padding:14px 16px; }
+
+/* ── 21.12 Modals i login ── */
+.lgin,.adjsel,.docsmodal{ background:rgba(6,8,12,.78); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+html:not([data-theme="dark"]) .lgin,
+html:not([data-theme="dark"]) .adjsel,
+html:not([data-theme="dark"]) .docsmodal{ background:rgba(40,34,24,.42); }
+.lbox,.aselbox,.docsbox{ box-shadow:var(--elev-3); border:1px solid var(--hair-2); padding:28px; }
+.lbox input{ border-radius:var(--r-sm); border:1px solid var(--hair); padding:11px 13px; }
+.lbox .go,.aselbox .actions .go{ border-radius:var(--r-sm); font-weight:700; letter-spacing:.03em; }
+#toast{
+  border-radius:var(--r-md); border:1px solid var(--hair-2);
+  box-shadow:var(--elev-3); font-weight:600; padding:13px 22px;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+}
+
+/* ── 21.13 Moviment: entrada esglaonada i pulsacions suaus ── */
+@keyframes gjpsRise{ from{ opacity:0; translate:0 12px; } to{ opacity:1; translate:0 0; } }
+.vgrid .vid,.donuts .donut,.appgrid .appcard{
+  animation:gjpsRise var(--t-slow) var(--ease-out) both;
+}
+.vgrid .vid:nth-child(1),.donuts .donut:nth-child(1),.appgrid .appcard:nth-child(1){ animation-delay:.02s }
+.vgrid .vid:nth-child(2),.donuts .donut:nth-child(2),.appgrid .appcard:nth-child(2){ animation-delay:.05s }
+.vgrid .vid:nth-child(3),.donuts .donut:nth-child(3),.appgrid .appcard:nth-child(3){ animation-delay:.08s }
+.vgrid .vid:nth-child(4),.donuts .donut:nth-child(4){ animation-delay:.11s }
+.vgrid .vid:nth-child(5),.donuts .donut:nth-child(5){ animation-delay:.14s }
+.vgrid .vid:nth-child(6),.donuts .donut:nth-child(6){ animation-delay:.17s }
+.vgrid .vid:nth-child(7){ animation-delay:.20s }
+.vgrid .vid:nth-child(8){ animation-delay:.23s }
+.vgrid .vid:nth-child(9){ animation-delay:.26s }
+.vgrid .vid:nth-child(10){ animation-delay:.29s }
+.vgrid .vid:nth-child(11){ animation-delay:.32s }
+.vgrid .vid:nth-child(n+12){ animation-delay:.35s }
+.now{ animation:gjpsRise var(--t-slow) var(--ease-out) both; }
+
+@keyframes playGlow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(57,217,138,0); }
+  50%{ box-shadow:0 0 0 5px rgba(57,217,138,.10); }
+}
+.now .play{ animation:playGlow 4.2s ease-in-out infinite !important; background:transparent; }
+@keyframes obreGlow{ 0%,100%{ filter:brightness(1) } 50%{ filter:brightness(1.07) } }
+@keyframes notePulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(155,139,208,.35) } 50%{ box-shadow:0 0 0 4px rgba(155,139,208,0) } }
+.trophy{ animation-duration:7s; }
+.trophy-container{ animation-duration:4s; }
+
+/* ── 21.14 Estats del sèpia (es reafirmen per sobre de la capa) ── */
+html[data-theme="sepia"] .acts button.done,
+html[data-theme="sepia"] .acts button.done:disabled,
+html[data-theme="sepia"] .acts button.done:hover,
+html[data-theme="sepia"] .ritem button.done,
+html[data-theme="sepia"] .ritem button.done:hover{
+  background:var(--ok) !important; border-color:var(--ok) !important;
+  color:#fff !important; font-weight:700 !important; opacity:1 !important;
+}
+html[data-theme="sepia"] .acts button.bk.bookmarked,
+html[data-theme="sepia"] .acts button.bk.bookmarked:hover{
+  background:var(--mark) !important; border-color:var(--mark) !important;
+  color:#fff !important; font-weight:700 !important;
+}
+
+/* ── 21.15 Mòbil: objectius tàctils i aire ── */
+@media (max-width:767px){
+  header{ padding:12px 4vw; }
+  main{ padding:20px 4vw; }
+  html{ scroll-padding-top:150px; }
+  .acts button{ padding:8px 11px; font-size:11.5px; }
+  .vr .play{ width:38px; height:38px; }
+  .blkcol button{ min-height:50px; }
+  .vid{ padding:15px; }
+  .vgrid{ gap:12px; }
+  .appcard button{ padding:12px 22px; }
+}
+
+/* ── 21.16 Respecte per qui no vol moviment ── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important; animation-iteration-count:1 !important;
+    transition-duration:.001ms !important; scroll-behavior:auto !important;
   }
-  html[data-theme="blue"] #mSearch svg {
-    stroke: #1a2030 !important;
-  }
-  
-  /* Lupa activada: fons blau + lupa blanca (com l'interrogant) */
-  html[data-theme="blue"] #mSearch.on {
-    background: #3d5a80 !important;
-    border-color: #3d5a80 !important;
-    color: #ffffff !important;
-  }
-  html[data-theme="blue"] #mSearch.on svg {
-    stroke: #ffffff !important;
-  }
-  
-  /* Interrogant vermell activat: fons vermell + interrogant blanc */
-  html[data-theme="blue"] #mHelp.on {
-    background: #ff5577 !important;
-    border-color: #ff5577 !important;
-  }
-  html[data-theme="blue"] #mHelp.on::before {
-    color: #ffffff !important;
-  }
+  .vid:hover,.donut:hover,.appcard:hover,.blkcol button:hover,.modes button:hover{ transform:none; }
 }
 
 </style>
@@ -1065,7 +1393,7 @@ var HELP = [
   { ico: ICON_GRADUATION, t: { ca: 'I en acabar el nivell…', es: 'Y al terminar el nivel…' }, p: { ca: 'Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉', es: 'Cuando completes todos los vídeos del nivel recibirás un regalo de graduación muy especial. Pero eso… ¡mejor descúbrelo tú mismo! 😉' } },
   { ico: ICON_CHART, t: { ca: 'Els percentatges de progrés', es: 'Los porcentajes de progreso' }, p: { ca: 'Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t\'explicarà exactament què està mesurant.', es: 'En el Seguimiento Continuo, los donuts de progreso solo tienen en cuenta los vídeos importantes (⭐): cuando los completes todos, verás el 100% y recibirás el regalo de graduación, aunque queden vídeos opcionales (☆) pendientes. En la Navegación Libre, en cambio, el porcentaje de cada bloque refleja todo el material del bloque (importantes y opcionales). Y si pasas el ratón por encima de cualquier donut o botón de bloque, te explicará exactamente qué está midiendo.' } },
   { ico: ICON_FLASK, t: { ca: 'Prova pilot: on es guarda el teu progrés?', es: 'Prueba piloto: ¿dónde se guarda tu progreso?' }, p: { ca: 'Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d\'un altre dispositiu, no hi veuràs el progrés actualitzat: no s\'ha perdut, simplement viu a l\'altre navegador. Aquesta limitació desapareixerà d\'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.', es: 'Esta web es todavía una prueba piloto con un máximo de 30 usuarios. Por eso, tu progreso (vídeos completados, notas personales y lista de repaso) queda guardado únicamente en el navegador del dispositivo que estés utilizando. Si entras con tu usuario desde otro dispositivo, no verás el progreso actualizado: no se ha perdido, simplemente vive en el otro navegador. Esta limitación desaparecerá en unos meses, cuando la web se publique oficialmente y el progreso se guarde en la nube.' } },
-  { ico: ICON_THEME, t: { ca: 'Canviar entre mode fosc i mode clar', es: 'Cambiar entre modo oscuro y modo claro' }, p: { ca: 'A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l\'últim tema que vas triar. Per defecte, la primera visita sempre s\'obre en mode fosc.', es: 'En la esquina superior derecha encontrarás un botón con un icono de sol o de luna. Al hacer clic, conmutarás entre el modo oscuro y el modo claro (azul noche). Tu preferencia se guarda automáticamente: la próxima vez que abras el web, se mostrará con el último tema que elegiste. Por defecto, la primera visita siempre se abre en modo oscuro.' } },
+    { ico: ICON_THEME, t: { ca: 'Tres temes: fosc, blau nit i sèpia', es: 'Tres temas: oscuro, azul noche y sepia' }, p: { ca: 'A la cantonada superior dreta trobaràs un botó rodó que commuta entre tres temes:\n\n🌙 FOSC — el més còmode per estudiar de nit.\n💧 BLAU NIT — clar i fresc, ideal al mòbil.\n☕ SÈPIA — clar i càlid (crema i marró suau), pensat per a pantalles grans d\'ordinador, on el blau pot resultar fred.\n\nCada clic passa al tema següent (també pots prémer la tecla T). La teva preferència es guarda automàticament i es recupera la propera vegada que obris el web. Per defecte, la primera visita sempre s\'obre en mode fosc.', es: 'En la esquina superior derecha encontrarás un botón redondo que alterna entre tres temas:\n\n🌙 OSCURO — el más cómodo para estudiar de noche.\n💧 AZUL NOCHE — claro y fresco, ideal en el móvil.\n☕ SEPIA — claro y cálido (crema y marrón suave), pensado para pantallas grandes de ordenador, donde el azul puede resultar frío.\n\nCada clic pasa al tema siguiente (también puedes pulsar la tecla T). Tu preferencia se guarda automáticamente y se recupera la próxima vez que abras la web. Por defecto, la primera visita siempre se abre en modo oscuro.' } },
   { ico: ICON_MOBILE, mobileOnly: true, t: { ca: 'Instal·la l\'aula al teu mòbil o tablet', es: 'Instala el aula en tu móvil o tablet' }, p: { ca: '📱 ANDROID (Chrome): obre el menú de tres puntets (⋮ o ⋯) —pot estar a dalt o a baix de la pantalla, segons el teu mòbil— i tria «Instal·la i crea una drecera». Apareixerà un quadre amb dues opcions: clica «Instal·la» (no «Crea la drecera»). Es crearà una icona amb el logo de l\'escola que, en obrir-la, mostrarà l\'aula a pantalla completa, sense barres del navegador. Un cop instal·lada, pots arrossegar la seva icona des del menú d\'aplicacions fins a l\'escriptori per crear un accés directe.\n\n🍎 iOS (iPhone i iPad, amb Safari): prem el botó Compartir (el quadrat amb fletxa cap amunt) i tria «Afegeix a la pantalla d\'inici». Es crearà una icona amb el logo de l\'escola a la teva pantalla d\'inici, que funcionarà com un accés directe.\n\n💡 Nota: les aplicacions d\'entrenament auditiu (com TONAL EMOTIONS) només estan disponibles des d\'un ordinador o tablet, ja que requereixen pantalla gran i, idealment, un teclat MIDI connectat. Des del mòbil podràs seguir tot el curs, però per a les apps hauràs d\'accedir des d\'un altre dispositiu.', es: '📱 ANDROID (Chrome): abre el menú de tres puntitos (⋮ o ⋯) —puede estar arriba o abajo de la pantalla, según tu móvil— y elige «Instalar y crear acceso directo». Aparecerá un cuadro con dos opciones: pulsa «Instalar» (no «Crear acceso directo»). Se creará un icono con el logo de la escuela que, al abrirlo, mostrará el aula a pantalla completa, sin barras del navegador. Una vez instalada, puedes arrastrar su icono desde el menú de aplicaciones hasta el escritorio para crear un acceso directo.\n\n🍎 iOS (iPhone y iPad, con Safari): pulsa el botón Compartir (el cuadrado con flecha hacia arriba) y elige «Añadir a pantalla de inicio». Se creará un icono con el logo de la escuela en tu pantalla de inicio, que funcionará como un acceso directo.\n\n💡 Nota: las aplicaciones de entrenamiento auditivo (como TONAL EMOTIONS) solo están disponibles desde un ordenador o tablet, ya que requieren pantalla grande y, idealmente, un teclado MIDI conectado. Desde el móvil podrás seguir todo el curso, pero para las apps deberás acceder desde otro dispositivo.' } },
   { ico: ICON_LANG, t: { ca: 'Català i castellà: dos cursos independents', es: 'Catalán y castellano: dos cursos independientes' }, p: { ca: 'Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l\'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d\'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.', es: 'Aunque el material de ambos idiomas es muy parecido, cada idioma funciona como un curso independiente: los vídeos completados, los porcentajes, la lista de repaso, las notas y el orden de los vídeos se gestionan por separado. Así, si completas un bloque en catalán, tu progreso en catalán estará al 100% mientras que en castellano seguirá su propio ritmo. La celebración 🏆 y el regalo de graduación también se desbloquean por separado en cada idioma. Puedes cambiar de idioma cuando quieras con el botón 🌐 de la cabecera: tu progreso de cada idioma se conserva siempre.' } },
   { ico: ICON_DESKTOP, pcOnly: true, t: { ca: 'Instal·la l\'aula al teu mòbil o tablet', es: 'Instala el aula en tu móvil o tablet' }, p: { ca: 'Per tenir l\'aula com una aplicació al teu mòbil o tablet:\n\n📱 ANDROID (Chrome): obre en el teu mòbil o tablet la mateixa adreça que veus a la barra d\'adreces d\'aquest navegador i inicia sessió. Després, obre el menú de tres puntets (⋮ o ⋯) —pot estar a dalt o a baix de la pantalla, segons el teu mòbil— i tria «Instal·la i crea una drecera». Apareixerà un quadre amb dues opcions: clica «Instal·la» (no «Crea la drecera»). Es crearà una icona amb el logo de l\'escola que, en obrir-la, mostrarà l\'aula a pantalla completa, sense barres del navegador. Un cop instal·lada, pots arrossegar la seva icona des del menú d\'aplicacions fins a l\'escriptori per crear un accés directe.\n\n🍎 iOS (iPhone i iPad, amb Safari): obre en el teu dispositiu la mateixa adreça i inicia sessió. Després, prem el botó Compartir (el quadrat amb fletxa cap amunt) i tria «Afegeix a la pantalla d\'inici». Es crearà una icona amb el logo de l\'escola a la teva pantalla d\'inici, que funcionarà com un accés directe.', es: 'Para tener el aula como una aplicación en tu móvil o tablet:\n\n📱 ANDROID (Chrome): abre en tu móvil o tablet la misma dirección que ves en la barra de direcciones de este navegador e inicia sesión. Después, abre el menú de tres puntitos (⋮ o ⋯) —puede estar arriba o abajo de la pantalla, según tu móvil— y elige «Instalar y crear acceso directo». Aparecerá un cuadro con dos opciones: pulsa «Instalar» (no «Crear acceso directo»). Se creará un icono con el logo de la escuela que, al abrirlo, mostrará el aula a pantalla completa, sin barras del navegador. Una vez instalada, puedes arrastrar su icono desde el menú de aplicaciones hasta el escritorio para crear un acceso directo.\n\n🍎 iOS (iPhone y iPad, con Safari): abre en tu dispositivo la misma dirección e inicia sesión. Después, pulsa el botón Compartir (el cuadrado con flecha hacia arriba) y elige «Añadir a pantalla de inicio». Se creará un icono con el logo de la escuela en tu pantalla de inicio, que funcionará como un acceso directo.' } },
@@ -2908,49 +3236,70 @@ function openFullscreenVideo(src) {
 
 (function () {
   var KEY = 'gjps_theme';
-  var THEMES = ['dark', 'blue'];
-  var THEME_NAMES = { dark: 'Fosc', blue: 'Blau nit' };
-  var THEME_COLORS = { dark: '#1a1d27', blue: '#d8dde4' };
-  var SUN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
-  var MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  var THEMES = ['dark', 'blue', 'sepia'];
+  var NAMES = {
+    dark:  { ca: 'Fosc',     es: 'Oscuro' },
+    blue:  { ca: 'Blau nit', es: 'Azul noche' },
+    sepia: { ca: 'Sèpia',    es: 'Sepia' }
+  };
+  var COLORS = { dark: '#1a1d27', blue: '#d8dde4', sepia: '#e8e4d9' };
+  var ICONS = {
+    dark: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+    blue: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6 6.1 6 10.1a6 6 0 0 1-12 0c0-4 6-10.1 6-10.1z"/></svg>',
+    sepia: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+  };
+  function lang() { return (window.LS && LS.lang === 'es') ? 'es' : 'ca'; }
   function apply(th) {
     document.documentElement.setAttribute('data-theme', th);
     var mt = document.querySelector('meta[name="theme-color"]');
-    if (mt) mt.setAttribute('content', THEME_COLORS[th] || '#1a1d27');
+    if (mt) mt.setAttribute('content', COLORS[th] || COLORS.dark);
   }
+  function next(th) { return THEMES[(THEMES.indexOf(th) + 1) % THEMES.length]; }
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
   apply(THEMES.indexOf(saved) >= 0 ? saved : 'dark');
+
   function paint(b) {
-    var current = document.documentElement.getAttribute('data-theme') || 'dark';
-    var isDark = current === 'dark';
-    b.innerHTML = isDark ? MOON : SUN;
-    b.title = 'Tema: ' + (THEME_NAMES[current] || current) + '. Clica per canviar.';
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    var nx = next(cur);
+    b.innerHTML = ICONS[cur];
+    b.style.color = (cur === 'dark') ? 'var(--mut)' : 'var(--gold)';
+    b.style.borderColor = (cur === 'dark') ? 'var(--line)' : 'var(--gold)';
+    b.title = (lang() === 'ca' ? 'Tema: ' : 'Tema: ') + NAMES[cur][lang()] +
+              (lang() === 'ca' ? ' · Clica per passar a ' : ' · Clic para pasar a ') + NAMES[nx][lang()];
     b.setAttribute('aria-label', b.title);
   }
   function makeBtn() {
     var b = document.getElementById('mTheme');
     if (!b || !b.parentNode) {
       b = document.createElement('button');
-      b.type = 'button';
-      b.id = 'mTheme';
-      b.style.cssText = 'position:fixed;top:10px;right:12px;z-index:9990;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;opacity:.65;transition:opacity .2s;padding:0;';
+      b.type = 'button'; b.id = 'mTheme';
+      b.style.cssText = 'position:fixed;top:10px;right:12px;z-index:9990;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;opacity:.7;transition:opacity .2s,color .2s,border-color .2s;padding:0;';
       document.body.appendChild(b);
     }
     b.onmouseenter = function () { b.style.opacity = '1'; };
-    b.onmouseleave = function () { b.style.opacity = '.65'; };
+    b.onmouseleave = function () { b.style.opacity = '.7'; };
     b.onclick = function () {
-      var current = document.documentElement.getAttribute('data-theme') || 'dark';
-      var idx = THEMES.indexOf(current);
-      var next = THEMES[(idx + 1) % THEMES.length];
-      apply(next);
-      try { localStorage.setItem(KEY, next); } catch (e) {}
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      var nx = next(cur);
+      apply(nx);
+      try { localStorage.setItem(KEY, nx); } catch (e) {}
       paint(b);
+      if (window.showToast) showToast((lang() === 'ca' ? 'Tema: ' : 'Tema: ') + NAMES[nx][lang()], 1400);
     };
     paint(b);
+    window.GJPSTheme = { set: function (t) { if (THEMES.indexOf(t) < 0) return; apply(t); try { localStorage.setItem(KEY, t); } catch (e) {} paint(b); }, get: function () { return document.documentElement.getAttribute('data-theme'); } };
   }
-  function ensure() { var b = document.getElementById('mTheme'); if (!b || !b.parentNode) makeBtn(); }
-  function start() { makeBtn(); setInterval(ensure, 1000); }
+  function start() {
+    makeBtn();
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 't' && e.key !== 'T') return;
+      var el = e.target;
+      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (el && el.isContentEditable) return;
+      var b = document.getElementById('mTheme'); if (b) b.click();
+    });
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
 
