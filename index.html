@@ -946,11 +946,7 @@ html:not([data-theme="dark"]) .docsmodal{ background:rgba(40,34,24,.42); }
 .vgrid .vid:nth-child(n+12){ animation-delay:.35s }
 .now{ animation:gjpsRise var(--t-slow) var(--ease-out) both; }
 
-@keyframes playGlow{
-  0%,100%{ box-shadow:0 0 0 0 rgba(57,217,138,0); }
-  50%{ box-shadow:0 0 0 5px rgba(57,217,138,.10); }
-}
-.now .play{ animation:playGlow 4.2s ease-in-out infinite !important; background:transparent; }
+/* (playGlow i .now .play es gestionen a la secció 15) */
 @keyframes obreGlow{ 0%,100%{ filter:brightness(1) } 50%{ filter:brightness(1.07) } }
 @keyframes notePulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(155,139,208,.35) } 50%{ box-shadow:0 0 0 4px rgba(155,139,208,0) } }
 .trophy{ animation-duration:7s; }
@@ -1023,6 +1019,14 @@ html[data-theme="dark"] .blkcol button.on {
 }
 html[data-theme="dark"] .blkcol button.on .bmini .bpct {
   color: var(--gold) !important;
+}
+
+/* ══ 24. MODE FOSC: forçar animació playGlow intensa ══ */
+html[data-theme="dark"] .now .play {
+  animation: playGlow 3.8s ease-in-out infinite !important;
+  border-color: var(--ok) !important;
+  color: var(--ok) !important;
+  background: transparent !important;
 }
 
 </style>
