@@ -1002,6 +1002,27 @@ html[data-theme="sepia"] .acts button.bk.bookmarked:hover{
   html[data-theme="sepia"] #wm { opacity: .28 !important; }
 }
 
+/* ══ 23. MODE FOSC: botons de bloc amb estil clàssic (sòlid + contorn actiu) ══ */
+html[data-theme="dark"] .blkcol button {
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--mut) !important;
+}
+html[data-theme="dark"] .blkcol button:hover {
+  border-color: var(--gold) !important;
+  color: var(--ink) !important;
+  background: var(--card) !important;
+}
+html[data-theme="dark"] .blkcol button.on {
+  background: transparent !important;
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 14px rgba(232,176,75,0.22), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+html[data-theme="dark"] .blkcol button.on .bmini .bpct {
+  color: var(--gold) !important;
+}
+
 </style>
 </head>
 <body class="">
