@@ -1059,6 +1059,65 @@ html[data-theme="dark"] .now .play {
   background: transparent !important;
 }
 
+/* ══ 25. BARRA D'ACCIONS EN UNA SOLA FILA · smartphone vertical ══ */
+@media (max-width: 767px) and (orientation: portrait) {
+  body:not(.editmode) .acts {
+    display: grid !important;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+  }
+  body:not(.editmode) .acts button {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px !important;
+    font-size: 10.5px !important;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 9px;
+  }
+  body:not(.editmode) .acts button:active { transform: scale(.955); }
+  body:not(.editmode) .acts .ai {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12.5px;
+    line-height: 1;
+  }
+  body:not(.editmode) .acts .ai svg {
+    width: 13px !important;
+    height: 13px !important;
+    margin: 0 !important;
+    vertical-align: 0 !important;
+  }
+  body:not(.editmode) .acts .al {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body:not(.editmode) .acts .ax { display: none; }
+}
+
+/* Pantalles molt estretes: icona sola als secundaris, etiqueta només al principal */
+@media (max-width: 380px) and (orientation: portrait) {
+  body:not(.editmode) .acts .skip .al,
+  body:not(.editmode) .acts .bk .al,
+  body:not(.editmode) .acts .nt .al { display: none; }
+  body:not(.editmode) .acts .ai { font-size: 15px; }
+  body:not(.editmode) .acts .ai svg { width: 16px !important; height: 16px !important; }
+  body:not(.editmode) .acts button { padding: 8px 2px !important; }
+}
+
 </style>
 </head>
 <body class="">
@@ -2147,14 +2206,30 @@ function makeVid(v, id, track, tag) {
   try { hasNotes = lsJSON(nkey, []).length > 0; } catch (e) {}
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
   var siTag = parseInt(id.split('.')[0], 10);
+  var ca = LS.lang === 'ca';
+  var skipFull = ca ? '⏭ Més tard' : '⏭ Más tarde';
   var skipBtnHtml = '';
   if (track && !LS.done[id]) {
-    skipBtnHtml = '<button class="skip">⏭ ' + (LS.lang === 'ca' ? 'Més tard' : 'Más tarde') + '</button>';
+    skipBtnHtml = '<button class="skip" title="' + skipFull + '" aria-label="' + skipFull + '"><span class="ai">⏭</span><span class="al">' + (ca ? 'Tard' : 'Luego') + '</span></button>';
   }
+  var ckFull = LS.done[id] ? t().undo : (track ? t().doneCont : t().mark);
+  var ckIcon = LS.done[id] ? '↺' : '✔';
+  var ckShort, ckExtra;
+  if (LS.done[id]) { ckShort = ca ? 'Desfer' : 'Deshacer'; ckExtra = ''; }
+  else if (track)  { ckShort = ca ? 'Fet' : 'Hecho';      ckExtra = ca ? ' i continuar' : ' y continuar'; }
+  else             { ckShort = ca ? 'Marcar' : 'Marcar';  ckExtra = ca ? ' fet' : ' hecho'; }
+  var bkFull = isBookmarked(id) ? t().bookmarked : t().bookmark;
+  var bkShort = isBookmarked(id) ? (ca ? 'Marcat' : 'Marcado') : (ca ? 'Repàs' : 'Repaso');
+  var ntShort = ca ? 'Notes' : 'Notas';
   
   row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + numberHtml + importanceHtml +
     '<div style="position:relative" class="vr"><button class="play">▶</button><div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div></div>' +
-    '<div class="acts"><button class="ck' + (LS.done[id] ? ' done' : '') + '">' + (LS.done[id] ? t().undo : (track ? t().doneCont : t().mark)) + '</button>' + skipBtnHtml + '<button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '">' + (isBookmarked(id) ? t().bookmarked : t().bookmark) + '</button><button class="' + ntClass + '">' + ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '') + '</button></div>' +
+    '<div class="acts">' +
+      '<button class="ck' + (LS.done[id] ? ' done' : '') + '" title="' + ckFull + '" aria-label="' + ckFull + '"><span class="ai">' + ckIcon + '</span><span class="al">' + ckShort + '</span><span class="ax">' + ckExtra + '</span></button>' +
+      skipBtnHtml +
+      '<button class="bk' + (isBookmarked(id) ? ' bookmarked' : '') + '" title="' + bkFull + '" aria-label="' + bkFull + '"><span class="ai">🔖</span><span class="al">' + bkShort + '</span></button>' +
+      '<button class="' + ntClass + '" title="' + t().notesTitle + '" aria-label="' + t().notesTitle + '"><span class="ai">' + ICON_NOTE + '</span><span class="al">' + ntShort + '</span></button>' +
+    '</div>' +
     '<div class="inl"><iframe allow="autoplay" src=""></iframe><div class="inlb"><button class="mx">⛶</button><button class="cl"></button></div></div>' +
     '<div class="vd" data-ovid="' + id + '" data-ovk="d">' + vidDesc(v, id, b) + '</div>' +
     '<div class="notes"><div class="ntitle">' + t().notesTitle + '</div><div class="nlist"></div><textarea placeholder="' + t().notesPh + '"></textarea><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;"><button class="save-note-btn" style="display:none;margin-top:0;">' + t().saveNote + '</button><button class="send-notes-btn" style="display:none;margin-top:0;padding:6px 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;">' + ICON_MAIL + ' ' + (LS.lang === 'ca' ? 'Enviar al professor' : 'Enviar al profesor') + '</button></div></div>';
@@ -2243,14 +2318,14 @@ function makeVid(v, id, track, tag) {
       if (currentNotes.length > 0) {
         if (ntBtn) {
           ntBtn.classList.add('has-notes');
-          ntBtn.innerHTML = ICON_PENCIL;
+          ntBtn.innerHTML = '<span class="ai">' + ICON_PENCIL + '</span><span class="al">' + (LS.lang === 'ca' ? 'Notes' : 'Notas') + '</span>';
           ntBtn.title = (LS.lang === 'ca' ? 'Tens ' + currentNotes.length + ' nota' + (currentNotes.length > 1 ? 's' : '') + ' en aquest vídeo' : 'Tienes ' + currentNotes.length + ' nota' + (currentNotes.length > 1 ? 's' : '') + ' en este vídeo');
         }
         if (sendBtn) sendBtn.style.display = 'inline-flex';
       } else {
         if (ntBtn) {
           ntBtn.classList.remove('has-notes');
-          ntBtn.innerHTML = ICON_NOTE + ' ' + t().notes.replace(/^\s*📝\s*/, '');
+          ntBtn.innerHTML = '<span class="ai">' + ICON_NOTE + '</span><span class="al">' + (LS.lang === 'ca' ? 'Notes' : 'Notas') + '</span>';
           ntBtn.title = (LS.lang === 'ca' ? 'Afegir notes personals sobre aquest vídeo' : 'Añadir notas personales sobre este vídeo');
         }
         if (sendBtn) sendBtn.style.display = 'none';
