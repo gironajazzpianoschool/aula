@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   TONAL EMOTIONS · app.js v63 (fitxer únic consolidat)
+   TONAL EMOTIONS · app.js v64 (fitxer únic consolidat)
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ══ 1. CONFIGURACIÓ ══ */
@@ -506,9 +506,12 @@ function handleMIDIMessage(event){
           advanceTimeout=setTimeout(()=>{ if(earTrainingActive) advanceToNextNote(); },1200);
         }
       } else if(command===0x80||(command===0x90&&velocity===0)){
-        if(internalPianoEnabled&&!testSustainTimeout) stopEarPianoNote(note);
-        if(!testSustainTimeout) hideProposedAnswer();
-      }
+      /* FIX: Ignorar Note Off si hi ha una altra tecla manual activa */
+      if(activeManualNotes.size > 0 && !activeManualNotes.has(note%12)) return;
+
+      if(internalPianoEnabled&&!testSustainTimeout){ if(sustainPedalActive) heldByPedal.add(note); else stopEarPianoNote(note); }
+      if(!sustainPedalActive&&!testSustainTimeout) hideProposedAnswer();
+    }
       if(command===0x90&&velocity>0&&internalPianoEnabled) startEarPianoNote(note,0.3);
       return;
     }
