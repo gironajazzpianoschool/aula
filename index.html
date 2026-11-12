@@ -421,15 +421,7 @@ body.editmode .vid { padding-left: 34px; }
    16. RESPONSIVE — PC / TABLET (> 767px)
    ============================================================ */
 @media (min-width: 768px) {
-  /* Tablets apaisades: reorganització de botons */
-  @media (orientation: landscape) and (max-width: 1100px) {
-    .hdr { justify-content: space-between; }
-    .hdr-right { display: flex !important; gap: 8px; align-items: center; }
-    #mInfo { order: 1; }
-    #mHelp { order: 2; }
-    #langToggle { order: 3; }
-  }
-  
+
   #mHelp {
     background: linear-gradient(135deg, rgba(232,176,75,0.08), rgba(232,176,75,0.02)) !important;
     border: 1.5px solid var(--line) !important;
@@ -3733,46 +3725,7 @@ try {
   initDragDrop();
   LS.mode = 'track';
   lsSet('gjps_mode', 'track');
-  render();
-  
-  /* Tablets apaisades: moure FAQ a la dreta */
-  function isLandscapeTablet() {
-    return window.innerWidth >= 768 && window.innerWidth <= 1100 && window.matchMedia('(orientation: landscape)').matches;
-  }
-  function reorganizeHeader() {
-    var hdr = document.querySelector('.hdr');
-    var mInfo = $('mInfo');
-    var mHelp = $('mHelp');
-    var langToggle = $('langToggle');
-    if (!hdr || !mInfo || !mHelp || !langToggle) return;
-    
-    var rightContainer = document.getElementById('hdr-right');
-    if (!rightContainer) {
-      rightContainer = document.createElement('div');
-      rightContainer.id = 'hdr-right';
-      rightContainer.className = 'hdr-right';
-      hdr.appendChild(rightContainer);
-    }
-    
-    if (isLandscapeTablet()) {
-      if (mInfo.parentNode !== rightContainer) {
-        rightContainer.appendChild(mInfo);
-        rightContainer.appendChild(mHelp);
-        rightContainer.appendChild(langToggle);
-      }
-    } else {
-      var modes = document.querySelector('.modes');
-      if (modes && mInfo.parentNode === rightContainer) {
-        modes.appendChild(mInfo);
-        hdr.appendChild(mHelp);
-        hdr.appendChild(langToggle);
-        rightContainer.remove();
-      }
-    }
-  }
-  reorganizeHeader();
-  window.addEventListener('resize', reorganizeHeader);
-  window.addEventListener('orientationchange', function() { setTimeout(reorganizeHeader, 100); });
+  render(); 
 } catch (e) {
   var f = document.getElementById('fatal');
   f.style.display = 'block';
