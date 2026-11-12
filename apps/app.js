@@ -1286,8 +1286,8 @@ function positionTonicControls(){
   const r=led.getBoundingClientRect(); const r2=lab?lab.getBoundingClientRect():r; const br=document.body.getBoundingClientRect();
   const left=((r.left-br.left)/scale)+'px'; const top=((Math.max(r.bottom,r2.bottom)-br.top+10)/scale)+'px';
   tonicBtnEl.style.left=left; tonicBtnEl.style.top=top;
-  if(tonicVolEl){ tonicVolEl.style.left=left; tonicVolEl.style.top=((Math.max(r.bottom,r2.bottom)-br.top+52)/scale)+'px'; }
-  if(tonicTipEl){ tonicTipEl.style.left=left; tonicTipEl.style.top=((Math.max(r.bottom,r2.bottom)-br.top+88)/scale)+'px'; }
+  if(tonicVolEl){ tonicVolEl.style.left=left; tonicVolEl.style.top=((Math.max(r.bottom,r2.bottom)-br.top+72)/scale)+'px'; }
+  if(tonicTipEl){ tonicTipEl.style.left=left; tonicTipEl.style.top=((Math.max(r.bottom,r2.bottom)-br.top+110)/scale)+'px'; }
 }
 function updateTonicBtn(){
   if(!tonicBtnEl){
