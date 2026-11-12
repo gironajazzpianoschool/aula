@@ -856,8 +856,14 @@ html[data-theme="dark"] .modes button.on{ color:#14161c !important; }
              border-color var(--t-mid) var(--ease);
 }
 .vid:hover{ transform:translateY(-3px); box-shadow:var(--elev-2); border-color:var(--hair-2); }
-.vid.nolink{ opacity:.5; }
+.vid.nolink{ opacity:.55; }
 .vid.nolink:hover{ transform:none; box-shadow:var(--elev-1); }
+html[data-theme="dark"] .vid.nolink{
+  background:#10131a !important;
+  border-style:dashed !important;
+  opacity:.6 !important;
+  filter:grayscale(.6);
+}
 .vgrid{ gap:14px; }
 .now{ padding:20px; border-color:var(--hair-2); box-shadow:var(--elev-2); }
 .now .ctx{ font-size:10px; opacity:.85; }
