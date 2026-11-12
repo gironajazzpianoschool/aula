@@ -451,6 +451,8 @@ body.editmode .vid { padding-left: 34px; }
    ============================================================ */
 @media (max-width: 767px) {
   .hbrand h1 { font-size: 18px !important; }
+  .userblock { flex-wrap: nowrap !important; max-width: none !important; gap: 6px !important; }
+  .ubtn.logoutbtn { height: 24px !important; padding: 0 8px !important; font-size: 10px !important; }
   .donuts { grid-template-columns: repeat(3, 1fr); }
   .blkcol { grid-template-columns: repeat(3, 1fr); }
   .vgrid { grid-template-columns: 1fr; }
@@ -3030,6 +3032,10 @@ $('lgBtn').onclick = function () {
 $('lgPin').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('lgBtn').onclick(); });
 $('lgName').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('lgPin').focus(); });
 $('btnUser').onclick = function () {
+  var msg = LS.lang === 'ca' 
+    ? 'Segur que vols tancar sessió?' 
+    : '¿Seguro que quieres cerrar sesión?';
+  if (!confirm(msg)) return;
   lsSet('gjps_session', '');
   lsSet('gjps_guest_date', '');
   LS.user = '';
