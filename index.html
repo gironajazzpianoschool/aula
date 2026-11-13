@@ -1010,13 +1010,13 @@ html[data-theme="sepia"] .acts button.bk.bookmarked:hover{
   .appcard button{ padding:12px 22px; }
 }
 
-/* ── 21.16 Respecte per qui no vol moviment ── */
+/* ── 21.16 Respecte per qui no vol moviment (CORREGIT) ── */
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation-duration:.001ms !important; animation-iteration-count:1 !important;
-    transition-duration:.001ms !important; scroll-behavior:auto !important;
-  }
-  .vid:hover,.donut:hover,.appcard:hover,.blkcol button:hover,.modes button:hover{ transform:none; }
+  .aurora,.bg-drift{animation:none !important}
+  .trophy,.trophy-container,.trophy-container::before,.trophy-container::after{animation:none !important}
+  .now .play{animation:none !important}
+  .vgrid .vid,.donuts .donut,.appgrid .appcard,.now{animation-duration:1ms !important}
+  /* CAP transform:none als :hover — les microinteraccions es conserven */
 }
 
 /* ══ 22. LOGO EN SMARTPHONES VERTICALS: més gran i més tènue ══ */
@@ -1210,6 +1210,58 @@ html:not([data-theme="dark"]) .lvlmenu{background:rgba(var(--header-rgb),.93);}
   .lvlmenu{width:100%;max-width:none;}
   .lvlopt{padding:12px;}
 }
+
+/* ══ 27. HOVER: actiu sempre que hi hagi punter fi; suprimit només en tàctil pur ══ */
+html.no-hover .modes button:hover,
+html.no-hover .blkcol button:hover{
+  background:var(--tap) !important; border-color:var(--hair) !important;
+  color:var(--ink) !important; transform:none !important; box-shadow:none !important;
+}
+html.no-hover .modes button.on:hover,
+html.no-hover .blkcol button.on:hover{
+  background:var(--gold) !important; border-color:var(--gold) !important; color:#fff !important;
+}
+html[data-theme="dark"].no-hover .modes button.on:hover,
+html[data-theme="dark"].no-hover .blkcol button.on:hover{ color:#14161c !important; }
+
+html.no-hover .vid:hover,
+html.no-hover .donut:hover,
+html.no-hover .appcard:hover,
+html.no-hover .faq-item:hover{
+  transform:none !important; box-shadow:var(--elev-1) !important; border-color:var(--hair) !important;
+}
+html.no-hover .acts button:hover{
+  transform:none !important; background:var(--tap) !important; border-color:var(--hair) !important;
+}
+html.no-hover .vr .play:hover,
+html.no-hover .appcard button:hover,
+html.no-hover .vid-importance:hover,
+html.no-hover .vid-number.editable:hover,
+html.no-hover .vid-drag:hover,
+html.no-hover .vid-del-btn:hover,
+html.no-hover .vid-order-btn:hover,
+html.no-hover #mTheme:hover,
+html.no-hover .lvlbtn:hover{ transform:none !important; filter:none !important; }
+html.no-hover .lvlbtn:hover{ border-color:var(--hair) !important; box-shadow:var(--elev-1) !important; }
+html.no-hover .lvlbtn:hover .lvlbtn-chev{ background:var(--tap) !important; }
+html.no-hover .lvlopt:hover{ background:none !important; box-shadow:none !important; }
+html.no-hover .lvlopt[aria-selected="true"]:hover{ background:var(--hair) !important; }
+
+/* El desplegable ja no mostra progrés: files més netes i compactes */
+.lvlopt-prog,.lvlopt-bar,.lvlopt-pct{ display:none !important; }
+
+/* ══ 28. «Properament» del selector de nivells: només en hover o toc ══ */
+.lvlopt .lvlopt-tip{
+  flex:none;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);padding:3px 8px;border-radius:999px;
+  border:1px solid var(--hair-2);background:var(--tap);white-space:nowrap;
+  opacity:0;transform:translateX(8px);pointer-events:none;
+  transition:opacity .22s var(--ease),transform .22s var(--ease-out);
+}
+.lvlopt.dis:hover,.lvlopt.dis.tip-on{ opacity:.75; }
+.lvlopt.dis:hover .lvlopt-tip,
+.lvlopt.dis.tip-on .lvlopt-tip{ opacity:1;transform:none; }
+.lvlopt-soon,.lvlopt-prog,.lvlopt-bar,.lvlopt-pct{ display:none !important; }
 
 </style>
 </head>
@@ -3428,31 +3480,42 @@ function openFullscreenVideo(src) {
   document.addEventListener('touchstart', function () { if (isIOSDevice && m.classList.contains('on')) flash(); }, { passive: true, capture: true });
 })();
 
+/* ================================================================
+   11a-bis. CAPACITAT DE HOVER · detecció reactiva, no destructiva
+   ================================================================ */
 (function () {
-  if (!window.matchMedia || !matchMedia('(hover: none)').matches) return;
-  try {
-    var wrap = [];
-    for (var si = 0; si < document.styleSheets.length; si++) {
-      var sheet = document.styleSheets[si];
-      var rules;
-      try { rules = sheet.cssRules; } catch (e) { continue; }
-      if (!rules) continue;
-      var del = [];
-      for (var ri = 0; ri < rules.length; ri++) {
-        var r = rules[ri];
-        if (r.type === 1 && r.selectorText && r.selectorText.indexOf(':hover') !== -1) {
-          wrap.push(r.selectorText + ' { ' + r.style.cssText + ' }');
-          del.push(ri);
-        }
-      }
-      for (var di = del.length - 1; di >= 0; di--) { try { sheet.deleteRule(del[di]); } catch (e) {} }
-    }
-    if (wrap.length) {
-      var st = document.createElement('style');
-      st.textContent = '@media (hover: hover) { ' + wrap.join(' ') + ' }';
-      document.head.appendChild(st);
-    }
-  } catch (e) {}
+  var root = document.documentElement;
+  var forced = false;
+  function mq(q) { try { return matchMedia(q).matches; } catch (e) { return false; } }
+  function evaluate() {
+    var can = forced || mq('(hover: hover)') || mq('(any-hover: hover)') || mq('(any-pointer: fine)');
+    root.classList.toggle('can-hover', can);
+    root.classList.toggle('no-hover', !can);
+    return can;
+  }
+  evaluate();
+  ['(hover: hover)', '(any-hover: hover)', '(pointer: fine)', '(any-pointer: fine)'].forEach(function (q) {
+    try {
+      var m = matchMedia(q);
+      if (m.addEventListener) m.addEventListener('change', evaluate);
+      else if (m.addListener) m.addListener(evaluate);
+    } catch (e) {}
+  });
+  function promote() { if (forced) return; forced = true; evaluate(); }
+  window.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse' || e.pointerType === 'pen') promote();
+  }, { passive: true, capture: true });
+  window.addEventListener('mousemove', function (e) {
+    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+    promote();
+  }, { passive: true, capture: true });
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab' || e.key.indexOf('Arrow') === 0) promote();
+  }, { passive: true, capture: true });
+  console.log('🖱️ hover:', mq('(hover: hover)'), '| any-hover:', mq('(any-hover: hover)'),
+              '| pointer:', mq('(pointer: fine)') ? 'fine' : 'coarse',
+              '| touchPoints:', navigator.maxTouchPoints || 0,
+              '| efectes actius:', root.classList.contains('can-hover'));
 })();
 
 (function () {
@@ -3879,15 +3942,6 @@ function buildLevelPicker() {
   var wrap = document.createElement('div');
   wrap.className = 'lvlpick';
 
-  var stats = {};
-  try {
-    allVids().forEach(function (x) {
-      if (!driveSrc(x.v, x.id)) return;
-      var s = stats[x.si] || (stats[x.si] = { n: 0, d: 0 });
-      s.n++; if (LS.done[x.id]) s.d++;
-    });
-  } catch (e) {}
-
   var cur = null;
   LEVELS.forEach(function (L) { if (L.id === freeLevel) cur = L; });
   if (!cur) cur = LEVELS[0];
@@ -3927,14 +3981,15 @@ function buildLevelPicker() {
     o.style.animationDelay = (20 + i * 28) + 'ms';
 
     var ico = L.wip ? '🚧' : (L.pending ? '⏳' : '');
-    var right;
+    var soonTxt = LS.lang === 'ca' ? 'Properament' : 'Próximamente';
+    var right = dis ? '<span class="lvlopt-tip">' + soonTxt + '</span>' : '';
     if (dis) {
-      right = '<span class="lvlopt-soon">' + (LS.lang === 'ca' ? 'Properament' : 'Próximamente') + '</span>';
-    } else {
-      var s = stats[L.id] || { n: 0, d: 0 };
-      var p = s.n ? Math.round(s.d / s.n * 100) : 0;
-      right = '<span class="lvlopt-prog"><span class="lvlopt-bar"><i class="' + (p >= 100 ? 'full' : '') + '" style="width:' + p + '%"></i></span>' +
-              '<span class="lvlopt-pct' + (p >= 100 ? ' full' : '') + '">' + (p >= 100 ? '✔' : p + '%') + '</span></span>';
+      o.title = soonTxt;
+      o.setAttribute('aria-label', L.n[LS.lang] + ' — ' + soonTxt);
+      o.addEventListener('click', function () {
+        menu.querySelectorAll('.lvlopt.tip-on').forEach(function (x) { if (x !== o) x.classList.remove('tip-on'); });
+        o.classList.toggle('tip-on');
+      });
     }
     o.innerHTML = '<span class="lvlopt-mark">' + (L.id === freeLevel ? CHECK_MARK : '') + '</span>' +
                   '<span class="lvlopt-txt">' + (ico ? '<span class="lvlopt-ico">' + ico + '</span>' : '') + esc(L.n[LS.lang]) + '</span>' + right;
@@ -4079,27 +4134,62 @@ try {
 </div>
 
 <script>
-  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isDesktop = !isMobileUA && !hasTouch;
+(function () {
+  var ua = navigator.userAgent;
+  var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  var isIPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  function mq(q) { try { return matchMedia(q).matches; } catch (e) { return false; } }
+  /* Un portàtil amb pantalla tàctil + ratolí és un ESCRIPTORI, no una tauleta */
+  var coarseOnly = mq('(pointer: coarse)') && !mq('(any-pointer: fine)') && !mq('(any-hover: hover)');
+  var isDesktop = !isMobileUA && !isIPadOS && !coarseOnly;
 
   if (isDesktop) {
-    console.log('🖥️ Mode ESCRIPTORI detectat: Bloquejant instal·lació PWA.');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); 
-      return false;
-    });
-  } else {
-    console.log('📱 Mode MÒBIL/TABLET detectat: Activant PWA.');
-    const link = document.createElement('link');
-    link.rel = 'manifest';
-    link.href = './manifest.json';
-    document.head.appendChild(link);
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+    console.log('🖥️ ESCRIPTORI (punter fi detectat): PWA desactivada.');
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); return false; });
+    /* Neteja única del service worker i de les caus que s'hagin pogut registrar abans */
+    var FLAG = 'gjps_sw_cleaned_v1';
+    var done = null;
+    try { done = localStorage.getItem(FLAG); } catch (e) {}
+    if (!done) {
+      try { localStorage.setItem(FLAG, '1'); } catch (e) {}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (rs) {
+          if (!rs.length) return;
+          rs.forEach(function (r) { try { r.unregister(); } catch (e) {} });
+          console.log('🧹 Service worker antic desregistrat.');
+        }).catch(function () {});
+      }
+      if (window.caches && caches.keys) {
+        caches.keys().then(function (ks) {
+          ks.forEach(function (k) { try { caches.delete(k); } catch (e) {} });
+        }).catch(function () {});
+      }
     }
+    return;
   }
-</script>
 
+  console.log('📱 MÒBIL/TAULETA: PWA activa.');
+  var link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = './manifest.json';
+  document.head.appendChild(link);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function (reg) {
+      reg.update();
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) reg.update(); });
+      reg.addEventListener('updatefound', function () {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', function () {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller && window.showToast) {
+            var ca = !window.LS || LS.lang === 'ca';
+            showToast(ca ? '🔄 Versió nova disponible. Recarrega per veure-la.' : '🔄 Versión nueva disponible. Recarga para verla.', 6000);
+          }
+        });
+      });
+    }).catch(function (err) { console.log('SW error:', err); });
+  }
+})();
+</script>
 <button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></body></html>
