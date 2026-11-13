@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   TONAL EMOTIONS · app.js v64 (fitxer únic consolidat)
+   TONAL EMOTIONS · app.js v65 (fitxer únic consolidat)
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ══ 1. CONFIGURACIÓ ══ */
@@ -173,7 +173,7 @@ function showNoteImage(idx){
   if(cached&&cached.complete) reveal(); else imgElement.onload=reveal;
 }
 
-/* ══ 3d. HUD EAR TRAINING · pila vertical infal·lible ══ */
+/* ══ 23. HUD EAR TRAINING · pila vertical (final del fitxer) ══ */
 var earHUDRAF=null;
 function scheduleEarHUD(){
   if(earHUDRAF) return;
@@ -184,70 +184,31 @@ function scheduleEarHUD(){
   });
 }
 function positionEarHUD(){
-  const root=document.documentElement;
-  const active=!!(earMode&&earMode.classList.contains('active'));
-  const stack=active&&!battleMode&&earModeType==='test';
+  var root=document.documentElement;
+  var active=!!(earMode&&earMode.classList&&earMode.classList.contains('active'));
+  var stack=active&&!battleMode&&earModeType==='test';
   root.classList.toggle('hud-stack',stack);
   if(!active) return;
-  const EDGE=IS_TABLET?12:20, TOP=IS_TABLET?14:20, GAP=10;
+  var EDGE=IS_TABLET?12:20, TOP=IS_TABLET?14:20, GAP=10;
   root.style.setProperty('--hud-edge',EDGE+'px');
-  let y=TOP;
-  /* 1) Notes configurades */
+  var y=TOP;
   root.style.setProperty('--hud-filter-top',y+'px');
   if(filterInfoEl&&filterInfoEl.style.display!=='none'){
-    const h=filterInfoEl.offsetHeight;
-    if(h>0) y+=h+GAP;
+    var hf=filterInfoEl.offsetHeight||0;
+    if(hf>0) y+=hf+GAP;
   }
-  /* 2) Percentatge, just a sota i sempre compacte */
   root.style.setProperty('--hud-acc-top',y+'px');
   if(accuracyPanel&&accuracyPanel.classList.contains('visible')){
-    const h=accuracyPanel.offsetHeight;
-    if(h>0) y+=h+GAP;
+    var ha=accuracyPanel.offsetHeight||0;
+    if(ha>0) y+=ha+GAP;
   }
-  /* 3) Resposta de l'alumne, al final de la pila i dins de pantalla */
   if(stack&&proposedAnswerBox){
-    const ah=proposedAnswerBox.offsetHeight||320;
-    const maxTop=Math.max(TOP,virtualHeight()-ah-20);
+    var hb=proposedAnswerBox.offsetHeight||320;
+    var maxTop=Math.max(TOP,virtualHeight()-hb-20);
     root.style.setProperty('--hud-answer-top',Math.min(y,maxTop)+'px');
   }
 }
-  /* 1) Notes configurades: cantonada superior, compacta */
-  let fi=null;
-  if(filterInfoEl && filterInfoEl.style.display!=='none'){
-    pin(filterInfoEl);
-    filterInfoEl.style.right=EDGE+'px';
-    filterInfoEl.style.top=TOP+'px';
-    filterInfoEl.style.zIndex='420';
-    fi=V(filterInfoEl.getBoundingClientRect());
-  }
-  /* 2) Percentatge: just a sota, sense estirar-se mai cap amunt */
-  let ap=null;
-  if(accuracyPanel){
-    pin(accuracyPanel);
-    accuracyPanel.style.right=EDGE+'px';
-    accuracyPanel.style.zIndex='410';
-    accuracyPanel.style.top=((fi?fi.b:TOP)+GAP)+'px';
-    if(accuracyPanel.classList.contains('visible')) ap=V(accuracyPanel.getBoundingClientRect());
-  }
-  /* 3) Resposta de l'alumne: baixa només el necessari per no tapar res */
-  if(proposedAnswerBox && !battleMode){
-    proposedAnswerBox.style.marginTop='';
-    if(proposedAnswerBox.classList.contains('visible')){
-      const base=parseFloat(getComputedStyle(proposedAnswerBox).marginTop)||0;
-      const pb=V(proposedAnswerBox.getBoundingClientRect());
-      const hit=b=>!!b && pb.r>b.l && pb.l<b.r;
-      let safe=0;
-      if(hit(fi)) safe=Math.max(safe,fi.b+GAP);
-      if(hit(ap)) safe=Math.max(safe,ap.b+GAP);
-      let shift=safe-pb.t;
-      if(shift>0.5){
-        const room=Math.max(0, virtualHeight()-pb.b-16);
-        shift=Math.min(shift,room);
-        if(shift>0.5) proposedAnswerBox.style.marginTop=(base+shift)+'px';
-      }
-    }
-  }
-}
+scheduleEarHUD();
 
 /* ══ 4. UTILITATS ══ */
 function t(k){ return translations[currentLang][k] || k; }
