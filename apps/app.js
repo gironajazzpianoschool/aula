@@ -125,13 +125,27 @@ function setThumbVisible(v){ thumb.style.opacity = v?'1':'0'; }
   #battle-scoreboard .battle-player-name{min-height:2.6em;display:flex;align-items:flex-end;justify-content:center;text-align:center;line-height:1.2;max-width:100%;}
   #battle-scoreboard .battle-player-score{margin-top:2px;}
   #p1-box h4,#p2-box h4{min-height:2.4em;display:flex;align-items:flex-end;justify-content:center;text-align:center;}
-  #accuracy-panel,#ear-filter-info{
-    position:fixed; left:auto; bottom:auto;
-    height:auto; max-height:none; min-height:0;
-    margin:0; box-sizing:border-box; align-self:flex-start;
+  #ear-filter-info,#accuracy-panel{
+    position:fixed !important;
+    right:var(--hud-edge,20px) !important;
+    left:auto !important; bottom:auto !important;
+    height:auto !important; max-height:none !important; min-height:0 !important;
+    margin:0 !important; transform:none !important;
+    flex:0 0 auto !important; align-self:flex-start !important;
+    box-sizing:border-box !important;
   }
-  #accuracy-panel{overflow:visible;}
-  #proposed-answer-box{box-sizing:border-box;}
+  #ear-filter-info{ top:var(--hud-filter-top,20px) !important; z-index:420 !important; }
+  #accuracy-panel{ top:var(--hud-acc-top,80px) !important; z-index:410 !important; overflow:visible !important; }
+  html.hud-stack #proposed-answer-box{
+    position:fixed !important;
+    top:var(--hud-answer-top,150px) !important;
+    right:var(--hud-edge,20px) !important;
+    left:auto !important; bottom:auto !important;
+    height:auto !important; max-height:none !important; min-height:0 !important;
+    margin:0 !important; transform:none !important;
+    flex:0 0 auto !important; box-sizing:border-box !important;
+    z-index:400 !important;
+  }
   *{scrollbar-width:thin;scrollbar-color:#8c52ff #12161c;}
   *::-webkit-scrollbar{width:10px;height:10px;}
   *::-webkit-scrollbar-track{background:#12161c;border-radius:8px;}
@@ -159,25 +173,44 @@ function showNoteImage(idx){
   if(cached&&cached.complete) reveal(); else imgElement.onload=reveal;
 }
 
-/* ══ 3d. HUD EAR TRAINING · filtre + percentatge + resposta, mai solapats ══ */
+/* ══ 3d. HUD EAR TRAINING · pila vertical infal·lible ══ */
 var earHUDRAF=null;
 function scheduleEarHUD(){
   if(earHUDRAF) return;
-  earHUDRAF=requestAnimationFrame(function(){ earHUDRAF=null; try{ positionEarHUD(); }catch(e){} });
+  earHUDRAF=requestAnimationFrame(function(){
+    earHUDRAF=null;
+    try{ positionEarHUD(); }catch(e){}
+    requestAnimationFrame(function(){ try{ positionEarHUD(); }catch(e){} });
+  });
 }
 function positionEarHUD(){
-  if(!earMode||!earMode.classList.contains('active')) return;
-  const s=appScale()||1;
-  const br=document.body.getBoundingClientRect();
-  const V=r=>({l:(r.left-br.left)/s,t:(r.top-br.top)/s,r:(r.right-br.left)/s,b:(r.bottom-br.top)/s,w:r.width/s,h:r.height/s});
-  const GAP=10, EDGE=IS_TABLET?12:20, TOP=IS_TABLET?14:20;
-  function pin(el){
-    if(!el) return;
-    el.style.position='fixed';
-    el.style.left='auto'; el.style.bottom='auto';
-    el.style.height='auto'; el.style.maxHeight='none'; el.style.minHeight='0';
-    el.style.margin='0'; el.style.transform='none'; el.style.boxSizing='border-box';
+  const root=document.documentElement;
+  const active=!!(earMode&&earMode.classList.contains('active'));
+  const stack=active&&!battleMode&&earModeType==='test';
+  root.classList.toggle('hud-stack',stack);
+  if(!active) return;
+  const EDGE=IS_TABLET?12:20, TOP=IS_TABLET?14:20, GAP=10;
+  root.style.setProperty('--hud-edge',EDGE+'px');
+  let y=TOP;
+  /* 1) Notes configurades */
+  root.style.setProperty('--hud-filter-top',y+'px');
+  if(filterInfoEl&&filterInfoEl.style.display!=='none'){
+    const h=filterInfoEl.offsetHeight;
+    if(h>0) y+=h+GAP;
   }
+  /* 2) Percentatge, just a sota i sempre compacte */
+  root.style.setProperty('--hud-acc-top',y+'px');
+  if(accuracyPanel&&accuracyPanel.classList.contains('visible')){
+    const h=accuracyPanel.offsetHeight;
+    if(h>0) y+=h+GAP;
+  }
+  /* 3) Resposta de l'alumne, al final de la pila i dins de pantalla */
+  if(stack&&proposedAnswerBox){
+    const ah=proposedAnswerBox.offsetHeight||320;
+    const maxTop=Math.max(TOP,virtualHeight()-ah-20);
+    root.style.setProperty('--hud-answer-top',Math.min(y,maxTop)+'px');
+  }
+}
   /* 1) Notes configurades: cantonada superior, compacta */
   let fi=null;
   if(filterInfoEl && filterInfoEl.style.display!=='none'){
@@ -518,7 +551,7 @@ function showProposedAnswer(pc){
 }
 function hideProposedAnswer(){
   p1AnswerImage.classList.remove('visible'); p2AnswerImage.classList.remove('visible'); proposedAnswerImage.classList.remove('visible');
-  if(!battleMode){ proposedAnswerBox.classList.remove('visible'); proposedAnswerBox.style.marginTop=''; }
+  if(!battleMode) proposedAnswerBox.classList.remove('visible');
   scheduleEarHUD();
 }
 function handleMIDIMessage(event){
