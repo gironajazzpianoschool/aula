@@ -1121,6 +1121,96 @@ html[data-theme="dark"] .now .play {
   body:not(.editmode) .acts button { padding: 8px 2px !important; font-size: 10px !important; }
 }
 
+/* ══ 26. SELECTOR DE NIVELL · desplegable propi, arrodonit i amb fletxa ══ */
+
+/* Restauració de la fletxa del select natiu (el shorthand `background:` de la
+   capa 21 l'havia esborrat) — per si algun navegador cau al natiu */
+.lvls select{
+  background-color:var(--card);
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:14px;
+}
+html[data-theme="dark"] .lvls select{background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8b04b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");}
+html[data-theme="blue"] .lvls select{background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233d5a80' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");}
+html[data-theme="sepia"] .lvls select{background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c4526' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");}
+
+.lvlpick{position:relative;flex:0 0 auto;}
+.lvlbtn{
+  display:inline-flex;align-items:center;gap:10px;
+  height:42px;min-width:236px;padding:0 12px 0 18px;
+  border-radius:var(--r-pill,999px);
+  border:1px solid var(--hair);background:var(--card);color:var(--ink);
+  font-family:inherit;font-weight:700;font-size:var(--fs-btn);
+  cursor:pointer;box-shadow:var(--elev-1);
+  transition:border-color var(--t-mid) var(--ease),box-shadow var(--t-mid) var(--ease),transform var(--t-fast) var(--ease);
+}
+.lvlbtn:hover{border-color:var(--gold);box-shadow:var(--elev-2);transform:translateY(-1px);}
+.lvlbtn[aria-expanded="true"]{border-color:var(--gold);box-shadow:var(--elev-2),var(--focus);transform:none;}
+.lvlbtn-txt{flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;}
+.lvlbtn-chev{flex:none;width:24px;height:24px;display:grid;place-items:center;color:var(--gold);
+  border-radius:50%;background:var(--tap);transition:transform var(--t-mid) var(--ease),background var(--t-fast);}
+.lvlbtn:hover .lvlbtn-chev{background:var(--hair);}
+.lvlbtn[aria-expanded="true"] .lvlbtn-chev{transform:rotate(180deg);background:var(--hair);}
+
+.lvlmenu{
+  position:absolute;top:calc(100% + 8px);left:0;z-index:70;
+  min-width:100%;width:max-content;max-width:min(380px,92vw);
+  padding:8px;border-radius:var(--r-lg,16px);
+  border:1px solid var(--hair-2);background:var(--card);
+  box-shadow:var(--elev-3);
+  backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);
+  max-height:min(62vh,430px);overflow-y:auto;overscroll-behavior:contain;
+  opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top left;
+  transition:opacity var(--t-mid) var(--ease),transform var(--t-mid) var(--ease),visibility var(--t-mid);
+}
+html[data-theme="dark"] .lvlmenu{background:rgba(19,23,31,.95);}
+html:not([data-theme="dark"]) .lvlmenu{background:rgba(var(--header-rgb),.93);}
+.lvlpick.open .lvlmenu{opacity:1;visibility:visible;transform:none;}
+.lvlmenu.up{top:auto;bottom:calc(100% + 8px);transform-origin:bottom left;}
+.lvlmenu:focus{outline:none;}
+.lvlmenu::-webkit-scrollbar{width:9px;}
+.lvlmenu::-webkit-scrollbar-thumb{background:var(--hair-2);border-radius:99px;border:2px solid transparent;background-clip:content-box;}
+.lvlmenu::-webkit-scrollbar-thumb:hover{background:var(--gold);background-clip:content-box;}
+
+.lvlmenu-head{
+  padding:6px 12px 9px;margin-bottom:4px;
+  font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mut);border-bottom:1px solid var(--hair);
+}
+.lvlopt{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:var(--r-md,12px);
+  color:var(--ink);font-size:var(--fs-btn);font-weight:600;
+  cursor:pointer;user-select:none;
+  transition:background var(--t-fast),color var(--t-fast),box-shadow var(--t-fast);
+}
+.lvlopt-mark{flex:none;width:16px;display:grid;place-items:center;color:var(--gold);}
+.lvlopt-txt{flex:1;min-width:0;display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lvlopt-ico{flex:none;font-size:14px;filter:grayscale(.2);}
+.lvlopt:hover,.lvlopt.active{background:var(--tap);}
+.lvlopt.active{box-shadow:inset 0 0 0 1px var(--hair-2);}
+.lvlopt[aria-selected="true"]{color:var(--gold);font-weight:800;background:var(--hair);}
+.lvlopt.dis{opacity:.42;cursor:not-allowed;}
+.lvlopt.dis:hover{background:none;box-shadow:none;}
+.lvlopt-soon{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);}
+.lvlopt-prog{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.lvlopt-bar{width:46px;height:5px;border-radius:99px;background:var(--hair-2);overflow:hidden;}
+.lvlopt-bar i{display:block;height:100%;border-radius:99px;background:var(--gold);transition:width .5s var(--ease-out);}
+.lvlopt-bar i.full{background:var(--ok);}
+.lvlopt-pct{min-width:30px;text-align:right;font-size:10.5px;font-weight:800;color:var(--mut);font-variant-numeric:tabular-nums;}
+.lvlopt-pct.full{color:var(--ok);}
+
+@keyframes lvlOptIn{from{opacity:0;transform:translateX(-7px);}to{opacity:1;transform:none;}}
+.lvlpick.open .lvlopt{animation:lvlOptIn .3s var(--ease-out) both;}
+
+@media (max-width:767px){
+  .lvlpick{flex:1 1 100%;}
+  .lvlbtn{width:100%;min-width:0;height:46px;}
+  .lvlmenu{width:100%;max-width:none;}
+  .lvlopt{padding:12px;}
+}
+
 </style>
 </head>
 <body class="">
@@ -1369,7 +1459,7 @@ function toggleBookmark(id) {
    2. DADES DEL CURS
    ================================================================ */
 var LEVELS = [
-  { id: 0, n: { ca: 'Vídeos de benvinguda', es: 'Vídeos de bienvenida' }, active: true },
+  { id: 0, n: { ca: 'Benvinguda', es: 'Bienvenida' }, active: true },
   { id: 1, n: { ca: 'Nivell Fonamental', es: 'Nivel Fundamental' }, active: true },
   { id: 2, n: { ca: 'Nivell 2', es: 'Nivel 2' }, active: false, wip: true },
   { id: 3, n: { ca: 'Nivell 3', es: 'Nivel 3' }, active: false, pending: true },
@@ -2762,26 +2852,7 @@ function renderFree() {
   fv.innerHTML = '';
   var lr = document.createElement('div');
   lr.className = 'lvls';
-  var sel = document.createElement('select');
-  LEVELS.forEach(function (L) {
-    var opt = document.createElement('option');
-    opt.value = L.id;
-    var label = L.n[LS.lang];
-    if (L.wip) { label = '🚧 ' + label; opt.disabled = true; }
-    else if (L.pending) { label = t().pendingIcon + ' ' + label; opt.disabled = true; }
-    opt.textContent = label;
-    if (L.id === freeLevel) opt.selected = true;
-    sel.appendChild(opt);
-  });
-  sel.onchange = function () {
-    freeLevel = parseInt(this.value, 10);
-    if (freeLevel !== 0 && freeBlock === 'w') freeBlock = 't';
-    if (freeLevel === 0) freeBlock = 'w';
-    autoLevelPending = false;
-    allVideosLoaded = false;
-    render();
-  };
-  lr.appendChild(sel);
+  lr.appendChild(buildLevelPicker());
   fv.appendChild(lr);
   var sb = document.createElement('div');
   sb.className = 'searchbox';
@@ -3797,6 +3868,183 @@ function refreshTonal() { if (LS.user && LS.mode === 'apps') render(); }
 window.addEventListener('storage', function (e) { if (e.key && e.key.indexOf('gjps_tonal_stats_') === 0) refreshTonal(); });
 document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshTonal(); });
 window.addEventListener('pageshow', refreshTonal);
+
+/* ================================================================
+   11d. SELECTOR DE NIVELL PERSONALITZAT
+   ================================================================ */
+var CHEV_DOWN = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+var CHECK_MARK = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function buildLevelPicker() {
+  var wrap = document.createElement('div');
+  wrap.className = 'lvlpick';
+
+  var stats = {};
+  try {
+    allVids().forEach(function (x) {
+      if (!driveSrc(x.v, x.id)) return;
+      var s = stats[x.si] || (stats[x.si] = { n: 0, d: 0 });
+      s.n++; if (LS.done[x.id]) s.d++;
+    });
+  } catch (e) {}
+
+  var cur = null;
+  LEVELS.forEach(function (L) { if (L.id === freeLevel) cur = L; });
+  if (!cur) cur = LEVELS[0];
+
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'lvlbtn';
+  btn.setAttribute('role', 'combobox');
+  btn.setAttribute('aria-haspopup', 'listbox');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', 'lvlMenu');
+  btn.setAttribute('aria-label', LS.lang === 'ca' ? 'Nivell del curs' : 'Nivel del curso');
+  btn.innerHTML = '<span class="lvlbtn-txt">' + esc(cur.n[LS.lang]) + '</span><span class="lvlbtn-chev">' + CHEV_DOWN + '</span>';
+
+  var menu = document.createElement('div');
+  menu.className = 'lvlmenu';
+  menu.id = 'lvlMenu';
+  menu.tabIndex = -1;
+  menu.setAttribute('role', 'listbox');
+  menu.setAttribute('aria-label', LS.lang === 'ca' ? 'Tria un nivell' : 'Elige un nivel');
+
+  var head = document.createElement('div');
+  head.className = 'lvlmenu-head';
+  head.textContent = LS.lang === 'ca' ? 'Itinerari del curs' : 'Itinerario del curso';
+  menu.appendChild(head);
+
+  var opts = [];
+  LEVELS.forEach(function (L, i) {
+    var dis = !L.active;
+    var o = document.createElement('div');
+    o.className = 'lvlopt' + (dis ? ' dis' : '');
+    o.id = 'lvlopt-' + L.id;
+    o.dataset.id = L.id;
+    o.setAttribute('role', 'option');
+    o.setAttribute('aria-selected', L.id === freeLevel ? 'true' : 'false');
+    if (dis) o.setAttribute('aria-disabled', 'true');
+    o.style.animationDelay = (20 + i * 28) + 'ms';
+
+    var ico = L.wip ? '🚧' : (L.pending ? '⏳' : '');
+    var right;
+    if (dis) {
+      right = '<span class="lvlopt-soon">' + (LS.lang === 'ca' ? 'Properament' : 'Próximamente') + '</span>';
+    } else {
+      var s = stats[L.id] || { n: 0, d: 0 };
+      var p = s.n ? Math.round(s.d / s.n * 100) : 0;
+      right = '<span class="lvlopt-prog"><span class="lvlopt-bar"><i class="' + (p >= 100 ? 'full' : '') + '" style="width:' + p + '%"></i></span>' +
+              '<span class="lvlopt-pct' + (p >= 100 ? ' full' : '') + '">' + (p >= 100 ? '✔' : p + '%') + '</span></span>';
+    }
+    o.innerHTML = '<span class="lvlopt-mark">' + (L.id === freeLevel ? CHECK_MARK : '') + '</span>' +
+                  '<span class="lvlopt-txt">' + (ico ? '<span class="lvlopt-ico">' + ico + '</span>' : '') + esc(L.n[LS.lang]) + '</span>' + right;
+    if (!dis) {
+      o.addEventListener('click', function () { choose(L.id); });
+      o.addEventListener('mousemove', function () { if (active !== i) setActive(i); });
+    }
+    menu.appendChild(o);
+    opts.push(o);
+  });
+
+  wrap.appendChild(btn);
+  wrap.appendChild(menu);
+
+  var open = false, active = -1;
+
+  function setActive(i) {
+    if (i < 0 || i >= opts.length) return;
+    active = i;
+    opts.forEach(function (o, k) { o.classList.toggle('active', k === i); });
+    menu.setAttribute('aria-activedescendant', opts[i].id);
+    var mr = menu.getBoundingClientRect(), er = opts[i].getBoundingClientRect();
+    if (er.top < mr.top + 4) menu.scrollTop -= (mr.top + 4 - er.top);
+    else if (er.bottom > mr.bottom - 4) menu.scrollTop += (er.bottom - (mr.bottom - 4));
+  }
+  function step(dir) {
+    var i = active;
+    for (var k = 0; k < opts.length; k++) {
+      i = (i + dir + opts.length) % opts.length;
+      if (!opts[i].classList.contains('dis')) { setActive(i); return; }
+    }
+  }
+  function edge(back) {
+    var order = opts.map(function (_, i) { return i; });
+    if (back) order.reverse();
+    for (var k = 0; k < order.length; k++) {
+      if (!opts[order[k]].classList.contains('dis')) { setActive(order[k]); return; }
+    }
+  }
+  function place() {
+    menu.classList.remove('up');
+    var r = btn.getBoundingClientRect();
+    var h = menu.offsetHeight || 320;
+    if (window.innerHeight - r.bottom - 16 < h && r.top - 16 > window.innerHeight - r.bottom - 16) menu.classList.add('up');
+  }
+  function onDocDown(e) { if (!wrap.contains(e.target)) close(); }
+  function onScroll(e) { if (open && !menu.contains(e.target)) close(); }
+  function onKey(e) {
+    if (!open) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); btn.focus(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); step(1); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); step(-1); return; }
+    if (e.key === 'Home') { e.preventDefault(); edge(false); return; }
+    if (e.key === 'End') { e.preventDefault(); edge(true); return; }
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (active >= 0 && !opts[active].classList.contains('dis')) choose(parseInt(opts[active].dataset.id, 10));
+      return;
+    }
+    if (e.key === 'Tab') close();
+  }
+  function openMenu() {
+    if (open) return;
+    open = true;
+    wrap.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    place();
+    var sel = 0;
+    opts.forEach(function (o, k) { if (o.dataset.id === String(freeLevel)) sel = k; });
+    setActive(sel);
+    try { menu.focus({ preventScroll: true }); } catch (e) { menu.focus(); }
+    document.addEventListener('mousedown', onDocDown, true);
+    document.addEventListener('touchstart', onDocDown, true);
+    document.addEventListener('keydown', onKey, true);
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', place);
+  }
+  function close() {
+    if (!open) return;
+    open = false;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.removeAttribute('aria-activedescendant');
+    document.removeEventListener('mousedown', onDocDown, true);
+    document.removeEventListener('touchstart', onDocDown, true);
+    document.removeEventListener('keydown', onKey, true);
+    window.removeEventListener('scroll', onScroll, true);
+    window.removeEventListener('resize', place);
+  }
+  function choose(id) {
+    close();
+    if (id === freeLevel) { btn.focus(); return; }
+    freeLevel = id;
+    if (freeLevel !== 0 && freeBlock === 'w') freeBlock = 't';
+    if (freeLevel === 0) freeBlock = 'w';
+    autoLevelPending = false;
+    allVideosLoaded = false;
+    render();
+  }
+
+  btn.addEventListener('click', function () { if (open) close(); else openMenu(); });
+  btn.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!open) openMenu();
+    }
+  });
+
+  return wrap;
+}
 
 /* ================================================================
    12. ARRENCADA
