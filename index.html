@@ -1522,6 +1522,16 @@ html[data-theme="dark"] #wm{
   }
 }
 
+/* ══ 29.10 MEDALLÓ A LA CAPÇALERA DEL SEGUIMENT CONTINUAT ══ */
+.now{ position:relative; }
+.now > .imp-hero{ position:absolute; top:16px; right:16px; }
+.now .ctx,
+.now .nowlbl{ padding-right:58px; }
+@media (max-width:767px){
+  .now > .imp-hero{ top:14px; right:14px; }
+  .now .ctx,.now .nowlbl{ padding-right:52px; }
+}
+
 </style>
 </head>
 <body class="">
@@ -3036,6 +3046,9 @@ function renderTrack() {
     now.className = 'now';
     now.innerHTML = '<div class="ctx">' + D[next.si].n[LS.lang] + ' · ' + t().unit + ' ' + (next.ui + 1) + '</div><div class="nowlbl">' + t().now + ' ' + t().blocks[next.b] + '</div>';
     now.appendChild(makeVid(next.v, next.id, true, ''));
+    /* El medalló puja a la capçalera del requadre: allibera l'amplada del títol */
+    var med = now.querySelector('.imp-hero');
+    if (med) now.appendChild(med);
     var playBtn = now.querySelector('.play');
     if (playBtn) {
       var vrWrap = playBtn.closest('.vr');
