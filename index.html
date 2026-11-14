@@ -1564,6 +1564,25 @@ html.ios-safari .imp-sweep{ animation:none !important; opacity:.20; }
 html.ios-safari .imp-rim{ animation-duration:80s !important; }
 html.ios-safari .imp-halo{ animation-duration:7s !important; }
 
+/* ══ 34. ESTRELLA DEL MEDALLÓ: el mateix groc en tots els temes ══ */
+html[data-theme="blue"],
+html[data-theme="sepia"]{
+  --imp-star:#ffd884;               /* exactament el groc del mode fosc */
+  --imp-star-sh:rgba(96,64,8,.50);  /* ombra càlida: la fa llegir sobre la cara clara */
+}
+/* Filet subtil perquè el groc no surti "rentat" sobre el nacre clar */
+html[data-theme="blue"] .imp-on .imp-star path,
+html[data-theme="sepia"] .imp-on .imp-star path{
+  stroke:rgba(122,82,10,.45);
+  stroke-width:.7;
+  stroke-linejoin:round;
+}
+/* La variant opcional (☆ contornejada) necessita un to més fosc per veure's */
+html[data-theme="blue"] .imp-off .imp-star,
+html[data-theme="sepia"] .imp-off .imp-star{
+  color:#a8760a;
+}
+
 </style>
 <style id="gjps-levels-css">#mCourse{position:fixed;right:18px;bottom:126px;z-index:9999999;width:46px;height:46px;border-radius:50%;background:var(--card);border:1.5px solid var(--gold);color:var(--gold);cursor:pointer;font-size:19px;display:none;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:all .2s}
 #mCourse:hover{transform:translateY(-2px)}
