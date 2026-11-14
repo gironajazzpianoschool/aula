@@ -401,9 +401,9 @@ body.editmode .vid { padding-left: 34px; }
    ============================================================ */
 .now .play { position: relative; animation: playGlow 3.8s ease-in-out infinite; border-color: var(--ok); color: var(--ok); }
 @keyframes playGlow {
-  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); transform: scale(1); }
+  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,0.55); background: rgba(57,217,138,0.08); scale: 1; }
+  50%  { box-shadow: 0 0 0 6px rgba(57,217,138,0), 0 0 14px 3px rgba(57,217,138,0.45); background: rgba(57,217,138,0.22); scale: 1.06; }
+  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0); background: rgba(57,217,138,0.05); scale: 1; }
 }
 .now .play:hover { animation-play-state: running; border-color: #6ff0b0; color: #6ff0b0; }
 .now .vr[data-tip]::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 12px); left: 0; transform: none; width: max-content; max-width: min(340px, 78vw); white-space: normal; text-align: center; background: #1a1f28; color: #c3c9d4; border: 1px solid var(--line); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: .3px; opacity: 0; clip-path: inset(0 100% 0 0); pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.45), 0 0 15px rgba(232,176,75, 0.25); z-index: 100; }
@@ -1348,10 +1348,9 @@ html[data-theme="sepia"]{
   background:repeating-radial-gradient(circle at 50% 50%,var(--imp-mill) 0 1px,transparent 1px 3.75px);
 }
 .imp-sweep{
-  position:absolute;inset:-45%;pointer-events:none;opacity:0.60;
-  mix-blend-mode:var(--imp-spec-blend);
-  background:conic-gradient(from 0deg,transparent 0deg,var(--imp-spec) 22deg,transparent 58deg,
-    transparent 190deg,var(--imp-spec) 214deg,transparent 246deg);
+  position:absolute;inset:-45%;border-radius:50%;pointer-events:none;opacity:0.35;
+  background:conic-gradient(from 0deg,transparent 0deg,var(--imp-spec) 26deg,transparent 62deg,
+    transparent 194deg,var(--imp-spec) 218deg,transparent 250deg);
   animation:impSpin 15s linear infinite !important;
 }
 .imp-star{
@@ -1522,12 +1521,31 @@ html[data-theme="dark"] #wm{
   }
 }
 
-/* ══ 29.10 MEDALLÓ DEL SEGUIMENT: a la fila al PC/tablet, a la capçalera al mòbil vertical ══ */
+/* ══ 29.10 MEDALLÓ DEL SEGUIMENT: sempre a la capçalera del requadre ══ */
 .now{ position:relative; }
-@media (max-width: 767px) and (orientation: portrait){
-  .now > .imp-hero{ position:absolute; top:14px; right:14px; }
-  .now .ctx,
-  .now .nowlbl{ padding-right:52px; }
+.now > .imp-hero{ position:absolute; top:16px; right:16px; }
+.now .ctx,
+.now .nowlbl{ padding-right:58px; }
+@media (max-width:767px){
+  .now > .imp-hero{ top:14px; right:14px; }
+  .now .ctx,.now .nowlbl{ padding-right:52px; }
+}
+
+/* ══ 32. PLAY DEL SEGUIMENT: reacció 3D en hover, com el medalló ══ */
+.now .play{
+  transition:transform .3s cubic-bezier(.16,1,.3,1),
+             background var(--t-mid) var(--ease),
+             border-color var(--t-mid) var(--ease),
+             color var(--t-mid) var(--ease),
+             box-shadow var(--t-mid) var(--ease);
+}
+.now .play:hover{
+  transform:translateY(-2px) scale(1.12);
+  box-shadow:0 6px 18px rgba(57,217,138,.35), 0 0 0 4px rgba(57,217,138,.12);
+}
+.now .play:active{
+  transform:translateY(0) scale(.94);
+  transition-duration:.09s;
 }
 
 </style>
@@ -3044,7 +3062,9 @@ function renderTrack() {
     now.className = 'now';
     now.innerHTML = '<div class="ctx">' + D[next.si].n[LS.lang] + ' · ' + t().unit + ' ' + (next.ui + 1) + '</div><div class="nowlbl">' + t().now + ' ' + t().blocks[next.b] + '</div>';
     now.appendChild(makeVid(next.v, next.id, true, ''));
-    placeNowMedal();
+    /* El medalló viu a la capçalera del requadre en tots els dispositius */
+    var med = now.querySelector('.imp-hero');
+    if (med) now.appendChild(med);
     var playBtn = now.querySelector('.play');
     if (playBtn) {
       var vrWrap = playBtn.closest('.vr');
@@ -3094,27 +3114,6 @@ function renderTrack() {
   tv.appendChild(dw);
   renderReviewBox(tv);
 }
-
-/* ── 9b. UBICACIÓ RESPONSIVA DEL MEDALLÓ DEL SEGUIMENT ──
-   Mòbil vertical: puja a la capçalera del requadre (allibera l'amplada del títol).
-   Tablet i PC: es queda dins la fila del títol, on hi ha espai de sobres. */
-function placeNowMedal(){
-  var now = document.querySelector('#trackView .now');
-  if (!now) return;
-  var med = now.querySelector('.imp-hero');
-  var vr = now.querySelector('.vr');
-  if (!med || !vr) return;
-  var mobilePortrait = window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches;
-  if (mobilePortrait) { if (med.parentNode !== now) now.appendChild(med); }
-  else { if (med.parentNode !== vr) vr.appendChild(med); }
-}
-(function(){
-  var mq = window.matchMedia('(max-width: 767px) and (orientation: portrait)');
-  if (mq.addEventListener) mq.addEventListener('change', placeNowMedal);
-  else if (mq.addListener) mq.addListener(placeNowMedal);
-  window.addEventListener('resize', placeNowMedal);
-  window.addEventListener('orientationchange', function(){ setTimeout(placeNowMedal, 120); });
-})();
 
 function normTxt(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function normTxt(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
@@ -4282,7 +4281,9 @@ function buildLevelPicker() {
     o.style.animationDelay = (20 + i * 28) + 'ms';
 
     var ico = L.wip ? '🚧' : (L.pending ? '⏳' : '');
-    var soonTxt = LS.lang === 'ca' ? 'Properament' : 'Próximamente';
+    var soonTxt = L.wip
+      ? (LS.lang === 'ca' ? 'En construcció' : 'En construcción')
+      : (LS.lang === 'ca' ? 'Properament' : 'Próximamente');
     var right = dis ? '<span class="lvlopt-tip">' + soonTxt + '</span>' : '';
     if (dis) {
       o.title = soonTxt;
@@ -4498,524 +4499,852 @@ try {
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.0
-   Afegeix: activar nivells 2-6, reanomenar els 5 blocs de cada nivell,
-   afegir/editar/eliminar/reordenar vídeos, numeració per bloc (comença per 1)
-   i desbloqueig seqüencial del Seguiment Continuat.
-   Tot es desa dins l'OV, així «💾 Guardar» ho exporta dins l'index.html.
+   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.1
+   Nivells 2-6 activables, estats (Acabat / En construcció / Pròximament),
+   noms de bloc per nivell, alta/edició/ordre de vídeos, numeració per bloc
+   i seqüenciació del Seguiment Continuat. Tot es desa dins l'OV.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
 
-/* ── §1 Constants ── */
-var B5 = ['t','g','r','a','p'];
+/* ── §1 Constants i utilitats ── */
+var B5 = ['t', 'g', 'r', 'a', 'p'];
 var MAX_LVL = 6;
-var CTX = 1;                       /* nivell de context per a t().blocks */
-function ca(){ return LS.lang === 'ca'; }
-function lvKey(l){ return String(l); }
-function el(tag, cls, html){ var n=document.createElement(tag); if(cls)n.className=cls; if(html!=null)n.innerHTML=html; return n; }
+var CTX = 1;
+function ca() { return LS.lang === 'ca'; }
+function lvKey(l) { return String(l); }
+function el(tag, cls, html) {
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+}
 
 /* ── §2 Model de nivells ── */
-function videoLevel(id){
+function videoLevel(id) {
   if (isGiftId(id)) return -1;
-  var si = parseInt(String(id).split('.')[0],10);
+  var si = parseInt(String(id).split('.')[0], 10);
   if (isNaN(si)) return 1;
   if (si === 0) return 0;
   if (si <= 6) return 1;
-  return si - 6;                   /* seccions sintètiques 7..11 → nivells 2..6 */
+  return si - 6;
 }
-function levelSections(l){
+function levelSections(l) {
   if (l === 0) return [0];
-  if (l === 1) return [1,2,3,4,5,6];
+  if (l === 1) return [1, 2, 3, 4, 5, 6];
   return [6 + l];
 }
-function levelObj(l){ for (var i=0;i<LEVELS.length;i++) if (LEVELS[i].id===l) return LEVELS[i]; return null; }
-function levelName(l){
+function levelObj(l) {
+  for (var i = 0; i < LEVELS.length; i++) if (LEVELS[i].id === l) return LEVELS[i];
+  return null;
+}
+function levelName(l) {
   var o = OV.lnm && OV.lnm[lvKey(l)];
   if (o && o[LS.lang]) return o[LS.lang];
   var L = levelObj(l);
-  return L ? L.n[LS.lang] : (ca()?'Nivell '+l:'Nivel '+l);
+  return L ? L.n[LS.lang] : (ca() ? 'Nivell ' + l : 'Nivel ' + l);
 }
-function levelActive(l){
+function levelActive(l) {
   var v = OV.lv && OV.lv[lvKey(l)];
   if (typeof v === 'boolean') return v;
   var L = levelObj(l);
   return !!(L && L.active);
 }
-function activeLevels(){ var o=[]; for (var l=0;l<=MAX_LVL;l++) if (levelActive(l)) o.push(l); return o; }
-function seqMode(l){
-  var m = OV.seq && OV.seq[lvKey(l)];
-  if (m==='blocks'||m==='order') return m;
-  return l<=1 ? 'order' : 'blocks';
+function levelState(l) {
+  var s = OV.lst && OV.lst[lvKey(l)];
+  if (s === 'wip' || s === 'soon' || s === 'done') return s;
+  if (l === 2) return 'wip';
+  if (l >= 3) return 'soon';
+  return 'done';
 }
-function ensureSections(){
-  for (var l=2;l<=MAX_LVL;l++){
-    var si=6+l;
+function activeLevels() {
+  var out = [];
+  for (var l = 0; l <= MAX_LVL; l++) if (levelActive(l)) out.push(l);
+  return out;
+}
+function seqMode(l) {
+  var m = OV.seq && OV.seq[lvKey(l)];
+  if (m === 'blocks' || m === 'order') return m;
+  return l <= 1 ? 'order' : 'blocks';
+}
+function ensureSections() {
+  var l, k, si, unit, L, o, st;
+  for (l = 2; l <= MAX_LVL; l++) {
+    si = 6 + l;
     if (D[si]) continue;
-    var unit={}; B5.forEach(function(b){ unit[b]={v:[],d:[]}; });
-    D[si]={ n:{ca:levelName(l),es:levelName(l)}, u:[unit], _synthetic:true };
+    unit = {};
+    B5.forEach(function (b) { unit[b] = { v: [], d: [] }; });
+    D[si] = { n: { ca: levelName(l), es: levelName(l) }, u: [unit], _synthetic: true };
   }
-  for (var k=0;k<=MAX_LVL;k++){
-    var L=levelObj(k); if(!L) continue;
+  for (k = 0; k <= MAX_LVL; k++) {
+    L = levelObj(k);
+    if (!L) continue;
     L.active = levelActive(k);
-    var o = OV.lnm && OV.lnm[lvKey(k)];
-    if (o){ if(o.ca) L.n.ca=o.ca; if(o.es) L.n.es=o.es; }
-    if (L.active){ delete L.wip; delete L.pending; }
-    else if (k>=2 && !L.pending) L.pending = true;
-    if (D[6+k]) D[6+k].n = { ca:L.n.ca, es:L.n.es };
+    o = OV.lnm && OV.lnm[lvKey(k)];
+    if (o) { if (o.ca) L.n.ca = o.ca; if (o.es) L.n.es = o.es; }
+    st = levelState(k);
+    L.wip = (st === 'wip');
+    L.pending = (st === 'soon');
+    if (D[6 + k]) D[6 + k].n = { ca: L.n.ca, es: L.n.es };
   }
 }
 
 /* ── §3 Vídeos nous: OV.nv ↔ D ── */
 var LEGACY_BASE = {};
-function legacyCount(si,ui,b){
-  var k=si+'.'+ui+'.'+b;
-  if (LEGACY_BASE[k]!=null) return LEGACY_BASE[k];
-  var n=0; try{ var bl=D[si].u[ui][b]; if(bl&&bl.v) n=bl.v.length; }catch(e){}
-  LEGACY_BASE[k]=n; return n;
+function legacyCount(si, ui, b) {
+  var k = si + '.' + ui + '.' + b;
+  if (LEGACY_BASE[k] != null) return LEGACY_BASE[k];
+  var n = 0;
+  try { var bl = D[si].u[ui][b]; if (bl && bl.v) n = bl.v.length; } catch (e) {}
+  LEGACY_BASE[k] = n;
+  return n;
 }
-function nvBucket(l,b,create){
+function nvBucket(l, b, create) {
   OV.nv = OV.nv || {};
-  var k=lvKey(l);
-  if (!OV.nv[k] && create) OV.nv[k]={};
+  var k = lvKey(l);
+  if (!OV.nv[k] && create) OV.nv[k] = {};
   if (!OV.nv[k]) return null;
-  if (!OV.nv[k][b] && create) OV.nv[k][b]=[];
+  if (!OV.nv[k][b] && create) OV.nv[k][b] = [];
   return OV.nv[k][b] || null;
 }
-function harvest(){
+function harvest() {
   if (!OV.nv) return;
-  Object.keys(OV.nv).forEach(function(k){
-    var l=parseInt(k,10);
-    B5.forEach(function(b){
-      var arr=OV.nv[k][b]; if(!arr) return;
-      var si=(l===1)?6:6+l, ui=(l===1)?3:0, base=legacyCount(si,ui,b);
-      arr.forEach(function(vid,i){
-        var id=si+'.'+ui+'.'+b+'.'+(base+i);
-        ['ca','es'].forEach(function(lg){
-          if (OV.t[id] && OV.t[id][lg]!=null) vid.t[lg]=OV.t[id][lg];
-          if (OV.d[id] && OV.d[id][lg]!=null) vid.d[lg]=OV.d[id][lg];
-          if (OV.l[id] && OV.l[id][lg]!=null) vid.l[lg]=OV.l[id][lg];
-          var im = OV.imp && OV.imp[id+':'+lg];
-          if (im) vid.imp[lg]=im;
+  Object.keys(OV.nv).forEach(function (k) {
+    var l = parseInt(k, 10);
+    B5.forEach(function (b) {
+      var arr = OV.nv[k][b];
+      if (!arr) return;
+      var si = (l === 1) ? 6 : 6 + l;
+      var ui = (l === 1) ? 3 : 0;
+      var base = legacyCount(si, ui, b);
+      arr.forEach(function (vid, i) {
+        var id = si + '.' + ui + '.' + b + '.' + (base + i);
+        ['ca', 'es'].forEach(function (lg) {
+          if (OV.t[id] && OV.t[id][lg] != null) vid.t[lg] = OV.t[id][lg];
+          if (OV.d[id] && OV.d[id][lg] != null) vid.d[lg] = OV.d[id][lg];
+          if (OV.l[id] && OV.l[id][lg] != null) vid.l[lg] = OV.l[id][lg];
+          var im = OV.imp && OV.imp[id + ':' + lg];
+          if (im) vid.imp[lg] = im;
         });
       });
     });
   });
 }
-function hydrate(){
-  OV.t=OV.t||{}; OV.d=OV.d||{}; OV.l=OV.l||{}; OV.imp=OV.imp||{};
-  for (var l=2;l<=MAX_LVL;l++){
-    var si=6+l; if(!D[si]) continue;
-    B5.forEach(function(b){ D[si].u[0][b]={v:[],d:[]}; });
+function hydrate() {
+  OV.t = OV.t || {}; OV.d = OV.d || {}; OV.l = OV.l || {}; OV.imp = OV.imp || {};
+  var l, si, ui;
+  for (l = 2; l <= MAX_LVL; l++) {
+    si = 6 + l;
+    if (!D[si]) continue;
+    B5.forEach(function (b) { D[si].u[0][b] = { v: [], d: [] }; });
   }
-  B5.forEach(function(b){
-    var base=legacyCount(6,3,b);
-    if (D[6]&&D[6].u[3]&&D[6].u[3][b]&&D[6].u[3][b].v) D[6].u[3][b].v.length=base;
+  B5.forEach(function (b) {
+    var base = legacyCount(6, 3, b);
+    if (D[6] && D[6].u[3] && D[6].u[3][b] && D[6].u[3][b].v) D[6].u[3][b].v.length = base;
   });
-  Object.keys(OV.nv||{}).forEach(function(k){
-    var l=parseInt(k,10);
-    var si=(l===1)?6:6+l, ui=(l===1)?3:0;
-    if (!D[si]||!D[si].u[ui]) return;
-    B5.forEach(function(b){
-      var arr=OV.nv[k][b]; if(!arr||!arr.length) return;
-      var bl=D[si].u[ui][b]; if(!bl) bl=D[si].u[ui][b]={v:[],d:[]}; if(!bl.v) bl.v=[];
-      var base=legacyCount(si,ui,b);
-      arr.forEach(function(vid,i){
-        var id=si+'.'+ui+'.'+b+'.'+(base+i);
-        bl.v.push([vid.t.ca||vid.t.es||'', vid.t.es||vid.t.ca||'', '']);
-        OV.t[id]={ca:vid.t.ca||'',es:vid.t.es||''};
-        OV.d[id]={ca:vid.d.ca||'',es:vid.d.es||''};
-        if (vid.l.ca||vid.l.es) OV.l[id]={ca:vid.l.ca||'',es:vid.l.es||''};
-        ['ca','es'].forEach(function(lg){ OV.imp[id+':'+lg]= vid.imp[lg]==='optional'?'optional':'important'; });
+  Object.keys(OV.nv || {}).forEach(function (k) {
+    l = parseInt(k, 10);
+    si = (l === 1) ? 6 : 6 + l;
+    ui = (l === 1) ? 3 : 0;
+    if (!D[si] || !D[si].u[ui]) return;
+    B5.forEach(function (b) {
+      var arr = OV.nv[k][b];
+      if (!arr || !arr.length) return;
+      var bl = D[si].u[ui][b];
+      if (!bl) bl = D[si].u[ui][b] = { v: [], d: [] };
+      if (!bl.v) bl.v = [];
+      var base = legacyCount(si, ui, b);
+      arr.forEach(function (vid, i) {
+        var id = si + '.' + ui + '.' + b + '.' + (base + i);
+        bl.v.push([vid.t.ca || vid.t.es || '', vid.t.es || vid.t.ca || '', '']);
+        OV.t[id] = { ca: vid.t.ca || '', es: vid.t.es || '' };
+        OV.d[id] = { ca: vid.d.ca || '', es: vid.d.es || '' };
+        if (vid.l.ca || vid.l.es) OV.l[id] = { ca: vid.l.ca || '', es: vid.l.es || '' };
+        ['ca', 'es'].forEach(function (lg) {
+          OV.imp[id + ':' + lg] = (vid.imp[lg] === 'optional') ? 'optional' : 'important';
+        });
       });
     });
   });
 }
-function rebuild(){ harvest(); LEGACY_BASE={}; ensureSections(); hydrate(); initializeOrder(); }
+function rebuild() {
+  harvest();
+  LEGACY_BASE = {};
+  ensureSections();
+  hydrate();
+  initializeOrder();
+}
 
 /* ── §4 Numeració per bloc ── */
-function blockSeq(l,b){
-  return orderList().filter(function(id){
-    return !isGiftId(id) && videoLevel(id)===l && vidBlockById(id)===b;
+function blockSeq(l, b) {
+  return orderList().filter(function (id) {
+    return !isGiftId(id) && videoLevel(id) === l && vidBlockById(id) === b;
   });
 }
-window.getVideoOrder = function(id){
+window.getVideoOrder = function (id) {
   if (isGiftId(id)) return 9998;
   var i = blockSeq(videoLevel(id), vidBlockById(id)).indexOf(id);
-  return i<0 ? 9999 : i+1;
+  return i < 0 ? 9999 : i + 1;
 };
-window.reorderVideo = function(id,newNum){
+window.reorderVideo = function (id, newNum) {
   if (editModeOn) collectAll();
   harvest();
   var seq = blockSeq(videoLevel(id), vidBlockById(id));
-  var cur = seq.indexOf(id), tgt = newNum-1;
-  if (cur<0||tgt<0||tgt>=seq.length||tgt===cur) return;
+  var cur = seq.indexOf(id);
+  var tgt = newNum - 1;
+  if (cur < 0 || tgt < 0 || tgt >= seq.length || tgt === cur) return;
   var list = orderList();
-  var ia=list.indexOf(id), ib=list.indexOf(seq[tgt]);
-  if (ia<0||ib<0) return;
-  list[ia]=seq[tgt]; list[ib]=id;
+  var ia = list.indexOf(id);
+  var ib = list.indexOf(seq[tgt]);
+  if (ia < 0 || ib < 0) return;
+  list[ia] = seq[tgt];
+  list[ib] = id;
   render();
 };
 
 /* ── §5 Seqüenciació del Seguiment Continuat ── */
-function withLink(ids){ return ids.filter(function(id){ var v=findVidById(id); return v && !!driveSrc(v.v,id); }); }
-function isImp(id){ return getVideoImportance(id)==='important'; }
-function allImpDone(ids){ var imp=ids.filter(isImp); return imp.length===0 ? true : imp.every(function(id){return !!LS.done[id];}); }
-function pickFrom(ids){
-  var pool=withLink(ids); if(!pool.length) return null;
-  var skipped=LS.skipped||[]; LS.skipAfter=LS.skipAfter||{};
-  var i,id,v;
-  for(i=0;i<skipped.length;i++){ id=skipped[i];
-    if(pool.indexOf(id)<0||LS.done[id])continue;
-    var after=LS.skipAfter[id];
-    if(after&&LS.done[after]){ v=findVidById(id); if(v)return v; } }
-  for(i=0;i<pool.length;i++){ id=pool[i];
-    if(LS.done[id]||skipped.indexOf(id)>=0)continue;
-    v=findVidById(id); if(v)return v; }
-  for(i=0;i<pool.length;i++){ id=pool[i];
-    if(LS.done[id])continue;
-    v=findVidById(id); if(v)return v; }
+function withLink(ids) {
+  return ids.filter(function (id) {
+    var v = findVidById(id);
+    return v && !!driveSrc(v.v, id);
+  });
+}
+function isImp(id) { return getVideoImportance(id) === 'important'; }
+function allImpDone(ids) {
+  var imp = ids.filter(isImp);
+  if (imp.length === 0) return true;
+  return imp.every(function (id) { return !!LS.done[id]; });
+}
+function pickFrom(ids) {
+  var pool = withLink(ids);
+  if (!pool.length) return null;
+  var skipped = LS.skipped || [];
+  LS.skipAfter = LS.skipAfter || {};
+  var i, id, v, after;
+  for (i = 0; i < skipped.length; i++) {
+    id = skipped[i];
+    if (pool.indexOf(id) < 0 || LS.done[id]) continue;
+    after = LS.skipAfter[id];
+    if (after && LS.done[after]) { v = findVidById(id); if (v) return v; }
+  }
+  for (i = 0; i < pool.length; i++) {
+    id = pool[i];
+    if (LS.done[id] || skipped.indexOf(id) >= 0) continue;
+    v = findVidById(id); if (v) return v;
+  }
+  for (i = 0; i < pool.length; i++) {
+    id = pool[i];
+    if (LS.done[id]) continue;
+    v = findVidById(id); if (v) return v;
+  }
   return null;
 }
-function trackContext(){
-  var lvls=activeLevels();
-  for (var i=0;i<lvls.length;i++){
-    var l=lvls[i];
-    if (l===0){
-      var w=withLink(blockSeq(0,'w'));
-      if (w.some(function(id){return !LS.done[id];})) return {level:0,block:'w',mode:'order'};
+function trackContext() {
+  var lvls = activeLevels().filter(function (l) { return levelState(l) === 'done'; });
+  var i, j, l, w, ids, pend, b, seq;
+  for (i = 0; i < lvls.length; i++) {
+    l = lvls[i];
+    if (l === 0) {
+      w = withLink(blockSeq(0, 'w'));
+      if (w.some(function (id) { return !LS.done[id]; })) return { level: 0, block: 'w', mode: 'order' };
       continue;
     }
-    if (seqMode(l)==='order'){
-      var ids=[];
-      levelSections(l).forEach(function(si){
-        orderList().forEach(function(id){ if(parseInt(id.split('.')[0],10)===si && !isGiftId(id)) ids.push(id); });
+    if (seqMode(l) === 'order') {
+      ids = [];
+      levelSections(l).forEach(function (si) {
+        orderList().forEach(function (id) {
+          if (parseInt(id.split('.')[0], 10) === si && !isGiftId(id)) ids.push(id);
+        });
       });
-      var pend=withLink(ids).filter(function(id){return !LS.done[id];});
-      if (pend.length) return {level:l,block:vidBlockById(pend[0]),mode:'order',ids:ids};
+      pend = withLink(ids).filter(function (id) { return !LS.done[id]; });
+      if (pend.length) return { level: l, block: vidBlockById(pend[0]), mode: 'order', ids: ids };
       continue;
     }
-    for (var j=0;j<B5.length;j++){
-      var b=B5[j], seq=withLink(blockSeq(l,b));
+    for (j = 0; j < B5.length; j++) {
+      b = B5[j];
+      seq = withLink(blockSeq(l, b));
       if (!seq.length) continue;
-      if (!allImpDone(seq)) return {level:l,block:b,mode:'blocks',ids:seq,index:j};
-      if (j===0 && seq.some(function(id){return !LS.done[id];})) return {level:l,block:b,mode:'blocks',ids:seq,index:j};
+      if (!allImpDone(seq)) return { level: l, block: b, mode: 'blocks', ids: seq, index: j };
+      if (j === 0 && seq.some(function (id) { return !LS.done[id]; })) return { level: l, block: b, mode: 'blocks', ids: seq, index: j };
     }
   }
   return null;
 }
-window.findNext = function(){
+window.findNext = function () {
   initializeOrder();
-  var ctx=trackContext();
-  if (ctx){ var got=pickFrom(ctx.ids || blockSeq(ctx.level,ctx.block)); if(got) return got; }
-  var rest=orderList().filter(function(id){return !isGiftId(id)&&!LS.done[id];});
-  var v=pickFrom(rest); if(v) return v;
+  var ctx = trackContext();
+  var got, rest, v;
+  if (ctx) {
+    got = pickFrom(ctx.ids || blockSeq(ctx.level, ctx.block));
+    if (got) return got;
+  }
+  rest = orderList().filter(function (id) { return !isGiftId(id) && !LS.done[id]; });
+  v = pickFrom(rest);
+  if (v) return v;
   return null;
 };
 
 /* ── §6 Noms de bloc per nivell ── */
-var BASE_BLOCKS={ ca:Object.assign({},UI.ca.blocks), es:Object.assign({},UI.es.blocks) };
-function blockNames(l,lang){
-  var out={ w:BASE_BLOCKS[lang].w, b:BASE_BLOCKS[lang].b };
-  B5.forEach(function(b){
-    var o=OV.bn&&OV.bn[lvKey(l)]&&OV.bn[lvKey(l)][b];
-    out[b]=(o&&o[lang])||BASE_BLOCKS[lang][b];
+var BASE_BLOCKS = { ca: Object.assign({}, UI.ca.blocks), es: Object.assign({}, UI.es.blocks) };
+function blockNames(l, lang) {
+  var out = { w: BASE_BLOCKS[lang].w, b: BASE_BLOCKS[lang].b };
+  B5.forEach(function (b) {
+    var o = OV.bn && OV.bn[lvKey(l)] && OV.bn[lvKey(l)][b];
+    out[b] = (o && o[lang]) || BASE_BLOCKS[lang][b];
   });
   return out;
 }
-['ca','es'].forEach(function(lang){
-  Object.defineProperty(UI[lang],'blocks',{ configurable:true, get:function(){ return blockNames(CTX,lang); } });
+['ca', 'es'].forEach(function (lang) {
+  Object.defineProperty(UI[lang], 'blocks', {
+    configurable: true,
+    get: function () { return blockNames(CTX, lang); }
+  });
 });
-window.blockName = function(b){ return blockNames(CTX,LS.lang)[b]||b; };
-function setBlockName(l,b,lang,val){
-  OV.bn=OV.bn||{}; var k=lvKey(l);
-  OV.bn[k]=OV.bn[k]||{}; OV.bn[k][b]=OV.bn[k][b]||{};
-  OV.bn[k][b][lang]=val;
+window.blockName = function (b) { return blockNames(CTX, LS.lang)[b] || b; };
+function setBlockName(l, b, lang, val) {
+  OV.bn = OV.bn || {};
+  var k = lvKey(l);
+  OV.bn[k] = OV.bn[k] || {};
+  OV.bn[k][b] = OV.bn[k][b] || {};
+  OV.bn[k][b][lang] = val;
 }
 
 /* ── §7 Correccions de bugs del nucli ── */
-window.moveVideo = function(id,destBlock,beforeId){
+window.moveVideo = function (id, destBlock, beforeId) {
   if (editModeOn) collectAll();
   harvest();
-  OV.bl=OV.bl||{};
-  if (destBlock) OV.bl[id]=destBlock;
+  OV.bl = OV.bl || {};
+  if (destBlock) OV.bl[id] = destBlock;
   initializeOrder();
-  var list=orderList();
-  var i=list.indexOf(id); if(i>=0) list.splice(i,1);
-  if (beforeId){ var j=list.indexOf(beforeId); if(j>=0) list.splice(j,0,id); else list.push(id); }
-  else list.push(id);
+  var list = orderList();
+  var i = list.indexOf(id);
+  if (i >= 0) list.splice(i, 1);
+  if (beforeId) {
+    var j = list.indexOf(beforeId);
+    if (j >= 0) list.splice(j, 0, id); else list.push(id);
+  } else {
+    list.push(id);
+  }
   render();
 };
 var _collectAll = window.collectAll;
-window.collectAll = function(){
-  document.querySelectorAll('[data-hi]:not([data-hk])').forEach(function(n){ n.removeAttribute('data-hi'); n.setAttribute('data-hi-skip','1'); });
+window.collectAll = function () {
+  document.querySelectorAll('[data-hi]:not([data-hk])').forEach(function (n) {
+    n.removeAttribute('data-hi');
+    n.setAttribute('data-hi-skip', '1');
+  });
   _collectAll();
-  document.querySelectorAll('[data-hi-skip]').forEach(function(n){ n.setAttribute('data-hi',n.getAttribute('data-hi-skip')); n.removeAttribute('data-hi-skip'); });
-  if (OV.h) Object.keys(OV.h).forEach(function(k){ delete OV.h[k]['undefined']; });
+  document.querySelectorAll('[data-hi-skip]').forEach(function (n) {
+    n.setAttribute('data-hi', n.getAttribute('data-hi-skip'));
+    n.removeAttribute('data-hi-skip');
+  });
+  if (OV.h) Object.keys(OV.h).forEach(function (k) { delete OV.h[k]['undefined']; });
   harvest();
 };
-document.addEventListener('keydown', function(e){
-  if (e.key!=='Escape') return;
-  var cm=$('cmModal'); if(cm&&cm.classList.contains('on')){ closeManager(); e.stopPropagation(); }
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  var cm = $('cmModal');
+  if (cm && cm.classList.contains('on')) { closeManager(); e.stopPropagation(); }
+  var vf = $('vfModal');
+  if (vf && vf.classList.contains('on')) { vf.classList.remove('on'); e.stopPropagation(); }
 }, true);
 
 /* ── §8 Gestor del curs ── */
-var mgrLevel=1;
-function openManager(){
-  if (currentUserRole()!=='admin') return;
+var mgrLevel = 1;
+function openManager() {
+  if (currentUserRole() !== 'admin') return;
   rebuild();
-  var m=$('cmModal');
-  if(!m){
-    m=el('div','cm-scrim'); m.id='cmModal';
-    m.innerHTML='<div class="cm-box"><div class="cm-head"><h3>'+(ca()?'Gestor del curs':'Gestor del curso')+
-      '</h3><button class="cm-x" id="cmClose">✕</button></div>'+
-      '<div class="cm-body"><aside class="cm-side" id="cmSide"></aside><section class="cm-main" id="cmMain"></section></div>'+
-      '<div class="cm-foot"><span class="cm-stat" id="cmStat"></span><button class="cm-btn pri" id="cmDone">'+(ca()?'Fet':'Hecho')+'</button></div></div>';
+  var m = $('cmModal');
+  if (!m) {
+    m = el('div', 'cm-scrim');
+    m.id = 'cmModal';
+    m.innerHTML = '<div class="cm-box">' +
+      '<div class="cm-head"><h3>' + (ca() ? 'Gestor del curs' : 'Gestor del curso') + '</h3>' +
+      '<button class="cm-x" id="cmClose">✕</button></div>' +
+      '<div class="cm-body"><aside class="cm-side" id="cmSide"></aside>' +
+      '<section class="cm-main" id="cmMain"></section></div>' +
+      '<div class="cm-foot"><span class="cm-stat" id="cmStat"></span>' +
+      '<button class="cm-btn pri" id="cmDone">' + (ca() ? 'Fet' : 'Hecho') + '</button></div></div>';
     document.body.appendChild(m);
-    $('cmClose').onclick=closeManager; $('cmDone').onclick=closeManager;
-    m.addEventListener('click',function(e){ if(e.target===m) closeManager(); });
+    $('cmClose').onclick = closeManager;
+    $('cmDone').onclick = closeManager;
+    m.addEventListener('click', function (e) { if (e.target === m) closeManager(); });
   }
   m.classList.add('on');
   paintManager();
 }
-function closeManager(){ var m=$('cmModal'); if(m)m.classList.remove('on'); rebuild(); render(); }
-function nvIndexOf(id){
-  var l=videoLevel(id), b=vidBlockById(id);
-  var arr=nvBucket(l,b,false); if(!arr) return null;
-  var si=parseInt(id.split('.')[0],10), ui=parseInt(id.split('.')[1],10), vi=parseInt(id.split('.')[3],10);
-  var i=vi-legacyCount(si,ui,b);
-  if (i<0||i>=arr.length) return null;
-  return {arr:arr,i:i,vid:arr[i]};
+function closeManager() {
+  var m = $('cmModal');
+  if (m) m.classList.remove('on');
+  rebuild();
+  render();
 }
-function paintManager(){
-  var side=$('cmSide'), main=$('cmMain');
-  side.innerHTML='<div class="cm-st">'+(ca()?'Nivells':'Niveles')+'</div>';
-  var total=0;
-  for (var l=0;l<=MAX_LVL;l++){
-    (function(l){
-      var n=0;
-      levelSections(l).forEach(function(si){
-        if(!D[si]||!D[si].u)return;
-        D[si].u.forEach(function(u){ B5.concat(['w']).forEach(function(b){ if(u[b]&&u[b].v) n+=u[b].v.filter(function(v){return v[li()];}).length; }); });
+function nvIndexOf(id) {
+  var l = videoLevel(id);
+  var b = vidBlockById(id);
+  var arr = nvBucket(l, b, false);
+  if (!arr) return null;
+  var si = parseInt(id.split('.')[0], 10);
+  var ui = parseInt(id.split('.')[1], 10);
+  var vi = parseInt(id.split('.')[3], 10);
+  var i = vi - legacyCount(si, ui, b);
+  if (i < 0 || i >= arr.length) return null;
+  return { arr: arr, i: i, vid: arr[i] };
+}
+function stateIcon(l) {
+  var s = levelState(l);
+  if (s === 'wip') return '🚧';
+  if (s === 'soon') return '⏳';
+  return '';
+}
+function paintManager() {
+  var side = $('cmSide');
+  var main = $('cmMain');
+  var l = mgrLevel;
+  var total = 0;
+  side.innerHTML = '<div class="cm-st">' + (ca() ? 'Nivells' : 'Niveles') + '</div>';
+  for (var x = 0; x <= MAX_LVL; x++) {
+    (function (lv) {
+      var n = 0;
+      levelSections(lv).forEach(function (si) {
+        if (!D[si] || !D[si].u) return;
+        D[si].u.forEach(function (u) {
+          B5.concat(['w']).forEach(function (b) {
+            if (u[b] && u[b].v) n += u[b].v.filter(function (v) { return v[li()]; }).length;
+          });
+        });
       });
-      total+=n;
-      var row=el('button','cm-lv'+(l===mgrLevel?' on':''));
-      row.innerHTML='<span class="cm-dot'+(levelActive(l)?' act':'')+'"></span><span class="cm-lvt">'+esc(levelName(l))+'</span><span class="cm-lvn">'+n+'</span>';
-      row.onclick=function(){ mgrLevel=l; paintManager(); };
+      total += n;
+      var sti = stateIcon(lv);
+      var row = el('button', 'cm-lv' + (lv === mgrLevel ? ' on' : ''));
+      row.innerHTML = '<span class="cm-dot' + (levelActive(lv) ? ' act' : '') + '"></span>' +
+        (sti ? '<span class="cm-sti">' + sti + '</span>' : '') +
+        '<span class="cm-lvt">' + esc(levelName(lv)) + '</span>' +
+        '<span class="cm-lvn">' + n + '</span>';
+      row.onclick = function () { mgrLevel = lv; paintManager(); };
       side.appendChild(row);
-    })(l);
+    })(x);
   }
-  $('cmStat').textContent=activeLevels().length+'/7 '+(ca()?'nivells actius':'niveles activos')+' · '+total+' '+(ca()?'vídeos':'vídeos');
-  var l=mgrLevel;
-  var h='<div class="cm-lvhead"><div class="cm-two">'+
-    '<label class="cm-fld"><span>'+(ca()?'Nom del nivell (CA)':'Nombre del nivel (CA)')+'</span><input data-lvnm="ca" value="'+esc((OV.lnm&&OV.lnm[lvKey(l)]&&OV.lnm[lvKey(l)].ca)||levelObj(l).n.ca)+'"></label>'+
-    '<label class="cm-fld"><span>'+(ca()?'Nom del nivell (ES)':'Nombre del nivel (ES)')+'</span><input data-lvnm="es" value="'+esc((OV.lnm&&OV.lnm[lvKey(l)]&&OV.lnm[lvKey(l)].es)||levelObj(l).n.es)+'"></label>'+
-    '</div><button class="cm-sw" id="cmActive" aria-pressed="'+levelActive(l)+'"><span class="cm-swt"></span>'+(ca()?'Publicat':'Publicado')+'</button></div>';
-  if (l>=1){
-    h+='<div class="cm-note">'+(ca()
-      ?'<b>Seqüenciació.</b> «Per blocs» no serveix el bloc següent fins que tots els ⭐ importants de l\'anterior estan fets. «Ordre del curs» respecta l\'itinerari entrellaçat.'
-      :'<b>Secuenciación.</b> «Por bloques» no sirve el bloque siguiente hasta que todos los ⭐ importantes del anterior están hechos. «Orden del curso» respeta el itinerario entrelazado.')+'</div>';
-    h+='<div class="cm-seg" id="cmSeq"><button data-seq="order"'+(seqMode(l)==='order'?' class="on"':'')+'>'+(ca()?'Ordre del curs':'Orden del curso')+'</button>'+
-       '<button data-seq="blocks"'+(seqMode(l)==='blocks'?' class="on"':'')+'>'+(ca()?'Per blocs':'Por bloques')+'</button></div>';
+  $('cmStat').textContent = activeLevels().length + '/7 ' +
+    (ca() ? 'nivells actius' : 'niveles activos') + ' · ' + total + ' ' + (ca() ? 'vídeos' : 'vídeos');
+
+  var stOn = { done: '', wip: '', soon: '' };
+  stOn[levelState(l)] = ' class="on"';
+  var stLbl = ca()
+    ? { done: '✔ Acabat', wip: '🚧 En construcció', soon: '⏳ Pròximament' }
+    : { done: '✔ Acabado', wip: '🚧 En construcción', soon: '⏳ Próximamente' };
+  var stHint = ca()
+    ? "L'estat només canvia la icona del llistat. La navegació la controla «Publicat»: un nivell publicat «En construcció» deixa veure el que ja hi ha penjat, però no entra al Seguiment Continuat fins que el marquis «Acabat»."
+    : "El estado solo cambia el icono del listado. La navegación la controla «Publicado»: un nivel publicado «En construcción» deja ver lo ya colgado, pero no entra en el Seguimiento Continuo hasta que lo marques «Acabado».";
+
+  var h = '<div class="cm-lvhead"><div class="cm-two">' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (CA)' : 'Nombre del nivel (CA)') + '</span>' +
+    '<input data-lvnm="ca" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].ca) || levelObj(l).n.ca) + '"></label>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (ES)' : 'Nombre del nivel (ES)') + '</span>' +
+    '<input data-lvnm="es" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].es) || levelObj(l).n.es) + '"></label>' +
+    '</div><button class="cm-sw" id="cmActive" aria-pressed="' + levelActive(l) + '"><span class="cm-swt"></span>' +
+    (ca() ? 'Publicat' : 'Publicado') + '</button></div>';
+  h += '<div class="cm-seg" id="cmState" style="margin-bottom:8px">' +
+    '<button data-st="done"' + stOn.done + '>' + stLbl.done + '</button>' +
+    '<button data-st="wip"' + stOn.wip + '>' + stLbl.wip + '</button>' +
+    '<button data-st="soon"' + stOn.soon + '>' + stLbl.soon + '</button></div>' +
+    '<div class="cm-hint" style="margin:-6px 0 12px">' + stHint + '</div>';
+
+  if (l >= 1) {
+    h += '<div class="cm-note">' + (ca()
+      ? "<b>Seqüenciació.</b> «Per blocs» no serveix el bloc següent fins que tots els ⭐ importants de l'anterior estan fets. «Ordre del curs» respecta l'itinerari entrellaçat."
+      : "<b>Secuenciación.</b> «Por bloques» no sirve el bloque siguiente hasta que todos los ⭐ importantes del anterior están hechos. «Orden del curso» respeta el itinerario entrelazado.") + '</div>';
+    h += '<div class="cm-seg" id="cmSeq">' +
+      '<button data-seq="order"' + (seqMode(l) === 'order' ? ' class="on"' : '') + '>' + (ca() ? 'Ordre del curs' : 'Orden del curso') + '</button>' +
+      '<button data-seq="blocks"' + (seqMode(l) === 'blocks' ? ' class="on"' : '') + '>' + (ca() ? 'Per blocs' : 'Por bloques') + '</button></div>';
   }
-  var blocks=(l===0)?['w']:B5;
-  blocks.forEach(function(b,bi){
-    var seq=(b==='w')?blockSeq(0,'w'):blockSeq(l,b);
-    h+='<div class="cm-blk"><div class="cm-bh">';
-    if (b!=='w'){
-      h+='<div class="cm-two">'+
-        '<label class="cm-fld"><span>'+(ca()?'Bloc':'Bloque')+' '+(bi+1)+' (CA)</span><input data-bn="'+b+'|ca" value="'+esc(blockNames(l,'ca')[b])+'"></label>'+
-        '<label class="cm-fld"><span>'+(ca()?'Bloc':'Bloque')+' '+(bi+1)+' (ES)</span><input data-bn="'+b+'|es" value="'+esc(blockNames(l,'es')[b])+'"></label></div>';
-    } else h+='<div class="cm-btitle">'+esc(blockNames(l,LS.lang).w)+'</div>';
-    var impN=seq.filter(isImp).length;
-    h+='<div class="cm-bmeta">'+seq.length+' '+(ca()?'vídeos':'vídeos')+' · '+impN+' ⭐</div></div><div class="cm-vlist">';
-    if(!seq.length) h+='<div class="cm-empty">'+(ca()?'Cap vídeo en aquest bloc.':'Ningún vídeo en este bloque.')+'</div>';
-    seq.forEach(function(id,i){
-      var v=findVidById(id); if(!v)return;
-      var isNew=!!nvIndexOf(id), link=!!driveSrc(v.v,id);
-      h+='<div class="cm-vrow"><span class="cm-vn">'+(i+1)+'</span><span class="cm-vt">'+esc(vidTitle(v.v,id))+'</span>'+
-         '<span class="cm-vl'+(link?' ok':'')+'">'+(link?'▶':'—')+'</span>'+
-         (isNew?'<span class="cm-vnew">'+(ca()?'nou':'nuevo')+'</span>':'')+
-         '<button class="cm-ib" data-imp="'+id+'">'+(isImp(id)?'⭐':'☆')+'</button>'+
-         '<button class="cm-ib" data-edit="'+id+'">✎</button>'+
-         '<button class="cm-ib" data-up="'+id+'"'+(i===0?' disabled':'')+'>↑</button>'+
-         '<button class="cm-ib" data-dn="'+id+'"'+(i===seq.length-1?' disabled':'')+'>↓</button>'+
-         (isNew?'<button class="cm-ib d" data-del="'+id+'">🗑</button>':'')+'</div>';
+
+  var blocks = (l === 0) ? ['w'] : B5;
+  blocks.forEach(function (b, bi) {
+    var seq = (b === 'w') ? blockSeq(0, 'w') : blockSeq(l, b);
+    h += '<div class="cm-blk"><div class="cm-bh">';
+    if (b !== 'w') {
+      h += '<div class="cm-two">' +
+        '<label class="cm-fld"><span>' + (ca() ? 'Bloc' : 'Bloque') + ' ' + (bi + 1) + ' (CA)</span>' +
+        '<input data-bn="' + b + '|ca" value="' + esc(blockNames(l, 'ca')[b]) + '"></label>' +
+        '<label class="cm-fld"><span>' + (ca() ? 'Bloc' : 'Bloque') + ' ' + (bi + 1) + ' (ES)</span>' +
+        '<input data-bn="' + b + '|es" value="' + esc(blockNames(l, 'es')[b]) + '"></label></div>';
+    } else {
+      h += '<div class="cm-btitle">' + esc(blockNames(l, LS.lang).w) + '</div>';
+    }
+    var impN = seq.filter(isImp).length;
+    h += '<div class="cm-bmeta">' + seq.length + ' ' + (ca() ? 'vídeos' : 'vídeos') + ' · ' + impN + ' ⭐</div></div><div class="cm-vlist">';
+    if (!seq.length) h += '<div class="cm-empty">' + (ca() ? 'Cap vídeo en aquest bloc.' : 'Ningún vídeo en este bloque.') + '</div>';
+    seq.forEach(function (id, i) {
+      var v = findVidById(id);
+      if (!v) return;
+      var isNew = !!nvIndexOf(id);
+      var link = !!driveSrc(v.v, id);
+      h += '<div class="cm-vrow">' +
+        '<span class="cm-vn">' + (i + 1) + '</span>' +
+        '<span class="cm-vt">' + esc(vidTitle(v.v, id)) + '</span>' +
+        '<span class="cm-vl' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
+        (isNew ? '<span class="cm-vnew">' + (ca() ? 'nou' : 'nuevo') + '</span>' : '') +
+        '<button class="cm-ib" data-imp="' + id + '">' + (isImp(id) ? '⭐' : '☆') + '</button>' +
+        '<button class="cm-ib" data-edit="' + id + '">✎</button>' +
+        '<button class="cm-ib" data-up="' + id + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button class="cm-ib" data-dn="' + id + '"' + (i === seq.length - 1 ? ' disabled' : '') + '>↓</button>' +
+        (isNew ? '<button class="cm-ib d" data-del="' + id + '">🗑</button>' : '') +
+        '</div>';
     });
-    if (b!=='w') h+='<button class="cm-add" data-add="'+l+'|'+b+'">＋ '+(ca()?'Afegir vídeo':'Añadir vídeo')+'</button>';
-    h+='</div></div>';
+    if (b !== 'w') h += '<button class="cm-add" data-add="' + l + '|' + b + '">＋ ' + (ca() ? 'Afegir vídeo' : 'Añadir vídeo') + '</button>';
+    h += '</div></div>';
   });
-  main.innerHTML=h;
-  main.querySelectorAll('[data-lvnm]').forEach(function(inp){ inp.onchange=function(){
-    OV.lnm=OV.lnm||{}; var k=lvKey(l); OV.lnm[k]=OV.lnm[k]||{};
-    OV.lnm[k][inp.dataset.lvnm]=inp.value.trim()||levelObj(l).n[inp.dataset.lvnm];
-    rebuild(); paintManager(); }; });
-  $('cmActive').onclick=function(){ OV.lv=OV.lv||{}; OV.lv[lvKey(l)]=!levelActive(l); rebuild(); paintManager(); showToast((levelActive(l)?'🔓 ':'🔒 ')+levelName(l)); };
-  var seg=$('cmSeq');
-  if(seg) seg.querySelectorAll('[data-seq]').forEach(function(btn){ btn.onclick=function(){ OV.seq=OV.seq||{}; OV.seq[lvKey(l)]=btn.dataset.seq; paintManager(); }; });
-  main.querySelectorAll('[data-bn]').forEach(function(inp){ inp.onchange=function(){
-    var p=inp.dataset.bn.split('|'); setBlockName(l,p[0],p[1],inp.value.trim()||BASE_BLOCKS[p[1]][p[0]]); paintManager(); }; });
-  main.querySelectorAll('[data-add]').forEach(function(btn){ btn.onclick=function(){ var p=btn.dataset.add.split('|'); openVideoForm(null,+p[0],p[1]); }; });
-  main.querySelectorAll('[data-edit]').forEach(function(btn){ btn.onclick=function(){ var id=btn.dataset.edit; openVideoForm(id,videoLevel(id),vidBlockById(id)); }; });
-  main.querySelectorAll('[data-imp]').forEach(function(btn){ btn.onclick=function(){
-    var id=btn.dataset.imp, nv=nvIndexOf(id);
-    var nx=getVideoImportance(id)==='important'?'optional':'important';
-    if(nv){ nv.vid.imp[LS.lang]=nx; hydrate(); } else { OV.imp=OV.imp||{}; OV.imp[id+':'+LS.lang]=nx; }
-    paintManager(); }; });
-  main.querySelectorAll('[data-up]').forEach(function(btn){ btn.onclick=function(){ reorderVideo(btn.dataset.up,getVideoOrder(btn.dataset.up)-1); paintManager(); }; });
-  main.querySelectorAll('[data-dn]').forEach(function(btn){ btn.onclick=function(){ reorderVideo(btn.dataset.dn,getVideoOrder(btn.dataset.dn)+1); paintManager(); }; });
-  main.querySelectorAll('[data-del]').forEach(function(btn){ btn.onclick=function(){
-    var id=btn.dataset.del, nv=nvIndexOf(id); if(!nv)return;
-    if(!confirm(ca()?'Eliminar aquest vídeo?':'¿Eliminar este vídeo?'))return;
-    nv.arr.splice(nv.i,1); rebuild(); paintManager(); showToast(ca()?'🗑 Vídeo eliminat':'🗑 Vídeo eliminado'); }; });
+  main.innerHTML = h;
+
+  main.querySelectorAll('[data-lvnm]').forEach(function (inp) {
+    inp.onchange = function () {
+      OV.lnm = OV.lnm || {};
+      var k = lvKey(l);
+      OV.lnm[k] = OV.lnm[k] || {};
+      OV.lnm[k][inp.dataset.lvnm] = inp.value.trim() || levelObj(l).n[inp.dataset.lvnm];
+      rebuild();
+      paintManager();
+    };
+  });
+  $('cmActive').onclick = function () {
+    OV.lv = OV.lv || {};
+    OV.lv[lvKey(l)] = !levelActive(l);
+    rebuild();
+    paintManager();
+    showToast((levelActive(l) ? '🔓 ' : '🔒 ') + levelName(l));
+  };
+  var stseg = $('cmState');
+  if (stseg) stseg.querySelectorAll('[data-st]').forEach(function (btn) {
+    btn.onclick = function () {
+      OV.lst = OV.lst || {};
+      OV.lst[lvKey(l)] = btn.dataset.st;
+      var ico = '✔ ';
+      if (btn.dataset.st === 'wip') ico = '🚧 ';
+      if (btn.dataset.st === 'soon') ico = '⏳ ';
+      rebuild();
+      paintManager();
+      showToast(ico + levelName(l));
+    };
+  });
+  var seg = $('cmSeq');
+  if (seg) seg.querySelectorAll('[data-seq]').forEach(function (btn) {
+    btn.onclick = function () {
+      OV.seq = OV.seq || {};
+      OV.seq[lvKey(l)] = btn.dataset.seq;
+      paintManager();
+    };
+  });
+  main.querySelectorAll('[data-bn]').forEach(function (inp) {
+    inp.onchange = function () {
+      var p = inp.dataset.bn.split('|');
+      setBlockName(l, p[0], p[1], inp.value.trim() || BASE_BLOCKS[p[1]][p[0]]);
+      paintManager();
+    };
+  });
+  main.querySelectorAll('[data-add]').forEach(function (btn) {
+    btn.onclick = function () {
+      var p = btn.dataset.add.split('|');
+      openVideoForm(null, parseInt(p[0], 10), p[1]);
+    };
+  });
+  main.querySelectorAll('[data-edit]').forEach(function (btn) {
+    btn.onclick = function () {
+      var id = btn.dataset.edit;
+      openVideoForm(id, videoLevel(id), vidBlockById(id));
+    };
+  });
+  main.querySelectorAll('[data-imp]').forEach(function (btn) {
+    btn.onclick = function () {
+      var id = btn.dataset.imp;
+      var nv = nvIndexOf(id);
+      var nx = (getVideoImportance(id) === 'important') ? 'optional' : 'important';
+      if (nv) { nv.vid.imp[LS.lang] = nx; hydrate(); }
+      else { OV.imp = OV.imp || {}; OV.imp[id + ':' + LS.lang] = nx; }
+      paintManager();
+    };
+  });
+  main.querySelectorAll('[data-up]').forEach(function (btn) {
+    btn.onclick = function () {
+      reorderVideo(btn.dataset.up, getVideoOrder(btn.dataset.up) - 1);
+      paintManager();
+    };
+  });
+  main.querySelectorAll('[data-dn]').forEach(function (btn) {
+    btn.onclick = function () {
+      reorderVideo(btn.dataset.dn, getVideoOrder(btn.dataset.dn) + 1);
+      paintManager();
+    };
+  });
+  main.querySelectorAll('[data-del]').forEach(function (btn) {
+    btn.onclick = function () {
+      var id = btn.dataset.del;
+      var nv = nvIndexOf(id);
+      if (!nv) return;
+      if (!confirm(ca() ? 'Eliminar aquest vídeo?' : '¿Eliminar este vídeo?')) return;
+      nv.arr.splice(nv.i, 1);
+      rebuild();
+      paintManager();
+      showToast(ca() ? '🗑 Vídeo eliminat' : '🗑 Vídeo eliminado');
+    };
+  });
 }
 
 /* ── §9 Formulari de vídeo ── */
-var vfCtx=null;
-function openVideoForm(id,l,b){
-  var nv=id?nvIndexOf(id):null, v=id?findVidById(id):null;
-  var data=nv?nv.vid:{
-    t:{ca:(v?(OV.t[id]&&OV.t[id].ca)||v.v[0]:''),es:(v?(OV.t[id]&&OV.t[id].es)||v.v[1]:'')},
-    d:{ca:(OV.d[id]&&OV.d[id].ca)||'',es:(OV.d[id]&&OV.d[id].es)||''},
-    l:{ca:(OV.l[id]&&OV.l[id].ca)||'',es:(OV.l[id]&&OV.l[id].es)||''},
-    imp:{ca:getVideoImportance(id),es:getVideoImportance(id)}
+var vfCtx = null;
+function openVideoForm(id, l, b) {
+  var nv = id ? nvIndexOf(id) : null;
+  var v = id ? findVidById(id) : null;
+  var data;
+  if (nv) data = nv.vid;
+  else data = {
+    t: { ca: (v ? (OV.t[id] && OV.t[id].ca) || v.v[0] : ''), es: (v ? (OV.t[id] && OV.t[id].es) || v.v[1] : '') },
+    d: { ca: (OV.d[id] && OV.d[id].ca) || '', es: (OV.d[id] && OV.d[id].es) || '' },
+    l: { ca: (OV.l[id] && OV.l[id].ca) || '', es: (OV.l[id] && OV.l[id].es) || '' },
+    imp: { ca: getVideoImportance(id), es: getVideoImportance(id) }
   };
-  vfCtx={id:id,level:l,block:b,nv:nv,imp:{ca:data.imp.ca,es:data.imp.es}};
-  var m=$('vfModal'); if(!m){ m=el('div','cm-scrim'); m.id='vfModal'; document.body.appendChild(m); }
-  var names=blockNames(l,LS.lang);
-  m.innerHTML='<div class="cm-box sm"><div class="cm-head"><h3>'+(id?(ca()?'Edita el vídeo':'Edita el vídeo'):(ca()?'Nou vídeo':'Nuevo vídeo'))+
-    '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">'+
-    '<div class="cm-note"><b>'+esc(levelName(l))+'</b> → <b>'+esc(names[b])+'</b></div>'+
-    '<div class="cm-two"><label class="cm-fld"><span>'+(ca()?'Títol (CA)':'Título (CA)')+'</span><input id="vfTca" value="'+esc(data.t.ca)+'"></label>'+
-    '<label class="cm-fld"><span>'+(ca()?'Títol (ES)':'Título (ES)')+'</span><input id="vfTes" value="'+esc(data.t.es)+'"></label></div>'+
-    '<div class="cm-two"><label class="cm-fld"><span>'+(ca()?'Descripció (CA)':'Descripción (CA)')+'</span><textarea id="vfDca">'+esc(data.d.ca)+'</textarea></label>'+
-    '<label class="cm-fld"><span>'+(ca()?'Descripció (ES)':'Descripción (ES)')+'</span><textarea id="vfDes">'+esc(data.d.es)+'</textarea></label></div>'+
-    '<div class="cm-two"><label class="cm-fld"><span>Drive (CA)</span><input id="vfLca" value="'+esc(data.l.ca)+'" placeholder="ID o URL"></label>'+
-    '<label class="cm-fld"><span>Drive (ES)</span><input id="vfLes" value="'+esc(data.l.es)+'" placeholder="ID o URL"></label></div>'+
-    '<div class="cm-fld"><span>'+(ca()?'Pes dins del bloc':'Peso dentro del bloque')+'</span><div class="cm-seg" id="vfImp">'+
-    '<button data-i="important"'+(vfCtx.imp[LS.lang]==='important'?' class="on"':'')+'>⭐ '+(ca()?'Important':'Importante')+'</button>'+
-    '<button data-i="optional"'+(vfCtx.imp[LS.lang]==='optional'?' class="on"':'')+'>☆ '+(ca()?'Opcional':'Opcional')+'</button></div>'+
-    '<div class="cm-hint">'+(ca()?'Els ⭐ importants bloquegen el bloc següent fins que estiguin fets.':'Los ⭐ importantes bloquean el bloque siguiente hasta que estén hechos.')+'</div></div>'+
-    '</div><div class="cm-foot"><button class="cm-btn" id="vfCancel">'+(ca()?'Cancel·la':'Cancelar')+'</button>'+
-    '<button class="cm-btn pri" id="vfSave">'+(ca()?'Desa':'Guardar')+'</button></div></div>';
+  vfCtx = { id: id, level: l, block: b, nv: nv, imp: { ca: data.imp.ca, es: data.imp.es } };
+  var m = $('vfModal');
+  if (!m) { m = el('div', 'cm-scrim'); m.id = 'vfModal'; document.body.appendChild(m); }
+  var names = blockNames(l, LS.lang);
+  m.innerHTML = '<div class="cm-box sm"><div class="cm-head"><h3>' +
+    (id ? (ca() ? 'Edita el vídeo' : 'Edita el vídeo') : (ca() ? 'Nou vídeo' : 'Nuevo vídeo')) +
+    '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">' +
+    '<div class="cm-note"><b>' + esc(levelName(l)) + '</b> → <b>' + esc(names[b]) + '</b></div>' +
+    '<div class="cm-two"><label class="cm-fld"><span>' + (ca() ? 'Títol (CA)' : 'Título (CA)') + '</span><input id="vfTca" value="' + esc(data.t.ca) + '"></label>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Títol (ES)' : 'Título (ES)') + '</span><input id="vfTes" value="' + esc(data.t.es) + '"></label></div>' +
+    '<div class="cm-two"><label class="cm-fld"><span>' + (ca() ? 'Descripció (CA)' : 'Descripción (CA)') + '</span><textarea id="vfDca">' + esc(data.d.ca) + '</textarea></label>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Descripció (ES)' : 'Descripción (ES)') + '</span><textarea id="vfDes">' + esc(data.d.es) + '</textarea></label></div>' +
+    '<div class="cm-two"><label class="cm-fld"><span>Drive (CA)</span><input id="vfLca" value="' + esc(data.l.ca) + '" placeholder="ID o URL"></label>' +
+    '<label class="cm-fld"><span>Drive (ES)</span><input id="vfLes" value="' + esc(data.l.es) + '" placeholder="ID o URL"></label></div>' +
+    '<div class="cm-fld"><span>' + (ca() ? 'Pes dins del bloc' : 'Peso dentro del bloque') + '</span><div class="cm-seg" id="vfImp">' +
+    '<button data-i="important"' + (vfCtx.imp[LS.lang] === 'important' ? ' class="on"' : '') + '>⭐ ' + (ca() ? 'Important' : 'Importante') + '</button>' +
+    '<button data-i="optional"' + (vfCtx.imp[LS.lang] === 'optional' ? ' class="on"' : '') + '>☆ ' + (ca() ? 'Opcional' : 'Opcional') + '</button></div>' +
+    '<div class="cm-hint">' + (ca() ? 'Els ⭐ importants bloquegen el bloc següent fins que estiguin fets.' : 'Los ⭐ importantes bloquean el bloque siguiente hasta que estén hechos.') + '</div></div>' +
+    '</div><div class="cm-foot"><button class="cm-btn" id="vfCancel">' + (ca() ? 'Cancel·la' : 'Cancelar') + '</button>' +
+    '<button class="cm-btn pri" id="vfSave">' + (ca() ? 'Desa' : 'Guardar') + '</button></div></div>';
   m.classList.add('on');
-  $('vfX').onclick=$('vfCancel').onclick=function(){ m.classList.remove('on'); };
-  m.querySelectorAll('#vfImp button').forEach(function(btn){ btn.onclick=function(){
-    vfCtx.imp[LS.lang]=btn.dataset.i;
-    m.querySelectorAll('#vfImp button').forEach(function(x){ x.classList.toggle('on',x===btn); }); }; });
-  $('vfSave').onclick=function(){
-    var tca=$('vfTca').value.trim(), tes=$('vfTes').value.trim();
-    if(!tca&&!tes){ $('vfTca').focus(); return; }
-    var rec={ t:{ca:tca||tes,es:tes||tca}, d:{ca:$('vfDca').value.trim(),es:$('vfDes').value.trim()},
-              l:{ca:parseDriveId($('vfLca').value)||'',es:parseDriveId($('vfLes').value)||''},
-              imp:{ca:vfCtx.imp.ca,es:vfCtx.imp.es} };
-    if (vfCtx.nv) Object.assign(vfCtx.nv.vid,rec);
-    else if (vfCtx.id){ OV.t[vfCtx.id]=rec.t; OV.d[vfCtx.id]=rec.d; if(rec.l.ca||rec.l.es)OV.l[vfCtx.id]=rec.l; OV.imp[vfCtx.id+':ca']=rec.imp.ca; OV.imp[vfCtx.id+':es']=rec.imp.es; }
-    else nvBucket(vfCtx.level,vfCtx.block,true).push(rec);
-    m.classList.remove('on'); rebuild(); paintManager();
-    showToast(vfCtx.id?(ca()?'💾 Desat':'💾 Guardado'):(ca()?'＋ Vídeo afegit':'＋ Vídeo añadido'));
+  $('vfX').onclick = function () { m.classList.remove('on'); };
+  $('vfCancel').onclick = function () { m.classList.remove('on'); };
+  m.querySelectorAll('#vfImp button').forEach(function (btn) {
+    btn.onclick = function () {
+      vfCtx.imp[LS.lang] = btn.dataset.i;
+      m.querySelectorAll('#vfImp button').forEach(function (x2) { x2.classList.toggle('on', x2 === btn); });
+    };
+  });
+  $('vfSave').onclick = function () {
+    var tca = $('vfTca').value.trim();
+    var tes = $('vfTes').value.trim();
+    if (!tca && !tes) { $('vfTca').focus(); return; }
+    var rec = {
+      t: { ca: tca || tes, es: tes || tca },
+      d: { ca: $('vfDca').value.trim(), es: $('vfDes').value.trim() },
+      l: { ca: parseDriveId($('vfLca').value) || '', es: parseDriveId($('vfLes').value) || '' },
+      imp: { ca: vfCtx.imp.ca, es: vfCtx.imp.es }
+    };
+    if (vfCtx.nv) {
+      vfCtx.nv.vid.t = rec.t; vfCtx.nv.vid.d = rec.d; vfCtx.nv.vid.l = rec.l; vfCtx.nv.vid.imp = rec.imp;
+    } else if (vfCtx.id) {
+      OV.t[vfCtx.id] = rec.t;
+      OV.d[vfCtx.id] = rec.d;
+      if (rec.l.ca || rec.l.es) OV.l[vfCtx.id] = rec.l;
+      OV.imp[vfCtx.id + ':ca'] = rec.imp.ca;
+      OV.imp[vfCtx.id + ':es'] = rec.imp.es;
+    } else {
+      nvBucket(vfCtx.level, vfCtx.block, true).push(rec);
+    }
+    m.classList.remove('on');
+    rebuild();
+    paintManager();
+    showToast(vfCtx.id ? (ca() ? '💾 Desat' : '💾 Guardado') : (ca() ? '＋ Vídeo afegit' : '＋ Vídeo añadido'));
   };
-  setTimeout(function(){ $('vfTca').focus(); },50);
+  setTimeout(function () { $('vfTca').focus(); }, 50);
 }
 
 /* ── §10 Navegació Lliure (filtrada per nivell) ── */
-window.renderFree = function(){
-  if (autoLevelPending){ smartFreeLevel(); autoLevelPending=false; }
-  CTX=freeLevel;
-  var fv=$('freeView'); fv.innerHTML='';
-  var lr=el('div','lvls'); lr.appendChild(buildLevelPicker());
-  var sb=el('div','searchbox','<span class="sb-ico">'+ICON_SEARCH+'</span><input id="freeSearch" type="search" placeholder="'+(ca()?'Cerca un vídeo d\'aquest nivell…':'Busca un vídeo de este nivel…')+'" value="'+esc(freeQuery)+'">');
-  lr.appendChild(sb); fv.appendChild(lr);
-  setTimeout(function(){ var inp=$('freeSearch'); if(!inp)return;
-    inp.oninput=function(){ freeQuery=this.value; filterFreeGrid(this.value); };
-    if(freeQuery) filterFreeGrid(freeQuery); },0);
-  if (!levelActive(freeLevel)&&!editModeOn){
-    fv.appendChild(el('div','wipbox','<div class="wipicon">⏳</div><h3>'+esc(levelName(freeLevel))+'</h3><p>'+t().pendingMsg+'</p>'));
+window.renderFree = function () {
+  if (autoLevelPending) { smartFreeLevel(); autoLevelPending = false; }
+  CTX = freeLevel;
+  var fv = $('freeView');
+  fv.innerHTML = '';
+  var lr = el('div', 'lvls');
+  lr.appendChild(buildLevelPicker());
+  var sb = el('div', 'searchbox',
+    '<span class="sb-ico">' + ICON_SEARCH + '</span><input id="freeSearch" type="search" placeholder="' +
+    (ca() ? "Cerca un vídeo d'aquest nivell…" : 'Busca un vídeo de este nivel…') + '" value="' + esc(freeQuery) + '">');
+  lr.appendChild(sb);
+  fv.appendChild(lr);
+  setTimeout(function () {
+    var inp = $('freeSearch');
+    if (!inp) return;
+    inp.oninput = function () { freeQuery = this.value; filterFreeGrid(this.value); };
+    if (freeQuery) filterFreeGrid(freeQuery);
+  }, 0);
+
+  if (!levelActive(freeLevel) && !editModeOn) {
+    var stt = levelState(freeLevel);
+    var wIco = (stt === 'wip') ? '🚧' : '⏳';
+    var wTit = (stt === 'wip') ? t().wipTitle : levelName(freeLevel);
+    var wMsg = (stt === 'wip') ? t().wipMsg : t().pendingMsg;
+    fv.appendChild(el('div', 'wipbox',
+      '<div class="wipicon">' + wIco + '</div><h3>' + esc(wTit) + '</h3><p>' + esc(wMsg) + '</p>'));
     return;
   }
-  var secs=levelSections(freeLevel);
-  if (freeLevel!==0){
-    var col=el('div','blkcol'), names=blockNames(freeLevel,LS.lang);
-    B5.concat(['b']).forEach(function(b){
-      var btn=el('button'); btn.dataset.b=b; if(b===freeBlock)btn.className='on';
-      btn.onclick=function(){ freeBlock=b; freeQuery=''; allVideosLoaded=false; render(); };
-      if(b==='b'){
-        var n=getBookmarks().filter(function(id){var v=findVidById(id);return v&&!!driveSrc(v.v,id);}).length;
-        btn.innerHTML='<span class="bname">'+names.b+'</span><span class="bmini"><span class="bico">🔖</span><span class="bcount">'+n+'</span></span>';
+
+  var secs = levelSections(freeLevel);
+  if (freeLevel !== 0) {
+    var col = el('div', 'blkcol');
+    var names = blockNames(freeLevel, LS.lang);
+    B5.concat(['b']).forEach(function (b) {
+      var btn = el('button');
+      btn.dataset.b = b;
+      if (b === freeBlock) btn.className = 'on';
+      btn.onclick = function () { freeBlock = b; freeQuery = ''; allVideosLoaded = false; render(); };
+      if (b === 'b') {
+        var n = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); }).length;
+        btn.innerHTML = '<span class="bname">' + names.b + '</span><span class="bmini"><span class="bico">🔖</span><span class="bcount">' + n + '</span></span>';
       } else {
-        var ids=withLink(blockSeq(freeLevel,b));
-        var p=ids.length?Math.round(ids.filter(function(id){return LS.done[id];}).length/ids.length*100):0;
-        var mini='<svg width="22" height="22" viewBox="0 0 24 24" style="flex:none"><circle cx="12" cy="12" r="11" fill="#242a35"/>'+pieSlice(12,12,11,p,p===100?'#39d98a':BC[b])+'</svg>';
-        btn.innerHTML='<span class="bname">'+esc(names[b])+'</span><span class="bmini">'+(p<100?mini+'<span class="bpct">'+p+'%</span>':'<span class="bpct" style="color:#39d98a">✔</span>')+'</span>';
+        var ids = withLink(blockSeq(freeLevel, b));
+        var doneN = ids.filter(function (id) { return LS.done[id]; }).length;
+        var p = ids.length ? Math.round(doneN / ids.length * 100) : 0;
+        var mini = '<svg width="22" height="22" viewBox="0 0 24 24" style="flex:none"><circle cx="12" cy="12" r="11" fill="#242a35"/>' + pieSlice(12, 12, 11, p, (p === 100 ? '#39d98a' : BC[b])) + '</svg>';
+        btn.innerHTML = '<span class="bname">' + esc(names[b]) + '</span><span class="bmini">' +
+          (p < 100 ? mini + '<span class="bpct">' + p + '%</span>' : '<span class="bpct" style="color:#39d98a">✔</span>') + '</span>';
       }
       col.appendChild(btn);
     });
     fv.appendChild(col);
   }
-  if (freeBlock==='b'&&!freeQuery){
-    var gb=el('div','vgrid');
-    var bm=getBookmarks().filter(function(id){var v=findVidById(id);return v&&!!driveSrc(v.v,id);});
-    if(!bm.length) gb.appendChild(el('div','','<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mut)"><div style="font-size:48px;opacity:.5">🔖</div><p>'+(ca()?'Encara no has marcat cap vídeo per repassar.':'Aún no has marcado ningún vídeo para repasar.')+'</p></div>'));
-    else bm.forEach(function(id){var v=findVidById(id); if(v) gb.appendChild(makeVid(v.v,id,false,levelName(videoLevel(id))));});
-    fv.appendChild(gb); return;
+
+  if (freeBlock === 'b' && !freeQuery) {
+    var gb = el('div', 'vgrid');
+    var bm = getBookmarks().filter(function (id) { var v = findVidById(id); return v && !!driveSrc(v.v, id); });
+    if (!bm.length) {
+      gb.appendChild(el('div', '', '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mut)"><div style="font-size:48px;opacity:.5">🔖</div><p>' +
+        (ca() ? 'Encara no has marcat cap vídeo per repassar.' : 'Aún no has marcado ningún vídeo para repasar.') + '</p></div>'));
+    } else {
+      bm.forEach(function (id) {
+        var v = findVidById(id);
+        if (v) gb.appendChild(makeVid(v.v, id, false, levelName(videoLevel(id))));
+      });
+    }
+    fv.appendChild(gb);
+    return;
   }
-  var head=el('div','blkhead','<span class="blkt">'+esc(blockNames(freeLevel,LS.lang)[freeBlock]||'')+'</span>');
-  if (editModeOn&&freeLevel!==0){
-    var add=el('button','adjb','＋ '+(ca()?'Afegir vídeo':'Añadir vídeo')); add.style.marginLeft='auto';
-    add.onclick=function(){ openVideoForm(null,freeLevel,freeBlock); }; head.appendChild(add);
+
+  var head = el('div', 'blkhead', '<span class="blkt">' + esc(blockNames(freeLevel, LS.lang)[freeBlock] || '') + '</span>');
+  if (editModeOn && freeLevel !== 0) {
+    var add = el('button', 'adjb', '＋ ' + (ca() ? 'Afegir vídeo' : 'Añadir vídeo'));
+    add.style.marginLeft = 'auto';
+    add.onclick = function () { openVideoForm(null, freeLevel, freeBlock); };
+    head.appendChild(add);
   }
-  var docs=[],dseen={},firstSi=secs[0],targetUi=0;
-  secs.forEach(function(si){ if(!D[si]||!D[si].u)return;
-    D[si].u.forEach(function(u,ui){ var bl=u[freeBlock]; if(bl&&bl.d) bl.d.forEach(function(dc){ var k=dc[li()]; if(dseen[k])return; dseen[k]=1; docs.push(dc); if(!targetUi)targetUi=ui; }); }); });
-  if (docs.length){ var ap=mkAdj(docs,firstSi,targetUi,freeBlock); head.appendChild(ap.btn); fv.appendChild(head); fv.appendChild(ap.box); }
-  else fv.appendChild(head);
-  var ids=(freeQuery||allVideosLoaded)
-    ? (function(){ var o=[]; secs.forEach(function(si){ orderList().forEach(function(id){ if(parseInt(id.split('.')[0],10)===si&&!isGiftId(id)) o.push(id); }); }); return o; })()
-    : blockSeq(freeLevel,freeBlock);
-  var grid=el('div','vgrid'); grid.dataset.block=freeBlock;
-  var shown=0;
-  ids.forEach(function(id){
-    var x=findVidById(id); if(!x||!x.v[li()])return;
-    var card=makeVid(x.v,id,false,secName(x.si));
-    card.dataset.block=vidBlockById(id);
-    var vt=card.querySelector('.vt'); if(vt)vt.dataset.origTitle=vt.textContent;
-    if(!freeQuery&&vidBlockById(id)!==freeBlock) card.style.display='none'; else shown++;
-    if(editModeOn){ var nv=nvIndexOf(id);
-      if(nv){ var del=el('button','vid-del-btn','🗑️');
-        del.onclick=function(e){ e.stopPropagation(); if(!confirm(ca()?'Eliminar aquest vídeo?':'¿Eliminar este vídeo?'))return; nv.arr.splice(nv.i,1); rebuild(); render(); };
-        var host=card.querySelector('.acts'); if(host)host.appendChild(del); } }
+  var docs = [], dseen = {}, firstSi = secs[0], targetUi = 0;
+  secs.forEach(function (si) {
+    if (!D[si] || !D[si].u) return;
+    D[si].u.forEach(function (u, ui) {
+      var bl = u[freeBlock];
+      if (bl && bl.d) bl.d.forEach(function (dc) {
+        var k = dc[li()];
+        if (dseen[k]) return;
+        dseen[k] = 1;
+        docs.push(dc);
+        if (!targetUi) targetUi = ui;
+      });
+    });
+  });
+  if (docs.length) {
+    var ap = mkAdj(docs, firstSi, targetUi, freeBlock);
+    head.appendChild(ap.btn);
+    fv.appendChild(head);
+    fv.appendChild(ap.box);
+  } else {
+    fv.appendChild(head);
+  }
+
+  var ids2;
+  if (freeQuery || allVideosLoaded) {
+    ids2 = [];
+    secs.forEach(function (si) {
+      orderList().forEach(function (id) {
+        if (parseInt(id.split('.')[0], 10) === si && !isGiftId(id)) ids2.push(id);
+      });
+    });
+  } else {
+    ids2 = blockSeq(freeLevel, freeBlock);
+  }
+  var grid = el('div', 'vgrid');
+  grid.dataset.block = freeBlock;
+  var shown = 0;
+  ids2.forEach(function (id) {
+    var x = findVidById(id);
+    if (!x || !x.v[li()]) return;
+    var card = makeVid(x.v, id, false, secName(x.si));
+    card.dataset.block = vidBlockById(id);
+    var vt = card.querySelector('.vt');
+    if (vt) vt.dataset.origTitle = vt.textContent;
+    if (!freeQuery && vidBlockById(id) !== freeBlock) card.style.display = 'none';
+    else shown++;
+    if (editModeOn) {
+      var nv = nvIndexOf(id);
+      if (nv) {
+        var del = el('button', 'vid-del-btn', '🗑️');
+        del.onclick = function (e) {
+          e.stopPropagation();
+          if (!confirm(ca() ? 'Eliminar aquest vídeo?' : '¿Eliminar este vídeo?')) return;
+          nv.arr.splice(nv.i, 1);
+          rebuild();
+          render();
+        };
+        var host = card.querySelector('.acts');
+        if (host) host.appendChild(del);
+      }
+    }
     grid.appendChild(card);
   });
-  if(!shown) grid.appendChild(el('div','','<div style="grid-column:1/-1;text-align:center;padding:34px;color:var(--mut)">'+(ca()?'Cap vídeo en aquest bloc encara.':'Ningún vídeo en este bloque todavía.')+'</div>'));
+  if (!shown) {
+    grid.appendChild(el('div', '', '<div style="grid-column:1/-1;text-align:center;padding:34px;color:var(--mut)">' +
+      (ca() ? 'Cap vídeo en aquest bloc encara.' : 'Ningún vídeo en este bloque todavía.') + '</div>'));
+  }
   fv.appendChild(grid);
 };
 
-/* ── §11 Seguiment Continuat (donuts per nivell) ── */
-var _renderTrack=window.renderTrack;
-window.renderTrack=function(){
-  var ctx=trackContext();
-  CTX=ctx?ctx.level:(activeLevels().slice(-1)[0]||1);
+/* ── §11 Seguiment Continuat: donuts per nivell ── */
+var _renderTrack = window.renderTrack;
+window.renderTrack = function () {
+  var ctx = trackContext();
+  CTX = ctx ? ctx.level : (activeLevels().slice(-1)[0] || 1);
   _renderTrack();
-  var tv=$('trackView'), dw=tv.querySelector('.donuts');
-  if(!dw||CTX===0)return;
-  var names=blockNames(CTX,LS.lang), openIdx=B5.length;
-  for(var j=0;j<B5.length;j++){ var s=withLink(blockSeq(CTX,B5[j])); if(s.length&&!allImpDone(s)){openIdx=j;break;} }
-  var h='',total=0,totalDone=0;
-  B5.forEach(function(b,j){
-    var ids=withLink(blockSeq(CTX,b)), imp=ids.filter(isImp);
-    var d=imp.filter(function(id){return LS.done[id];}).length;
-    var p=!ids.length?0:(imp.length?Math.round(d/imp.length*100):100);
-    total+=imp.length; totalDone+=d;
-    var locked=seqMode(CTX)==='blocks'&&j>openIdx;
-    h+='<div class="donut'+((!ids.length||locked)?' dim':'')+'" title="'+(locked?(ca()?'Bloc bloquejat: completa els ⭐ de l\'anterior':'Bloque bloqueado: completa los ⭐ del anterior'):'')+'">'+donut(p,BC[b])+'<div class="lbl">'+esc(names[b])+'</div></div>';
+  var tv = $('trackView');
+  var dw = tv.querySelector('.donuts');
+  if (!dw || CTX === 0) return;
+  var names = blockNames(CTX, LS.lang);
+  var openIdx = B5.length;
+  var j, s;
+  for (j = 0; j < B5.length; j++) {
+    s = withLink(blockSeq(CTX, B5[j]));
+    if (s.length && !allImpDone(s)) { openIdx = j; break; }
+  }
+  var h = '', total = 0, totalDone = 0;
+  B5.forEach(function (b, jj) {
+    var ids = withLink(blockSeq(CTX, b));
+    var imp = ids.filter(isImp);
+    var d = imp.filter(function (id) { return LS.done[id]; }).length;
+    var p = !ids.length ? 0 : (imp.length ? Math.round(d / imp.length * 100) : 100);
+    total += imp.length;
+    totalDone += d;
+    var locked = (seqMode(CTX) === 'blocks' && jj > openIdx);
+    h += '<div class="donut' + ((!ids.length || locked) ? ' dim' : '') + '" title="' +
+      (locked ? (ca() ? 'Bloc bloquejat: completa els ⭐ de l\'anterior' : 'Bloque bloqueado: completa los ⭐ del anterior') : '') + '">' +
+      donut(p, BC[b]) + '<div class="lbl">' + esc(names[b]) + '</div></div>';
   });
-  var pt=total?Math.round(totalDone/total*100):0;
-  h+='<div class="donut tot">'+donut(pt,'#e8b04b')+'<div class="lbl">'+t().total+'</div></div>';
-  dw.innerHTML=h;
+  var pt = total ? Math.round(totalDone / total * 100) : 0;
+  h += '<div class="donut tot">' + donut(pt, '#e8b04b') + '<div class="lbl">' + t().total + '</div></div>';
+  dw.innerHTML = h;
 };
 
-/* ── §12 Estils ── */
-var CSS=[
+/* ── §12 Estils del gestor ── */
+var CSS = [
 '#mCourse{position:fixed;right:18px;bottom:126px;z-index:9999999;width:46px;height:46px;border-radius:50%;background:var(--card);border:1.5px solid var(--gold);color:var(--gold);cursor:pointer;font-size:19px;display:none;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:all .2s}',
 '#mCourse:hover{transform:translateY(-2px)}',
 '.cm-scrim{position:fixed;inset:0;z-index:10000000;display:none;place-items:center;padding:18px;background:rgba(6,8,12,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}',
@@ -5034,6 +5363,7 @@ var CSS=[
 '.cm-lv.on{background:rgba(232,176,75,.12);border-color:var(--gold)}',
 '.cm-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--mut)}',
 '.cm-dot.act{background:var(--ok);box-shadow:0 0 8px var(--ok)}',
+'.cm-sti{flex:none;font-size:12px;line-height:1}',
 '.cm-lvt{flex:1;min-width:0;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
 '.cm-lvn{flex:none;font-size:10px;color:var(--mut)}',
 '.cm-main,.cm-scroll{padding:20px;overflow-y:auto}',
@@ -5083,24 +5413,46 @@ var CSS=[
 'html[data-theme="dark"] .cm-btn.pri{color:#14161c}',
 '@media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}'
 ].join('\n');
-var st=document.createElement('style'); st.id='gjps-levels-css'; st.textContent=CSS; document.head.appendChild(st);
+var stCss = document.createElement('style');
+stCss.id = 'gjps-levels-css';
+stCss.textContent = CSS;
+document.head.appendChild(stCss);
 
 /* ── §13 Instal·lació ── */
-function install(){
-  if(!$('mCourse')){ var b=el('button','','🗂'); b.id='mCourse'; b.type='button'; b.title=ca()?'Gestor del curs':'Gestor del curso'; b.onclick=openManager; document.body.appendChild(b); }
-  var _render=window.render;
-  window.render=function(){ _render(); var btn=$('mCourse'); if(btn) btn.style.display=(editModeOn&&currentUserRole()==='admin')?'flex':'none'; };
-  var _save=window.saveAsFile;
-  window.saveAsFile=function(){ harvest(); _save(); };
-  var _smart=window.smartFreeLevel;
-  window.smartFreeLevel=function(){ _smart(); if(!levelActive(freeLevel)) freeLevel=activeLevels()[0]||0; };
-  rebuild(); render();
-  console.log('🗂 GJPS · gestor del curs actiu · nivells:',activeLevels().join(', '));
+function install() {
+  if (!$('mCourse')) {
+    var b = el('button', '', '🗂');
+    b.id = 'mCourse';
+    b.type = 'button';
+    b.title = ca() ? 'Gestor del curs' : 'Gestor del curso';
+    b.onclick = openManager;
+    document.body.appendChild(b);
+  }
+  var _render = window.render;
+  window.render = function () {
+    _render();
+    var btn = $('mCourse');
+    if (btn) btn.style.display = (editModeOn && currentUserRole() === 'admin') ? 'flex' : 'none';
+  };
+  var _save = window.saveAsFile;
+  window.saveAsFile = function () { harvest(); _save(); };
+  var _smart = window.smartFreeLevel;
+  window.smartFreeLevel = function () {
+    _smart();
+    if (!levelActive(freeLevel)) freeLevel = activeLevels()[0] || 0;
+  };
+  rebuild();
+  render();
+  console.log('🗂 GJPS · gestor del curs actiu · nivells:', activeLevels().join(', '));
 }
-if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
-window.GJPSCourse={ rebuild:rebuild, harvest:harvest, open:openManager, levels:activeLevels, seq:trackContext, blockSeq:blockSeq, data:function(){return OV;} };
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+else install();
+window.GJPSCourse = {
+  rebuild: rebuild, harvest: harvest, open: openManager,
+  levels: activeLevels, seq: trackContext, blockSeq: blockSeq,
+  data: function () { return OV; }
+};
 })();
 </script>
-
 </body>
 </html>
