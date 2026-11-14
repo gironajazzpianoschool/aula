@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca" data-theme="dark"><head>
+<html lang="ca" data-theme="dark" class="can-hover"><head>
 <meta name="theme-color" content="#1a1d27">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1548,12 +1548,94 @@ html[data-theme="dark"] #wm{
   transition-duration:.09s;
 }
 
+/* ══ 33. REFLEX DEL MEDALLÓ: sense quadrat fantasma (Safari / iPad) ══ */
+.imp-face{
+  overflow:hidden !important;
+  border-radius:50% !important;
+}
+.imp-sweep{
+  inset:0 !important;              /* ja no sobresurt del cercle */
+  border-radius:50% !important;    /* es retalla a si mateix */
+  mix-blend-mode:normal !important;
+  opacity:.30;
+}
+/* Safari (iPad i Mac): reflex estàtic i més tènue; el cercol continua girant lent */
+html.ios-safari .imp-sweep{ animation:none !important; opacity:.20; }
+html.ios-safari .imp-rim{ animation-duration:80s !important; }
+html.ios-safari .imp-halo{ animation-duration:7s !important; }
+
 </style>
-</head>
+<style id="gjps-levels-css">#mCourse{position:fixed;right:18px;bottom:126px;z-index:9999999;width:46px;height:46px;border-radius:50%;background:var(--card);border:1.5px solid var(--gold);color:var(--gold);cursor:pointer;font-size:19px;display:none;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:all .2s}
+#mCourse:hover{transform:translateY(-2px)}
+.cm-scrim{position:fixed;inset:0;z-index:10000000;display:none;place-items:center;padding:18px;background:rgba(6,8,12,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cm-scrim.on{display:grid}
+.cm-box{width:min(1120px,100%);height:min(90vh,880px);display:flex;flex-direction:column;overflow:hidden;background:var(--card);border:1px solid var(--hair-2,var(--line));border-radius:var(--r-lg,16px);box-shadow:var(--elev-3,0 30px 70px rgba(0,0,0,.5))}
+.cm-box.sm{width:min(620px,100%);height:auto;max-height:90vh}
+.cm-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hair,var(--line))}
+.cm-head h3{font-size:17px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.cm-x{margin-left:auto;width:34px;height:34px;border-radius:9px;background:var(--tap,transparent);border:1px solid var(--hair,var(--line));color:var(--ink);cursor:pointer;font-size:15px}
+.cm-x:hover{background:var(--danger);border-color:transparent;color:#fff}
+.cm-body{flex:1;min-height:0;display:grid;grid-template-columns:212px minmax(0,1fr)}
+.cm-side{border-right:1px solid var(--hair,var(--line));padding:14px 12px;overflow-y:auto}
+.cm-st{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin:0 6px 10px}
+.cm-lv{display:flex;align-items:center;gap:9px;width:100%;padding:10px 11px;border-radius:10px;border:1px solid transparent;background:none;color:var(--ink);cursor:pointer;text-align:left;margin-bottom:5px;font-family:inherit;transition:all .15s}
+.cm-lv:hover{background:var(--tap,rgba(255,255,255,.04));border-color:var(--hair,var(--line))}
+.cm-lv.on{background:rgba(232,176,75,.12);border-color:var(--gold)}
+.cm-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--mut)}
+.cm-dot.act{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.cm-sti{flex:none;font-size:12px;line-height:1}
+.cm-lvt{flex:1;min-width:0;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-lvn{flex:none;font-size:10px;color:var(--mut)}
+.cm-main,.cm-scroll{padding:20px;overflow-y:auto}
+.cm-scroll{flex:1;min-height:0}
+.cm-lvhead{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--hair,var(--line))}
+.cm-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-width:250px}
+.cm-fld{display:block;margin-bottom:12px}
+.cm-fld>span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+.cm-fld input,.cm-fld textarea{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);font-family:inherit;font-size:13px}
+.cm-fld textarea{min-height:70px;resize:vertical}
+.cm-fld input:focus,.cm-fld textarea:focus{outline:none;border-color:var(--gold)}
+.cm-sw{display:inline-flex;align-items:center;gap:10px;padding:10px 13px;border-radius:9px;cursor:pointer;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);font-family:inherit;font-size:12px;font-weight:700}
+.cm-swt{flex:none;width:38px;height:21px;border-radius:99px;background:var(--hair-2,var(--line));position:relative;transition:background .22s}
+.cm-swt::after{content:"";position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:var(--mut);transition:transform .22s,background .22s}
+.cm-sw[aria-pressed="true"] .cm-swt{background:rgba(57,217,138,.32)}
+.cm-sw[aria-pressed="true"] .cm-swt::after{transform:translateX(17px);background:var(--ok)}
+.cm-note{padding:11px 13px;border-radius:10px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);font-size:12px;line-height:1.6;color:var(--mut);margin-bottom:13px}
+.cm-note b{color:var(--ink)}
+.cm-hint{font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5}
+.cm-seg{display:flex;gap:4px;padding:4px;border-radius:9px;background:var(--bg);border:1px solid var(--hair,var(--line));margin-bottom:14px}
+.cm-seg button{flex:1;padding:9px;border-radius:7px;border:0;background:none;color:var(--mut);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}
+.cm-seg button.on{background:var(--gold);color:#fff}
+html[data-theme="dark"] .cm-seg button.on{color:#14161c}
+.cm-blk{border:1px solid var(--hair,var(--line));border-radius:14px;margin-bottom:13px;overflow:hidden;background:var(--bg)}
+.cm-bh{display:flex;gap:12px;align-items:flex-end;padding:13px;flex-wrap:wrap;border-bottom:1px solid var(--hair,var(--line))}
+.cm-bh .cm-fld{margin-bottom:0}
+.cm-btitle{font-size:14px;font-weight:800;color:var(--gold);letter-spacing:.06em}
+.cm-bmeta{font-size:10.5px;color:var(--mut);font-weight:700;white-space:nowrap;padding-bottom:9px}
+.cm-vlist{padding:10px 12px}
+.cm-empty{font-size:12px;color:var(--mut);padding:4px 2px 11px}
+.cm-vrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--card);margin-bottom:6px}
+.cm-vn{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--tap,transparent);border:1px solid var(--hair-2,var(--line));font-size:11px;font-weight:800}
+.cm-vt{flex:1;min-width:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-vl{flex:none;font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
+.cm-vl.ok{border-color:var(--ok);color:var(--ok)}
+.cm-vnew{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.cm-ib{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);cursor:pointer;font-size:12px;display:grid;place-items:center}
+.cm-ib:hover{border-color:var(--gold);color:var(--gold)}
+.cm-ib.d:hover{border-color:var(--danger);color:var(--danger)}
+.cm-ib:disabled{opacity:.3;cursor:not-allowed}
+.cm-add{width:100%;padding:11px;border-radius:9px;border:1px dashed var(--gold);color:var(--gold);background:rgba(232,176,75,.06);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}
+.cm-add:hover{background:rgba(232,176,75,.14)}
+.cm-foot{display:flex;gap:9px;align-items:center;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--hair,var(--line))}
+.cm-stat{margin-right:auto;font-size:11.5px;color:var(--mut)}
+.cm-btn{padding:10px 16px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700}
+.cm-btn.pri{background:var(--gold);border-color:var(--gold);color:#fff}
+html[data-theme="dark"] .cm-btn.pri{color:#14161c}
+@media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}</style></head>
 <body class="">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
-<div id="toast" style="opacity: 0;">☆ Vídeo marcat com a OPCIONAL</div>
+<div id="toast" style="opacity: 0;">💾 Desat</div>
 
 <header>
   <div class="hbrand">
@@ -1565,8 +1647,8 @@ html[data-theme="dark"] #wm{
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
-      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+      <button id="mTrack" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
+      <button id="mFree" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
       <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
       <button id="mInfo" title="Preguntes freqüents">FAQ</button>
     </span>
@@ -1577,13 +1659,13 @@ html[data-theme="dark"] #wm{
 </header>
 
 <main>
-  <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: block;"></div>
+  <div id="trackView" style="display: block;"></div>
+  <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
   <div id="infoView" style="display:none"></div>
-  <div id="helpView" style="display: none;"><div class="info-container"><h2>Com funciona aquest web</h2><p style="color:var(--mut);font-size:var(--fs);line-height:1.6;margin-bottom:16px;">Benvingut/da a l'aula virtual! Aquesta guia ràpida t'explica com treure-li tot el partit en 2 minuts.</p><div class="faq-item" data-hi="0"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg></span><span class="faqtxt help-title" data-hi="0" data-hk="t">Seguiment Continuat</span></h3><p class="help-para" data-hi="0" data-hk="p">És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico">⏭</span><span class="faqtxt help-title" data-hi="1" data-hk="t">Deixar un vídeo per a més tard</span></h3><p class="help-para" data-hi="1" data-hk="p">Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.</p></div><div class="faq-item" data-hi="2"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span><span class="faqtxt help-title" data-hi="2" data-hk="t">Navegació Lliure</span></h3><p class="help-para" data-hi="2" data-hk="p">Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.
+  <div id="helpView" style="display: none;"><div class="info-container"><h2>Com funciona aquest web</h2><p style="color:var(--mut);font-size:var(--fs);line-height:1.6;margin-bottom:16px;">Benvingut/da a l'aula virtual! Aquesta guia ràpida t'explica com treure-li tot el partit en 2 minuts.</p><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg></span><span class="faqtxt help-title" data-hi="0" data-hk="t">Seguiment Continuat</span></h3><p class="help-para" data-hi="0" data-hk="p">És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico">⏭</span><span class="faqtxt help-title" data-hi="1" data-hk="t">Deixar un vídeo per a més tard</span></h3><p class="help-para" data-hi="1" data-hk="p">Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span><span class="faqtxt help-title" data-hi="2" data-hk="t">Navegació Lliure</span></h3><p class="help-para" data-hi="2" data-hk="p">Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.
 
-🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.</p></div><div class="faq-item" data-hi="3"><h3><span class="faqico">⭐</span><span class="faqtxt help-title" data-hi="3" data-hk="t">Vídeos importants i opcionals</span></h3><p class="help-para" data-hi="3" data-hk="p">Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.</p></div><div class="faq-item" data-hi="4"><h3><span class="faqico">🔖</span><span class="faqtxt help-title" data-hi="4" data-hk="t">La teva llista de repàs</span></h3><p class="help-para" data-hi="4" data-hk="p">Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.</p></div><div class="faq-item" data-hi="5"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="8" y1="7" x2="15" y2="7"></line><line x1="8" y1="11" x2="15" y2="11"></line></svg></span><span class="faqtxt help-title" data-hi="5" data-hk="t">Notes personals i enviar-les al professor</span></h3><p class="help-para" data-hi="5" data-hk="p">Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.</p></div><div class="faq-item" data-hi="6"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg></span><span class="faqtxt help-title" data-hi="6" data-hk="t">Aplicacions d'entrenament</span></h3><p class="help-para" data-hi="6" data-hk="p">A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.</p></div><div class="faq-item" data-hi="7"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span><span class="faqtxt help-title" data-hi="7" data-hk="t">I en acabar el nivell…</span></h3><p class="help-para" data-hi="7" data-hk="p">Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉</p></div><div class="faq-item" data-hi="8"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span><span class="faqtxt help-title" data-hi="8" data-hk="t">Els percentatges de progrés</span></h3><p class="help-para" data-hi="8" data-hk="p">Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.</p></div><div class="faq-item" data-hi="9"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg></span><span class="faqtxt help-title" data-hi="9" data-hk="t">Prova pilot: on es guarda el teu progrés?</span></h3><p class="help-para" data-hi="9" data-hk="p">Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.</p></div><div class="faq-item" data-hi="10"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><circle cx="7" cy="12" r="3.2"></circle><line x1="7" y1="6.6" x2="7" y2="5.2"></line><line x1="7" y1="17.4" x2="7" y2="18.8"></line><line x1="1.6" y1="12" x2="3" y2="12"></line><line x1="3.2" y1="8.2" x2="4.2" y2="9.2"></line><line x1="3.2" y1="15.8" x2="4.2" y2="14.8"></line><g transform="translate(11.5,6) scale(0.5)"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="4"></path></g></svg></span><span class="faqtxt help-title" data-hi="10" data-hk="t">Canviar entre mode fosc i mode clar</span></h3><p class="help-para" data-hi="10" data-hk="p">A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.</p></div><div class="faq-item" data-hi="12"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span class="faqtxt help-title" data-hi="12" data-hk="t">Català i castellà: dos cursos independents</span></h3><p class="help-para" data-hi="12" data-hk="p">Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.</p></div><div class="faq-item" data-hi="13"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></span><span class="faqtxt help-title" data-hi="13" data-hk="t">Instal·la l'aula al mòbil o crea un accés directe a l'escriptori</span></h3><p class="help-para" data-hi="13" data-hk="p">Tens dues opcions per tenir l'aula sempre a mà:
+🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico">⭐</span><span class="faqtxt help-title" data-hi="3" data-hk="t">Vídeos importants i opcionals</span></h3><p class="help-para" data-hi="3" data-hk="p">Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico">🔖</span><span class="faqtxt help-title" data-hi="4" data-hk="t">La teva llista de repàs</span></h3><p class="help-para" data-hi="4" data-hk="p">Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="8" y1="7" x2="15" y2="7"></line><line x1="8" y1="11" x2="15" y2="11"></line></svg></span><span class="faqtxt help-title" data-hi="5" data-hk="t">Notes personals i enviar-les al professor</span></h3><p class="help-para" data-hi="5" data-hk="p">Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg></span><span class="faqtxt help-title" data-hi="6" data-hk="t">Aplicacions d'entrenament</span></h3><p class="help-para" data-hi="6" data-hk="p">A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span><span class="faqtxt help-title" data-hi="7" data-hk="t">I en acabar el nivell…</span></h3><p class="help-para" data-hi="7" data-hk="p">Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span><span class="faqtxt help-title" data-hi="8" data-hk="t">Els percentatges de progrés</span></h3><p class="help-para" data-hi="8" data-hk="p">Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10 2v7.31"></path><path d="M14 2v7.31"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg></span><span class="faqtxt help-title" data-hi="9" data-hk="t">Prova pilot: on es guarda el teu progrés?</span></h3><p class="help-para" data-hi="9" data-hk="p">Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><circle cx="7" cy="12" r="3.2"></circle><line x1="7" y1="6.6" x2="7" y2="5.2"></line><line x1="7" y1="17.4" x2="7" y2="18.8"></line><line x1="1.6" y1="12" x2="3" y2="12"></line><line x1="3.2" y1="8.2" x2="4.2" y2="9.2"></line><line x1="3.2" y1="15.8" x2="4.2" y2="14.8"></line><g transform="translate(11.5,6) scale(0.5)"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="4"></path></g></svg></span><span class="faqtxt help-title" data-hi="10" data-hk="t">Canviar entre mode fosc i mode clar</span></h3><p class="help-para" data-hi="10" data-hk="p">A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span class="faqtxt help-title" data-hi="12" data-hk="t">Català i castellà: dos cursos independents</span></h3><p class="help-para" data-hi="12" data-hk="p">Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.</p></div><div class="faq-item" data-hi="1"><h3><span class="faqico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></span><span class="faqtxt help-title" data-hi="13" data-hk="t">Instal·la l'aula al mòbil o crea un accés directe a l'escriptori</span></h3><p class="help-para" data-hi="13" data-hk="p">Tens dues opcions per tenir l'aula sempre a mà:
 
 📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.
 
@@ -1959,7 +2041,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ================================================================ */
-var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional"},"h":{"0":{"t":{"ca":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."},"undefined":{"ca":"Seguiment ContinuatÉs el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."},"undefined":{"ca":"⏭Deixar un vídeo per a més tardQuan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."},"undefined":{"ca":"Navegació LliurePer explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."},"undefined":{"ca":"⭐Vídeos importants i opcionalsCada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."},"undefined":{"ca":"🔖La teva llista de repàsAmb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."},"undefined":{"ca":"Notes personals i enviar-les al professorCada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."},"undefined":{"ca":"Aplicacions d'entrenamentA la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"},"undefined":{"ca":"I en acabar el nivell…Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."},"undefined":{"ca":"Els percentatges de progrésAl Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."},"undefined":{"ca":"Prova pilot: on es guarda el teu progrés?Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."},"undefined":{"ca":"Canviar entre mode fosc i mode clarA la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."},"undefined":{"ca":"Català i castellà: dos cursos independentsTot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."},"undefined":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptoriTens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}}};/*OV-END*/
+var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{}};/*OV-END*/
 
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
@@ -4411,6 +4493,10 @@ try {
   if ($('appVer')) $('appVer').textContent = 'GJPS v' + APP_VERSION + ' (' + APP_BUILD + ')';
   console.log('🎹 GJPS v' + APP_VERSION + ' · ' + APP_BUILD);
   setLabels();
+  /* Safari (iPad/Mac) no retalla capes animades al border-radius: ho marquem per calmar el reflex */
+  if (isIOSDevice || /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
+    document.documentElement.classList.add('ios-safari');
+  }
   loadDone();
   initDragDrop();
   LS.mode = 'track';
@@ -4495,14 +4581,16 @@ try {
   }
 })();
 </script>
-<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button>
+<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border-color: var(--line); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc · Clica per passar a Blau nit" aria-label="Tema: Fosc · Clica per passar a Blau nit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.1
-   Nivells 2-6 activables, estats (Acabat / En construcció / Pròximament),
-   noms de bloc per nivell, alta/edició/ordre de vídeos, numeració per bloc
-   i seqüenciació del Seguiment Continuat. Tot es desa dins l'OV.
+   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.2
+   CA i ES són DOS CURSOS INDEPENDENTS: cada vídeo nou pertany a un sol idioma,
+   i títol/descripció/enllaç/importància es desen a OV.t / OV.d / OV.l / OV.imp
+   amb clau d'idioma, igual que els vídeos llegats. L'ordre (OV.order) i els
+   fets (LS.done) ja eren per idioma, així que la independència és total.
+   Novetat v1.2: eliminar vídeos (llegats o nous) es desa per idioma via OV.del.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
@@ -4589,15 +4677,16 @@ function ensureSections() {
   }
 }
 
-/* ── §3 Vídeos nous: OV.nv ↔ D ── */
-var LEGACY_BASE = {};
+/* ── §3 Vídeos nous: ranures d'un sol idioma (OV.nv) + contingut a OV.t/d/l/imp ──
+   OV.nv[nivell][bloc] = [ 'ca' | 'es' | 0 , … ]   (0 = ranura eliminada, es conserva
+   per mantenir estables els ids). El títol de cada ranura viu a OV.t[id][idioma],
+   de manera que un vídeo només existeix en l'idioma que el va crear.            */
+var PREV_HYDR = {};
+function dKey(si, ui, b) { return si + '.' + ui + '.' + b; }
 function legacyCount(si, ui, b) {
-  var k = si + '.' + ui + '.' + b;
-  if (LEGACY_BASE[k] != null) return LEGACY_BASE[k];
-  var n = 0;
-  try { var bl = D[si].u[ui][b]; if (bl && bl.v) n = bl.v.length; } catch (e) {}
-  LEGACY_BASE[k] = n;
-  return n;
+  var cur = 0;
+  try { var bl = D[si].u[ui][b]; if (bl && bl.v) cur = bl.v.length; } catch (e) {}
+  return cur - (PREV_HYDR[dKey(si, ui, b)] || 0);
 }
 function nvBucket(l, b, create) {
   OV.nv = OV.nv || {};
@@ -4607,26 +4696,36 @@ function nvBucket(l, b, create) {
   if (!OV.nv[k][b] && create) OV.nv[k][b] = [];
   return OV.nv[k][b] || null;
 }
-function harvest() {
+function slotCoords(l, b) {
+  return { si: (l === 1) ? 6 : 6 + l, ui: (l === 1) ? 3 : 0, b: b };
+}
+/* Migració única: registres bilingües de la v1.1 → ranures d'un sol idioma */
+function migrateNv() {
   if (!OV.nv) return;
   Object.keys(OV.nv).forEach(function (k) {
     var l = parseInt(k, 10);
+    var c = slotCoords(l, 't');
     B5.forEach(function (b) {
       var arr = OV.nv[k][b];
       if (!arr) return;
-      var si = (l === 1) ? 6 : 6 + l;
-      var ui = (l === 1) ? 3 : 0;
-      var base = legacyCount(si, ui, b);
-      arr.forEach(function (vid, i) {
-        var id = si + '.' + ui + '.' + b + '.' + (base + i);
+      var out = [];
+      arr.forEach(function (rec) {
+        if (rec === 0 || typeof rec === 'string') { out.push(rec || 0); return; }
+        var touched = false;
         ['ca', 'es'].forEach(function (lg) {
-          if (OV.t[id] && OV.t[id][lg] != null) vid.t[lg] = OV.t[id][lg];
-          if (OV.d[id] && OV.d[id][lg] != null) vid.d[lg] = OV.d[id][lg];
-          if (OV.l[id] && OV.l[id][lg] != null) vid.l[lg] = OV.l[id][lg];
-          var im = OV.imp && OV.imp[id + ':' + lg];
-          if (im) vid.imp[lg] = im;
+          var tt = rec.t && rec.t[lg];
+          if (!tt) return;
+          touched = true;
+          var id = c.si + '.' + c.ui + '.' + b + '.' + (legacyCount(c.si, c.ui, b) + out.length);
+          OV.t = OV.t || {}; OV.t[id] = OV.t[id] || {}; OV.t[id][lg] = tt;
+          if (rec.d && rec.d[lg]) { OV.d = OV.d || {}; OV.d[id] = OV.d[id] || {}; OV.d[id][lg] = rec.d[lg]; }
+          if (rec.l && rec.l[lg]) { OV.l = OV.l || {}; OV.l[id] = OV.l[id] || {}; OV.l[id][lg] = rec.l[lg]; }
+          if (rec.imp && rec.imp[lg]) { OV.imp = OV.imp || {}; OV.imp[id + ':' + lg] = rec.imp[lg]; }
+          out.push(lg);
         });
+        if (!touched) out.push(0);
       });
+      OV.nv[k][b] = out;
     });
   });
 }
@@ -4636,11 +4735,13 @@ function hydrate() {
   for (l = 2; l <= MAX_LVL; l++) {
     si = 6 + l;
     if (!D[si]) continue;
-    B5.forEach(function (b) { D[si].u[0][b] = { v: [], d: [] }; });
+    B5.forEach(function (b) { D[si].u[0][b] = { v: [], d: [] }; PREV_HYDR[dKey(si, 0, b)] = 0; });
   }
   B5.forEach(function (b) {
-    var base = legacyCount(6, 3, b);
-    if (D[6] && D[6].u[3] && D[6].u[3][b] && D[6].u[3][b].v) D[6].u[3][b].v.length = base;
+    var bl = D[6].u[3][b];
+    if (!bl) bl = D[6].u[3][b] = { v: [], d: [] };
+    if (!bl.v) bl.v = [];
+    bl.v.length = legacyCount(6, 3, b);
   });
   Object.keys(OV.nv || {}).forEach(function (k) {
     l = parseInt(k, 10);
@@ -4649,33 +4750,59 @@ function hydrate() {
     if (!D[si] || !D[si].u[ui]) return;
     B5.forEach(function (b) {
       var arr = OV.nv[k][b];
-      if (!arr || !arr.length) return;
+      if (!arr) return;
       var bl = D[si].u[ui][b];
       if (!bl) bl = D[si].u[ui][b] = { v: [], d: [] };
       if (!bl.v) bl.v = [];
-      var base = legacyCount(si, ui, b);
-      arr.forEach(function (vid, i) {
+      var base = bl.v.length;
+      arr.forEach(function (mg, i) {
         var id = si + '.' + ui + '.' + b + '.' + (base + i);
-        bl.v.push([vid.t.ca || vid.t.es || '', vid.t.es || vid.t.ca || '', '']);
-        OV.t[id] = { ca: vid.t.ca || '', es: vid.t.es || '' };
-        OV.d[id] = { ca: vid.d.ca || '', es: vid.d.es || '' };
-        if (vid.l.ca || vid.l.es) OV.l[id] = { ca: vid.l.ca || '', es: vid.l.es || '' };
-        ['ca', 'es'].forEach(function (lg) {
-          OV.imp[id + ':' + lg] = (vid.imp[lg] === 'optional') ? 'optional' : 'important';
-        });
+        var tc = '', te = '';
+        if (mg === 'ca') tc = (OV.t[id] && OV.t[id].ca) || '';
+        if (mg === 'es') te = (OV.t[id] && OV.t[id].es) || '';
+        bl.v.push([tc, te, '']);
       });
+      PREV_HYDR[dKey(si, ui, b)] = arr.length;
     });
   });
 }
+function isDeleted(id, lang) {
+  var d = OV.del && OV.del[id];
+  return !!(d && d[lang]);
+}
+function markDeleted(id) {
+  OV.del = OV.del || {};
+  OV.del[id] = OV.del[id] || {};
+  OV.del[id][LS.lang] = 1;
+}
+function unmarkDeleted(id) {
+  if (OV.del && OV.del[id]) delete OV.del[id][LS.lang];
+}
+/* El nucli enumera vídeos via allVidsLang: filtrem els eliminats de l'idioma actual */
+var _allVidsLang = window.allVidsLang;
+window.allVidsLang = function (lang) {
+  return _allVidsLang(lang).filter(function (x) { return !isDeleted(x.id, lang); });
+};
+function nvIndexOf(id) {
+  var l = videoLevel(id);
+  var b = vidBlockById(id);
+  var arr = nvBucket(l, b, false);
+  if (!arr) return null;
+  var si = parseInt(id.split('.')[0], 10);
+  var ui = parseInt(id.split('.')[1], 10);
+  var vi = parseInt(id.split('.')[3], 10);
+  var i = vi - legacyCount(si, ui, b);
+  if (i < 0 || i >= arr.length) return null;
+  return { arr: arr, i: i, lang: arr[i] };
+}
 function rebuild() {
-  harvest();
-  LEGACY_BASE = {};
+  migrateNv();
   ensureSections();
   hydrate();
   initializeOrder();
 }
 
-/* ── §4 Numeració per bloc ── */
+/* ── §4 Numeració per bloc (independent per idioma, via OV.order[idioma]) ── */
 function blockSeq(l, b) {
   return orderList().filter(function (id) {
     return !isGiftId(id) && videoLevel(id) === l && vidBlockById(id) === b;
@@ -4688,7 +4815,6 @@ window.getVideoOrder = function (id) {
 };
 window.reorderVideo = function (id, newNum) {
   if (editModeOn) collectAll();
-  harvest();
   var seq = blockSeq(videoLevel(id), vidBlockById(id));
   var cur = seq.indexOf(id);
   var tgt = newNum - 1;
@@ -4812,7 +4938,6 @@ function setBlockName(l, b, lang, val) {
 /* ── §7 Correccions de bugs del nucli ── */
 window.moveVideo = function (id, destBlock, beforeId) {
   if (editModeOn) collectAll();
-  harvest();
   OV.bl = OV.bl || {};
   if (destBlock) OV.bl[id] = destBlock;
   initializeOrder();
@@ -4839,12 +4964,11 @@ window.collectAll = function () {
     n.removeAttribute('data-hi-skip');
   });
   if (OV.h) Object.keys(OV.h).forEach(function (k) { delete OV.h[k]['undefined']; });
-  harvest();
 };
 document.addEventListener('keydown', function (e) {
   if (e.key !== 'Escape') return;
   var cm = $('cmModal');
-  if (cm && cm.classList.contains('on')) { closeManager(); e.stopPropagation(); }
+  if (cm && cm.classList.contains('on')) { closeManager(); e.stopPropagation(); return; }
   var vf = $('vfModal');
   if (vf && vf.classList.contains('on')) { vf.classList.remove('on'); e.stopPropagation(); }
 }, true);
@@ -4879,18 +5003,6 @@ function closeManager() {
   rebuild();
   render();
 }
-function nvIndexOf(id) {
-  var l = videoLevel(id);
-  var b = vidBlockById(id);
-  var arr = nvBucket(l, b, false);
-  if (!arr) return null;
-  var si = parseInt(id.split('.')[0], 10);
-  var ui = parseInt(id.split('.')[1], 10);
-  var vi = parseInt(id.split('.')[3], 10);
-  var i = vi - legacyCount(si, ui, b);
-  if (i < 0 || i >= arr.length) return null;
-  return { arr: arr, i: i, vid: arr[i] };
-}
 function stateIcon(l) {
   var s = levelState(l);
   if (s === 'wip') return '🚧';
@@ -4902,7 +5014,7 @@ function paintManager() {
   var main = $('cmMain');
   var l = mgrLevel;
   var total = 0;
-  side.innerHTML = '<div class="cm-st">' + (ca() ? 'Nivells' : 'Niveles') + '</div>';
+  side.innerHTML = '<div class="cm-st">' + (ca() ? 'Nivells' : 'Niveles') + ' · ' + LS.lang.toUpperCase() + '</div>';
   for (var x = 0; x <= MAX_LVL; x++) {
     (function (lv) {
       var n = 0;
@@ -4914,6 +5026,7 @@ function paintManager() {
           });
         });
       });
+      n -= countDeleted(lv);
       total += n;
       var sti = stateIcon(lv);
       var row = el('button', 'cm-lv' + (lv === mgrLevel ? ' on' : ''));
@@ -4926,7 +5039,8 @@ function paintManager() {
     })(x);
   }
   $('cmStat').textContent = activeLevels().length + '/7 ' +
-    (ca() ? 'nivells actius' : 'niveles activos') + ' · ' + total + ' ' + (ca() ? 'vídeos' : 'vídeos');
+    (ca() ? 'nivells actius' : 'niveles activos') + ' · ' + total + ' ' + (ca() ? 'vídeos' : 'vídeos') +
+    ' (' + LS.lang.toUpperCase() + ')';
 
   var stOn = { done: '', wip: '', soon: '' };
   stOn[levelState(l)] = ' class="on"';
@@ -4934,11 +5048,11 @@ function paintManager() {
     ? { done: '✔ Acabat', wip: '🚧 En construcció', soon: '⏳ Pròximament' }
     : { done: '✔ Acabado', wip: '🚧 En construcción', soon: '⏳ Próximamente' };
   var stHint = ca()
-    ? "L'estat només canvia la icona del llistat. La navegació la controla «Publicat»: un nivell publicat «En construcció» deixa veure el que ja hi ha penjat, però no entra al Seguiment Continuat fins que el marquis «Acabat»."
-    : "El estado solo cambia el icono del listado. La navegación la controla «Publicado»: un nivel publicado «En construcción» deja ver lo ya colgado, pero no entra en el Seguimiento Continuo hasta que lo marques «Acabado».";
+    ? "Cada idioma es gestiona per separat: el que editis ara només afecta el curs en " + (ca() ? 'català' : 'castellà') + ". «Publicat» controla la navegació; l'estat només canvia la icona del llistat."
+    : "Cada idioma se gestiona por separado: lo que edites ahora solo afecta al curso en " + (ca() ? 'catalán' : 'castellano') + ". «Publicado» controla la navegación; el estado solo cambia el icono del listado.";
 
   var h = '<div class="cm-lvhead"><div class="cm-two">' +
-    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (CA)' : 'Nombre del nivel (CA)') + '</span>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (CA)' : 'Nombre del nivel (CA') + ')</span>' +
     '<input data-lvnm="ca" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].ca) || levelObj(l).n.ca) + '"></label>' +
     '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (ES)' : 'Nombre del nivel (ES)') + '</span>' +
     '<input data-lvnm="es" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].es) || levelObj(l).n.es) + '"></label>' +
@@ -4974,25 +5088,26 @@ function paintManager() {
     }
     var impN = seq.filter(isImp).length;
     h += '<div class="cm-bmeta">' + seq.length + ' ' + (ca() ? 'vídeos' : 'vídeos') + ' · ' + impN + ' ⭐</div></div><div class="cm-vlist">';
-    if (!seq.length) h += '<div class="cm-empty">' + (ca() ? 'Cap vídeo en aquest bloc.' : 'Ningún vídeo en este bloque.') + '</div>';
+    if (!seq.length) h += '<div class="cm-empty">' + (ca() ? 'Cap vídeo en aquest bloc en aquest idioma.' : 'Ningún vídeo en este bloque en este idioma.') + '</div>';
     seq.forEach(function (id, i) {
       var v = findVidById(id);
       if (!v) return;
-      var isNew = !!nvIndexOf(id);
+      var nv = nvIndexOf(id);
+      var isNew = !!(nv && nv.lang === LS.lang);
       var link = !!driveSrc(v.v, id);
       h += '<div class="cm-vrow">' +
         '<span class="cm-vn">' + (i + 1) + '</span>' +
         '<span class="cm-vt">' + esc(vidTitle(v.v, id)) + '</span>' +
         '<span class="cm-vl' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
         (isNew ? '<span class="cm-vnew">' + (ca() ? 'nou' : 'nuevo') + '</span>' : '') +
-        '<button class="cm-ib" data-imp="' + id + '">' + (isImp(id) ? '⭐' : '☆') + '</button>' +
-        '<button class="cm-ib" data-edit="' + id + '">✎</button>' +
+        '<button class="cm-ib" data-imp="' + id + '" title="' + (ca() ? 'Important / opcional' : 'Importante / opcional') + '">' + (isImp(id) ? '⭐' : '☆') + '</button>' +
+        '<button class="cm-ib" data-edit="' + id + '" title="' + (ca() ? 'Edita' : 'Edita') + '">✎</button>' +
         '<button class="cm-ib" data-up="' + id + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
         '<button class="cm-ib" data-dn="' + id + '"' + (i === seq.length - 1 ? ' disabled' : '') + '>↓</button>' +
-        (isNew ? '<button class="cm-ib d" data-del="' + id + '">🗑</button>' : '') +
+        '<button class="cm-ib d" data-del="' + id + '" title="' + (ca() ? 'Elimina (només aquest idioma)' : 'Elimina (solo este idioma)') + '">🗑</button>' +
         '</div>';
     });
-    if (b !== 'w') h += '<button class="cm-add" data-add="' + l + '|' + b + '">＋ ' + (ca() ? 'Afegir vídeo' : 'Añadir vídeo') + '</button>';
+    if (b !== 'w') h += '<button class="cm-add" data-add="' + l + '|' + b + '">＋ ' + (ca() ? 'Afegir vídeo (' + LS.lang.toUpperCase() + ')' : 'Añadir vídeo (' + LS.lang.toUpperCase() + ')') + '</button>';
     h += '</div></div>';
   });
   main.innerHTML = h;
@@ -5057,10 +5172,8 @@ function paintManager() {
   main.querySelectorAll('[data-imp]').forEach(function (btn) {
     btn.onclick = function () {
       var id = btn.dataset.imp;
-      var nv = nvIndexOf(id);
-      var nx = (getVideoImportance(id) === 'important') ? 'optional' : 'important';
-      if (nv) { nv.vid.imp[LS.lang] = nx; hydrate(); }
-      else { OV.imp = OV.imp || {}; OV.imp[id + ':' + LS.lang] = nx; }
+      OV.imp = OV.imp || {};
+      OV.imp[id + ':' + LS.lang] = (isImp(id) === 'important') ? 'optional' : 'important';
       paintManager();
     };
   });
@@ -5079,47 +5192,51 @@ function paintManager() {
   main.querySelectorAll('[data-del]').forEach(function (btn) {
     btn.onclick = function () {
       var id = btn.dataset.del;
-      var nv = nvIndexOf(id);
-      if (!nv) return;
-      if (!confirm(ca() ? 'Eliminar aquest vídeo?' : '¿Eliminar este vídeo?')) return;
-      nv.arr.splice(nv.i, 1);
+      var msg = (ca()
+        ? 'Eliminar aquest vídeo NOMÉS del curs en ' + LS.lang.toUpperCase() + '?'
+        : '¿Eliminar este vídeo SOLO del curso en ' + LS.lang.toUpperCase() + '?') + '\n\n' + vidTitle((findVidById(id) || {}).v || ['', ''], id);
+      if (!confirm(msg)) return;
+      markDeleted(id);
       rebuild();
       paintManager();
-      showToast(ca() ? '🗑 Vídeo eliminat' : '🗑 Vídeo eliminado');
+      showToast(ca() ? '🗑 Vídeo eliminat de ' + LS.lang.toUpperCase() : '🗑 Vídeo eliminado de ' + LS.lang.toUpperCase());
     };
   });
 }
+function countDeleted(lv) {
+  var n = 0;
+  if (!OV.del) return 0;
+  Object.keys(OV.del).forEach(function (id) {
+    if (OV.del[id] && OV.del[id][LS.lang] && videoLevel(id) === lv) n++;
+  });
+  return n;
+}
 
-/* ── §9 Formulari de vídeo ── */
+/* ── §9 Formulari de vídeo (un sol idioma: l'actiu) ── */
 var vfCtx = null;
 function openVideoForm(id, l, b) {
-  var nv = id ? nvIndexOf(id) : null;
+  var lang = LS.lang;
   var v = id ? findVidById(id) : null;
-  var data;
-  if (nv) data = nv.vid;
-  else data = {
-    t: { ca: (v ? (OV.t[id] && OV.t[id].ca) || v.v[0] : ''), es: (v ? (OV.t[id] && OV.t[id].es) || v.v[1] : '') },
-    d: { ca: (OV.d[id] && OV.d[id].ca) || '', es: (OV.d[id] && OV.d[id].es) || '' },
-    l: { ca: (OV.l[id] && OV.l[id].ca) || '', es: (OV.l[id] && OV.l[id].es) || '' },
-    imp: { ca: getVideoImportance(id), es: getVideoImportance(id) }
-  };
-  vfCtx = { id: id, level: l, block: b, nv: nv, imp: { ca: data.imp.ca, es: data.imp.es } };
+  var tVal = id ? ((OV.t[id] && OV.t[id][lang]) || (v ? v.v[li()] : '')) : '';
+  var dVal = id ? ((OV.d[id] && OV.d[id][lang]) || '') : '';
+  var lVal = id ? ((OV.l[id] && OV.l[id][lang]) || '') : '';
+  var iVal = id ? getVideoImportance(id) : 'important';
+  vfCtx = { id: id, level: l, block: b, imp: iVal };
   var m = $('vfModal');
   if (!m) { m = el('div', 'cm-scrim'); m.id = 'vfModal'; document.body.appendChild(m); }
-  var names = blockNames(l, LS.lang);
+  var names = blockNames(l, lang);
+  var langName = lang === 'ca' ? (ca() ? 'català' : 'catalán') : (ca() ? 'castellà' : 'castellano');
   m.innerHTML = '<div class="cm-box sm"><div class="cm-head"><h3>' +
-    (id ? (ca() ? 'Edita el vídeo' : 'Edita el vídeo') : (ca() ? 'Nou vídeo' : 'Nuevo vídeo')) +
+    (id ? (ca() ? 'Edita el vídeo' : 'Edita el vídeo') : (ca() ? 'Nou vídeo' : 'Nuevo vídeo')) + ' · ' + langName.toUpperCase() +
     '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">' +
-    '<div class="cm-note"><b>' + esc(levelName(l)) + '</b> → <b>' + esc(names[b]) + '</b></div>' +
-    '<div class="cm-two"><label class="cm-fld"><span>' + (ca() ? 'Títol (CA)' : 'Título (CA)') + '</span><input id="vfTca" value="' + esc(data.t.ca) + '"></label>' +
-    '<label class="cm-fld"><span>' + (ca() ? 'Títol (ES)' : 'Título (ES)') + '</span><input id="vfTes" value="' + esc(data.t.es) + '"></label></div>' +
-    '<div class="cm-two"><label class="cm-fld"><span>' + (ca() ? 'Descripció (CA)' : 'Descripción (CA)') + '</span><textarea id="vfDca">' + esc(data.d.ca) + '</textarea></label>' +
-    '<label class="cm-fld"><span>' + (ca() ? 'Descripció (ES)' : 'Descripción (ES)') + '</span><textarea id="vfDes">' + esc(data.d.es) + '</textarea></label></div>' +
-    '<div class="cm-two"><label class="cm-fld"><span>Drive (CA)</span><input id="vfLca" value="' + esc(data.l.ca) + '" placeholder="ID o URL"></label>' +
-    '<label class="cm-fld"><span>Drive (ES)</span><input id="vfLes" value="' + esc(data.l.es) + '" placeholder="ID o URL"></label></div>' +
+    '<div class="cm-note"><b>' + esc(levelName(l)) + '</b> → <b>' + esc(names[b]) + '</b><br>' +
+    (ca() ? 'Aquest formulari només edita el curs en ' : 'Este formulario solo edita el curso en ') + langName + '.</div>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Títol' : 'Título') + '</span><input id="vfT" value="' + esc(tVal) + '"></label>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Descripció' : 'Descripción') + '</span><textarea id="vfD">' + esc(dVal) + '</textarea></label>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Enllaç de Google Drive (ID o URL)' : 'Enlace de Google Drive (ID o URL)') + '</span><input id="vfL" value="' + esc(lVal) + '" placeholder="1B0keL0UC… o https://drive.google.com/file/d/…"></label>' +
     '<div class="cm-fld"><span>' + (ca() ? 'Pes dins del bloc' : 'Peso dentro del bloque') + '</span><div class="cm-seg" id="vfImp">' +
-    '<button data-i="important"' + (vfCtx.imp[LS.lang] === 'important' ? ' class="on"' : '') + '>⭐ ' + (ca() ? 'Important' : 'Importante') + '</button>' +
-    '<button data-i="optional"' + (vfCtx.imp[LS.lang] === 'optional' ? ' class="on"' : '') + '>☆ ' + (ca() ? 'Opcional' : 'Opcional') + '</button></div>' +
+    '<button data-i="important"' + (iVal === 'important' ? ' class="on"' : '') + '>⭐ ' + (ca() ? 'Important' : 'Importante') + '</button>' +
+    '<button data-i="optional"' + (iVal === 'optional' ? ' class="on"' : '') + '>☆ ' + (ca() ? 'Opcional' : 'Opcional') + '</button></div>' +
     '<div class="cm-hint">' + (ca() ? 'Els ⭐ importants bloquegen el bloc següent fins que estiguin fets.' : 'Los ⭐ importantes bloquean el bloque siguiente hasta que estén hechos.') + '</div></div>' +
     '</div><div class="cm-foot"><button class="cm-btn" id="vfCancel">' + (ca() ? 'Cancel·la' : 'Cancelar') + '</button>' +
     '<button class="cm-btn pri" id="vfSave">' + (ca() ? 'Desa' : 'Guardar') + '</button></div></div>';
@@ -5128,40 +5245,36 @@ function openVideoForm(id, l, b) {
   $('vfCancel').onclick = function () { m.classList.remove('on'); };
   m.querySelectorAll('#vfImp button').forEach(function (btn) {
     btn.onclick = function () {
-      vfCtx.imp[LS.lang] = btn.dataset.i;
+      vfCtx.imp = btn.dataset.i;
       m.querySelectorAll('#vfImp button').forEach(function (x2) { x2.classList.toggle('on', x2 === btn); });
     };
   });
   $('vfSave').onclick = function () {
-    var tca = $('vfTca').value.trim();
-    var tes = $('vfTes').value.trim();
-    if (!tca && !tes) { $('vfTca').focus(); return; }
-    var rec = {
-      t: { ca: tca || tes, es: tes || tca },
-      d: { ca: $('vfDca').value.trim(), es: $('vfDes').value.trim() },
-      l: { ca: parseDriveId($('vfLca').value) || '', es: parseDriveId($('vfLes').value) || '' },
-      imp: { ca: vfCtx.imp.ca, es: vfCtx.imp.es }
-    };
-    if (vfCtx.nv) {
-      vfCtx.nv.vid.t = rec.t; vfCtx.nv.vid.d = rec.d; vfCtx.nv.vid.l = rec.l; vfCtx.nv.vid.imp = rec.imp;
-    } else if (vfCtx.id) {
-      OV.t[vfCtx.id] = rec.t;
-      OV.d[vfCtx.id] = rec.d;
-      if (rec.l.ca || rec.l.es) OV.l[vfCtx.id] = rec.l;
-      OV.imp[vfCtx.id + ':ca'] = rec.imp.ca;
-      OV.imp[vfCtx.id + ':es'] = rec.imp.es;
-    } else {
-      nvBucket(vfCtx.level, vfCtx.block, true).push(rec);
+    var title = $('vfT').value.trim();
+    if (!title) { $('vfT').focus(); return; }
+    var id = vfCtx.id;
+    if (!id) {
+      var c = slotCoords(vfCtx.level, vfCtx.block);
+      var arr = nvBucket(vfCtx.level, vfCtx.block, true);
+      id = c.si + '.' + c.ui + '.' + vfCtx.block + '.' + (legacyCount(c.si, c.ui, vfCtx.block) + arr.length);
+      arr.push(lang);
     }
+    OV.t = OV.t || {}; OV.t[id] = OV.t[id] || {}; OV.t[id][lang] = title;
+    OV.d = OV.d || {}; OV.d[id] = OV.d[id] || {}; OV.d[id][lang] = $('vfD').value.trim();
+    var lk = parseDriveId($('vfL').value);
+    OV.l = OV.l || {}; OV.l[id] = OV.l[id] || {};
+    if (lk) OV.l[id][lang] = lk; else delete OV.l[id][lang];
+    OV.imp = OV.imp || {}; OV.imp[id + ':' + lang] = vfCtx.imp;
+    unmarkDeleted(id);
     m.classList.remove('on');
     rebuild();
-    paintManager();
-    showToast(vfCtx.id ? (ca() ? '💾 Desat' : '💾 Guardado') : (ca() ? '＋ Vídeo afegit' : '＋ Vídeo añadido'));
+    if ($('cmModal') && $('cmModal').classList.contains('on')) paintManager(); else render();
+    showToast(vfCtx.id ? (ca() ? '💾 Desat' : '💾 Guardado') : (ca() ? '＋ Vídeo afegit a ' + lang.toUpperCase() : '＋ Vídeo añadido a ' + lang.toUpperCase()));
   };
-  setTimeout(function () { $('vfTca').focus(); }, 50);
+  setTimeout(function () { $('vfT').focus(); }, 50);
 }
 
-/* ── §10 Navegació Lliure (filtrada per nivell) ── */
+/* ── §10 Navegació Lliure (filtrada per nivell i per idioma) ── */
 window.renderFree = function () {
   if (autoLevelPending) { smartFreeLevel(); autoLevelPending = false; }
   CTX = freeLevel;
@@ -5234,7 +5347,7 @@ window.renderFree = function () {
 
   var head = el('div', 'blkhead', '<span class="blkt">' + esc(blockNames(freeLevel, LS.lang)[freeBlock] || '') + '</span>');
   if (editModeOn && freeLevel !== 0) {
-    var add = el('button', 'adjb', '＋ ' + (ca() ? 'Afegir vídeo' : 'Añadir vídeo'));
+    var add = el('button', 'adjb', '＋ ' + (ca() ? 'Afegir vídeo (' + LS.lang.toUpperCase() + ')' : 'Añadir vídeo (' + LS.lang.toUpperCase() + ')'));
     add.style.marginLeft = 'auto';
     add.onclick = function () { openVideoForm(null, freeLevel, freeBlock); };
     head.appendChild(add);
@@ -5286,25 +5399,24 @@ window.renderFree = function () {
     if (!freeQuery && vidBlockById(id) !== freeBlock) card.style.display = 'none';
     else shown++;
     if (editModeOn) {
-      var nv = nvIndexOf(id);
-      if (nv) {
-        var del = el('button', 'vid-del-btn', '🗑️');
-        del.onclick = function (e) {
-          e.stopPropagation();
-          if (!confirm(ca() ? 'Eliminar aquest vídeo?' : '¿Eliminar este vídeo?')) return;
-          nv.arr.splice(nv.i, 1);
-          rebuild();
-          render();
-        };
-        var host = card.querySelector('.acts');
-        if (host) host.appendChild(del);
-      }
+      var del = el('button', 'vid-del-btn', '🗑️');
+      del.title = ca() ? 'Elimina només del curs ' + LS.lang.toUpperCase() : 'Elimina solo del curso ' + LS.lang.toUpperCase();
+      del.onclick = function (e) {
+        e.stopPropagation();
+        if (!confirm(ca() ? 'Eliminar aquest vídeo NOMÉS de ' + LS.lang.toUpperCase() + '?' : '¿Eliminar este vídeo SOLO de ' + LS.lang.toUpperCase() + '?')) return;
+        markDeleted(id);
+        rebuild();
+        render();
+        showToast(ca() ? '🗑 Eliminats de ' + LS.lang.toUpperCase() : '🗑 Eliminado de ' + LS.lang.toUpperCase());
+      };
+      var host = card.querySelector('.acts');
+      if (host) host.appendChild(del);
     }
     grid.appendChild(card);
   });
   if (!shown) {
     grid.appendChild(el('div', '', '<div style="grid-column:1/-1;text-align:center;padding:34px;color:var(--mut)">' +
-      (ca() ? 'Cap vídeo en aquest bloc encara.' : 'Ningún vídeo en este bloque todavía.') + '</div>'));
+      (ca() ? 'Cap vídeo en aquest bloc en aquest idioma.' : 'Ningún vídeo en este bloque en este idioma.') + '</div>'));
   }
   fv.appendChild(grid);
 };
@@ -5434,8 +5546,6 @@ function install() {
     var btn = $('mCourse');
     if (btn) btn.style.display = (editModeOn && currentUserRole() === 'admin') ? 'flex' : 'none';
   };
-  var _save = window.saveAsFile;
-  window.saveAsFile = function () { harvest(); _save(); };
   var _smart = window.smartFreeLevel;
   window.smartFreeLevel = function () {
     _smart();
@@ -5443,16 +5553,16 @@ function install() {
   };
   rebuild();
   render();
-  console.log('🗂 GJPS · gestor del curs actiu · nivells:', activeLevels().join(', '));
+  console.log('🗂 GJPS · gestor del curs v1.2 · idioma actiu:', LS.lang, '· nivells:', activeLevels().join(', '));
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
 else install();
 window.GJPSCourse = {
-  rebuild: rebuild, harvest: harvest, open: openManager,
-  levels: activeLevels, seq: trackContext, blockSeq: blockSeq,
+  rebuild: rebuild, open: openManager, levels: activeLevels, seq: trackContext,
+  blockSeq: blockSeq, deleted: function () { return OV.del || {}; },
   data: function () { return OV; }
 };
 })();
 </script>
-</body>
-</html>
+
+<button id="mCourse" type="button" title="Gestor del curs" style="display: none;">🗂</button><div class="cm-scrim" id="cmModal"><div class="cm-box"><div class="cm-head"><h3>Gestor del curs</h3><button class="cm-x" id="cmClose">✕</button></div><div class="cm-body"><aside class="cm-side" id="cmSide"><div class="cm-st">Nivells · CA</div><button class="cm-lv"><span class="cm-dot act"></span><span class="cm-lvt">Benvinguda</span><span class="cm-lvn">3</span></button><button class="cm-lv on"><span class="cm-dot act"></span><span class="cm-lvt">Nivell Fonamental</span><span class="cm-lvn">70</span></button><button class="cm-lv"><span class="cm-dot"></span><span class="cm-sti">🚧</span><span class="cm-lvt">Nivell 2</span><span class="cm-lvn">0</span></button><button class="cm-lv"><span class="cm-dot"></span><span class="cm-sti">⏳</span><span class="cm-lvt">Nivell 3</span><span class="cm-lvn">0</span></button><button class="cm-lv"><span class="cm-dot"></span><span class="cm-sti">⏳</span><span class="cm-lvt">Nivell 4</span><span class="cm-lvn">0</span></button><button class="cm-lv"><span class="cm-dot"></span><span class="cm-sti">⏳</span><span class="cm-lvt">Nivell 5</span><span class="cm-lvn">0</span></button><button class="cm-lv"><span class="cm-dot"></span><span class="cm-sti">⏳</span><span class="cm-lvt">Nivell 6</span><span class="cm-lvn">0</span></button></aside><section class="cm-main" id="cmMain"><div class="cm-lvhead"><div class="cm-two"><label class="cm-fld"><span>Nom del nivell (CA))</span><input data-lvnm="ca" value="Nivell Fonamental"></label><label class="cm-fld"><span>Nom del nivell (ES)</span><input data-lvnm="es" value="Nivel Fundamental"></label></div><button class="cm-sw" id="cmActive" aria-pressed="true"><span class="cm-swt"></span>Publicat</button></div><div class="cm-seg" id="cmState" style="margin-bottom:8px"><button data-st="done" class="on">✔ Acabat</button><button data-st="wip">🚧 En construcció</button><button data-st="soon">⏳ Pròximament</button></div><div class="cm-hint" style="margin:-6px 0 12px">Cada idioma es gestiona per separat: el que editis ara només afecta el curs en català. «Publicat» controla la navegació; l'estat només canvia la icona del llistat.</div><div class="cm-note"><b>Seqüenciació.</b> «Per blocs» no serveix el bloc següent fins que tots els ⭐ importants de l'anterior estan fets. «Ordre del curs» respecta l'itinerari entrellaçat.</div><div class="cm-seg" id="cmSeq"><button data-seq="order" class="on">Ordre del curs</button><button data-seq="blocks">Per blocs</button></div><div class="cm-blk"><div class="cm-bh"><div class="cm-two"><label class="cm-fld"><span>Bloc 1 (CA)</span><input data-bn="t|ca" value="Tècnica"></label><label class="cm-fld"><span>Bloc 1 (ES)</span><input data-bn="t|es" value="Técnica"></label></div><div class="cm-bmeta">20 vídeos · 20 ⭐</div></div><div class="cm-vlist"><div class="cm-vrow"><span class="cm-vn">1</span><span class="cm-vt">Funcionament de les Rutines</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.1.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.1.t.0" title="Edita">✎</button><button class="cm-ib" data-up="1.1.t.0" disabled="">↑</button><button class="cm-ib" data-dn="1.1.t.0">↓</button><button class="cm-ib d" data-del="1.1.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">2</span><span class="cm-vt">Postura al Piano: Posició Corporal Correcta</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.2.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.2.t.0" title="Edita">✎</button><button class="cm-ib" data-up="1.2.t.0">↑</button><button class="cm-ib" data-dn="1.2.t.0">↓</button><button class="cm-ib d" data-del="1.2.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">3</span><span class="cm-vt">Rutines 01-10</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.2.t.1" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.2.t.1" title="Edita">✎</button><button class="cm-ib" data-up="1.2.t.1">↑</button><button class="cm-ib" data-dn="1.2.t.1">↓</button><button class="cm-ib d" data-del="1.2.t.1" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">4</span><span class="cm-vt">Rutines 11-20</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.3.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.3.t.0" title="Edita">✎</button><button class="cm-ib" data-up="1.3.t.0">↑</button><button class="cm-ib" data-dn="1.3.t.0">↓</button><button class="cm-ib d" data-del="1.3.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">5</span><span class="cm-vt">Rutines 21-30</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.0.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.0.t.0" title="Edita">✎</button><button class="cm-ib" data-up="2.0.t.0">↑</button><button class="cm-ib" data-dn="2.0.t.0">↓</button><button class="cm-ib d" data-del="2.0.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">6</span><span class="cm-vt">Rutines 31-40</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.1.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.1.t.0" title="Edita">✎</button><button class="cm-ib" data-up="2.1.t.0">↑</button><button class="cm-ib" data-dn="2.1.t.0">↓</button><button class="cm-ib d" data-del="2.1.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">7</span><span class="cm-vt">Rutines 41-50</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.2.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.2.t.0" title="Edita">✎</button><button class="cm-ib" data-up="2.2.t.0">↑</button><button class="cm-ib" data-dn="2.2.t.0">↓</button><button class="cm-ib d" data-del="2.2.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">8</span><span class="cm-vt">Rutines 51-60</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.3.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.3.t.0" title="Edita">✎</button><button class="cm-ib" data-up="2.3.t.0">↑</button><button class="cm-ib" data-dn="2.3.t.0">↓</button><button class="cm-ib d" data-del="2.3.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">9</span><span class="cm-vt">Rutines 61-70</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.0.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.t.0" title="Edita">✎</button><button class="cm-ib" data-up="3.0.t.0">↑</button><button class="cm-ib" data-dn="3.0.t.0">↓</button><button class="cm-ib d" data-del="3.0.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">10</span><span class="cm-vt">Rutines 71-80</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.1.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.1.t.0" title="Edita">✎</button><button class="cm-ib" data-up="3.1.t.0">↑</button><button class="cm-ib" data-dn="3.1.t.0">↓</button><button class="cm-ib d" data-del="3.1.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">11</span><span class="cm-vt">Rutines 81-90</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.2.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.2.t.0" title="Edita">✎</button><button class="cm-ib" data-up="3.2.t.0">↑</button><button class="cm-ib" data-dn="3.2.t.0">↓</button><button class="cm-ib d" data-del="3.2.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">12</span><span class="cm-vt">Rutines 91-100</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.3.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.3.t.0" title="Edita">✎</button><button class="cm-ib" data-up="3.3.t.0">↑</button><button class="cm-ib" data-dn="3.3.t.0">↓</button><button class="cm-ib d" data-del="3.3.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">13</span><span class="cm-vt">Rutines 101-110</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="4.0.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.0.t.0" title="Edita">✎</button><button class="cm-ib" data-up="4.0.t.0">↑</button><button class="cm-ib" data-dn="4.0.t.0">↓</button><button class="cm-ib d" data-del="4.0.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">14</span><span class="cm-vt">Rutines 111-120</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="4.1.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.1.t.0" title="Edita">✎</button><button class="cm-ib" data-up="4.1.t.0">↑</button><button class="cm-ib" data-dn="4.1.t.0">↓</button><button class="cm-ib d" data-del="4.1.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">15</span><span class="cm-vt">Rutines 121-130</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="4.2.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.2.t.0" title="Edita">✎</button><button class="cm-ib" data-up="4.2.t.0">↑</button><button class="cm-ib" data-dn="4.2.t.0">↓</button><button class="cm-ib d" data-del="4.2.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">16</span><span class="cm-vt">Rutines 131-140</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="4.3.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.3.t.0" title="Edita">✎</button><button class="cm-ib" data-up="4.3.t.0">↑</button><button class="cm-ib" data-dn="4.3.t.0">↓</button><button class="cm-ib d" data-del="4.3.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">17</span><span class="cm-vt">Rutines 141-150</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.0.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.0.t.0" title="Edita">✎</button><button class="cm-ib" data-up="5.0.t.0">↑</button><button class="cm-ib" data-dn="5.0.t.0">↓</button><button class="cm-ib d" data-del="5.0.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">18</span><span class="cm-vt">Rutines 151-160</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.1.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.1.t.0" title="Edita">✎</button><button class="cm-ib" data-up="5.1.t.0">↑</button><button class="cm-ib" data-dn="5.1.t.0">↓</button><button class="cm-ib d" data-del="5.1.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">19</span><span class="cm-vt">Rutines 161-170</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.2.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.2.t.0" title="Edita">✎</button><button class="cm-ib" data-up="5.2.t.0">↑</button><button class="cm-ib" data-dn="5.2.t.0">↓</button><button class="cm-ib d" data-del="5.2.t.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">20</span><span class="cm-vt">Rutines 171-180</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.3.t.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.3.t.0" title="Edita">✎</button><button class="cm-ib" data-up="5.3.t.0">↑</button><button class="cm-ib" data-dn="5.3.t.0" disabled="">↓</button><button class="cm-ib d" data-del="5.3.t.0" title="Elimina (només aquest idioma)">🗑</button></div><button class="cm-add" data-add="1|t">＋ Afegir vídeo (CA)</button></div></div><div class="cm-blk"><div class="cm-bh"><div class="cm-two"><label class="cm-fld"><span>Bloc 2 (CA)</span><input data-bn="g|ca" value="Teoria"></label><label class="cm-fld"><span>Bloc 2 (ES)</span><input data-bn="g|es" value="Teoría"></label></div><div class="cm-bmeta">11 vídeos · 11 ⭐</div></div><div class="cm-vlist"><div class="cm-vrow"><span class="cm-vn">1</span><span class="cm-vt">Notes al piano: Introducció Essencial</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="1.0.g.0" disabled="">↑</button><button class="cm-ib" data-dn="1.0.g.0">↓</button><button class="cm-ib d" data-del="1.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">2</span><span class="cm-vt">Claus musicals: Com Llegir i Col·locar Mans</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.0.g.1" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.0.g.1" title="Edita">✎</button><button class="cm-ib" data-up="1.0.g.1">↑</button><button class="cm-ib" data-dn="1.0.g.1">↓</button><button class="cm-ib d" data-del="1.0.g.1" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">3</span><span class="cm-vt">Introducció a les Tríades</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="2.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="2.0.g.0">↑</button><button class="cm-ib" data-dn="2.0.g.0">↓</button><button class="cm-ib d" data-del="2.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">4</span><span class="cm-vt">Escala Major: Patró Universal</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="3.0.g.0">↑</button><button class="cm-ib" data-dn="3.0.g.0">↓</button><button class="cm-ib d" data-del="3.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">5</span><span class="cm-vt">Introducció al Sistema Tonal</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.2.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.2.g.0" title="Edita">✎</button><button class="cm-ib" data-up="3.2.g.0">↑</button><button class="cm-ib" data-dn="3.2.g.0">↓</button><button class="cm-ib d" data-del="3.2.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">6</span><span class="cm-vt">Inversió de Tríades Majors i Menors</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="4.0.g.0">↑</button><button class="cm-ib" data-dn="4.0.g.0">↓</button><button class="cm-ib d" data-del="4.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">7</span><span class="cm-vt">Tríades Majors i Menors en Posició Oberta</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.2.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.2.g.0" title="Edita">✎</button><button class="cm-ib" data-up="4.2.g.0">↑</button><button class="cm-ib" data-dn="4.2.g.0">↓</button><button class="cm-ib d" data-del="4.2.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">8</span><span class="cm-vt">Voicings Triàdics a Dues Mans</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="5.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="5.0.g.0">↑</button><button class="cm-ib" data-dn="5.0.g.0">↓</button><button class="cm-ib d" data-del="5.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">9</span><span class="cm-vt">Introducció al Solfeig</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="5.2.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.2.g.0" title="Edita">✎</button><button class="cm-ib" data-up="5.2.g.0">↑</button><button class="cm-ib" data-dn="5.2.g.0">↓</button><button class="cm-ib d" data-del="5.2.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">10</span><span class="cm-vt">Funcions Tonals Bàsiques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="6.0.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.0.g.0" title="Edita">✎</button><button class="cm-ib" data-up="6.0.g.0">↑</button><button class="cm-ib" data-dn="6.0.g.0">↓</button><button class="cm-ib d" data-del="6.0.g.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">11</span><span class="cm-vt">Introducció a la Connexió de Tríades</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="6.2.g.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.2.g.0" title="Edita">✎</button><button class="cm-ib" data-up="6.2.g.0">↑</button><button class="cm-ib" data-dn="6.2.g.0" disabled="">↓</button><button class="cm-ib d" data-del="6.2.g.0" title="Elimina (només aquest idioma)">🗑</button></div><button class="cm-add" data-add="1|g">＋ Afegir vídeo (CA)</button></div></div><div class="cm-blk"><div class="cm-bh"><div class="cm-two"><label class="cm-fld"><span>Bloc 3 (CA)</span><input data-bn="r|ca" value="Ritme"></label><label class="cm-fld"><span>Bloc 3 (ES)</span><input data-bn="r|es" value="Ritmo"></label></div><div class="cm-bmeta">11 vídeos · 11 ⭐</div></div><div class="cm-vlist"><div class="cm-vrow"><span class="cm-vn">1</span><span class="cm-vt">Pols i Tempo: Figures bàsiques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.0.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.0.r.0" title="Edita">✎</button><button class="cm-ib" data-up="1.0.r.0" disabled="">↑</button><button class="cm-ib" data-dn="1.0.r.0">↓</button><button class="cm-ib d" data-del="1.0.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">2</span><span class="cm-vt">Puntet, Lligadura de prolongació i Contratemps</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="1.2.r.0">↑</button><button class="cm-ib" data-dn="1.2.r.0">↓</button><button class="cm-ib d" data-del="1.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">3</span><span class="cm-vt">Síncopa Musical</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="2.0.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.0.r.0" title="Edita">✎</button><button class="cm-ib" data-up="2.0.r.0">↑</button><button class="cm-ib" data-dn="2.0.r.0">↓</button><button class="cm-ib d" data-del="2.0.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">4</span><span class="cm-vt">Semicorxeres (I)</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="2.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="2.2.r.0">↑</button><button class="cm-ib" data-dn="2.2.r.0">↓</button><button class="cm-ib d" data-del="2.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">5</span><span class="cm-vt">Semicorxeres (II)</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.0.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.r.0" title="Edita">✎</button><button class="cm-ib" data-up="3.0.r.0">↑</button><button class="cm-ib" data-dn="3.0.r.0">↓</button><button class="cm-ib d" data-del="3.0.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">6</span><span class="cm-vt">Valors Irregulars: El Treset (I)</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="3.2.r.0">↑</button><button class="cm-ib" data-dn="3.2.r.0">↓</button><button class="cm-ib d" data-del="3.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">7</span><span class="cm-vt">Valors Irregulars: El Treset (II)</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.0.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.0.r.0" title="Edita">✎</button><button class="cm-ib" data-up="4.0.r.0">↑</button><button class="cm-ib" data-dn="4.0.r.0">↓</button><button class="cm-ib d" data-del="4.0.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">8</span><span class="cm-vt">Mètrica Simple i Composta</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="4.2.r.0">↑</button><button class="cm-ib" data-dn="4.2.r.0">↓</button><button class="cm-ib d" data-del="4.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">9</span><span class="cm-vt">Entrenament Rítmic</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="5.0.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.0.r.0" title="Edita">✎</button><button class="cm-ib" data-up="5.0.r.0">↑</button><button class="cm-ib" data-dn="5.0.r.0">↓</button><button class="cm-ib d" data-del="5.0.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">10</span><span class="cm-vt">Introducció a la Mètrica Irregular</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="5.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="5.2.r.0">↑</button><button class="cm-ib" data-dn="5.2.r.0">↓</button><button class="cm-ib d" data-del="5.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">11</span><span class="cm-vt">Repàs de Ritme del Nivell Fonamental</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="6.2.r.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.2.r.0" title="Edita">✎</button><button class="cm-ib" data-up="6.2.r.0">↑</button><button class="cm-ib" data-dn="6.2.r.0" disabled="">↓</button><button class="cm-ib d" data-del="6.2.r.0" title="Elimina (només aquest idioma)">🗑</button></div><button class="cm-add" data-add="1|r">＋ Afegir vídeo (CA)</button></div></div><div class="cm-blk"><div class="cm-bh"><div class="cm-two"><label class="cm-fld"><span>Bloc 4 (CA)</span><input data-bn="a|ca" value="Auditiu"></label><label class="cm-fld"><span>Bloc 4 (ES)</span><input data-bn="a|es" value="Auditivo"></label></div><div class="cm-bmeta">11 vídeos · 11 ⭐</div></div><div class="cm-vlist"><div class="cm-vrow"><span class="cm-vn">1</span><span class="cm-vt">Fonaments de l'Oïda Musical</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.1.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.1.a.0" title="Edita">✎</button><button class="cm-ib" data-up="1.1.a.0" disabled="">↑</button><button class="cm-ib" data-dn="1.1.a.0">↓</button><button class="cm-ib d" data-del="1.1.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">2</span><span class="cm-vt">Evita Memoritzar Intervals</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="1.3.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.3.a.0" title="Edita">✎</button><button class="cm-ib" data-up="1.3.a.0">↑</button><button class="cm-ib" data-dn="1.3.a.0">↓</button><button class="cm-ib d" data-del="1.3.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">3</span><span class="cm-vt">Emocions: Notes Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="2.0.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.0.a.0" title="Edita">✎</button><button class="cm-ib" data-up="2.0.a.0">↑</button><button class="cm-ib" data-dn="2.0.a.0">↓</button><button class="cm-ib d" data-del="2.0.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">4</span><span class="cm-vt">Instruccions i Correcció del Test</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="2.3.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.3.a.0" title="Edita">✎</button><button class="cm-ib" data-up="2.3.a.0">↑</button><button class="cm-ib" data-dn="2.3.a.0">↓</button><button class="cm-ib d" data-del="2.3.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">5</span><span class="cm-vt">Test de Notes Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.0.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.a.0" title="Edita">✎</button><button class="cm-ib" data-up="3.0.a.0">↑</button><button class="cm-ib" data-dn="3.0.a.0">↓</button><button class="cm-ib d" data-del="3.0.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">6</span><span class="cm-vt">Emocions: Notes No Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="3.1.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.1.a.0" title="Edita">✎</button><button class="cm-ib" data-up="3.1.a.0">↑</button><button class="cm-ib" data-dn="3.1.a.0">↓</button><button class="cm-ib d" data-del="3.1.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">7</span><span class="cm-vt">Test de Notes No Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.2.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.2.a.0" title="Edita">✎</button><button class="cm-ib" data-up="4.2.a.0">↑</button><button class="cm-ib" data-dn="4.2.a.0">↓</button><button class="cm-ib d" data-del="4.2.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">8</span><span class="cm-vt">Emocions: Notes Diatòniques + No Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="4.3.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.3.a.0" title="Edita">✎</button><button class="cm-ib" data-up="4.3.a.0">↑</button><button class="cm-ib" data-dn="4.3.a.0">↓</button><button class="cm-ib d" data-del="4.3.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">9</span><span class="cm-vt">Test de Notes Diatòniques + No Diatòniques</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="6.1.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.1.a.0" title="Edita">✎</button><button class="cm-ib" data-up="6.1.a.0">↑</button><button class="cm-ib" data-dn="6.1.a.0">↓</button><button class="cm-ib d" data-del="6.1.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">10</span><span class="cm-vt">La Tònica com a Única Referència</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="6.2.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.2.a.0" title="Edita">✎</button><button class="cm-ib" data-up="6.2.a.0">↑</button><button class="cm-ib" data-dn="6.2.a.0">↓</button><button class="cm-ib d" data-del="6.2.a.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">11</span><span class="cm-vt">TONAL EMOTIONS: El teu Laboratori Auditiu</span><span class="cm-vl ok">▶</span><button class="cm-ib" data-imp="6.3.a.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.3.a.0" title="Edita">✎</button><button class="cm-ib" data-up="6.3.a.0">↑</button><button class="cm-ib" data-dn="6.3.a.0" disabled="">↓</button><button class="cm-ib d" data-del="6.3.a.0" title="Elimina (només aquest idioma)">🗑</button></div><button class="cm-add" data-add="1|a">＋ Afegir vídeo (CA)</button></div></div><div class="cm-blk"><div class="cm-bh"><div class="cm-two"><label class="cm-fld"><span>Bloc 5 (CA)</span><input data-bn="p|ca" value="Pràctica"></label><label class="cm-fld"><span>Bloc 5 (ES)</span><input data-bn="p|es" value="Práctica"></label></div><div class="cm-bmeta">17 vídeos · 16 ⭐</div></div><div class="cm-vlist"><div class="cm-vrow"><span class="cm-vn">1</span><span class="cm-vt">La Xocolatera (tema)</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.1.p.0" title="Important / opcional">☆</button><button class="cm-ib" data-edit="1.1.p.0" title="Edita">✎</button><button class="cm-ib" data-up="1.1.p.0" disabled="">↑</button><button class="cm-ib" data-dn="1.1.p.0">↓</button><button class="cm-ib d" data-del="1.1.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">2</span><span class="cm-vt">Himne Alegria (I)</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.2.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.2.p.0" title="Edita">✎</button><button class="cm-ib" data-up="1.2.p.0">↑</button><button class="cm-ib" data-dn="1.2.p.0">↓</button><button class="cm-ib d" data-del="1.2.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">3</span><span class="cm-vt">Perestroika (SAU)</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="1.3.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="1.3.p.0" title="Edita">✎</button><button class="cm-ib" data-up="1.3.p.0">↑</button><button class="cm-ib" data-dn="1.3.p.0">↓</button><button class="cm-ib d" data-del="1.3.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">4</span><span class="cm-vt">Aunque Tú No Lo Sepas</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.0.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.0.p.0" title="Edita">✎</button><button class="cm-ib" data-up="2.0.p.0">↑</button><button class="cm-ib" data-dn="2.0.p.0">↓</button><button class="cm-ib d" data-del="2.0.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">5</span><span class="cm-vt">Tríades Majors: CT1</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="2.1.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="2.1.p.0" title="Edita">✎</button><button class="cm-ib" data-up="2.1.p.0">↑</button><button class="cm-ib" data-dn="2.1.p.0">↓</button><button class="cm-ib d" data-del="2.1.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">6</span><span class="cm-vt">Let it Be</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.0.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.p.0" title="Edita">✎</button><button class="cm-ib" data-up="3.0.p.0">↑</button><button class="cm-ib" data-dn="3.0.p.0">↓</button><button class="cm-ib d" data-del="3.0.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">7</span><span class="cm-vt">Tríades Majors: CT2</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.0.p.1" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.0.p.1" title="Edita">✎</button><button class="cm-ib" data-up="3.0.p.1">↑</button><button class="cm-ib" data-dn="3.0.p.1">↓</button><button class="cm-ib d" data-del="3.0.p.1" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">8</span><span class="cm-vt">Himne Alegria (II)</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.2.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.2.p.0" title="Edita">✎</button><button class="cm-ib" data-up="3.2.p.0">↑</button><button class="cm-ib" data-dn="3.2.p.0">↓</button><button class="cm-ib d" data-del="3.2.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">9</span><span class="cm-vt">Tríades Majors: CC</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="3.3.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="3.3.p.0" title="Edita">✎</button><button class="cm-ib" data-up="3.3.p.0">↑</button><button class="cm-ib" data-dn="3.3.p.0">↓</button><button class="cm-ib d" data-del="3.3.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">10</span><span class="cm-vt">Tríades Menors: CT1</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="4.1.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="4.1.p.0" title="Edita">✎</button><button class="cm-ib" data-up="4.1.p.0">↑</button><button class="cm-ib" data-dn="4.1.p.0">↓</button><button class="cm-ib d" data-del="4.1.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">11</span><span class="cm-vt">Tríades Menors: CT2</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.0.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.0.p.0" title="Edita">✎</button><button class="cm-ib" data-up="5.0.p.0">↑</button><button class="cm-ib" data-dn="5.0.p.0">↓</button><button class="cm-ib d" data-del="5.0.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">12</span><span class="cm-vt">Tríades Menors: CC</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.2.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.2.p.0" title="Edita">✎</button><button class="cm-ib" data-up="5.2.p.0">↑</button><button class="cm-ib" data-dn="5.2.p.0">↓</button><button class="cm-ib d" data-del="5.2.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">13</span><span class="cm-vt">Interstellar</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="5.3.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="5.3.p.0" title="Edita">✎</button><button class="cm-ib" data-up="5.3.p.0">↑</button><button class="cm-ib" data-dn="5.3.p.0">↓</button><button class="cm-ib d" data-del="5.3.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">14</span><span class="cm-vt">Heaven (Bryan Adams)</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="6.0.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.0.p.0" title="Edita">✎</button><button class="cm-ib" data-up="6.0.p.0">↑</button><button class="cm-ib" data-dn="6.0.p.0">↓</button><button class="cm-ib d" data-del="6.0.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">15</span><span class="cm-vt">Time</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="6.1.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.1.p.0" title="Edita">✎</button><button class="cm-ib" data-up="6.1.p.0">↑</button><button class="cm-ib" data-dn="6.1.p.0">↓</button><button class="cm-ib d" data-del="6.1.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">16</span><span class="cm-vt">Someone Like You</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="6.3.p.0" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.3.p.0" title="Edita">✎</button><button class="cm-ib" data-up="6.3.p.0">↑</button><button class="cm-ib" data-dn="6.3.p.0">↓</button><button class="cm-ib d" data-del="6.3.p.0" title="Elimina (només aquest idioma)">🗑</button></div><div class="cm-vrow"><span class="cm-vn">17</span><span class="cm-vt">Introducció als FNG</span><span class="cm-vl">—</span><button class="cm-ib" data-imp="6.3.p.1" title="Important / opcional">⭐</button><button class="cm-ib" data-edit="6.3.p.1" title="Edita">✎</button><button class="cm-ib" data-up="6.3.p.1">↑</button><button class="cm-ib" data-dn="6.3.p.1" disabled="">↓</button><button class="cm-ib d" data-del="6.3.p.1" title="Elimina (només aquest idioma)">🗑</button></div><button class="cm-add" data-add="1|p">＋ Afegir vídeo (CA)</button></div></div></section></div><div class="cm-foot"><span class="cm-stat" id="cmStat">2/7 nivells actius · 73 vídeos (CA)</span><button class="cm-btn pri" id="cmDone">Fet</button></div></div></div><div class="cm-scrim" id="vfModal"><div class="cm-box sm"><div class="cm-head"><h3>Edita el vídeo · CATALÀ</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll"><div class="cm-note"><b>Nivell Fonamental</b> → <b>Teoria</b><br>Aquest formulari només edita el curs en català.</div><label class="cm-fld"><span>Títol</span><input id="vfT" value="Funcions Tonals Bàsiques"></label><label class="cm-fld"><span>Descripció</span><textarea id="vfD">Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme.</textarea></label><label class="cm-fld"><span>Enllaç de Google Drive (ID o URL)</span><input id="vfL" value="" placeholder="1B0keL0UC… o https://drive.google.com/file/d/…"></label><div class="cm-fld"><span>Pes dins del bloc</span><div class="cm-seg" id="vfImp"><button data-i="important" class="on">⭐ Important</button><button data-i="optional">☆ Opcional</button></div><div class="cm-hint">Els ⭐ importants bloquegen el bloc següent fins que estiguin fets.</div></div></div><div class="cm-foot"><button class="cm-btn" id="vfCancel">Cancel·la</button><button class="cm-btn pri" id="vfSave">Desa</button></div></div></div></body></html>
