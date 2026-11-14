@@ -1522,14 +1522,12 @@ html[data-theme="dark"] #wm{
   }
 }
 
-/* ══ 29.10 MEDALLÓ A LA CAPÇALERA DEL SEGUIMENT CONTINUAT ══ */
+/* ══ 29.10 MEDALLÓ DEL SEGUIMENT: a la fila al PC/tablet, a la capçalera al mòbil vertical ══ */
 .now{ position:relative; }
-.now > .imp-hero{ position:absolute; top:16px; right:16px; }
-.now .ctx,
-.now .nowlbl{ padding-right:58px; }
-@media (max-width:767px){
-  .now > .imp-hero{ top:14px; right:14px; }
-  .now .ctx,.now .nowlbl{ padding-right:52px; }
+@media (max-width: 767px) and (orientation: portrait){
+  .now > .imp-hero{ position:absolute; top:14px; right:14px; }
+  .now .ctx,
+  .now .nowlbl{ padding-right:52px; }
 }
 
 </style>
@@ -3046,9 +3044,7 @@ function renderTrack() {
     now.className = 'now';
     now.innerHTML = '<div class="ctx">' + D[next.si].n[LS.lang] + ' · ' + t().unit + ' ' + (next.ui + 1) + '</div><div class="nowlbl">' + t().now + ' ' + t().blocks[next.b] + '</div>';
     now.appendChild(makeVid(next.v, next.id, true, ''));
-    /* El medalló puja a la capçalera del requadre: allibera l'amplada del títol */
-    var med = now.querySelector('.imp-hero');
-    if (med) now.appendChild(med);
+    placeNowMedal();
     var playBtn = now.querySelector('.play');
     if (playBtn) {
       var vrWrap = playBtn.closest('.vr');
@@ -3099,6 +3095,28 @@ function renderTrack() {
   renderReviewBox(tv);
 }
 
+/* ── 9b. UBICACIÓ RESPONSIVA DEL MEDALLÓ DEL SEGUIMENT ──
+   Mòbil vertical: puja a la capçalera del requadre (allibera l'amplada del títol).
+   Tablet i PC: es queda dins la fila del títol, on hi ha espai de sobres. */
+function placeNowMedal(){
+  var now = document.querySelector('#trackView .now');
+  if (!now) return;
+  var med = now.querySelector('.imp-hero');
+  var vr = now.querySelector('.vr');
+  if (!med || !vr) return;
+  var mobilePortrait = window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches;
+  if (mobilePortrait) { if (med.parentNode !== now) now.appendChild(med); }
+  else { if (med.parentNode !== vr) vr.appendChild(med); }
+}
+(function(){
+  var mq = window.matchMedia('(max-width: 767px) and (orientation: portrait)');
+  if (mq.addEventListener) mq.addEventListener('change', placeNowMedal);
+  else if (mq.addListener) mq.addListener(placeNowMedal);
+  window.addEventListener('resize', placeNowMedal);
+  window.addEventListener('orientationchange', function(){ setTimeout(placeNowMedal, 120); });
+})();
+
+function normTxt(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function normTxt(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
 function updateBlockHighlights() {
