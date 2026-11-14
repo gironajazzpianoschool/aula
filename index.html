@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
 
+
+
 <style>
 /* ============================================================
    1. VARIABLES I RESET
@@ -1258,10 +1260,267 @@ html.no-hover .lvlopt[aria-selected="true"]:hover{ background:var(--hair) !impor
   opacity:0;transform:translateX(8px);pointer-events:none;
   transition:opacity .22s var(--ease),transform .22s var(--ease-out);
 }
-.lvlopt.dis:hover,.lvlopt.dis.tip-on{ opacity:.75; }
-.lvlopt.dis:hover .lvlopt-tip,
-.lvlopt.dis.tip-on .lvlopt-tip{ opacity:1;transform:none; }
+.lvlopt.dis:hover{ opacity:.75; }
+.lvlopt.dis:hover .lvlopt-tip{ opacity:1;transform:none; }
 .lvlopt-soon,.lvlopt-prog,.lvlopt-bar,.lvlopt-pct{ display:none !important; }
+
+/* ══ 29. INSÍGNIA D'IMPORTÀNCIA · medalló al Seguiment, estrella original a la Lliure ══ */
+
+/* ── 29.1 La insígnia del Seguiment viu dins la fila del títol ── */
+.vr{align-items:center;}
+.vr .vt{flex:1;min-width:0;}
+.vr .vid-importance,.vr .vid-number{position:relative !important;top:auto !important;right:auto !important;flex:none;}
+.vr .vid-number{order:3;width:28px;height:28px;font-size:12px;}
+.vr .vid-importance{order:4;}
+
+/* ── 29.2 Estrella senzilla: Navegació Lliure ── */
+.vid-importance.imp-simple{
+  width:28px;height:28px;min-width:28px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;line-height:1;color:var(--gold);cursor:help;z-index:6;
+  transition:transform .2s ease;
+}
+.vid-importance.imp-simple:hover{transform:scale(1.2);}
+.vid-importance.imp-simple.editable{cursor:pointer;border-radius:7px;}
+.vid-importance.imp-simple.editable:hover{outline:1px dashed var(--gold);background:rgba(var(--imp-halo),.10);}
+
+/* ── 29.3 Paleta del medalló per tema ── */
+html[data-theme="dark"],html:not([data-theme]){
+  --imp-d1:#39414f;--imp-d2:#181c24;--imp-d3:#0a0c11;
+  --imp-mill:rgba(255,255,255,.075);
+  --imp-rim1:#fbe6b4;--imp-rim2:#e8b04b;--imp-rim3:#7d5416;--imp-rim4:#f7dc9a;
+  --imp-star:#ffd884;--imp-star-sh:rgba(0,0,0,.8);
+  --imp-spec:rgba(255,255,255,.32);--imp-spec-blend:screen;
+  --imp-halo:232,176,75;--imp-face-sh:rgba(0,0,0,.55);
+}
+html[data-theme="blue"]{
+  --imp-d1:#ffffff;--imp-d2:#eaf0f7;--imp-d3:#c7d5e6;
+  --imp-mill:rgba(61,90,128,.11);
+  --imp-rim1:#b3cde9;--imp-rim2:#3d5a80;--imp-rim3:#1d2e44;--imp-rim4:#8fb2d8;
+  --imp-star:#a8760a;--imp-star-sh:rgba(255,255,255,.9);
+  --imp-spec:rgba(61,90,128,.22);--imp-spec-blend:multiply;
+  --imp-halo:61,90,128;--imp-face-sh:rgba(26,32,48,.22);
+}
+html[data-theme="sepia"]{
+  --imp-d1:#fffefa;--imp-d2:#f2ead9;--imp-d3:#d6c7ab;
+  --imp-mill:rgba(92,69,38,.11);
+  --imp-rim1:#cbab73;--imp-rim2:#5c4526;--imp-rim3:#31240f;--imp-rim4:#b08c50;
+  --imp-star:#ad7c0c;--imp-star-sh:rgba(255,255,255,.9);
+  --imp-spec:rgba(92,69,38,.20);--imp-spec-blend:multiply;
+  --imp-halo:92,69,38;--imp-face-sh:rgba(74,53,32,.24);
+}
+
+/* ── 29.4 Contenidor del medalló ── */
+.vid-importance.imp-hero{
+  width:46px;height:46px;min-width:46px;display:grid;place-items:center;
+  cursor:help;z-index:6;isolation:isolate;
+  transition:transform .3s cubic-bezier(.16,1,.3,1),filter .3s ease;
+}
+.vid-importance.imp-hero:hover{transform:scale(1.09);}
+.vid-importance.imp-hero.editable{cursor:pointer;}
+.vid-importance.imp-hero.editable:hover{filter:brightness(1.07);}
+
+/* ── 29.5 Capes del medalló: geometria + calibratge definitiu ── */
+.imp-halo{
+  position:absolute;inset:-10px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(var(--imp-halo),0.26) 0%,rgba(var(--imp-halo),0.10) 45%,transparent 70%);
+  animation:impBreathe 5s ease-in-out infinite !important;
+}
+.imp-rim{
+  position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:1;
+  opacity:0.35;background:var(--imp-rim2);
+  box-shadow:0 2px 8px var(--imp-face-sh);
+  animation:impSpin 37s linear infinite !important;
+}
+.imp-rim::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  opacity:0.24;
+  background:conic-gradient(from 0deg,transparent 0deg,var(--imp-rim1) 58deg,transparent 128deg,
+    transparent 196deg,var(--imp-rim4) 250deg,transparent 320deg);
+}
+.imp-face{
+  position:absolute;inset:2px;border-radius:50%;overflow:hidden;z-index:2;
+  display:grid;place-items:center;
+  background:radial-gradient(circle at 34% 26%,var(--imp-d1) 0%,var(--imp-d2) 52%,var(--imp-d3) 100%);
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.30),inset 0 -2px 7px var(--imp-face-sh);
+}
+.imp-mill{
+  position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:repeating-radial-gradient(circle at 50% 50%,var(--imp-mill) 0 1px,transparent 1px 3.75px);
+}
+.imp-sweep{
+  position:absolute;inset:-45%;pointer-events:none;opacity:0.60;
+  mix-blend-mode:var(--imp-spec-blend);
+  background:conic-gradient(from 0deg,transparent 0deg,var(--imp-spec) 22deg,transparent 58deg,
+    transparent 190deg,var(--imp-spec) 214deg,transparent 246deg);
+  animation:impSpin 15s linear infinite !important;
+}
+.imp-star{
+  position:relative;z-index:3;width:67%;height:67%;display:block;color:var(--imp-star);
+  filter:drop-shadow(0 1px 1px var(--imp-star-sh));
+  animation:impBeat 5.5s ease-in-out infinite !important;
+}
+.imp-on .imp-star path{fill:currentColor;}
+.imp-off .imp-star path{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;}
+.imp-orbit{
+  position:absolute;inset:-7px;pointer-events:none;z-index:4;
+  animation:impSpin 15s linear infinite !important;
+  display:none !important;
+}
+.imp-dot{
+  position:absolute;top:0;left:50%;width:3.5px;height:3.5px;margin-left:-1.75px;border-radius:50%;
+  background:var(--imp-rim1);box-shadow:0 0 7px 1.5px rgba(var(--imp-halo),.6);
+}
+
+/* ── 29.6 Variant opcional: medalló apagat, sense moviment ── */
+.vid-importance.imp-off{opacity:.6;}
+.vid-importance.imp-off .imp-halo,
+.vid-importance.imp-off .imp-orbit,
+.vid-importance.imp-off .imp-sweep{display:none !important;}
+.vid-importance.imp-off .imp-rim{animation:none !important;opacity:.5;}
+.vid-importance.imp-off .imp-star{animation:none !important;}
+.vid-importance.imp-off .imp-face{background:radial-gradient(circle at 34% 26%,var(--imp-d1),var(--imp-d2));}
+
+/* ── 29.7 Animacions ── */
+@keyframes impSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes impBreathe{0%,100%{opacity:.38;transform:scale(.93)}50%{opacity:.96;transform:scale(1.1)}}
+@keyframes impBeat{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.140) rotate(-4deg)}}
+
+html.fx-calm .imp-halo,html.fx-calm .imp-rim,html.fx-calm .imp-sweep,
+html.fx-calm .imp-orbit,html.fx-calm .imp-star{animation:none !important;}
+
+/* ── 29.8 Navegació Lliure: insígnia i número a la cantonada de la targeta ── */
+.vid > .vid-importance.imp-simple{
+  position:absolute !important;top:8px !important;right:8px !important;
+  width:28px;height:28px;min-width:28px;min-height:28px;order:0;
+}
+.vid > .vid-number{
+  position:absolute !important;top:8px !important;right:38px !important;
+  width:28px;height:28px;font-size:12px;order:0;
+}
+.stagetag{padding-right:38px;}
+body.editmode .stagetag{padding-right:78px;}
+.vid:not(.vid-now):not(:has(.stagetag)) .vr{padding-right:38px;}
+
+.acts .vid-del-btn{background:var(--danger) !important;border-color:transparent !important;color:#fff !important;}
+
+/* ── 29.9 Responsive ── */
+@media (max-width:767px){
+  .vr{gap:9px;}
+  .vid-importance.imp-hero{width:42px;height:42px;min-width:42px;}
+  .vid-importance.imp-simple{font-size:19px;}
+}
+@media (max-width:380px){
+  .vr{gap:7px;}
+  .vid-importance.imp-hero{width:38px;height:38px;min-width:38px;}
+  .imp-orbit{inset:-5px;}
+  .imp-halo{inset:-7px;}
+}
+
+/* ══ 30. ENTRADA DE FAQ I AJUDA · revelat esglaonat discret ══ */
+@keyframes gjpsInfoIn{ from{opacity:0;translate:0 8px;} to{opacity:1;translate:0 0;} }
+@keyframes gjpsInfoFade{ from{opacity:0;} to{opacity:1;} }
+
+.info-container > h2{
+  animation:gjpsInfoIn .32s var(--ease-out,cubic-bezier(.16,1,.3,1)) both;
+}
+.info-container > p{
+  animation:gjpsInfoIn .32s var(--ease-out,cubic-bezier(.16,1,.3,1)) .04s both;
+}
+.info-container .faq-item,
+#faqGuestContent .faq-item{
+  animation:gjpsInfoIn .38s var(--ease-out,cubic-bezier(.16,1,.3,1)) both;
+}
+.info-container .faq-item:nth-of-type(1),#faqGuestContent .faq-item:nth-of-type(1){animation-delay:.070s}
+.info-container .faq-item:nth-of-type(2),#faqGuestContent .faq-item:nth-of-type(2){animation-delay:.105s}
+.info-container .faq-item:nth-of-type(3),#faqGuestContent .faq-item:nth-of-type(3){animation-delay:.140s}
+.info-container .faq-item:nth-of-type(4),#faqGuestContent .faq-item:nth-of-type(4){animation-delay:.175s}
+.info-container .faq-item:nth-of-type(5),#faqGuestContent .faq-item:nth-of-type(5){animation-delay:.210s}
+.info-container .faq-item:nth-of-type(6),#faqGuestContent .faq-item:nth-of-type(6){animation-delay:.245s}
+.info-container .faq-item:nth-of-type(7),#faqGuestContent .faq-item:nth-of-type(7){animation-delay:.280s}
+.info-container .faq-item:nth-of-type(8),#faqGuestContent .faq-item:nth-of-type(8){animation-delay:.315s}
+.info-container .faq-item:nth-of-type(9),#faqGuestContent .faq-item:nth-of-type(9){animation-delay:.350s}
+.info-container .faq-item:nth-of-type(n+10),#faqGuestContent .faq-item:nth-of-type(n+10){animation-delay:.385s}
+
+/* Moviment reduït del sistema: es conserva el fosa, es treu el desplaçament */
+@media (prefers-reduced-motion:reduce){
+  .info-container > h2,.info-container > p,
+  .info-container .faq-item,#faqGuestContent .faq-item{
+    animation-name:gjpsInfoFade;animation-duration:.24s;
+  }
+}
+/* Mode calma (tecla M): sense entrada */
+html.fx-calm .info-container > h2,
+html.fx-calm .info-container > p,
+html.fx-calm .info-container .faq-item,
+html.fx-calm #faqGuestContent .faq-item{animation:none !important;}
+
+/* ══ 30. ENTRADA DE FAQ I AJUDA · revelat esglaonat discret ══ */
+@keyframes gjpsInfoIn{
+  from{opacity:0;translate:0 8px;scale:0.940;}
+  to{opacity:1;translate:0 0;scale:1;}
+}
+@keyframes gjpsInfoFade{ from{opacity:0;} to{opacity:1;} }
+
+.info-container > h2{ animation:gjpsInfoIn 0.54s cubic-bezier(.16,1,.3,1) both; }
+.info-container > p{ animation:gjpsInfoIn 0.54s cubic-bezier(.16,1,.3,1) 0.051s both; }
+.info-container .faq-item,
+#faqGuestContent .faq-item{
+  animation:gjpsInfoIn 0.60s cubic-bezier(.16,1,.3,1) both;
+}
+.info-container .faq-item:nth-of-type(1),#faqGuestContent .faq-item:nth-of-type(1){animation-delay:0.070s}
+.info-container .faq-item:nth-of-type(2),#faqGuestContent .faq-item:nth-of-type(2){animation-delay:0.155s}
+.info-container .faq-item:nth-of-type(3),#faqGuestContent .faq-item:nth-of-type(3){animation-delay:0.240s}
+.info-container .faq-item:nth-of-type(4),#faqGuestContent .faq-item:nth-of-type(4){animation-delay:0.325s}
+.info-container .faq-item:nth-of-type(5),#faqGuestContent .faq-item:nth-of-type(5){animation-delay:0.410s}
+.info-container .faq-item:nth-of-type(6),#faqGuestContent .faq-item:nth-of-type(6){animation-delay:0.495s}
+.info-container .faq-item:nth-of-type(7),#faqGuestContent .faq-item:nth-of-type(7){animation-delay:0.580s}
+.info-container .faq-item:nth-of-type(8),#faqGuestContent .faq-item:nth-of-type(8){animation-delay:0.665s}
+.info-container .faq-item:nth-of-type(9),#faqGuestContent .faq-item:nth-of-type(9){animation-delay:0.750s}
+.info-container .faq-item:nth-of-type(10),#faqGuestContent .faq-item:nth-of-type(10){animation-delay:0.835s}
+.info-container .faq-item:nth-of-type(11),#faqGuestContent .faq-item:nth-of-type(11){animation-delay:0.920s}
+.info-container .faq-item:nth-of-type(n+12),#faqGuestContent .faq-item:nth-of-type(n+12){animation-delay:1.005s}
+
+/* Moviment reduït del sistema: es conserva la fosa, es treu el desplaçament */
+@media (prefers-reduced-motion:reduce){
+  .info-container > h2,.info-container > p,
+  .info-container .faq-item,#faqGuestContent .faq-item{
+    animation-name:gjpsInfoFade;animation-duration:.24s;
+  }
+}
+/* Mode calma (tecla M): sense entrada */
+html.fx-calm .info-container > h2,
+html.fx-calm .info-container > p,
+html.fx-calm .info-container .faq-item,
+html.fx-calm #faqGuestContent .faq-item{animation:none !important;}
+
+/* ══ 31. MODE FOSC AL PC · logo una mica més present i ambient menys negre ══ */
+
+/* 31.1 Dos comandaments independents del logo */
+html[data-theme="dark"]{
+  --wm-op:.18;      /* presència del logo (abans .15) */
+  --wm-lift:1.32;   /* blancor del logo (abans 1.05) */
+}
+html[data-theme="dark"] #wm{
+  filter:brightness(var(--wm-lift)) contrast(1.04) saturate(.96);
+}
+
+/* 31.2 Ambient una mica més lluminós, NOMÉS a partir de 1024 px */
+@media (min-width:1024px){
+  html[data-theme="dark"]{
+    --bg:#1f232e;        /* abans #1a1d27 */
+    --card:#181d27;      /* abans #13171f */
+    --line:#303643;      /* abans #2a2f3a */
+    --hair:rgba(255,255,255,.10);
+    --hair-2:rgba(255,255,255,.17);
+  }
+  html[data-theme="dark"] body{
+    background:
+      radial-gradient(72% 56% at 50% -8%,rgba(232,176,75,.045),transparent 62%),
+      radial-gradient(58% 48% at 100% 100%,rgba(76,201,240,.032),transparent 62%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+}
 
 </style>
 </head>
@@ -2315,7 +2574,7 @@ function makeVid(v, id, track, tag) {
   var ui = parseInt(id.split('.')[1], 10);
   var row = document.createElement('div');
   var hasLink = !!driveSrc(v, id);
-  row.className = 'vid' + (hasLink ? '' : ' nolink');
+  row.className = 'vid' + (hasLink ? '' : ' nolink') + (track ? ' vid-now' : '');
   row.id = 'v_' + id;
   row.dataset.vid = id;
   var orderNum = getVideoOrder(id);
@@ -2332,13 +2591,22 @@ function makeVid(v, id, track, tag) {
     dragHtml = '<div class="vid-drag" title="' + (LS.lang === 'ca' ? 'Arrossega per moure (dins o entre blocs)' : 'Arrastra para mover (dentro o entre bloques)') + '">✋</div>';
   }
   if (!isGiftId(id)) {
-    if (editModeOn) {
-      importanceHtml = '<div class="vid-importance editable" title="' + importanceTitle + '">' + importanceIcon + '</div>';
-      if (si !== 0) {
-        numberHtml = '<div class="vid-number editable" title="' + (LS.lang === 'ca' ? 'Canviar ordre' : 'Cambiar orden') + '">' + orderNum + '</div>';
-      }
+    var impState = importance === 'important' ? 'imp-on' : 'imp-off';
+    var impEdit = editModeOn ? ' editable' : '';
+    if (track) {
+      var impPath = 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z';
+      importanceHtml = '<div class="vid-importance imp-hero ' + impState + impEdit + '" title="' + importanceTitle + '" role="img" aria-label="' + importanceTitle + '">' +
+        '<span class="imp-halo"></span>' +
+        '<span class="imp-rim"></span>' +
+        '<span class="imp-face"><span class="imp-mill"></span><span class="imp-sweep"></span>' +
+        '<svg class="imp-star" viewBox="0 0 24 24" aria-hidden="true"><path d="' + impPath + '"/></svg></span>' +
+        '<span class="imp-orbit"><i class="imp-dot"></i></span>' +
+      '</div>';
     } else {
-      importanceHtml = '<div class="vid-importance" title="' + importanceTitle + '">' + importanceIcon + '</div>';
+      importanceHtml = '<div class="vid-importance imp-simple ' + impState + impEdit + '" title="' + importanceTitle + '" role="img" aria-label="' + importanceTitle + '">' + importanceIcon + '</div>';
+    }
+    if (editModeOn && si !== 0) {
+      numberHtml = '<div class="vid-number editable" title="' + (LS.lang === 'ca' ? 'Canviar ordre' : 'Cambiar orden') + '">' + orderNum + '</div>';
     }
   }
   var nkeyBase = 'gjps_notes_' + LS.user + '_' + id;
@@ -2367,8 +2635,10 @@ function makeVid(v, id, track, tag) {
   var bkShort = isBookmarked(id) ? (ca ? 'Marcat' : 'Marcado') : (ca ? 'Repàs' : 'Repaso');
   var ntShort = ca ? 'Notes' : 'Notas';
   
-  row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + numberHtml + importanceHtml +
-    '<div style="position:relative" class="vr"><button class="play">▶</button><div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div></div>' +
+  var impInRow = track ? (numberHtml + importanceHtml) : '';
+  var impOnCard = track ? '' : (numberHtml + importanceHtml);
+  row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + siTag + '" data-ovsk="n">' + tag + '</div>' : '') + dragHtml + impOnCard +
+    '<div style="position:relative" class="vr"><button class="play">▶</button><div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div>' + impInRow + '</div>' +
     '<div class="acts">' +
       '<button class="ck' + (LS.done[id] ? ' done' : '') + '" title="' + ckFull + '" aria-label="' + ckFull + '"><span class="ai">' + ckIcon + '</span><span class="al">' + ckShort + '</span><span class="ax">' + ckExtra + '</span></button>' +
       skipBtnHtml +
@@ -3040,8 +3310,8 @@ function renderFree() {
         }
         render();
       };
-      editBtns.appendChild(delBtn);
-      vidEl.appendChild(editBtns);
+      var actsHost = vidEl.querySelector('.acts');
+      if (actsHost) actsHost.appendChild(delBtn); else vidEl.appendChild(delBtn);
     }
     grid.appendChild(vidEl);
   });
@@ -3986,10 +4256,6 @@ function buildLevelPicker() {
     if (dis) {
       o.title = soonTxt;
       o.setAttribute('aria-label', L.n[LS.lang] + ' — ' + soonTxt);
-      o.addEventListener('click', function () {
-        menu.querySelectorAll('.lvlopt.tip-on').forEach(function (x) { if (x !== o) x.classList.remove('tip-on'); });
-        o.classList.toggle('tip-on');
-      });
     }
     o.innerHTML = '<span class="lvlopt-mark">' + (L.id === freeLevel ? CHECK_MARK : '') + '</span>' +
                   '<span class="lvlopt-txt">' + (ico ? '<span class="lvlopt-ico">' + ico + '</span>' : '') + esc(L.n[LS.lang]) + '</span>' + right;
@@ -4051,8 +4317,12 @@ function buildLevelPicker() {
     }
     if (e.key === 'Tab') close();
   }
+  function clearTips() {
+    opts.forEach(function (o) { o.classList.remove('tip-on'); });
+  }
   function openMenu() {
     if (open) return;
+    clearTips();
     open = true;
     wrap.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
@@ -4070,6 +4340,7 @@ function buildLevelPicker() {
   function close() {
     if (!open) return;
     open = false;
+    opts.forEach(function (o) { o.classList.remove('tip-on'); });
     wrap.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
     menu.removeAttribute('aria-activedescendant');
@@ -4192,4 +4463,613 @@ try {
   }
 })();
 </script>
-<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></body></html>
+<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc. Clica per canviar." aria-label="Tema: Fosc. Clica per canviar."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.0
+   Afegeix: activar nivells 2-6, reanomenar els 5 blocs de cada nivell,
+   afegir/editar/eliminar/reordenar vídeos, numeració per bloc (comença per 1)
+   i desbloqueig seqüencial del Seguiment Continuat.
+   Tot es desa dins l'OV, així «💾 Guardar» ho exporta dins l'index.html.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+
+/* ── §1 Constants ── */
+var B5 = ['t','g','r','a','p'];
+var MAX_LVL = 6;
+var CTX = 1;                       /* nivell de context per a t().blocks */
+function ca(){ return LS.lang === 'ca'; }
+function lvKey(l){ return String(l); }
+function el(tag, cls, html){ var n=document.createElement(tag); if(cls)n.className=cls; if(html!=null)n.innerHTML=html; return n; }
+
+/* ── §2 Model de nivells ── */
+function videoLevel(id){
+  if (isGiftId(id)) return -1;
+  var si = parseInt(String(id).split('.')[0],10);
+  if (isNaN(si)) return 1;
+  if (si === 0) return 0;
+  if (si <= 6) return 1;
+  return si - 6;                   /* seccions sintètiques 7..11 → nivells 2..6 */
+}
+function levelSections(l){
+  if (l === 0) return [0];
+  if (l === 1) return [1,2,3,4,5,6];
+  return [6 + l];
+}
+function levelObj(l){ for (var i=0;i<LEVELS.length;i++) if (LEVELS[i].id===l) return LEVELS[i]; return null; }
+function levelName(l){
+  var o = OV.lnm && OV.lnm[lvKey(l)];
+  if (o && o[LS.lang]) return o[LS.lang];
+  var L = levelObj(l);
+  return L ? L.n[LS.lang] : (ca()?'Nivell '+l:'Nivel '+l);
+}
+function levelActive(l){
+  var v = OV.lv && OV.lv[lvKey(l)];
+  if (typeof v === 'boolean') return v;
+  var L = levelObj(l);
+  return !!(L && L.active);
+}
+function activeLevels(){ var o=[]; for (var l=0;l<=MAX_LVL;l++) if (levelActive(l)) o.push(l); return o; }
+function seqMode(l){
+  var m = OV.seq && OV.seq[lvKey(l)];
+  if (m==='blocks'||m==='order') return m;
+  return l<=1 ? 'order' : 'blocks';
+}
+function ensureSections(){
+  for (var l=2;l<=MAX_LVL;l++){
+    var si=6+l;
+    if (D[si]) continue;
+    var unit={}; B5.forEach(function(b){ unit[b]={v:[],d:[]}; });
+    D[si]={ n:{ca:levelName(l),es:levelName(l)}, u:[unit], _synthetic:true };
+  }
+  for (var k=0;k<=MAX_LVL;k++){
+    var L=levelObj(k); if(!L) continue;
+    L.active = levelActive(k);
+    var o = OV.lnm && OV.lnm[lvKey(k)];
+    if (o){ if(o.ca) L.n.ca=o.ca; if(o.es) L.n.es=o.es; }
+    if (L.active){ delete L.wip; delete L.pending; }
+    else if (k>=2 && !L.pending) L.pending = true;
+    if (D[6+k]) D[6+k].n = { ca:L.n.ca, es:L.n.es };
+  }
+}
+
+/* ── §3 Vídeos nous: OV.nv ↔ D ── */
+var LEGACY_BASE = {};
+function legacyCount(si,ui,b){
+  var k=si+'.'+ui+'.'+b;
+  if (LEGACY_BASE[k]!=null) return LEGACY_BASE[k];
+  var n=0; try{ var bl=D[si].u[ui][b]; if(bl&&bl.v) n=bl.v.length; }catch(e){}
+  LEGACY_BASE[k]=n; return n;
+}
+function nvBucket(l,b,create){
+  OV.nv = OV.nv || {};
+  var k=lvKey(l);
+  if (!OV.nv[k] && create) OV.nv[k]={};
+  if (!OV.nv[k]) return null;
+  if (!OV.nv[k][b] && create) OV.nv[k][b]=[];
+  return OV.nv[k][b] || null;
+}
+function harvest(){
+  if (!OV.nv) return;
+  Object.keys(OV.nv).forEach(function(k){
+    var l=parseInt(k,10);
+    B5.forEach(function(b){
+      var arr=OV.nv[k][b]; if(!arr) return;
+      var si=(l===1)?6:6+l, ui=(l===1)?3:0, base=legacyCount(si,ui,b);
+      arr.forEach(function(vid,i){
+        var id=si+'.'+ui+'.'+b+'.'+(base+i);
+        ['ca','es'].forEach(function(lg){
+          if (OV.t[id] && OV.t[id][lg]!=null) vid.t[lg]=OV.t[id][lg];
+          if (OV.d[id] && OV.d[id][lg]!=null) vid.d[lg]=OV.d[id][lg];
+          if (OV.l[id] && OV.l[id][lg]!=null) vid.l[lg]=OV.l[id][lg];
+          var im = OV.imp && OV.imp[id+':'+lg];
+          if (im) vid.imp[lg]=im;
+        });
+      });
+    });
+  });
+}
+function hydrate(){
+  OV.t=OV.t||{}; OV.d=OV.d||{}; OV.l=OV.l||{}; OV.imp=OV.imp||{};
+  for (var l=2;l<=MAX_LVL;l++){
+    var si=6+l; if(!D[si]) continue;
+    B5.forEach(function(b){ D[si].u[0][b]={v:[],d:[]}; });
+  }
+  B5.forEach(function(b){
+    var base=legacyCount(6,3,b);
+    if (D[6]&&D[6].u[3]&&D[6].u[3][b]&&D[6].u[3][b].v) D[6].u[3][b].v.length=base;
+  });
+  Object.keys(OV.nv||{}).forEach(function(k){
+    var l=parseInt(k,10);
+    var si=(l===1)?6:6+l, ui=(l===1)?3:0;
+    if (!D[si]||!D[si].u[ui]) return;
+    B5.forEach(function(b){
+      var arr=OV.nv[k][b]; if(!arr||!arr.length) return;
+      var bl=D[si].u[ui][b]; if(!bl) bl=D[si].u[ui][b]={v:[],d:[]}; if(!bl.v) bl.v=[];
+      var base=legacyCount(si,ui,b);
+      arr.forEach(function(vid,i){
+        var id=si+'.'+ui+'.'+b+'.'+(base+i);
+        bl.v.push([vid.t.ca||vid.t.es||'', vid.t.es||vid.t.ca||'', '']);
+        OV.t[id]={ca:vid.t.ca||'',es:vid.t.es||''};
+        OV.d[id]={ca:vid.d.ca||'',es:vid.d.es||''};
+        if (vid.l.ca||vid.l.es) OV.l[id]={ca:vid.l.ca||'',es:vid.l.es||''};
+        ['ca','es'].forEach(function(lg){ OV.imp[id+':'+lg]= vid.imp[lg]==='optional'?'optional':'important'; });
+      });
+    });
+  });
+}
+function rebuild(){ harvest(); LEGACY_BASE={}; ensureSections(); hydrate(); initializeOrder(); }
+
+/* ── §4 Numeració per bloc ── */
+function blockSeq(l,b){
+  return orderList().filter(function(id){
+    return !isGiftId(id) && videoLevel(id)===l && vidBlockById(id)===b;
+  });
+}
+window.getVideoOrder = function(id){
+  if (isGiftId(id)) return 9998;
+  var i = blockSeq(videoLevel(id), vidBlockById(id)).indexOf(id);
+  return i<0 ? 9999 : i+1;
+};
+window.reorderVideo = function(id,newNum){
+  if (editModeOn) collectAll();
+  harvest();
+  var seq = blockSeq(videoLevel(id), vidBlockById(id));
+  var cur = seq.indexOf(id), tgt = newNum-1;
+  if (cur<0||tgt<0||tgt>=seq.length||tgt===cur) return;
+  var list = orderList();
+  var ia=list.indexOf(id), ib=list.indexOf(seq[tgt]);
+  if (ia<0||ib<0) return;
+  list[ia]=seq[tgt]; list[ib]=id;
+  render();
+};
+
+/* ── §5 Seqüenciació del Seguiment Continuat ── */
+function withLink(ids){ return ids.filter(function(id){ var v=findVidById(id); return v && !!driveSrc(v.v,id); }); }
+function isImp(id){ return getVideoImportance(id)==='important'; }
+function allImpDone(ids){ var imp=ids.filter(isImp); return imp.length===0 ? true : imp.every(function(id){return !!LS.done[id];}); }
+function pickFrom(ids){
+  var pool=withLink(ids); if(!pool.length) return null;
+  var skipped=LS.skipped||[]; LS.skipAfter=LS.skipAfter||{};
+  var i,id,v;
+  for(i=0;i<skipped.length;i++){ id=skipped[i];
+    if(pool.indexOf(id)<0||LS.done[id])continue;
+    var after=LS.skipAfter[id];
+    if(after&&LS.done[after]){ v=findVidById(id); if(v)return v; } }
+  for(i=0;i<pool.length;i++){ id=pool[i];
+    if(LS.done[id]||skipped.indexOf(id)>=0)continue;
+    v=findVidById(id); if(v)return v; }
+  for(i=0;i<pool.length;i++){ id=pool[i];
+    if(LS.done[id])continue;
+    v=findVidById(id); if(v)return v; }
+  return null;
+}
+function trackContext(){
+  var lvls=activeLevels();
+  for (var i=0;i<lvls.length;i++){
+    var l=lvls[i];
+    if (l===0){
+      var w=withLink(blockSeq(0,'w'));
+      if (w.some(function(id){return !LS.done[id];})) return {level:0,block:'w',mode:'order'};
+      continue;
+    }
+    if (seqMode(l)==='order'){
+      var ids=[];
+      levelSections(l).forEach(function(si){
+        orderList().forEach(function(id){ if(parseInt(id.split('.')[0],10)===si && !isGiftId(id)) ids.push(id); });
+      });
+      var pend=withLink(ids).filter(function(id){return !LS.done[id];});
+      if (pend.length) return {level:l,block:vidBlockById(pend[0]),mode:'order',ids:ids};
+      continue;
+    }
+    for (var j=0;j<B5.length;j++){
+      var b=B5[j], seq=withLink(blockSeq(l,b));
+      if (!seq.length) continue;
+      if (!allImpDone(seq)) return {level:l,block:b,mode:'blocks',ids:seq,index:j};
+      if (j===0 && seq.some(function(id){return !LS.done[id];})) return {level:l,block:b,mode:'blocks',ids:seq,index:j};
+    }
+  }
+  return null;
+}
+window.findNext = function(){
+  initializeOrder();
+  var ctx=trackContext();
+  if (ctx){ var got=pickFrom(ctx.ids || blockSeq(ctx.level,ctx.block)); if(got) return got; }
+  var rest=orderList().filter(function(id){return !isGiftId(id)&&!LS.done[id];});
+  var v=pickFrom(rest); if(v) return v;
+  return null;
+};
+
+/* ── §6 Noms de bloc per nivell ── */
+var BASE_BLOCKS={ ca:Object.assign({},UI.ca.blocks), es:Object.assign({},UI.es.blocks) };
+function blockNames(l,lang){
+  var out={ w:BASE_BLOCKS[lang].w, b:BASE_BLOCKS[lang].b };
+  B5.forEach(function(b){
+    var o=OV.bn&&OV.bn[lvKey(l)]&&OV.bn[lvKey(l)][b];
+    out[b]=(o&&o[lang])||BASE_BLOCKS[lang][b];
+  });
+  return out;
+}
+['ca','es'].forEach(function(lang){
+  Object.defineProperty(UI[lang],'blocks',{ configurable:true, get:function(){ return blockNames(CTX,lang); } });
+});
+window.blockName = function(b){ return blockNames(CTX,LS.lang)[b]||b; };
+function setBlockName(l,b,lang,val){
+  OV.bn=OV.bn||{}; var k=lvKey(l);
+  OV.bn[k]=OV.bn[k]||{}; OV.bn[k][b]=OV.bn[k][b]||{};
+  OV.bn[k][b][lang]=val;
+}
+
+/* ── §7 Correccions de bugs del nucli ── */
+window.moveVideo = function(id,destBlock,beforeId){
+  if (editModeOn) collectAll();
+  harvest();
+  OV.bl=OV.bl||{};
+  if (destBlock) OV.bl[id]=destBlock;
+  initializeOrder();
+  var list=orderList();
+  var i=list.indexOf(id); if(i>=0) list.splice(i,1);
+  if (beforeId){ var j=list.indexOf(beforeId); if(j>=0) list.splice(j,0,id); else list.push(id); }
+  else list.push(id);
+  render();
+};
+var _collectAll = window.collectAll;
+window.collectAll = function(){
+  document.querySelectorAll('[data-hi]:not([data-hk])').forEach(function(n){ n.removeAttribute('data-hi'); n.setAttribute('data-hi-skip','1'); });
+  _collectAll();
+  document.querySelectorAll('[data-hi-skip]').forEach(function(n){ n.setAttribute('data-hi',n.getAttribute('data-hi-skip')); n.removeAttribute('data-hi-skip'); });
+  if (OV.h) Object.keys(OV.h).forEach(function(k){ delete OV.h[k]['undefined']; });
+  harvest();
+};
+document.addEventListener('keydown', function(e){
+  if (e.key!=='Escape') return;
+  var cm=$('cmModal'); if(cm&&cm.classList.contains('on')){ closeManager(); e.stopPropagation(); }
+}, true);
+
+/* ── §8 Gestor del curs ── */
+var mgrLevel=1;
+function openManager(){
+  if (currentUserRole()!=='admin') return;
+  rebuild();
+  var m=$('cmModal');
+  if(!m){
+    m=el('div','cm-scrim'); m.id='cmModal';
+    m.innerHTML='<div class="cm-box"><div class="cm-head"><h3>'+(ca()?'Gestor del curs':'Gestor del curso')+
+      '</h3><button class="cm-x" id="cmClose">✕</button></div>'+
+      '<div class="cm-body"><aside class="cm-side" id="cmSide"></aside><section class="cm-main" id="cmMain"></section></div>'+
+      '<div class="cm-foot"><span class="cm-stat" id="cmStat"></span><button class="cm-btn pri" id="cmDone">'+(ca()?'Fet':'Hecho')+'</button></div></div>';
+    document.body.appendChild(m);
+    $('cmClose').onclick=closeManager; $('cmDone').onclick=closeManager;
+    m.addEventListener('click',function(e){ if(e.target===m) closeManager(); });
+  }
+  m.classList.add('on');
+  paintManager();
+}
+function closeManager(){ var m=$('cmModal'); if(m)m.classList.remove('on'); rebuild(); render(); }
+function nvIndexOf(id){
+  var l=videoLevel(id), b=vidBlockById(id);
+  var arr=nvBucket(l,b,false); if(!arr) return null;
+  var si=parseInt(id.split('.')[0],10), ui=parseInt(id.split('.')[1],10), vi=parseInt(id.split('.')[3],10);
+  var i=vi-legacyCount(si,ui,b);
+  if (i<0||i>=arr.length) return null;
+  return {arr:arr,i:i,vid:arr[i]};
+}
+function paintManager(){
+  var side=$('cmSide'), main=$('cmMain');
+  side.innerHTML='<div class="cm-st">'+(ca()?'Nivells':'Niveles')+'</div>';
+  var total=0;
+  for (var l=0;l<=MAX_LVL;l++){
+    (function(l){
+      var n=0;
+      levelSections(l).forEach(function(si){
+        if(!D[si]||!D[si].u)return;
+        D[si].u.forEach(function(u){ B5.concat(['w']).forEach(function(b){ if(u[b]&&u[b].v) n+=u[b].v.filter(function(v){return v[li()];}).length; }); });
+      });
+      total+=n;
+      var row=el('button','cm-lv'+(l===mgrLevel?' on':''));
+      row.innerHTML='<span class="cm-dot'+(levelActive(l)?' act':'')+'"></span><span class="cm-lvt">'+esc(levelName(l))+'</span><span class="cm-lvn">'+n+'</span>';
+      row.onclick=function(){ mgrLevel=l; paintManager(); };
+      side.appendChild(row);
+    })(l);
+  }
+  $('cmStat').textContent=activeLevels().length+'/7 '+(ca()?'nivells actius':'niveles activos')+' · '+total+' '+(ca()?'vídeos':'vídeos');
+  var l=mgrLevel;
+  var h='<div class="cm-lvhead"><div class="cm-two">'+
+    '<label class="cm-fld"><span>'+(ca()?'Nom del nivell (CA)':'Nombre del nivel (CA)')+'</span><input data-lvnm="ca" value="'+esc((OV.lnm&&OV.lnm[lvKey(l)]&&OV.lnm[lvKey(l)].ca)||levelObj(l).n.ca)+'"></label>'+
+    '<label class="cm-fld"><span>'+(ca()?'Nom del nivell (ES)':'Nombre del nivel (ES)')+'</span><input data-lvnm="es" value="'+esc((OV.lnm&&OV.lnm[lvKey(l)]&&OV.lnm[lvKey(l)].es)||levelObj(l).n.es)+'"></label>'+
+    '</div><button class="cm-sw" id="cmActive" aria-pressed="'+levelActive(l)+'"><span class="cm-swt"></span>'+(ca()?'Publicat':'Publicado')+'</button></div>';
+  if (l>=1){
+    h+='<div class="cm-note">'+(ca()
+      ?'<b>Seqüenciació.</b> «Per blocs» no serveix el bloc següent fins que tots els ⭐ importants de l\'anterior estan fets. «Ordre del curs» respecta l\'itinerari entrellaçat.'
+      :'<b>Secuenciación.</b> «Por bloques» no sirve el bloque siguiente hasta que todos los ⭐ importantes del anterior están hechos. «Orden del curso» respeta el itinerario entrelazado.')+'</div>';
+    h+='<div class="cm-seg" id="cmSeq"><button data-seq="order"'+(seqMode(l)==='order'?' class="on"':'')+'>'+(ca()?'Ordre del curs':'Orden del curso')+'</button>'+
+       '<button data-seq="blocks"'+(seqMode(l)==='blocks'?' class="on"':'')+'>'+(ca()?'Per blocs':'Por bloques')+'</button></div>';
+  }
+  var blocks=(l===0)?['w']:B5;
+  blocks.forEach(function(b,bi){
+    var seq=(b==='w')?blockSeq(0,'w'):blockSeq(l,b);
+    h+='<div class="cm-blk"><div class="cm-bh">';
+    if (b!=='w'){
+      h+='<div class="cm-two">'+
+        '<label class="cm-fld"><span>'+(ca()?'Bloc':'Bloque')+' '+(bi+1)+' (CA)</span><input data-bn="'+b+'|ca" value="'+esc(blockNames(l,'ca')[b])+'"></label>'+
+        '<label class="cm-fld"><span>'+(ca()?'Bloc':'Bloque')+' '+(bi+1)+' (ES)</span><input data-bn="'+b+'|es" value="'+esc(blockNames(l,'es')[b])+'"></label></div>';
+    } else h+='<div class="cm-btitle">'+esc(blockNames(l,LS.lang).w)+'</div>';
+    var impN=seq.filter(isImp).length;
+    h+='<div class="cm-bmeta">'+seq.length+' '+(ca()?'vídeos':'vídeos')+' · '+impN+' ⭐</div></div><div class="cm-vlist">';
+    if(!seq.length) h+='<div class="cm-empty">'+(ca()?'Cap vídeo en aquest bloc.':'Ningún vídeo en este bloque.')+'</div>';
+    seq.forEach(function(id,i){
+      var v=findVidById(id); if(!v)return;
+      var isNew=!!nvIndexOf(id), link=!!driveSrc(v.v,id);
+      h+='<div class="cm-vrow"><span class="cm-vn">'+(i+1)+'</span><span class="cm-vt">'+esc(vidTitle(v.v,id))+'</span>'+
+         '<span class="cm-vl'+(link?' ok':'')+'">'+(link?'▶':'—')+'</span>'+
+         (isNew?'<span class="cm-vnew">'+(ca()?'nou':'nuevo')+'</span>':'')+
+         '<button class="cm-ib" data-imp="'+id+'">'+(isImp(id)?'⭐':'☆')+'</button>'+
+         '<button class="cm-ib" data-edit="'+id+'">✎</button>'+
+         '<button class="cm-ib" data-up="'+id+'"'+(i===0?' disabled':'')+'>↑</button>'+
+         '<button class="cm-ib" data-dn="'+id+'"'+(i===seq.length-1?' disabled':'')+'>↓</button>'+
+         (isNew?'<button class="cm-ib d" data-del="'+id+'">🗑</button>':'')+'</div>';
+    });
+    if (b!=='w') h+='<button class="cm-add" data-add="'+l+'|'+b+'">＋ '+(ca()?'Afegir vídeo':'Añadir vídeo')+'</button>';
+    h+='</div></div>';
+  });
+  main.innerHTML=h;
+  main.querySelectorAll('[data-lvnm]').forEach(function(inp){ inp.onchange=function(){
+    OV.lnm=OV.lnm||{}; var k=lvKey(l); OV.lnm[k]=OV.lnm[k]||{};
+    OV.lnm[k][inp.dataset.lvnm]=inp.value.trim()||levelObj(l).n[inp.dataset.lvnm];
+    rebuild(); paintManager(); }; });
+  $('cmActive').onclick=function(){ OV.lv=OV.lv||{}; OV.lv[lvKey(l)]=!levelActive(l); rebuild(); paintManager(); showToast((levelActive(l)?'🔓 ':'🔒 ')+levelName(l)); };
+  var seg=$('cmSeq');
+  if(seg) seg.querySelectorAll('[data-seq]').forEach(function(btn){ btn.onclick=function(){ OV.seq=OV.seq||{}; OV.seq[lvKey(l)]=btn.dataset.seq; paintManager(); }; });
+  main.querySelectorAll('[data-bn]').forEach(function(inp){ inp.onchange=function(){
+    var p=inp.dataset.bn.split('|'); setBlockName(l,p[0],p[1],inp.value.trim()||BASE_BLOCKS[p[1]][p[0]]); paintManager(); }; });
+  main.querySelectorAll('[data-add]').forEach(function(btn){ btn.onclick=function(){ var p=btn.dataset.add.split('|'); openVideoForm(null,+p[0],p[1]); }; });
+  main.querySelectorAll('[data-edit]').forEach(function(btn){ btn.onclick=function(){ var id=btn.dataset.edit; openVideoForm(id,videoLevel(id),vidBlockById(id)); }; });
+  main.querySelectorAll('[data-imp]').forEach(function(btn){ btn.onclick=function(){
+    var id=btn.dataset.imp, nv=nvIndexOf(id);
+    var nx=getVideoImportance(id)==='important'?'optional':'important';
+    if(nv){ nv.vid.imp[LS.lang]=nx; hydrate(); } else { OV.imp=OV.imp||{}; OV.imp[id+':'+LS.lang]=nx; }
+    paintManager(); }; });
+  main.querySelectorAll('[data-up]').forEach(function(btn){ btn.onclick=function(){ reorderVideo(btn.dataset.up,getVideoOrder(btn.dataset.up)-1); paintManager(); }; });
+  main.querySelectorAll('[data-dn]').forEach(function(btn){ btn.onclick=function(){ reorderVideo(btn.dataset.dn,getVideoOrder(btn.dataset.dn)+1); paintManager(); }; });
+  main.querySelectorAll('[data-del]').forEach(function(btn){ btn.onclick=function(){
+    var id=btn.dataset.del, nv=nvIndexOf(id); if(!nv)return;
+    if(!confirm(ca()?'Eliminar aquest vídeo?':'¿Eliminar este vídeo?'))return;
+    nv.arr.splice(nv.i,1); rebuild(); paintManager(); showToast(ca()?'🗑 Vídeo eliminat':'🗑 Vídeo eliminado'); }; });
+}
+
+/* ── §9 Formulari de vídeo ── */
+var vfCtx=null;
+function openVideoForm(id,l,b){
+  var nv=id?nvIndexOf(id):null, v=id?findVidById(id):null;
+  var data=nv?nv.vid:{
+    t:{ca:(v?(OV.t[id]&&OV.t[id].ca)||v.v[0]:''),es:(v?(OV.t[id]&&OV.t[id].es)||v.v[1]:'')},
+    d:{ca:(OV.d[id]&&OV.d[id].ca)||'',es:(OV.d[id]&&OV.d[id].es)||''},
+    l:{ca:(OV.l[id]&&OV.l[id].ca)||'',es:(OV.l[id]&&OV.l[id].es)||''},
+    imp:{ca:getVideoImportance(id),es:getVideoImportance(id)}
+  };
+  vfCtx={id:id,level:l,block:b,nv:nv,imp:{ca:data.imp.ca,es:data.imp.es}};
+  var m=$('vfModal'); if(!m){ m=el('div','cm-scrim'); m.id='vfModal'; document.body.appendChild(m); }
+  var names=blockNames(l,LS.lang);
+  m.innerHTML='<div class="cm-box sm"><div class="cm-head"><h3>'+(id?(ca()?'Edita el vídeo':'Edita el vídeo'):(ca()?'Nou vídeo':'Nuevo vídeo'))+
+    '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">'+
+    '<div class="cm-note"><b>'+esc(levelName(l))+'</b> → <b>'+esc(names[b])+'</b></div>'+
+    '<div class="cm-two"><label class="cm-fld"><span>'+(ca()?'Títol (CA)':'Título (CA)')+'</span><input id="vfTca" value="'+esc(data.t.ca)+'"></label>'+
+    '<label class="cm-fld"><span>'+(ca()?'Títol (ES)':'Título (ES)')+'</span><input id="vfTes" value="'+esc(data.t.es)+'"></label></div>'+
+    '<div class="cm-two"><label class="cm-fld"><span>'+(ca()?'Descripció (CA)':'Descripción (CA)')+'</span><textarea id="vfDca">'+esc(data.d.ca)+'</textarea></label>'+
+    '<label class="cm-fld"><span>'+(ca()?'Descripció (ES)':'Descripción (ES)')+'</span><textarea id="vfDes">'+esc(data.d.es)+'</textarea></label></div>'+
+    '<div class="cm-two"><label class="cm-fld"><span>Drive (CA)</span><input id="vfLca" value="'+esc(data.l.ca)+'" placeholder="ID o URL"></label>'+
+    '<label class="cm-fld"><span>Drive (ES)</span><input id="vfLes" value="'+esc(data.l.es)+'" placeholder="ID o URL"></label></div>'+
+    '<div class="cm-fld"><span>'+(ca()?'Pes dins del bloc':'Peso dentro del bloque')+'</span><div class="cm-seg" id="vfImp">'+
+    '<button data-i="important"'+(vfCtx.imp[LS.lang]==='important'?' class="on"':'')+'>⭐ '+(ca()?'Important':'Importante')+'</button>'+
+    '<button data-i="optional"'+(vfCtx.imp[LS.lang]==='optional'?' class="on"':'')+'>☆ '+(ca()?'Opcional':'Opcional')+'</button></div>'+
+    '<div class="cm-hint">'+(ca()?'Els ⭐ importants bloquegen el bloc següent fins que estiguin fets.':'Los ⭐ importantes bloquean el bloque siguiente hasta que estén hechos.')+'</div></div>'+
+    '</div><div class="cm-foot"><button class="cm-btn" id="vfCancel">'+(ca()?'Cancel·la':'Cancelar')+'</button>'+
+    '<button class="cm-btn pri" id="vfSave">'+(ca()?'Desa':'Guardar')+'</button></div></div>';
+  m.classList.add('on');
+  $('vfX').onclick=$('vfCancel').onclick=function(){ m.classList.remove('on'); };
+  m.querySelectorAll('#vfImp button').forEach(function(btn){ btn.onclick=function(){
+    vfCtx.imp[LS.lang]=btn.dataset.i;
+    m.querySelectorAll('#vfImp button').forEach(function(x){ x.classList.toggle('on',x===btn); }); }; });
+  $('vfSave').onclick=function(){
+    var tca=$('vfTca').value.trim(), tes=$('vfTes').value.trim();
+    if(!tca&&!tes){ $('vfTca').focus(); return; }
+    var rec={ t:{ca:tca||tes,es:tes||tca}, d:{ca:$('vfDca').value.trim(),es:$('vfDes').value.trim()},
+              l:{ca:parseDriveId($('vfLca').value)||'',es:parseDriveId($('vfLes').value)||''},
+              imp:{ca:vfCtx.imp.ca,es:vfCtx.imp.es} };
+    if (vfCtx.nv) Object.assign(vfCtx.nv.vid,rec);
+    else if (vfCtx.id){ OV.t[vfCtx.id]=rec.t; OV.d[vfCtx.id]=rec.d; if(rec.l.ca||rec.l.es)OV.l[vfCtx.id]=rec.l; OV.imp[vfCtx.id+':ca']=rec.imp.ca; OV.imp[vfCtx.id+':es']=rec.imp.es; }
+    else nvBucket(vfCtx.level,vfCtx.block,true).push(rec);
+    m.classList.remove('on'); rebuild(); paintManager();
+    showToast(vfCtx.id?(ca()?'💾 Desat':'💾 Guardado'):(ca()?'＋ Vídeo afegit':'＋ Vídeo añadido'));
+  };
+  setTimeout(function(){ $('vfTca').focus(); },50);
+}
+
+/* ── §10 Navegació Lliure (filtrada per nivell) ── */
+window.renderFree = function(){
+  if (autoLevelPending){ smartFreeLevel(); autoLevelPending=false; }
+  CTX=freeLevel;
+  var fv=$('freeView'); fv.innerHTML='';
+  var lr=el('div','lvls'); lr.appendChild(buildLevelPicker());
+  var sb=el('div','searchbox','<span class="sb-ico">'+ICON_SEARCH+'</span><input id="freeSearch" type="search" placeholder="'+(ca()?'Cerca un vídeo d\'aquest nivell…':'Busca un vídeo de este nivel…')+'" value="'+esc(freeQuery)+'">');
+  lr.appendChild(sb); fv.appendChild(lr);
+  setTimeout(function(){ var inp=$('freeSearch'); if(!inp)return;
+    inp.oninput=function(){ freeQuery=this.value; filterFreeGrid(this.value); };
+    if(freeQuery) filterFreeGrid(freeQuery); },0);
+  if (!levelActive(freeLevel)&&!editModeOn){
+    fv.appendChild(el('div','wipbox','<div class="wipicon">⏳</div><h3>'+esc(levelName(freeLevel))+'</h3><p>'+t().pendingMsg+'</p>'));
+    return;
+  }
+  var secs=levelSections(freeLevel);
+  if (freeLevel!==0){
+    var col=el('div','blkcol'), names=blockNames(freeLevel,LS.lang);
+    B5.concat(['b']).forEach(function(b){
+      var btn=el('button'); btn.dataset.b=b; if(b===freeBlock)btn.className='on';
+      btn.onclick=function(){ freeBlock=b; freeQuery=''; allVideosLoaded=false; render(); };
+      if(b==='b'){
+        var n=getBookmarks().filter(function(id){var v=findVidById(id);return v&&!!driveSrc(v.v,id);}).length;
+        btn.innerHTML='<span class="bname">'+names.b+'</span><span class="bmini"><span class="bico">🔖</span><span class="bcount">'+n+'</span></span>';
+      } else {
+        var ids=withLink(blockSeq(freeLevel,b));
+        var p=ids.length?Math.round(ids.filter(function(id){return LS.done[id];}).length/ids.length*100):0;
+        var mini='<svg width="22" height="22" viewBox="0 0 24 24" style="flex:none"><circle cx="12" cy="12" r="11" fill="#242a35"/>'+pieSlice(12,12,11,p,p===100?'#39d98a':BC[b])+'</svg>';
+        btn.innerHTML='<span class="bname">'+esc(names[b])+'</span><span class="bmini">'+(p<100?mini+'<span class="bpct">'+p+'%</span>':'<span class="bpct" style="color:#39d98a">✔</span>')+'</span>';
+      }
+      col.appendChild(btn);
+    });
+    fv.appendChild(col);
+  }
+  if (freeBlock==='b'&&!freeQuery){
+    var gb=el('div','vgrid');
+    var bm=getBookmarks().filter(function(id){var v=findVidById(id);return v&&!!driveSrc(v.v,id);});
+    if(!bm.length) gb.appendChild(el('div','','<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--mut)"><div style="font-size:48px;opacity:.5">🔖</div><p>'+(ca()?'Encara no has marcat cap vídeo per repassar.':'Aún no has marcado ningún vídeo para repasar.')+'</p></div>'));
+    else bm.forEach(function(id){var v=findVidById(id); if(v) gb.appendChild(makeVid(v.v,id,false,levelName(videoLevel(id))));});
+    fv.appendChild(gb); return;
+  }
+  var head=el('div','blkhead','<span class="blkt">'+esc(blockNames(freeLevel,LS.lang)[freeBlock]||'')+'</span>');
+  if (editModeOn&&freeLevel!==0){
+    var add=el('button','adjb','＋ '+(ca()?'Afegir vídeo':'Añadir vídeo')); add.style.marginLeft='auto';
+    add.onclick=function(){ openVideoForm(null,freeLevel,freeBlock); }; head.appendChild(add);
+  }
+  var docs=[],dseen={},firstSi=secs[0],targetUi=0;
+  secs.forEach(function(si){ if(!D[si]||!D[si].u)return;
+    D[si].u.forEach(function(u,ui){ var bl=u[freeBlock]; if(bl&&bl.d) bl.d.forEach(function(dc){ var k=dc[li()]; if(dseen[k])return; dseen[k]=1; docs.push(dc); if(!targetUi)targetUi=ui; }); }); });
+  if (docs.length){ var ap=mkAdj(docs,firstSi,targetUi,freeBlock); head.appendChild(ap.btn); fv.appendChild(head); fv.appendChild(ap.box); }
+  else fv.appendChild(head);
+  var ids=(freeQuery||allVideosLoaded)
+    ? (function(){ var o=[]; secs.forEach(function(si){ orderList().forEach(function(id){ if(parseInt(id.split('.')[0],10)===si&&!isGiftId(id)) o.push(id); }); }); return o; })()
+    : blockSeq(freeLevel,freeBlock);
+  var grid=el('div','vgrid'); grid.dataset.block=freeBlock;
+  var shown=0;
+  ids.forEach(function(id){
+    var x=findVidById(id); if(!x||!x.v[li()])return;
+    var card=makeVid(x.v,id,false,secName(x.si));
+    card.dataset.block=vidBlockById(id);
+    var vt=card.querySelector('.vt'); if(vt)vt.dataset.origTitle=vt.textContent;
+    if(!freeQuery&&vidBlockById(id)!==freeBlock) card.style.display='none'; else shown++;
+    if(editModeOn){ var nv=nvIndexOf(id);
+      if(nv){ var del=el('button','vid-del-btn','🗑️');
+        del.onclick=function(e){ e.stopPropagation(); if(!confirm(ca()?'Eliminar aquest vídeo?':'¿Eliminar este vídeo?'))return; nv.arr.splice(nv.i,1); rebuild(); render(); };
+        var host=card.querySelector('.acts'); if(host)host.appendChild(del); } }
+    grid.appendChild(card);
+  });
+  if(!shown) grid.appendChild(el('div','','<div style="grid-column:1/-1;text-align:center;padding:34px;color:var(--mut)">'+(ca()?'Cap vídeo en aquest bloc encara.':'Ningún vídeo en este bloque todavía.')+'</div>'));
+  fv.appendChild(grid);
+};
+
+/* ── §11 Seguiment Continuat (donuts per nivell) ── */
+var _renderTrack=window.renderTrack;
+window.renderTrack=function(){
+  var ctx=trackContext();
+  CTX=ctx?ctx.level:(activeLevels().slice(-1)[0]||1);
+  _renderTrack();
+  var tv=$('trackView'), dw=tv.querySelector('.donuts');
+  if(!dw||CTX===0)return;
+  var names=blockNames(CTX,LS.lang), openIdx=B5.length;
+  for(var j=0;j<B5.length;j++){ var s=withLink(blockSeq(CTX,B5[j])); if(s.length&&!allImpDone(s)){openIdx=j;break;} }
+  var h='',total=0,totalDone=0;
+  B5.forEach(function(b,j){
+    var ids=withLink(blockSeq(CTX,b)), imp=ids.filter(isImp);
+    var d=imp.filter(function(id){return LS.done[id];}).length;
+    var p=!ids.length?0:(imp.length?Math.round(d/imp.length*100):100);
+    total+=imp.length; totalDone+=d;
+    var locked=seqMode(CTX)==='blocks'&&j>openIdx;
+    h+='<div class="donut'+((!ids.length||locked)?' dim':'')+'" title="'+(locked?(ca()?'Bloc bloquejat: completa els ⭐ de l\'anterior':'Bloque bloqueado: completa los ⭐ del anterior'):'')+'">'+donut(p,BC[b])+'<div class="lbl">'+esc(names[b])+'</div></div>';
+  });
+  var pt=total?Math.round(totalDone/total*100):0;
+  h+='<div class="donut tot">'+donut(pt,'#e8b04b')+'<div class="lbl">'+t().total+'</div></div>';
+  dw.innerHTML=h;
+};
+
+/* ── §12 Estils ── */
+var CSS=[
+'#mCourse{position:fixed;right:18px;bottom:126px;z-index:9999999;width:46px;height:46px;border-radius:50%;background:var(--card);border:1.5px solid var(--gold);color:var(--gold);cursor:pointer;font-size:19px;display:none;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:all .2s}',
+'#mCourse:hover{transform:translateY(-2px)}',
+'.cm-scrim{position:fixed;inset:0;z-index:10000000;display:none;place-items:center;padding:18px;background:rgba(6,8,12,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}',
+'.cm-scrim.on{display:grid}',
+'.cm-box{width:min(1120px,100%);height:min(90vh,880px);display:flex;flex-direction:column;overflow:hidden;background:var(--card);border:1px solid var(--hair-2,var(--line));border-radius:var(--r-lg,16px);box-shadow:var(--elev-3,0 30px 70px rgba(0,0,0,.5))}',
+'.cm-box.sm{width:min(620px,100%);height:auto;max-height:90vh}',
+'.cm-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hair,var(--line))}',
+'.cm-head h3{font-size:17px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}',
+'.cm-x{margin-left:auto;width:34px;height:34px;border-radius:9px;background:var(--tap,transparent);border:1px solid var(--hair,var(--line));color:var(--ink);cursor:pointer;font-size:15px}',
+'.cm-x:hover{background:var(--danger);border-color:transparent;color:#fff}',
+'.cm-body{flex:1;min-height:0;display:grid;grid-template-columns:212px minmax(0,1fr)}',
+'.cm-side{border-right:1px solid var(--hair,var(--line));padding:14px 12px;overflow-y:auto}',
+'.cm-st{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin:0 6px 10px}',
+'.cm-lv{display:flex;align-items:center;gap:9px;width:100%;padding:10px 11px;border-radius:10px;border:1px solid transparent;background:none;color:var(--ink);cursor:pointer;text-align:left;margin-bottom:5px;font-family:inherit;transition:all .15s}',
+'.cm-lv:hover{background:var(--tap,rgba(255,255,255,.04));border-color:var(--hair,var(--line))}',
+'.cm-lv.on{background:rgba(232,176,75,.12);border-color:var(--gold)}',
+'.cm-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--mut)}',
+'.cm-dot.act{background:var(--ok);box-shadow:0 0 8px var(--ok)}',
+'.cm-lvt{flex:1;min-width:0;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+'.cm-lvn{flex:none;font-size:10px;color:var(--mut)}',
+'.cm-main,.cm-scroll{padding:20px;overflow-y:auto}',
+'.cm-scroll{flex:1;min-height:0}',
+'.cm-lvhead{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--hair,var(--line))}',
+'.cm-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-width:250px}',
+'.cm-fld{display:block;margin-bottom:12px}',
+'.cm-fld>span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}',
+'.cm-fld input,.cm-fld textarea{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);font-family:inherit;font-size:13px}',
+'.cm-fld textarea{min-height:70px;resize:vertical}',
+'.cm-fld input:focus,.cm-fld textarea:focus{outline:none;border-color:var(--gold)}',
+'.cm-sw{display:inline-flex;align-items:center;gap:10px;padding:10px 13px;border-radius:9px;cursor:pointer;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);font-family:inherit;font-size:12px;font-weight:700}',
+'.cm-swt{flex:none;width:38px;height:21px;border-radius:99px;background:var(--hair-2,var(--line));position:relative;transition:background .22s}',
+'.cm-swt::after{content:"";position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:var(--mut);transition:transform .22s,background .22s}',
+'.cm-sw[aria-pressed="true"] .cm-swt{background:rgba(57,217,138,.32)}',
+'.cm-sw[aria-pressed="true"] .cm-swt::after{transform:translateX(17px);background:var(--ok)}',
+'.cm-note{padding:11px 13px;border-radius:10px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);font-size:12px;line-height:1.6;color:var(--mut);margin-bottom:13px}',
+'.cm-note b{color:var(--ink)}',
+'.cm-hint{font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5}',
+'.cm-seg{display:flex;gap:4px;padding:4px;border-radius:9px;background:var(--bg);border:1px solid var(--hair,var(--line));margin-bottom:14px}',
+'.cm-seg button{flex:1;padding:9px;border-radius:7px;border:0;background:none;color:var(--mut);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}',
+'.cm-seg button.on{background:var(--gold);color:#fff}',
+'html[data-theme="dark"] .cm-seg button.on{color:#14161c}',
+'.cm-blk{border:1px solid var(--hair,var(--line));border-radius:14px;margin-bottom:13px;overflow:hidden;background:var(--bg)}',
+'.cm-bh{display:flex;gap:12px;align-items:flex-end;padding:13px;flex-wrap:wrap;border-bottom:1px solid var(--hair,var(--line))}',
+'.cm-bh .cm-fld{margin-bottom:0}',
+'.cm-btitle{font-size:14px;font-weight:800;color:var(--gold);letter-spacing:.06em}',
+'.cm-bmeta{font-size:10.5px;color:var(--mut);font-weight:700;white-space:nowrap;padding-bottom:9px}',
+'.cm-vlist{padding:10px 12px}',
+'.cm-empty{font-size:12px;color:var(--mut);padding:4px 2px 11px}',
+'.cm-vrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--card);margin-bottom:6px}',
+'.cm-vn{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--tap,transparent);border:1px solid var(--hair-2,var(--line));font-size:11px;font-weight:800}',
+'.cm-vt{flex:1;min-width:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+'.cm-vl{flex:none;font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}',
+'.cm-vl.ok{border-color:var(--ok);color:var(--ok)}',
+'.cm-vnew{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}',
+'.cm-ib{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);cursor:pointer;font-size:12px;display:grid;place-items:center}',
+'.cm-ib:hover{border-color:var(--gold);color:var(--gold)}',
+'.cm-ib.d:hover{border-color:var(--danger);color:var(--danger)}',
+'.cm-ib:disabled{opacity:.3;cursor:not-allowed}',
+'.cm-add{width:100%;padding:11px;border-radius:9px;border:1px dashed var(--gold);color:var(--gold);background:rgba(232,176,75,.06);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}',
+'.cm-add:hover{background:rgba(232,176,75,.14)}',
+'.cm-foot{display:flex;gap:9px;align-items:center;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--hair,var(--line))}',
+'.cm-stat{margin-right:auto;font-size:11.5px;color:var(--mut)}',
+'.cm-btn{padding:10px 16px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700}',
+'.cm-btn.pri{background:var(--gold);border-color:var(--gold);color:#fff}',
+'html[data-theme="dark"] .cm-btn.pri{color:#14161c}',
+'@media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}'
+].join('\n');
+var st=document.createElement('style'); st.id='gjps-levels-css'; st.textContent=CSS; document.head.appendChild(st);
+
+/* ── §13 Instal·lació ── */
+function install(){
+  if(!$('mCourse')){ var b=el('button','','🗂'); b.id='mCourse'; b.type='button'; b.title=ca()?'Gestor del curs':'Gestor del curso'; b.onclick=openManager; document.body.appendChild(b); }
+  var _render=window.render;
+  window.render=function(){ _render(); var btn=$('mCourse'); if(btn) btn.style.display=(editModeOn&&currentUserRole()==='admin')?'flex':'none'; };
+  var _save=window.saveAsFile;
+  window.saveAsFile=function(){ harvest(); _save(); };
+  var _smart=window.smartFreeLevel;
+  window.smartFreeLevel=function(){ _smart(); if(!levelActive(freeLevel)) freeLevel=activeLevels()[0]||0; };
+  rebuild(); render();
+  console.log('🗂 GJPS · gestor del curs actiu · nivells:',activeLevels().join(', '));
+}
+if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+window.GJPSCourse={ rebuild:rebuild, harvest:harvest, open:openManager, levels:activeLevels, seq:trackContext, blockSeq:blockSeq, data:function(){return OV;} };
+})();
+</script>
+
+</body>
+</html>
