@@ -1,6 +1,363 @@
 <!DOCTYPE html>
 <html lang="ca" data-theme="dark" class="can-hover">
 <head>
+<script>
+/* ═══ GJPS · GUARDIÀ D'ARRENCADA v2 · amb analitzador de balanç de claus ═══ */
+(function () {
+  'use strict';
+  var CA = true;
+  try { CA = localStorage.getItem('gjps_lang') !== 'es'; } catch (e) {}
+  var T = CA ? {
+    title: 'Diagnòstic d\'arrencada', sub: 'El JavaScript no s\'ha executat: per això els botons no responen.',
+    noCore: 'El nucli JavaScript no s\'ha inicialitzat.',
+    noHand: 'Els botons existeixen però no tenen controladors assignats.',
+    hParse: 'Error de sintaxi. Hi ha una clau, parèntesi o cometes sense tancar. Mira el balanç de sota.',
+    hRun: 'Error d\'execució. Mira la línia assenyalada.',
+    hBoot: 'L\'arrencada s\'ha aturat. Sovint és una funció cridada abans d\'existir.',
+    bal: 'Balanç de claus i parèntesis', open: 'Obertures sense tancar', unexp: 'Tancaments inesperats',
+    balOk: 'Tots els blocs estan balancejats en aquest script.',
+    script: 'Script', sLine: 'línia script', dLine: '≈ línia fitxer', find: 'Localitza\'l amb Ctrl+F:',
+    analyze: 'Analitza el codi', copy: 'Copia el diagnòstic', copied: 'Copiat',
+    reload: 'Recarrega', hide: 'Amaga', see: 'Veure el diagnòstic',
+    err: 'error', errs: 'errors', suspects: 'Funcions tocades en els últims pegats (revisa-les primer)'
+  } : {
+    title: 'Diagnóstico de arranque', sub: 'El JavaScript no se ha ejecutado: por eso los botones no responden.',
+    noCore: 'El núcleo JavaScript no se ha inicializado.',
+    noHand: 'Los botones existen pero no tienen controladores asignados.',
+    hParse: 'Error de sintaxis. Hay una llave, paréntesis o comillas sin cerrar. Mira el balance de abajo.',
+    hRun: 'Error de ejecución. Mira la línea señalada.',
+    hBoot: 'El arranque se ha detenido. Suele ser una función llamada antes de existir.',
+    bal: 'Balance de llaves y paréntesis', open: 'Aperturas sin cerrar', unexp: 'Cierres inesperados',
+    balOk: 'Todos los bloques están balanceados en este script.',
+    script: 'Script', sLine: 'línea script', dLine: '≈ línea archivo', find: 'Localízalo con Ctrl+F:',
+    analyze: 'Analizar el código', copy: 'Copiar el diagnóstico', copied: 'Copiado',
+    reload: 'Recargar', hide: 'Ocultar', see: 'Ver el diagnóstico',
+    err: 'error', errs: 'errores', suspects: 'Funciones tocadas en los últimos parches (revísalas primero)'
+  };
+  var SUSPECTS = ['openFullscreenVideo', 'filterFreeGrid', 'readTonalStats', 'tonalStatsHtml',
+                  'openApp', 'renderApps', 'refreshTonal', 'startTonalPoll', 'isStandaloneApp'];
+
+  var errors = [], selected = 0, mounted = false, hidden = false, analysis = null;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function push(e) {
+    if (errors.some(function (x) { return x.message === e.message && x.line === e.line; })) return;
+    errors.push(e); selected = errors.length - 1; render();
+  }
+
+  window.onerror = function (m, s, l, c, er) {
+    var syn = /SyntaxError/i.test(String(m)) || (er && er.name === 'SyntaxError');
+    push({ kind: syn ? 'parse' : 'runtime', message: String(m), file: s || 'index.html',
+           line: l || 0, col: c || 0, stack: er && er.stack ? String(er.stack) : '' });
+    return false;
+  };
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e.reason || {};
+    push({ kind: 'runtime', message: 'Promise: ' + (r.message || String(r)),
+           file: 'index.html', line: 0, col: 0, stack: r.stack || '' });
+  });
+
+  /* ── Analitzador: recorre el text d'un script i balanceja obertures ── */
+  var KW = { return:1, typeof:1, instanceof:1, in:1, of:1, new:1, delete:1, void:1,
+             case:1, do:1, else:1, yield:1, await:1, throw:1 };
+  function scan(text) {
+    var i = 0, n = text.length, line = 1, col = 1;
+    var stack = [], bad = [], mode = 'code', tpl = [], prevSig = '', prevWord = '', word = '';
+    function step(k) { for (var j = 0; j < k && i < n; j++) { if (text[i] === '\n') { line++; col = 1; } else col++; i++; } }
+    function reOk() {
+      if (prevSig === '') return true;
+      if (/[)\]}]/.test(prevSig)) return false;
+      if (/[A-Za-z0-9_$]/.test(prevSig)) return !!KW[prevWord];
+      return true;
+    }
+    while (i < n) {
+      var c = text[i], d = text[i + 1];
+      if (mode === 'code') {
+        var isW = /[A-Za-z0-9_$]/.test(c);
+        if (!isW && word) { prevWord = word; word = ''; }
+        if (c === '\n' || c === ' ' || c === '\t' || c === '\r') { step(1); continue; }
+        if (c === '/' && d === '/') { while (i < n && text[i] !== '\n') step(1); continue; }
+        if (c === '/' && d === '*') { step(2); while (i < n && !(text[i] === '*' && text[i + 1] === '/')) step(1); if (i < n) step(2); continue; }
+        if (c === "'") { mode = 'sq'; step(1); continue; }
+        if (c === '"') { mode = 'dq'; step(1); continue; }
+        if (c === '`') { mode = 'tpl'; step(1); continue; }
+        if (c === '/' && reOk()) { mode = 're'; step(1); continue; }
+        if (c === '{' || c === '(' || c === '[') { stack.push({ ch: c, line: line, col: col }); prevSig = c; step(1); continue; }
+        if (c === '}' || c === ')' || c === ']') {
+          if (c === '}' && tpl.length && tpl[tpl.length - 1] === stack.length) { tpl.pop(); mode = 'tpl'; prevSig = '`'; step(1); continue; }
+          var want = { '}': '{', ')': '(', ']': '[' }[c];
+          if (stack.length && stack[stack.length - 1].ch === want) stack.pop();
+          else bad.push({ ch: c, line: line, col: col });
+          prevSig = c; step(1); continue;
+        }
+        if (isW) { word += c; prevSig = c; step(1); continue; }
+        prevSig = c; step(1); continue;
+      }
+      if (mode === 'sq' || mode === 'dq') {
+        var q = mode === 'sq' ? "'" : '"';
+        if (c === '\\') { step(2); continue; }
+        if (c === q) { mode = 'code'; prevSig = q; step(1); continue; }
+        step(1); continue;
+      }
+      if (mode === 'tpl') {
+        if (c === '\\') { step(2); continue; }
+        if (c === '`') { mode = 'code'; prevSig = '`'; step(1); continue; }
+        if (c === '$' && d === '{') { tpl.push(stack.length); mode = 'code'; step(2); continue; }
+        step(1); continue;
+      }
+      if (mode === 're') {
+        if (c === '\\') { step(2); continue; }
+        if (c === '[') { step(1); while (i < n && text[i] !== ']') { if (text[i] === '\\') step(2); else step(1); } if (i < n) step(1); continue; }
+        if (c === '/') { mode = 'code'; prevSig = '/'; step(1); while (i < n && /[a-z]/.test(text[i])) step(1); continue; }
+        if (c === '\n') { mode = 'code'; step(1); continue; }
+        step(1); continue;
+      }
+    }
+    return { stack: stack, bad: bad, lines: line, mode: mode };
+  }
+
+  function analyze() {
+    var out = [];
+    var endLine = 0;
+    errors.forEach(function (e) { if (e.kind === 'parse' && e.line > endLine) endLine = e.line; });
+    Array.prototype.forEach.call(document.scripts, function (sc, idx) {
+      if (sc.src) return;
+      var txt = sc.textContent || '';
+      if (txt.length < 200) return;
+      if (txt.indexOf('GUARDIÀ D\'ARRENCADA') >= 0) return;
+      var r = scan(txt);
+      if (!r.stack.length && !r.bad.length && r.mode === 'code') return;
+      var lines = txt.split(/\r?\n/);
+      var first = '';
+      for (var k = 0; k < lines.length; k++) { if (lines[k].trim()) { first = lines[k].trim().slice(0, 90); break; } }
+      out.push({ idx: idx, lines: lines, res: r, first: first,
+                 offset: endLine ? endLine - r.lines : 0 });
+    });
+    analysis = out;
+    render();
+  }
+
+  function frame(lines, ln, off, col) {
+    var a = Math.max(1, ln - 5), b = Math.min(lines.length, ln + 5);
+    var h = '<div class="gg-code"><pre>';
+    for (var k = a; k <= b; k++) {
+      var hit = k === ln;
+      h += '<span class="gg-ln' + (hit ? ' hit' : '') + '"><span class="n">' +
+           (off ? (off + k) : k) + '</span>' + esc(lines[k - 1] || '') + '</span>';
+      if (hit && col > 0) {
+        h += '<span class="gg-caret"><span class="n"></span>' +
+             new Array(col).join(' ') + '▲</span>';
+      }
+    }
+    return h + '</pre></div>';
+  }
+
+  var CSS = [
+    '#gjpsGuard{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;padding:18px;',
+    'background:radial-gradient(70% 60% at 50% 0%,rgba(255,85,119,.14),transparent 60%),rgba(6,8,12,.88);',
+    'backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:Inter,system-ui,sans-serif;color:#f2f2f2}',
+    '#gjpsGuard.on{display:grid}#gjpsGuard *{box-sizing:border-box}',
+    '.gg-box{width:min(980px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden;',
+    'background:linear-gradient(180deg,#1b202b,#12161e);border:1px solid rgba(255,255,255,.14);border-radius:18px;',
+    'box-shadow:0 30px 80px rgba(0,0,0,.65)}',
+    '.gg-head{display:flex;align-items:flex-start;gap:14px;padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.1);',
+    'background:linear-gradient(135deg,rgba(255,85,119,.14),rgba(232,176,75,.06))}',
+    '.gg-badge{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;',
+    'background:rgba(255,85,119,.18);border:1px solid rgba(255,85,119,.45);color:#ff8fa6}',
+    '.gg-ht{flex:1;min-width:0}.gg-ht h2{margin:0;font-size:17px;font-weight:800;color:#ffd884}',
+    '.gg-ht p{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:#a8b0be}',
+    '.gg-count{flex:none;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;',
+    'border-radius:99px;background:rgba(255,85,119,.16);border:1px solid rgba(255,85,119,.4);color:#ff9fb2}',
+    '.gg-body{flex:1;min-height:0;overflow-y:auto;padding:16px 20px}',
+    '.gg-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}',
+    '.gg-tab{padding:7px 12px;border-radius:9px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:700;',
+    'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#a8b0be}',
+    '.gg-tab.on{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}',
+    '.gg-msg{padding:12px 14px;border-radius:12px;margin-bottom:11px;font-size:12.5px;line-height:1.6;',
+    'background:rgba(255,85,119,.1);border:1px solid rgba(255,85,119,.32);color:#ffc2ce;',
+    'font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-word}',
+    '.gg-loc{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}',
+    '.gg-chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(76,201,240,.12);',
+    'border:1px solid rgba(76,201,240,.35);color:#9fe3f8;font-family:ui-monospace,Menlo,Consolas,monospace}',
+    '.gg-hint{padding:11px 13px;border-radius:12px;margin-bottom:13px;font-size:12.5px;line-height:1.6;',
+    'background:rgba(232,176,75,.09);border:1px solid rgba(232,176,75,.3);color:#f0d9a8}',
+    '.gg-sec{margin:16px 0 9px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#e8b04b}',
+    '.gg-card{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px;margin-bottom:11px;background:rgba(0,0,0,.25)}',
+    '.gg-card h4{margin:0 0 8px;font-size:12.5px;font-weight:800;color:#f2f2f2}',
+    '.gg-find{font-size:11px;color:#8d95a3;margin-bottom:9px;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}',
+    '.gg-code{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#080a0e;margin-top:8px}',
+    '.gg-code pre{margin:0;padding:10px 0;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7}',
+    '.gg-ln{display:block;white-space:pre;padding:0 12px 0 0;color:#cfd6e2}',
+    '.gg-ln .n{display:inline-block;width:60px;padding-right:12px;text-align:right;color:#5c6675;user-select:none;',
+    'border-right:1px solid rgba(255,255,255,.08);margin-right:12px}',
+    '.gg-ln.hit{background:rgba(255,85,119,.16);color:#fff;box-shadow:inset 3px 0 0 #ff5577}',
+    '.gg-ln.hit .n{color:#ff9fb2;font-weight:700}',
+    '.gg-caret{display:block;white-space:pre;color:#ff5577;font-weight:700;padding:0 12px 0 0}',
+    '.gg-caret .n{display:inline-block;width:60px;padding-right:12px;margin-right:12px;border-right:1px solid transparent}',
+    '.gg-ok{padding:11px 13px;border-radius:10px;font-size:12px;background:rgba(57,217,138,.1);',
+    'border:1px solid rgba(57,217,138,.32);color:#9be8c4}',
+    '.gg-sus{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}',
+    '.gg-sus span{font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;padding:4px 9px;border-radius:99px;',
+    'background:rgba(140,82,255,.14);border:1px solid rgba(140,82,255,.4);color:#c9b3ff}',
+    '.gg-foot{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap;padding:13px 20px;',
+    'border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.25)}',
+    '.gg-btn{padding:10px 15px;border-radius:10px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:700;',
+    'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#f2f2f2;transition:all .18s}',
+    '.gg-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.3)}',
+    '.gg-btn.pri{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}',
+    '.gg-btn.cy{background:linear-gradient(135deg,#4cc9f0,#1f8fb5);border-color:transparent;color:#04222c}',
+    '.gg-stat{margin-right:auto;font-size:11.5px;color:#6d7686}',
+    '#gjpsGuardPill{position:fixed;left:14px;bottom:14px;z-index:2147482999;display:none;align-items:center;gap:8px;',
+    'padding:9px 14px;border-radius:99px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:800;',
+    'background:linear-gradient(135deg,#ff5577,#b32b48);border:0;color:#fff;box-shadow:0 8px 24px rgba(255,85,119,.4)}',
+    '#gjpsGuardPill.on{display:inline-flex}',
+    '#gjpsGuard *{scrollbar-width:thin;scrollbar-color:rgba(232,176,75,.55) rgba(255,255,255,.05)}',
+    '#gjpsGuard ::-webkit-scrollbar{width:10px;height:10px}',
+    '#gjpsGuard ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);border-radius:99px}',
+    '#gjpsGuard ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8b04b,#a9762a);border-radius:99px;',
+    'border:2px solid transparent;background-clip:content-box}',
+    '@media(max-width:760px){#gjpsGuard{padding:10px;align-items:end}.gg-box{max-height:94vh}',
+    '.gg-head,.gg-body,.gg-foot{padding:13px}.gg-btn{flex:1;text-align:center}.gg-stat{width:100%;margin:0 0 4px}',
+    '.gg-ln .n,.gg-caret .n{width:44px;padding-right:9px;margin-right:9px}}'
+  ].join('\n');
+
+  function mount() {
+    if (mounted) return;
+    var st = document.createElement('style'); st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+    var w = document.createElement('div'); w.id = 'gjpsGuard';
+    w.innerHTML = '<div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div>' +
+      '<div class="gg-ht"><h2>' + esc(T.title) + '</h2><p>' + esc(T.sub) + '</p></div>' +
+      '<div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div>' +
+      '<div class="gg-foot"><span class="gg-stat" id="ggStat"></span>' +
+      '<button class="gg-btn" id="ggHide">' + esc(T.hide) + '</button>' +
+      '<button class="gg-btn" id="ggAn">' + esc(T.analyze) + '</button>' +
+      '<button class="gg-btn cy" id="ggRe">' + esc(T.reload) + '</button>' +
+      '<button class="gg-btn pri" id="ggCo">' + esc(T.copy) + '</button></div></div>';
+    document.body.appendChild(w);
+    var p = document.createElement('button'); p.id = 'gjpsGuardPill'; p.type = 'button';
+    p.innerHTML = '⚠ ' + esc(T.see); document.body.appendChild(p);
+    document.getElementById('ggHide').onclick = function () { hidden = true; render(); };
+    p.onclick = function () { hidden = false; render(); };
+    document.getElementById('ggAn').onclick = analyze;
+    document.getElementById('ggRe').onclick = function () { location.reload(); };
+    document.getElementById('ggCo').onclick = function () {
+      var txt = dump(), b = this;
+      var ok = function () { b.textContent = '✓ ' + T.copied; setTimeout(function () { b.textContent = T.copy; }, 1700); };
+      var fb = function () {
+        var ta = document.createElement('textarea'); ta.value = txt;
+        ta.style.cssText = 'position:fixed;left:-9999px'; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); ok(); } catch (e) {} ta.remove();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, fb); else fb();
+    };
+    w.addEventListener('click', function (e) { if (e.target === w) { hidden = true; render(); } });
+    mounted = true;
+  }
+
+  function dump() {
+    var o = ['GJPS · ' + T.title, location.href, ''];
+    errors.forEach(function (e, i) {
+      o.push('[' + (i + 1) + '] ' + e.kind.toUpperCase() + ' — ' + e.message);
+      if (e.line) o.push('    ' + T.dLine + ' ' + e.line + ' , col ' + e.col);
+    });
+    if (analysis) analysis.forEach(function (a) {
+      o.push('', T.script + ' #' + a.idx + ' — ' + a.first);
+      a.res.stack.forEach(function (s) {
+        o.push('  ' + T.open + ': ' + s.ch + '  ' + T.sLine + ' ' + s.line +
+               (a.offset ? '  ' + T.dLine + ' ' + (a.offset + s.line) : ''));
+        for (var k = Math.max(1, s.line - 3); k <= Math.min(a.lines.length, s.line + 3); k++)
+          o.push('   ' + (a.offset ? a.offset + k : k) + ' | ' + a.lines[k - 1]);
+      });
+      a.res.bad.forEach(function (s) { o.push('  ' + T.unexp + ': ' + s.ch + ' ' + T.sLine + ' ' + s.line); });
+      if (a.res.mode !== 'code') o.push('  mode final: ' + a.res.mode + ' (cometes o comentari sense tancar)');
+    });
+    return o.join('\n');
+  }
+
+  function render() {
+    if (!document.body) return;
+    mount();
+    var w = document.getElementById('gjpsGuard'), p = document.getElementById('gjpsGuardPill');
+    if (!errors.length) { w.classList.remove('on'); p.classList.remove('on'); return; }
+    if (hidden) { w.classList.remove('on'); p.classList.add('on'); return; }
+    p.classList.remove('on'); w.classList.add('on');
+    document.getElementById('ggCount').textContent = errors.length + ' ' + (errors.length === 1 ? T.err : T.errs);
+    var e = errors[Math.min(selected, errors.length - 1)];
+    var h = '';
+    if (errors.length > 1) {
+      h += '<div class="gg-tabs">';
+      errors.forEach(function (x, i) {
+        h += '<button class="gg-tab' + (i === selected ? ' on' : '') + '" data-i="' + i + '">' +
+             (i + 1) + '. ' + esc(x.kind) + (x.line ? ' · L' + x.line : '') + '</button>';
+      });
+      h += '</div>';
+    }
+    h += '<div class="gg-msg">' + esc(e.message) + '</div><div class="gg-loc">';
+    if (e.line) h += '<span class="gg-chip">' + T.dLine + ' ' + e.line + '</span>';
+    if (e.col) h += '<span class="gg-chip">col ' + e.col + '</span>';
+    h += '<span class="gg-chip">' + esc(e.kind) + '</span></div>';
+    h += '<div class="gg-hint">' + esc(e.kind === 'parse' ? T.hParse : e.kind === 'boot' ? T.hBoot : T.hRun) + '</div>';
+
+    if (analysis) {
+      h += '<div class="gg-sec">' + esc(T.bal) + '</div>';
+      if (!analysis.length) h += '<div class="gg-ok">' + esc(T.balOk) + '</div>';
+      analysis.forEach(function (a) {
+        h += '<div class="gg-card"><h4>' + esc(T.script) + ' #' + a.idx + '</h4>' +
+             '<div class="gg-find">' + esc(T.find) + ' ' + esc(a.first) + '</div>';
+        if (a.res.mode !== 'code') {
+          h += '<div class="gg-hint">' + (CA ? 'Acaba dins de ' : 'Termina dentro de ') +
+               '<b>' + esc(a.res.mode) + '</b>' + (CA ? ' — cometes o comentari sense tancar.' : ' — comillas o comentario sin cerrar.') + '</div>';
+        }
+        a.res.stack.forEach(function (s) {
+          h += '<div class="gg-loc"><span class="gg-chip">' + esc(T.open) + ' ' + esc(s.ch) + '</span>' +
+               '<span class="gg-chip">' + T.sLine + ' ' + s.line + '</span>' +
+               (a.offset ? '<span class="gg-chip">' + T.dLine + ' ' + (a.offset + s.line) + '</span>' : '') + '</div>';
+          h += frame(a.lines, s.line, a.offset, s.col);
+        });
+        a.res.bad.forEach(function (s) {
+          h += '<div class="gg-loc"><span class="gg-chip">' + esc(T.unexp) + ' ' + esc(s.ch) + '</span>' +
+               '<span class="gg-chip">' + T.sLine + ' ' + s.line + '</span></div>';
+          h += frame(a.lines, s.line, a.offset, s.col);
+        });
+        h += '</div>';
+      });
+      h += '<div class="gg-sec">' + esc(T.suspects) + '</div><div class="gg-sus">' +
+           SUSPECTS.map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('') + '</div>';
+    }
+    document.getElementById('ggBody').innerHTML = h;
+    Array.prototype.forEach.call(document.querySelectorAll('#ggBody .gg-tab'), function (b) {
+      b.onclick = function () { selected = parseInt(b.dataset.i, 10); render(); };
+    });
+    document.getElementById('ggStat').textContent = errors.length + ' ' + T.errs;
+  }
+
+  function health() {
+    if (typeof window.render !== 'function' || typeof window.$ !== 'function') {
+      push({ kind: errors.length ? 'boot' : 'parse', message: T.noCore, file: 'index.html', line: 0, col: 0, stack: '' });
+      return;
+    }
+    var wired = 0, present = 0;
+    ['mTrack', 'mFree', 'mInfo', 'mHelp', 'langToggle'].forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      present++; if (typeof el.onclick === 'function') wired++;
+    });
+    if (present && !wired) push({ kind: 'boot', message: T.noHand, file: 'index.html', line: 0, col: 0, stack: '' });
+  }
+
+  function boot() {
+    health();
+    if (errors.some(function (e) { return e.kind === 'parse'; })) analyze(); else render();
+    setTimeout(function () { health(); render(); }, 1200);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+  window.addEventListener('load', function () { setTimeout(boot, 300); });
+  window.GJPSGuard = { text: dump, analyze: analyze, show: function () { hidden = false; render(); } };
+})();
+</script>
 <meta name="theme-color" content="#1a1d27">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1601,6 +1958,20 @@ html[data-theme="dark"] .cm-seg button.on{color:#14161c}
 .cm-btn.pri{background:var(--gold);border-color:var(--gold);color:#fff}
 html[data-theme="dark"] .cm-btn.pri{color:#14161c}
 @media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}
+
+/* ══ 36. REPRODUCTOR INTEGRAT: sortida sempre accessible ══ */
+@media (min-width: 768px){
+  .modal.on .close{
+    opacity:1 !important;
+    display:flex !important;
+    background:rgba(0,0,0,.85) !important;
+    border:2px solid var(--gold) !important;
+    box-shadow:0 4px 12px rgba(0,0,0,.5) !important;
+  }
+}
+.modal.on{ touch-action:manipulation; }
+.modal.on .frame iframe{ background:#000; }
+
 </style>
 </head>
 <body class="">
@@ -1761,6 +2132,15 @@ function isSmartphone() {
   return false;
 }
 function isTabletDevice() { return isMobileDevice() && !isSmartphone(); }
+/* App instal·lada a l'escriptori / pantalla d'inici: no admet pestanyes noves */
+function isStandaloneApp() {
+  try {
+    return window.navigator.standalone === true ||
+           matchMedia('(display-mode: standalone)').matches ||
+           matchMedia('(display-mode: fullscreen)').matches ||
+           matchMedia('(display-mode: minimal-ui)').matches;
+  } catch (e) { return window.navigator.standalone === true; }
+}
 
 var BO = ['w', 't', 'g', 'r', 'a', 'p'];
 var BC = { t: '#e8b04b', g: '#39d98a', r: '#4cc9f0', a: '#8c52ff', p: '#ff2bd6' };
@@ -3237,20 +3617,19 @@ function filterFreeGrid(q) {
     }, 0);
     return;
   }
+  var total = 0;
   document.querySelectorAll('#freeView .vgrid').forEach(function (g) {
     var visibles = 0;
     g.querySelectorAll('.vid').forEach(function (card) {
       var vt = card.querySelector('.vt');
       var origText = vt ? (vt.dataset.origTitle || vt.textContent) : '';
+      /* NOMÉS el títol: mai la descripció */
       var textMatch = !nq || normTxt(origText).indexOf(nq) >= 0;
       var blockMatch = isSearching || (card.dataset.block === freeBlock);
       var show = textMatch && blockMatch;
       if (vt) {
-        if (show && isSearching && q && !editModeOn) {
-          vt.innerHTML = highlightText(origText, q);
-        } else {
-          vt.textContent = origText;
-        }
+        if (show && isSearching && q && !editModeOn) vt.innerHTML = highlightText(origText, q);
+        else vt.textContent = origText;
       }
       card.style.display = show ? '' : 'none';
       if (show) visibles++;
@@ -3263,8 +3642,11 @@ function filterFreeGrid(q) {
       empty.textContent = LS.lang === 'ca' ? 'Cap vídeo coincideix amb la cerca.' : 'Ningún vídeo coincide con la búsqueda.';
       g.appendChild(empty);
     }
-    empty.style.display = (nq && visibles === 0) ? 'block' : 'none';
+    empty.style.display = (isSearching && visibles === 0) ? 'block' : 'none';
+    total += visibles;
   });
+  var sc = $('searchCount');
+  if (sc) sc.textContent = isSearching ? (total + (LS.lang === 'ca' ? ' resultats' : ' resultados')) : '';
   updateBlockHighlights();
 }
 
@@ -3441,12 +3823,26 @@ function renderFree() {
   }
   fv.appendChild(grid);
 }
+/* Llegeix el rècord amb tolerància de claus i el normalitza a la clau canònica */
+function readTonalStats() {
+  var u = LS.user || '';
+  var keys = ['gjps_tonal_stats_' + u, 'gjps_tonal_stats', 'gjps_tonal_last_' + u, 'gjps_tonal_last'];
+  for (var i = 0; i < keys.length; i++) {
+    var s = lsJSON(keys[i], null);
+    if (!s) continue;
+    if (!s.best && s.p !== undefined) s = { best: s, last: s, sessions: s.sessions || 1 };
+    if (!s.best) continue;
+    if (i > 0) lsSet('gjps_tonal_stats_' + u, JSON.stringify(s));
+    return s;
+  }
+  return null;
+}
 
 function tonalStatsHtml() {
   if (!LS.user || LS.user === 'guest') return '';
   var KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
   var ca = LS.lang === 'ca';
-  var s = lsJSON('gjps_tonal_stats_' + LS.user, null);
+  var s = readTonalStats();
   if (!s || !s.best) {
     return '<div style="margin:0 0 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;color:var(--mut);font-size:var(--fs-sm);line-height:1.5;">' + (ca ? '🏆 Encara no tens cap rècord a TONAL EMOTIONS: completa un TEST per estrenar el teu marcador!' : '🏆 Aún no tienes ningún récord en TONAL EMOTIONS: ¡completa un TEST para estrenar tu marcador!') + '</div>';
   }
@@ -3467,19 +3863,32 @@ function tonalStatsHtml() {
 }
 function openApp(url) {
   if (!url) { alert(t().appsSoon); return; }
-  var fullUrl = url.indexOf('http') === 0 ? url : window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + url;
-  fullUrl += (fullUrl.indexOf('?') >= 0 ? '&' : '?') + 'lang=' + LS.lang;
-  if (window.navigator.standalone || isIOS()) {
-    window.location.href = fullUrl;
-  } else if (isMobileDevice()) {
-    window.location.href = fullUrl;
-  } else {
-    window.open(fullUrl, '_blank');
-  }
+  var base = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+  var fullUrl = url.indexOf('http') === 0 ? url : base + url;
+  fullUrl += (fullUrl.indexOf('?') >= 0 ? '&' : '?') +
+             'lang=' + encodeURIComponent(LS.lang) +
+             '&user=' + encodeURIComponent(LS.user || '');
+  /* Recorda on érem per tornar-ho a obrir en tornar de l'app */
+  lsSet('gjps_return_mode', LS.mode);
+  if (isStandaloneApp() || isMobileDevice()) window.location.href = fullUrl;
+  else window.open(fullUrl, '_blank');
 }
 function renderApps() {
   var av = $('appsView');
   av.innerHTML = '';
+  var bar = document.createElement('div');
+  bar.className = 'blkhead';
+  bar.innerHTML = '<span class="blkt">' + (LS.lang === 'ca' ? 'Aplicacions d\'entrenament' : 'Aplicaciones de entrenamiento') + '</span>';
+  var rb = document.createElement('button');
+  rb.className = 'adjb';
+  rb.textContent = LS.lang === 'ca' ? '↻ Actualitza rècords' : '↻ Actualizar récords';
+  rb.onclick = function () {
+    readTonalStats();
+    render();
+    showToast(LS.lang === 'ca' ? 'Rècords actualitzats' : 'Récords actualizados');
+  };
+  bar.appendChild(rb);
+  av.appendChild(bar);
   var g = document.createElement('div');
   g.className = 'appgrid';
   APPS.forEach(function (a, i) {
@@ -3773,58 +4182,38 @@ $('langToggle').onclick = function () {
 var currentVideoSrc = '';
 
 function openFullscreenVideo(src) {
+  if (!src) { showToast(t().soon); return; }
   currentVideoSrc = src;
   var player = $('player');
   var overlay = $('videoOverlay');
   var modal = $('modal');
-  var isIOSDevice = isIOS();
 
-  if (isMobileDevice()) {
-    window.open(currentVideoSrc, '_blank');
+  /* Pestanya nova NOMÉS en mòbil dins del navegador. En app instal·lada
+     (iPad/iPhone/Android) o en tablet, reproductor integrat sempre. */
+  if (isSmartphone() && !isStandaloneApp()) {
+    window.open(src, '_blank');
     return;
   }
+
   pushVideoState();
-  if (isMobileDevice()) {
-    modal.classList.add('on');
-    if (isIOSDevice) {
-      modal.classList.add('ios-device');
-      var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&authuser=0' : currentVideoSrc + '?authuser=0';
-      player.setAttribute('allow', 'autoplay; fullscreen; storage-access-by-user-activation');
-      player.src = finalSrc;
-      player.classList.add('active');
-      if (overlay) overlay.classList.add('hidden');
-      document.documentElement.style.zoom = '1';
-      showCloseBtn();
-      if (player.requestFullscreen) player.requestFullscreen().catch(function () {});
-      else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
-    } else {
-      modal.classList.remove('ios-device');
-      var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1&authuser=0' : currentVideoSrc + '?autoplay=1&authuser=0';
-      player.src = finalSrc;
-      player.classList.add('active');
-      document.documentElement.style.zoom = '1';
-      showCloseBtn();
-      if (overlay) {
-        overlay.classList.remove('hidden');
-        if (LS.lang === 'ca') {
-          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Gira el dispositiu en horitzontal per veure el vídeo a pantalla completa.</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">Toca la pantalla per començar. Per sortir, prem ENRERE una sola vegada o la ✕.</div>';
-        } else {
-          $('overlayText').innerHTML = '<div style="font-size:18px;font-weight:700;letter-spacing:0.3px;margin-bottom:14px;">Gira el dispositivo en horizontal para ver el vídeo a pantalla completa.</div><div style="font-size:14px;font-weight:500;color:var(--mut);letter-spacing:0.2px;">Toca la pantalla para empezar. Para salir, pulsa ATRÁS una sola vez o la ✕.</div>';
-        }
-        setTimeout(function() { overlay.classList.add('hidden'); }, 6000);
-      }
-    }
-  } else {
-    pushVideoState();
-    player.src = '';
-    player.classList.remove('active');
-    modal.classList.add('on');
-    modal.classList.remove('ios-device');
-    if (overlay) overlay.classList.remove('hidden');
+  document.documentElement.style.zoom = '1';
+  modal.classList.add('on');
+  modal.classList.toggle('ios-device', isIOS());
+  modal.classList.add('show-controls');
+
+  var finalSrc = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0';
+  player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
+  player.src = finalSrc;
+  player.classList.add('active');
+  if (overlay) overlay.classList.add('hidden');
+
+  /* Fullscreen natiu només a l'escriptori amb navegador: a iOS trenca el retorn */
+  if (!isMobileDevice() && !isStandaloneApp()) {
     var wrap = document.querySelector('.wrap');
-    if (wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
-    else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+    if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
+    else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
   }
+  showCloseBtn();
 }
 
 (function () {
@@ -4290,10 +4679,40 @@ document.addEventListener('mouseout', function (e) {
   }
 });
 
-function refreshTonal() { if (LS.user && LS.mode === 'apps') render(); }
-window.addEventListener('storage', function (e) { if (e.key && e.key.indexOf('gjps_tonal_stats_') === 0) refreshTonal(); });
+function refreshTonal() {
+  if (!LS.user || LS.mode !== 'apps') return;
+  var m = $('modal');
+  if (m && m.classList.contains('on')) return;   /* no interrompre un vídeo */
+  readTonalStats();
+  render();
+}
+window.addEventListener('storage', function (e) {
+  if (e.key && e.key.indexOf('gjps_tonal') === 0) refreshTonal();
+});
 document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshTonal(); });
 window.addEventListener('pageshow', refreshTonal);
+window.addEventListener('focus', refreshTonal);
+/* L'app pot avisar per postMessage quan acaba un TEST */
+window.addEventListener('message', function (e) {
+  var d = e.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type !== 'gjps:tonal' && d.type !== 'tonal-stats') return;
+  var p = d.stats || d.payload || d;
+  if (!p || !p.best) return;
+  lsSet('gjps_tonal_stats_' + (LS.user || ''), JSON.stringify(p));
+  refreshTonal();
+});
+/* Sondeig lleuger: només mentre la vista Apps és visible i la pestanya activa */
+var tonalPoll = null, tonalSnap = null;
+function startTonalPoll() {
+  if (tonalPoll) clearInterval(tonalPoll);
+  tonalSnap = lsGet('gjps_tonal_stats_' + (LS.user || ''));
+  tonalPoll = setInterval(function () {
+    if (document.hidden || LS.mode !== 'apps') return;
+    var cur = lsGet('gjps_tonal_stats_' + (LS.user || ''));
+    if (cur !== tonalSnap) { tonalSnap = cur; refreshTonal(); }
+  }, 1500);
+}
 
 /* ================================================================
    14. SELECTOR DE NIVELL PERSONALITZAT
@@ -4479,9 +4898,13 @@ try {
   }
   loadDone();
   initDragDrop();
-  LS.mode = 'track';
-  lsSet('gjps_mode', 'track');
-  render(); 
+  var returnMode = lsGet('gjps_return_mode');
+  if (returnMode) { LS.mode = returnMode; lsSet('gjps_return_mode', ''); }
+  else { LS.mode = 'track'; }
+  lsSet('gjps_mode', LS.mode);
+  readTonalStats();
+  startTonalPoll();
+  render();  
 } catch (e) {
   var f = document.getElementById('fatal');
   f.style.display = 'block';
@@ -5276,7 +5699,7 @@ window.renderFree = function () {
   lr.appendChild(buildLevelPicker());
   var sb = el('div', 'searchbox',
     '<span class="sb-ico">' + ICON_SEARCH + '</span><input id="freeSearch" type="search" placeholder="' +
-    (ca() ? "Cerca un vídeo d'aquest nivell…" : 'Busca un vídeo de este nivel…') + '" value="' + esc(freeQuery) + '">');
+    (ca() ? 'Cerca un vídeo en tots els nivells…' : 'Busca un vídeo en todos los niveles…') + '" value="' + esc(freeQuery) + '">');
   lr.appendChild(sb);
   fv.appendChild(lr);
   setTimeout(function () {
@@ -5337,7 +5760,10 @@ window.renderFree = function () {
     return;
   }
 
-  var head = el('div', 'blkhead', '<span class="blkt">' + esc(blockNames(freeLevel, LS.lang)[freeBlock] || '') + '</span>');
+  var searching = !!(freeQuery || allVideosLoaded);
+  var head = el('div', 'blkhead',
+    '<span class="blkt">' + esc(searching ? (ca() ? 'Cerca global' : 'Búsqueda global') : (blockNames(freeLevel, LS.lang)[freeBlock] || '')) + '</span>' +
+    (searching ? '<span id="searchCount" style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.06em"></span>' : ''));
   if (editModeOn && freeLevel !== 0) {
     var add = el('button', 'adjb', '＋ ' + (ca() ? 'Afegir vídeo (' + LS.lang.toUpperCase() + ')' : 'Añadir vídeo (' + LS.lang.toUpperCase() + ')'));
     add.style.marginLeft = 'auto';
@@ -5367,13 +5793,19 @@ window.renderFree = function () {
     fv.appendChild(head);
   }
 
+  /* Cerca GLOBAL: tots els nivells publicats (tots, si estem en mode edició) */
+  var globalSearch = !!(freeQuery || allVideosLoaded);
   var ids2;
-  if (freeQuery || allVideosLoaded) {
-    ids2 = [];
-    secs.forEach(function (si) {
-      orderList().forEach(function (id) {
-        if (parseInt(id.split('.')[0], 10) === si && !isGiftId(id)) ids2.push(id);
-      });
+  if (globalSearch) {
+    var allowed = {};
+    for (var lv = 0; lv <= MAX_LVL; lv++) {
+      if (levelActive(lv) || editModeOn) {
+        levelSections(lv).forEach(function (si) { allowed[si] = 1; });
+      }
+    }
+    ids2 = orderList().filter(function (id) {
+      if (isGiftId(id)) return false;
+      return !!allowed[parseInt(id.split('.')[0], 10)];
     });
   } else {
     ids2 = blockSeq(freeLevel, freeBlock);
@@ -5384,7 +5816,12 @@ window.renderFree = function () {
   ids2.forEach(function (id) {
     var x = findVidById(id);
     if (!x || !x.v[li()]) return;
-    var card = makeVid(x.v, id, false, secName(x.si));
+    var tagTxt = secName(x.si);
+    if (globalSearch) {
+      var ln = levelName(videoLevel(id));
+      tagTxt = (ln && ln !== tagTxt) ? (ln + ' · ' + tagTxt) : tagTxt;
+    }
+    var card = makeVid(x.v, id, false, tagTxt);
     card.dataset.block = vidBlockById(id);
     var vt = card.querySelector('.vt');
     if (vt) vt.dataset.origTitle = vt.textContent;
