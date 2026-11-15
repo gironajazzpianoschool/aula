@@ -2059,18 +2059,132 @@ html[data-theme="dark"] .cm-seg button.on{color:#14161c}
 html[data-theme="dark"] .cm-btn.pri{color:#14161c}
 @media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}
 
-/* ══ 36. REPRODUCTOR INTEGRAT: sortida sempre accessible ══ */
+/* ══ 36. REPRODUCTOR INTEGRAT: sortida sempre accessible i llegible ══ */
+.modal.on{ touch-action:manipulation; }
+.modal.on .frame iframe{ background:#000; }
 @media (min-width: 768px){
   .modal.on .close{
     opacity:1 !important;
     display:flex !important;
-    background:rgba(0,0,0,.85) !important;
-    border:2px solid var(--gold) !important;
-    box-shadow:0 4px 12px rgba(0,0,0,.5) !important;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.85);
+    color:var(--gold);
+    border:2px solid var(--gold);
+    box-shadow:0 4px 12px rgba(0,0,0,.5);
+    text-shadow:none;
+  }
+  .modal.on .close:hover,
+  .modal.on .close:focus-visible{
+    background:var(--gold);
+    color:#0a0c10;
+    border-color:var(--gold);
+    transform:scale(1.1);
+    box-shadow:0 6px 22px rgba(232,176,75,.45);
+    outline:none;
+  }
+  .modal.on .close:active{
+    transform:scale(1.02);
+    box-shadow:0 3px 12px rgba(0,0,0,.5);
   }
 }
-.modal.on{ touch-action:manipulation; }
-.modal.on .frame iframe{ background:#000; }
+
+/* ══ 37. AVÍS DE REPRODUCCIÓ iOS: instructiu però transparent als tocs ══ */
+.modal.ios-tap .video-overlay{
+  pointer-events:none;
+  z-index:99998;
+  background:linear-gradient(180deg,rgba(6,8,12,.78) 0%,rgba(6,8,12,.42) 42%,rgba(6,8,12,.78) 100%);
+  transition:opacity .45s ease;
+}
+.modal.ios-tap .video-overlay .icon{
+  font-size:64px;
+  color:var(--gold);
+  text-shadow:0 0 26px rgba(232,176,75,.6);
+  animation:iosTapPulse 1.9s ease-in-out infinite;
+}
+@keyframes iosTapPulse{
+  0%,100%{ transform:scale(1); opacity:.92; }
+  50%{ transform:scale(1.14); opacity:1; }
+}
+.modal.ios-tap .video-overlay .text{ max-width:min(420px,84%); }
+.modal.ios-tap .close{ z-index:100001; }
+
+/* ══ 38. SELECTOR D'IDIOMA NEUTRAL · primera visita + login ══ */
+.login-lang{display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0 2px;position:static;top:auto;flex-wrap:wrap}
+.login-lang-lbl{font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-right:2px}
+.login-lang button{background:var(--tap,transparent);border:1px solid var(--hair,var(--line));color:var(--mut);border-radius:999px;padding:7px 16px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;transition:all .2s}
+.login-lang button:hover{border-color:var(--gold);color:var(--ink)}
+.login-lang button.on{background:var(--gold);border-color:var(--gold);color:#fff}
+html[data-theme="dark"] .login-lang button.on{color:#14161c}
+
+.lgate{position:fixed;inset:0;z-index:2147482000;display:none;place-items:center;padding:22px;
+  font-family:'Inter',system-ui,sans-serif;overflow:hidden}
+.lgate.on{display:grid}
+.lgate *{box-sizing:border-box}
+.lgate-bg{position:absolute;inset:0;background:
+  radial-gradient(58% 46% at 12% 4%,rgba(232,176,75,.20),transparent 62%),
+  radial-gradient(50% 42% at 92% 8%,rgba(140,82,255,.20),transparent 62%),
+  radial-gradient(56% 48% at 78% 100%,rgba(76,201,240,.15),transparent 62%),
+  linear-gradient(168deg,#07080b,#0e1219 55%,#090b10)}
+.lgate-grain{position:absolute;inset:0;opacity:.055;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.lgate-keys{position:absolute;left:0;right:0;bottom:0;height:130px;pointer-events:none;opacity:.07;
+  background:repeating-linear-gradient(90deg,#fff 0 30px,transparent 30px 40px);
+  -webkit-mask:linear-gradient(0deg,#000,transparent);mask:linear-gradient(0deg,#000,transparent)}
+.lgate-card{position:relative;width:min(660px,100%);max-height:92vh;overflow-y:auto;text-align:center;
+  padding:38px 32px 30px;border-radius:24px;color:#f4f1ea;
+  background:linear-gradient(180deg,rgba(26,31,42,.96),rgba(14,18,25,.98));
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 40px 100px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);
+  animation:lgateIn .6s cubic-bezier(.16,1,.3,1) both}
+@keyframes lgateIn{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+.lgate.out{animation:lgateOut .38s ease forwards}
+@keyframes lgateOut{to{opacity:0;transform:scale(1.02)}}
+.lgate-brand{font-size:clamp(17px,3.4vw,25px);font-weight:800;letter-spacing:.05em;line-height:1.2;
+  background:linear-gradient(96deg,#f7dc9a,#e8b04b 48%,#c98f3a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lgate-brand sup{font-size:.5em;vertical-align:super}
+.lgate-globe{margin:20px auto 16px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(232,176,75,.10);border:1px solid rgba(232,176,75,.32);color:#e8b04b}
+.lgate-prompt{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:26px}
+.lgate-prompt span{font-size:15px;font-weight:650;color:#d8dce4;letter-spacing:.005em}
+.lgate-prompt i{display:block;width:52px;height:1px;background:linear-gradient(90deg,transparent,rgba(232,176,75,.55),transparent)}
+.lgate-opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lgate-opt{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;
+  padding:24px 16px 20px;border-radius:18px;cursor:pointer;font-family:inherit;text-align:center;
+  background:rgba(255,255,255,.035);border:1.5px solid rgba(255,255,255,.13);color:#f4f1ea;
+  transition:transform .26s cubic-bezier(.16,1,.3,1),border-color .22s,background .22s,box-shadow .26s;
+  animation:lgateOpt .55s cubic-bezier(.16,1,.3,1) both}
+.lgate-opt:nth-child(1){animation-delay:.14s}
+.lgate-opt:nth-child(2){animation-delay:.22s}
+@keyframes lgateOpt{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.lgate-opt:hover,.lgate-opt:focus-visible{outline:none;transform:translateY(-4px);
+  border-color:#e8b04b;background:rgba(232,176,75,.09);box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 0 4px rgba(232,176,75,.13)}
+.lgate-opt:active{transform:translateY(-1px) scale(.985)}
+.lgate-opt.pick{border-color:#39d98a;background:rgba(57,217,138,.14);box-shadow:0 0 0 4px rgba(57,217,138,.18)}
+.lgate-code{font-size:9.5px;font-weight:800;letter-spacing:.2em;color:#8d95a3;
+  padding:3px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.15)}
+.lgate-opt:hover .lgate-code,.lgate-opt:focus-visible .lgate-code{color:#f7dc9a;border-color:rgba(232,176,75,.45)}
+.lgate-name{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.lgate-hello{font-size:12.5px;color:#9aa2b0;font-weight:500}
+.lgate-foot{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);
+  font-size:11.5px;line-height:1.7;color:#7d8593}
+.lgate-foot b{color:#a8b0be;font-weight:600}
+.lgate-card::-webkit-scrollbar{width:10px}
+.lgate-card::-webkit-scrollbar-track{background:rgba(255,255,255,.04);border-radius:99px}
+.lgate-card::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8b04b,#a9762a);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+.lgate-card{scrollbar-width:thin;scrollbar-color:rgba(232,176,75,.5) rgba(255,255,255,.05)}
+@media(max-width:620px){
+  .lgate{padding:14px}
+  .lgate-card{padding:28px 20px 24px;border-radius:20px}
+  .lgate-opts{grid-template-columns:1fr;gap:11px}
+  .lgate-opt{flex-direction:row;justify-content:flex-start;gap:14px;padding:18px 18px;text-align:left}
+  .lgate-opt .lgate-txt{display:flex;flex-direction:column;gap:2px;flex:1}
+  .lgate-name{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .lgate-card,.lgate-opt{animation-duration:1ms}
+  .lgate-opt:hover,.lgate-opt:focus-visible{transform:none}
+}
 
 </style>
 </head>
@@ -2481,7 +2595,7 @@ var UI = {
 
 var FAQS = [
   { ico: 'logo', q: { ca: 'Què és Girona Jazz Piano School?', es: '¿Qué es Girona Jazz Piano School?' }, a: { ca: 'És una escola de piano online amb un mètode propi que combina tècniques d\'aprenentatge de la música moderna i de la clàssica. L\'alumnat gaudeix d\'un seguiment continuat i d\'accés 24/7 a tot el contingut.', es: 'Es una escuela de piano online con método propio que combina técnicas de aprendizaje de la música moderna y de la clásica. El alumnado disfruta de un seguimiento continuado y de acceso 24/7 a todo el contenido.' } },
-  { ico: '👤', q: { ca: 'Qui hi ha darrere de GJPS?', es: '¿Quién hay detrás de GJPS?' }, a: { ca: 'Girona Jazz Piano School és un projecte personal creat per un pianista i professor apassionat per la didàctica del piano modern i el jazz. Amb anys d\'experiència formant músics, he desenvolupat aquest mètode progressiu pensat per a adults que volen aprendre a tocar de veritat, entenent la música des de dins i adquirint autonomia al teclat pas a pas.', es: 'Girona Jazz Piano School es un proyecto personal creado por un pianista y profesor apasionado por la didáctica del piano moderno y el jazz. Con años de experiencia formando músicos, he desarrollado este método progresivo pensado para adultos que quieren aprender a tocar de verdad, entendiendo la música desde dentro y adquiriendo autonomía en el teclado paso a paso.' } },
+  { ico: '👤', q: { ca: 'Qui hi ha darrere de GJPS? La meva biografia', es: '¿Quién hay detrás de GJPS? Mi biografía' }, a: { ca: 'Em dic X i soc pianista, professor i el creador de Girona Jazz Piano School. Aquest és un projecte personal, nascut de X anys d\'experiència ensenyant piano modern i jazz.\n\n🎹 LA MEVA FORMACIÓ\nVaig començar a estudiar música als X anys i em vaig formar a X, on vaig obtenir X. La base clàssica em va donar rigor, lectura i tècnica; el jazz i el llenguatge modern em van ensenyar a entendre l\'harmonia des de dins i a crear sense partitura. Aquesta doble mirada és exactament la que vertebra el mètode.\n\n🎓 LA MEVA TRAJECTÒRIA\nPorto X anys dedicant-me a l\'ensenyament i he acompanyat més de X alumnes de perfils molt diferents: des de persones que no havien tocat mai una tecla fins a músics amb conservatori que buscaven autonomia real al teclat. Com a intèrpret he treballat X anys en directe amb X, i aquesta experiència d\'escenari és la que m\'ha ensenyat què és realment útil quan has de tocar davant d\'algú.\n\n💡 PER QUÈ EXISTEIX AQUEST MÈTODE\nMassa sovint vaig trobar alumnes que llegien notes correctament però no sabien què estaven tocant ni per què allò funcionava. Aquest mètode neix exactament d\'aquí: primer entendre, després tocar amb sentit i finalment crear. No és un recull de vídeos solts, és un itinerari pensat pas a pas perquè ningú es quedi enrere ni s\'avorreixi.\n\n📍 AVUI\nCompagino les classes presencials a Girona amb aquesta aula virtual, que em permet arribar a alumnes d\'arreu mantenint el seguiment personalitzat: les notes que em fas arribar des de cada vídeo les llegeixo jo mateix.', es: 'Me llamo X y soy pianista, profesor y el creador de Girona Jazz Piano School. Este es un proyecto personal, nacido de X años de experiencia enseñando piano moderno y jazz.\n\n🎹 MI FORMACIÓN\nEmpecé a estudiar música a los X años y me formé en X, donde obtuve X. La base clásica me dio rigor, lectura y técnica; el jazz y el lenguaje moderno me enseñaron a entender la armonía desde dentro y a crear sin partitura. Esa doble mirada es exactamente la que vertebra el método.\n\n🎓 MI TRAYECTORIA\nLlevo X años dedicándome a la enseñanza y he acompañado a más de X alumnos de perfiles muy distintos: desde personas que nunca habían tocado una tecla hasta músicos con conservatorio que buscaban autonomía real en el teclado. Como intérprete he trabajado X años en directo con X, y esa experiencia de escenario es la que me ha enseñado qué es realmente útil cuando tienes que tocar delante de alguien.\n\n💡 POR QUÉ EXISTE ESTE MÉTODO\nDemasiado a menudo encontré alumnos que leían notas correctamente pero no sabían qué estaban tocando ni por qué aquello funcionaba. Este método nace exactamente de ahí: primero entender, después tocar con sentido y finalmente crear. No es una colección de vídeos sueltos, es un itinerario pensado paso a paso para que nadie se quede atrás ni se aburra.\n\n📍 HOY\nCompagino las clases presenciales en Girona con esta aula virtual, que me permite llegar a alumnos de cualquier lugar manteniendo el seguimiento personalizado: las notas que me envías desde cada vídeo las leo yo mismo.' } },
   { ico: '🎻', q: { ca: 'Vinc del conservatori, em servirà aquest mètode?', es: 'Vengo del conservatorio, ¿me servirá este método?' }, a: { ca: 'I tant! El mètode està pensat per a qualsevol perfil, tant si comences de zero com si ja tens una base. Si véns del conservatori (de piano o de qualsevol altre instrument), trobaràs que aquí s\'aprèn a entendre la música des de dins, adquirint habilitats tant per tocar repertori clàssic com modern (pop, rock, bandes sonores...). El mètode t\'ajudarà a guanyar autonomia al teclat, a improvisar, a acompanyar i a entendre l\'harmonia d\'una manera pràctica que sovint al conservatori tradicional queda en segon pla.', es: '¡Por supuesto! El método está pensado para cualquier perfil, tanto si empiezas de cero como si ya tienes una base. Si vienes del conservatorio (de piano o de cualquier otro instrumento), encontrarás que aquí se aprende a entender la música desde dentro, adquiriendo habilidades tanto para tocar repertorio clásico como moderno (pop, rock, bandas sonoras...). El método te ayudará a ganar autonomía en el teclado, a improvisar, a acompañar y a entender la armonía de una manera práctica que a menudo en el conservatorio tradicional queda en segundo plano.' } },
   { ico: '💻', q: { ca: 'És presencial o 100% online?', es: '¿Es presencial o 100% online?' }, a: { ca: 'És un curs 100% online amb un itinerari ordenat i de seguiment continuat. A través de vídeos didàctics, partitures i un sistema propi de rutines tècniques, està pensat per formar músics autònoms a llarg termini.', es: 'Es un curso 100% online con un itinerario ordenado y de seguimiento continuado que combina vídeos didácticos, partituras y un sistema propio de rutinas técnicas, está pensado para formar músicos autónomos a largo plazo.' } },
   { ico: '📚', q: { ca: 'Com es desenvolupen els cursos?', es: '¿Cómo se desarrollan los cursos?' }, a: { ca: 'Cada nivell s\'estructura en blocs que es combinen dins del seguiment continuat per formar el músic des de zero. Al primer nivell, per exemple, trobaràs 5 blocs: Tècnica, Teoria, Ritme, Auditiu i Pràctica funcional.\nSeguint els vídeos en ordre, aniràs adquirint pas a pas tot el que necessites per posar-ho en pràctica al piano.', es: 'Cada nivel se estructura en bloques que se combinan dentro del seguimiento continuado para formar al músico desde cero. En el primer nivel, por ejemplo, encontrarás 5 bloques: Técnica, Teoría, Ritmo, Audición y Práctica funcional. Siguiendo los vídeos en orden, irás adquiriendo paso a paso todo lo que necesitas para ponerlo en práctica en el piano.' } },
@@ -2490,7 +2604,9 @@ var FAQS = [
   { ico: '🎸', q: { ca: '"Jo només vull tocar acords"', es: '"Yo solo quiero tocar acordes"' }, a: { ca: 'Perfecte! Aprendràs a acompanyar amb acords des del primer dia. No obstant això, compta que és només una petita part de l\'ensenyament: el mètode es construeix amb una combinació de disciplines per entendre la música de veritat.', es: '¡Perfecto! Aprenderás a acompañar con acordes desde el primer día. No obstante, ten en cuenta que es solo una pequeña parte de la enseñanza: el método se construye con una combinación de disciplinas para entender la música de verdad.' } },
   { ico: '🎼', q: { ca: 'Puc aprendre sense saber música?', es: '¿Puedo aprender sin saber música?' }, a: { ca: 'I tant! El mètode està dissenyat per començar des de zero. Aprendràs a tocar acords i melodies sense necessitat de saber solfeig inicialment, tot i que el mètode t\'ensenyarà gradualment els conceptes teòrics necessaris.', es: '¡Por supuesto! El método está diseñado para empezar desde cero. Aprenderás a tocar acordes y melodías sin necesidad de saber solfeo inicialmente, aunque el método te enseñará gradualmente los conceptos teóricos necesarios.' } },
   { ico: '📞', q: { ca: 'Et puc trucar per dubtes?', es: '¿Te puedo llamar por dudas?' }, a: { ca: 'No, no em pots trucar. Quan tinguis dubtes, pots utilitzar l\'espai de notes personals de cada vídeo i enviar-les per em@il al professor si ho necessites.', es: 'No, no me puedes llamar. Cuando tengas dudas, puedes utilizar el espacio de notas personales de cada vídeo y enviarlas por em@il al profesor si lo necesitas.' } },
-  { ico: '🚪', q: { ca: 'Me\'n puc donar de baixa quan vulgui?', es: '¿Me puedo dar de baja cuando quiera?' }, a: { ca: 'I tant. No hi ha permanència. Pots cancel·lar la teva subscripció en qualsevol moment amb un parell de clics.\nA més, si en inscriure\'t no estàs content amb el contingut, t\'oferim una garantia de devolució de 7 dies.', es: 'Por supuesto. No hay permanencia. Puedes cancelar tu suscripción en cualquier momento con un par de clics. Además, si al inscribirte no estás contento con el contenido, te ofrecemos una garantía de devolución de 7 días.' } }
+  { ico: '🚪', q: { ca: 'Me\'n puc donar de baixa quan vulgui?', es: '¿Me puedo dar de baja cuando quiera?' }, a: { ca: 'I tant. No hi ha permanència. Pots cancel·lar la teva subscripció en qualsevol moment amb un parell de clics.\nA més, si en inscriure\'t no estàs content amb el contingut, t\'oferim una garantia de devolució de 7 dies.', es: 'Por supuesto. No hay permanencia. Puedes cancelar tu suscripción en cualquier momento con un par de clics. Además, si al inscribirte no estás contento con el contenido, te ofrecemos una garantía de devolución de 7 días.' } },
+  { ico: '🎸', q: { ca: 'Hi haurà un segon instrument? Per què guitarra?', es: '¿Habrá un segundo instrumento? ¿Por qué guitarra?' }, a: { ca: 'Sí. A partir del Nivell X s\'obre un bloc nou i totalment opcional dedicat a la guitarra com a segon instrument de reforç.\n\n🎓 LA IDEA VÉ DEL CONSERVATORI\nAls conservatoris és obligatori cursar un segon instrument, i no és per formar dos intèrprets: és perquè cada instrument t\'obliga a entendre la música des d\'un angle diferent. Aquí fem el mateix, però amb un objectiu molt concret: que la guitarra reforci el teu piano.\n\n🎸 PER QUÈ LA GUITARRA\nEl piano és lineal i visual: les notes estan totes en fila. La guitarra és vertical i geomètrica: els acords es converteixen en formes que es mouen pel mànec. Quan trasllades un mateix concepte d\'un teclat a l\'altre, deixa de ser una posició memoritzada i es converteix en comprensió real.\n\nQUÈ HI TROBARÀS\n• Postura, mà dreta i mà esquerra: el mínim imprescindible per sonar bé sense lesions.\n• Acords i voicings al mànec: les mateixes tríades que ja treballes al piano, vistes en una altra disposició.\n• Inversions i conducció de veus: entendre per què un acord enllaça amb el següent.\n• Ritme i rasgueig: la mà dreta de la guitarra és un metrònom viu que reforça la subdivisió.\n• Repertori compartit: els mateixos temes del bloc de Pràctica, tocats als dos instruments.\n\n⚙️ COM FUNCIONA DINS DEL CURS\n• És un bloc OPCIONAL: cap dels seus vídeos és ⭐ important, de manera que MAI bloqueja el teu avanç al piano ni el desbloqueig dels blocs següents.\n• No cal tenir guitarra ni cap experiència prèvia per seguir el curs de piano amb normalitat.\n• Si decideixes fer-lo, tindràs la seva pròpia numeració i el seu progrés, com qualsevol altre bloc.\n• El pots deixar, reprendre o ignorar sense cap penalització.', es: 'Sí. A partir del Nivel X se abre un bloque nuevo y totalmente opcional dedicado a la guitarra como segundo instrumento de refuerzo.\n\n🎓 LA IDEA VIENE DEL CONSERVATORIO\nEn los conservatorios es obligatorio cursar un segundo instrumento, y no es para formar dos intérpretes: es porque cada instrumento te obliga a entender la música desde un ángulo distinto. Aquí hacemos lo mismo, pero con un objetivo muy concreto: que la guitarra refuerce tu piano.\n\n🎸 POR QUÉ LA GUITARRA\nEl piano es lineal y visual: las notas están todas en fila. La guitarra es vertical y geométrica: los acordes se convierten en formas que se mueven por el mástil. Cuando trasladas un mismo concepto de un teclado al otro, deja de ser una posición memorizada y se convierte en comprensión real.\n\nQUÉ ENCONTRARÁS\n• Postura, mano derecha y mano izquierda: lo mínimo imprescindible para sonar bien sin lesiones.\n• Acordes y voicings en el mástil: las mismas tríadas que ya trabajas en el piano, vistas en otra disposición.\n• Inversiones y conducción de voces: entender por qué un acorde enlaza con el siguiente.\n• Ritmo y rasgueo: la mano derecha de la guitarra es un metrónomo vivo que refuerza la subdivisión.\n• Repertorio compartido: los mismos temas del bloque de Práctica, tocados en los dos instrumentos.\n\n⚙️ CÓMO FUNCIONA DENTRO DEL CURSO\n• Es un bloque OPCIONAL: ninguno de sus vídeos es ⭐ importante, así que NUNCA bloquea tu avance en el piano ni el desbloqueo de los bloques siguientes.\n• No hace falta tener guitarra ni experiencia previa para seguir el curso de piano con normalidad.\n• Si decides hacerlo, tendrá su propia numeración y su progreso, como cualquier otro bloque.\n• Puedes dejarlo, retomarlo o ignorarlo sin ninguna penalización.' } },
+  { ico: '⏳', q: { ca: 'Quant ha costat construir tot això? Què inclou la subscripció?', es: '¿Cuánto ha costado construir todo esto? ¿Qué incluye la suscripción?' }, a: { ca: 'Aquest primer nivell no és un curs muntat en un cap de setmana. Hi ha X hores de feina al darrere, i vull que les vegis perquè entenguis què estàs rebent.\n\n🛠️ DESGLOSSAT DE LA FEINA\n• Disseny pedagògic i itinerari pas a pas: X hores\n• Gravació i edició de X vídeos: X hores\n• Composició, arranjament i gravació de X play-alongs: X hores\n• Edició i digitació de X partitures: X hores\n• Disseny i gravació de les X rutines tècniques: X hores\n• Desenvolupament del web, del seguiment continuat i de les apps d\'entrenament: X hores\n• Proves en ordinador, mòbil i tablet, correccions i versions: X hores\n\n➡️ TOTAL: X hores de treball.\n\n🎁 QUÈ REPS TU\nTot aquest material, disponible 24 hores al dia durant tot el mes, per menys del que costa UNA sola hora de classe presencial d\'instrument.\n\nI no és només vídeo:\n• Un itinerari que et diu sempre quin és el següent pas, sense haver de decidir què estudiar.\n• Tots els vídeos que vulguis repetir, tantes vegades com calgui, al teu ritme.\n• Partitures i play-alongs descarregables per estudiar amb acompanyament real.\n• Entrenament auditiu amb apps pròpies que no trobaràs enlloc més.\n• Notes personals a cada vídeo que arriben directament al professor.\n• Nous continguts i millores que s\'hi van afegint sense cost extra.\n\n💬 LA COMPARACIÓ HONESTA\nUna classe presencial és valuosa, però són 60 minuts i s\'acaben. Aquí tens el mètode sencer, cada dia del mes, per menys diners. No substitueix el contacte humà: el complementa, i per això les notes i el seguiment hi són sempre.', es: 'Este primer nivel no es un curso montado en un fin de semana. Hay X horas de trabajo detrás, y quiero que las veas para que entiendas qué estás recibiendo.\n\n🛠️ DESGLOSE DEL TRABAJO\n• Diseño pedagógico e itinerario paso a paso: X horas\n• Grabación y edición de X vídeos: X horas\n• Composición, arreglo y grabación de X play-alongs: X horas\n• Edición y digitación de X partituras: X horas\n• Diseño y grabación de las X rutinas técnicas: X horas\n• Desarrollo de la web, del seguimiento continuo y de las apps de entrenamiento: X horas\n• Pruebas en ordenador, móvil y tablet, correcciones y versiones: X horas\n\n➡️ TOTAL: X horas de trabajo.\n\n🎁 QUÉ RECIBES TÚ\nTodo este material, disponible 24 horas al día durante todo el mes, por menos de lo que cuesta UNA sola hora de clase presencial de instrumento.\n\nY no es solo vídeo:\n• Un itinerario que te dice siempre cuál es el siguiente paso, sin tener que decidir qué estudiar.\n• Todos los vídeos que quieras repetir, tantas veces como haga falta, a tu ritmo.\n• Partituras y play-alongs descargables para estudiar con acompañamiento real.\n• Entrenamiento auditivo con apps propias que no encontrarás en ningún otro sitio.\n• Notas personales en cada vídeo que llegan directamente al profesor.\n• Nuevos contenidos y mejoras que se van añadiendo sin coste extra.\n\n💬 LA COMPARACIÓN HONESTA\nUna clase presencial es valiosa, pero son 60 minutos y se acaban. Aquí tienes el método entero, cada día del mes, por menos dinero. No sustituye el contacto humano: lo complementa, y por eso las notas y el seguimiento están siempre presentes.' } }
 ];
 
 var HELP = [
@@ -4086,12 +4202,17 @@ function showLogin() {
   $('login').classList.add('on');
   $('lgTitle').innerHTML = '<div style="font-size:22px;font-weight:800;background:linear-gradient(90deg,#f7dc9a 0%,var(--gold) 45%,#c98f3a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;margin-bottom:4px;">GIRONA JAZZ PIANO SCHOOL®</div><div style="font-size:14px;color:var(--mut);font-weight:400;">' + (LS.lang === 'ca' ? 'Inicia sessió a l\'aula virtual' : 'Inicia sesión en el aula virtual') + '</div>';
   var langDiv = $('loginLangSwitcher');
-  langDiv.innerHTML = '';
-  ['ca', 'es'].forEach(function (lang) {
+  langDiv.innerHTML = '<span class="login-lang-lbl">Idioma</span>';
+  [['ca', 'Català'], ['es', 'Español']].forEach(function (pair) {
     var btn = document.createElement('button');
-    btn.textContent = lang === 'ca' ? 'CAT' : 'ESP';
-    if (LS.lang === lang) btn.className = 'on';
-    btn.onclick = function () { LS.lang = lang; lsSet('gjps_lang', lang); setLabels(); showLogin(); };
+    btn.type = 'button';
+    btn.textContent = pair[1];
+    btn.setAttribute('aria-pressed', LS.lang === pair[0] ? 'true' : 'false');
+    if (LS.lang === pair[0]) btn.className = 'on';
+    btn.onclick = function () {
+      LS.lang = pair[0]; lsSet('gjps_lang', pair[0]);
+      loadDone(); loadSkip(); setLabels(); showLogin();
+    };
     langDiv.appendChild(btn);
   });
   var oldFaqBtn = $('lgFaqBtn');
@@ -4099,7 +4220,7 @@ function showLogin() {
   var faqBtn = document.createElement('button');
   faqBtn.id = 'lgFaqBtn';
   faqBtn.className = 'go secondary';
-  faqBtn.style.cssText = 'margin-top:22px;position:relative;top:20px;background:transparent;border:1px solid var(--line);color:var(--mut);font-size:var(--fs-btn);width:100%;';
+  faqBtn.style.cssText = 'margin-top:18px;background:transparent;border:1px solid var(--line);color:var(--mut);font-size:var(--fs-btn);width:100%;';
   faqBtn.textContent = (LS.lang === 'ca' ? ' Preguntes Freqüents (FAQ)' : '📖 Preguntas Frecuentes (FAQ)');
   faqBtn.onclick = function () { showGuestFAQ(); };
   $('loginLangSwitcher').parentNode.insertBefore(faqBtn, $('loginLangSwitcher'));
@@ -4112,7 +4233,7 @@ function showLogin() {
   var dl = $('userlist');
   dl.innerHTML = '';
   USERS_DB.forEach(function (u) { if (u.role === 'admin') return; var o = document.createElement('option'); o.value = u.n; dl.appendChild(o); });
-  setTimeout(function () { $('lgName').focus(); }, 100);
+  setTimeout(function () { if (!window.__gjpsLangPending) $('lgName').focus(); }, 100);
 }
 
 function startSession(n) {
@@ -4280,6 +4401,7 @@ $('langToggle').onclick = function () {
    11. REPRODUCTOR A PANTALLA COMPLETA
    ================================================================ */
 var currentVideoSrc = '';
+var iosTapTimer = null;
 
 function openFullscreenVideo(src) {
   if (!src) { showToast(t().soon); return; }
@@ -4287,28 +4409,50 @@ function openFullscreenVideo(src) {
   var player = $('player');
   var overlay = $('videoOverlay');
   var modal = $('modal');
+  var ios = isIOS();
 
-  /* Pestanya nova NOMÉS en mòbil dins del navegador. En app instal·lada
-     (iPad/iPhone/Android) o en tablet, reproductor integrat sempre. */
-  if (isSmartphone() && !isStandaloneApp()) {
+  /* ANDROID (mòbil i tauleta, també en app instal·lada): pestanya nova,
+     com sempre. No s'usa el reproductor integrat. */
+  if (!ios && isMobileDevice()) {
     window.open(src, '_blank');
     return;
   }
 
   pushVideoState();
+  clearTimeout(iosTapTimer);
   document.documentElement.style.zoom = '1';
   modal.classList.add('on');
-  modal.classList.toggle('ios-device', isIOS());
   modal.classList.add('show-controls');
 
-  var finalSrc = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0';
-  player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  player.src = finalSrc;
-  player.classList.add('active');
-  if (overlay) overlay.classList.add('hidden');
-
-  /* Fullscreen natiu només a l'escriptori amb navegador: a iOS trenca el retorn */
-  if (!isMobileDevice() && !isStandaloneApp()) {
+  if (ios) {
+    /* iOS: el reproductor de Drive no arrenca des de fora. Carreguem el
+       vídeo i deixem un avís transparent als tocs perquè el dit arribi
+       directament al play de Drive. */
+    modal.classList.add('ios-device', 'ios-tap');
+    var iosSrc = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0';
+    player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
+    player.src = iosSrc;
+    player.classList.add('active');
+    if (overlay) {
+      $('overlayText').innerHTML = LS.lang === 'ca'
+        ? '<div style="font-size:17px;font-weight:800;letter-spacing:.02em;margin-bottom:10px;">Toca el centre per reproduir</div>' +
+          '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.6;">iOS demana un toc per iniciar el vídeo.<br>Per sortir, prem la ✕ de dalt a la dreta.</div>'
+        : '<div style="font-size:17px;font-weight:800;letter-spacing:.02em;margin-bottom:10px;">Toca el centro para reproducir</div>' +
+          '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.6;">iOS pide un toque para iniciar el vídeo.<br>Para salir, pulsa la ✕ de arriba a la derecha.</div>';
+      overlay.classList.remove('hidden');
+      iosTapTimer = setTimeout(function () { overlay.classList.add('hidden'); }, 5000);
+    }
+  } else {
+    /* ESCRIPTORI: flux original provat. El modal s'obre a pantalla completa
+       amb el src BUIT i l'avís visible. El clic sobre l'avís és el gest
+       d'usuari que carrega el vídeo amb autoplay, i Drive arrenca sol. */
+    modal.classList.remove('ios-device', 'ios-tap');
+    player.src = '';
+    player.classList.remove('active');
+    if (overlay) {
+      $('overlayText').textContent = t().overlayText;
+      overlay.classList.remove('hidden');
+    }
     var wrap = document.querySelector('.wrap');
     if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
     else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
@@ -4446,6 +4590,11 @@ window.addEventListener('popstate', function () {
   if (videoHistoryGuard) { videoHistoryGuard = false; closeVideoPlayer(true); }
 });
 function closeVideoPlayer(fromPop) {
+  clearTimeout(iosTapTimer);
+  var mm = $('modal');
+  if (mm) { mm.classList.remove('ios-tap', 'ios-device'); }
+  var ovv = $('videoOverlay');
+  if (ovv) ovv.classList.remove('hidden');
   document.documentElement.style.zoom = '';
   try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
   if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen();
@@ -6014,6 +6163,112 @@ window.GJPSCourse = {
   blockSeq: blockSeq, deleted: function () { return OV.del || {}; },
   data: function () { return OV; }
 };
+})();
+</script>
+
+<script>
+/* ═══ GJPS · SELECTOR D'IDIOMA DE PRIMERA VISITA · neutral ═══ */
+(function () {
+  'use strict';
+  var KEY = 'gjps_lang';
+  var GLOBE = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z"/></svg>';
+  var gate = null, opts = [];
+
+  function has() { try { return !!localStorage.getItem(KEY); } catch (e) { return true; } }
+
+  function build() {
+    if (gate) return;
+    gate = document.createElement('div');
+    gate.className = 'lgate';
+    gate.id = 'langGate';
+    gate.setAttribute('role', 'dialog');
+    gate.setAttribute('aria-modal', 'true');
+    gate.setAttribute('aria-label', 'Tria el teu idioma · Elige tu idioma');
+    gate.innerHTML =
+      '<div class="lgate-bg"></div><div class="lgate-grain"></div><div class="lgate-keys"></div>' +
+      '<div class="lgate-card">' +
+        '<div class="lgate-brand">GIRONA JAZZ PIANO SCHOOL<sup>®</sup></div>' +
+        '<div class="lgate-globe">' + GLOBE + '</div>' +
+        '<div class="lgate-prompt"><span>Tria el teu idioma</span><i></i><span>Elige tu idioma</span></div>' +
+        '<div class="lgate-opts">' +
+          '<button type="button" class="lgate-opt" data-lang="ca">' +
+            '<span class="lgate-code">CA</span>' +
+            '<span class="lgate-txt"><span class="lgate-name">Català</span>' +
+            '<span class="lgate-hello">Benvingut/da</span></span>' +
+          '</button>' +
+          '<button type="button" class="lgate-opt" data-lang="es">' +
+            '<span class="lgate-code">ES</span>' +
+            '<span class="lgate-txt"><span class="lgate-name">Español</span>' +
+            '<span class="lgate-hello">Bienvenido/a</span></span>' +
+          '</button>' +
+        '</div>' +
+        '<div class="lgate-foot">' +
+          '<b>Pots canviar-lo en qualsevol moment</b><br>' +
+          'Podrás cambiarlo en cualquier momento' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(gate);
+    opts = Array.prototype.slice.call(gate.querySelectorAll('.lgate-opt'));
+    opts.forEach(function (b) { b.addEventListener('click', function () { pick(b); }); });
+    gate.addEventListener('keydown', onKey);
+  }
+
+  function onKey(e) {
+    var i = opts.indexOf(document.activeElement);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); opts[(i + 1 + opts.length) % opts.length].focus(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); opts[(i - 1 + opts.length) % opts.length].focus(); }
+    else if (e.key === '1') { e.preventDefault(); pick(opts[0]); }
+    else if (e.key === '2') { e.preventDefault(); pick(opts[1]); }
+    else if (e.key === 'Escape' || e.key === 'Tab') { if (e.key === 'Escape') e.preventDefault(); }
+  }
+
+  function pick(btn) {
+    if (!btn) return;
+    var lang = btn.dataset.lang;
+    btn.classList.add('pick');
+    opts.forEach(function (b) { b.disabled = true; });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+    if (typeof LS !== 'undefined') LS.lang = lang;
+    setTimeout(function () {
+      if (typeof loadDone === 'function') loadDone();
+      if (typeof loadSkip === 'function') loadSkip();
+      if (typeof setLabels === 'function') setLabels();
+      close();
+      var logged = (typeof LS !== 'undefined') && LS.user;
+      if (logged && typeof render === 'function') render();
+      else if (typeof showLogin === 'function') showLogin();
+      if (typeof showToast === 'function') {
+        showToast(lang === 'ca' ? 'Idioma: Català' : 'Idioma: Español', 1800);
+      }
+    }, 260);
+  }
+
+  function open() {
+    build();
+    window.__gjpsLangPending = true;
+    gate.classList.remove('out');
+    gate.classList.add('on');
+    opts.forEach(function (b) { b.disabled = false; b.classList.remove('pick'); });
+    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+    setTimeout(function () { opts[0].focus(); }, 220);
+    setTimeout(function () {
+      try { if (document.activeElement && $('lgName') === document.activeElement) document.activeElement.blur(); } catch (e) {}
+      opts[0].focus();
+    }, 420);
+  }
+
+  function close() {
+    window.__gjpsLangPending = false;
+    if (!gate) return;
+    gate.classList.add('out');
+    setTimeout(function () { gate.classList.remove('on', 'out'); }, 380);
+  }
+
+  function boot() { if (!has()) open(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  window.GJPSLang = { open: open, close: close, chosen: has };
 })();
 </script>
 
