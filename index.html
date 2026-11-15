@@ -7173,10 +7173,10 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · REPRODUCTOR iOS DEFINITIU  v3
-   Arrencada amb gest propi, sense observers ni bucles. Cap element del
-   reproductor de Drive rep el primer toc: el vídeo es carrega dins del gest
-   sobre el nostre botó, arrenca sol i Drive amaga els seus controls.
+   GJPS · REPRODUCTOR iOS DEFINITIU  v4
+   L'estat es controla de forma imperativa amb style.display, no amb classes:
+   cap altre codi del web el pot alterar. El gest sobre el botó propi és qui
+   carrega el vídeo amb autoplay, i Drive arrenca sense haver rebut cap toc.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
@@ -7184,133 +7184,152 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 var CSS = [
 '.iosstart{position:absolute;inset:0;z-index:999998;display:none;place-items:center;padding:26px;',
 '  cursor:pointer;-webkit-tap-highlight-color:transparent;',
-'  background:radial-gradient(58% 48% at 50% 42%,rgba(20,25,34,.94),rgba(4,6,9,.985))}',
-'.modal.on.ios-tap.awaiting .iosstart{display:grid;animation:iosFade .45s ease both}',
-'@keyframes iosFade{from{opacity:0}to{opacity:1}}',
+'  background:radial-gradient(58% 48% at 50% 42%,rgba(20,25,34,.955),rgba(4,6,9,.99))}',
 '.iosstart::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;',
 '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'3\'/%3E%3C/filter%3E%3Crect width=\'150\' height=\'150\' filter=\'url(%23n)\'/%3E%3C/svg%3E")}',
 '.iosstart-in{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;',
-'  animation:iosRise .55s cubic-bezier(.16,1,.3,1) both}',
-'@keyframes iosRise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}',
+'  animation:iosRise .5s cubic-bezier(.16,1,.3,1) both}',
+'@keyframes iosRise{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}',
 '.iosplay{position:relative;width:120px;height:120px;border-radius:50%;border:0;cursor:pointer;',
 '  display:grid;place-items:center;font-size:44px;line-height:1;padding-left:9px;color:#0a0c10;',
 '  background:linear-gradient(148deg,#fbe6b4,#e8b04b 52%,#b8842f);',
 '  box-shadow:0 20px 52px rgba(232,176,75,.46),0 0 0 13px rgba(232,176,75,.11),inset 0 2px 0 rgba(255,255,255,.5);',
-'  transition:transform .22s cubic-bezier(.16,1,.3,1),box-shadow .22s;',
-'  animation:iosBeat 2.6s ease-in-out infinite}',
+'  transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s;',
+'  animation:iosBeat 2.6s ease-in-out infinite;-webkit-tap-highlight-color:transparent}',
 '@keyframes iosBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}',
-'.iosplay:active{transform:scale(.94);box-shadow:0 10px 26px rgba(232,176,75,.4),0 0 0 8px rgba(232,176,75,.14)}',
+'.iosplay:active{transform:scale(.94)}',
 '.iosplay::after{content:"";position:absolute;inset:-26px;border-radius:50%;pointer-events:none;',
 '  border:1px solid rgba(232,176,75,.24);animation:iosRing 3.2s ease-out infinite}',
 '@keyframes iosRing{0%{transform:scale(.86);opacity:.8}100%{transform:scale(1.18);opacity:0}}',
 '.iostitle{margin-top:28px;font-size:20px;font-weight:800;letter-spacing:.01em;color:#f4f1ea}',
 '.iossub{margin-top:10px;font-size:13.5px;font-weight:500;line-height:1.7;color:#a8b0be;max-width:min(430px,86vw)}',
-'.iosbadge{margin-top:20px;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:99px;',
-'  font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;',
-'  color:#e8b04b;background:rgba(232,176,75,.1);border:1px solid rgba(232,176,75,.32)}',
-'.iosclean{position:absolute;top:14px;left:14px;z-index:1000001;display:none;align-items:center;gap:7px;',
+'.iosclean{position:absolute;top:14px;left:14px;z-index:1000002;display:none;align-items:center;gap:7px;',
 '  padding:9px 15px;border-radius:99px;background:rgba(0,0,0,.82);border:2px solid var(--gold);color:var(--gold);',
 '  font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5);',
 '  -webkit-tap-highlight-color:transparent;transition:transform .16s}',
 '.iosclean:active{transform:scale(.95)}',
-'.modal.on.ios-tap.playing .iosclean{display:inline-flex}',
-'.modal.ios-tap .close{z-index:1000002}',
+'.modal.ios-tap .close{z-index:1000003}',
 '@media(max-width:767px){.iosplay{width:100px;height:100px;font-size:36px;padding-left:7px}',
 '  .iostitle{font-size:17px;margin-top:22px}.iossub{font-size:12.5px}}',
-'html.fx-calm .iosplay,html.fx-calm .iosplay::after{animation:none!important}',
-'@media (prefers-reduced-motion:reduce){.iosstart,.iosstart-in,.iosplay,.iosplay::after{animation:none!important}}'
+'html.fx-calm .iosplay,html.fx-calm .iosplay::after,html.fx-calm .iosstart-in{animation:none!important}',
+'@media (prefers-reduced-motion:reduce){.iosstart-in,.iosplay,.iosplay::after{animation:none!important}}'
 ].join('\n');
 
-function ca() { return (window.LS && LS.lang === 'es') ? false : true; }
-function modal() { return document.getElementById('modal'); }
-function player() { return document.getElementById('player'); }
+var startEl = null, cleanEl = null, loadedSrc = '';
+
+function ca() { return !(window.LS && LS.lang === 'es'); }
+function mm() { return document.getElementById('modal'); }
+function pp() { return document.getElementById('player'); }
+function toast(msg) { if (typeof showToast === 'function') showToast(msg, 2000); }
 
 function build() {
-  if (document.getElementById('iosStart')) return;
-  var st = document.createElement('style');
-  st.id = 'gjpsIosPlayV3';
-  st.textContent = CSS;
-  document.head.appendChild(st);
-
+  if (startEl && document.body.contains(startEl)) return;
+  if (!document.getElementById('gjpsIosPlayV4')) {
+    var st = document.createElement('style');
+    st.id = 'gjpsIosPlayV4';
+    st.textContent = CSS;
+    document.head.appendChild(st);
+  }
   var wrap = document.querySelector('.wrap');
   if (!wrap) return;
 
-  var s = document.createElement('div');
-  s.id = 'iosStart';
-  s.className = 'iosstart';
-  s.setAttribute('role', 'button');
-  s.setAttribute('tabindex', '0');
-  s.innerHTML =
+  var old = document.getElementById('iosStart'); if (old) old.remove();
+  var oldc = document.getElementById('iosClean'); if (oldc) oldc.remove();
+
+  startEl = document.createElement('div');
+  startEl.id = 'iosStart';
+  startEl.className = 'iosstart';
+  startEl.innerHTML =
     '<div class="iosstart-in">' +
       '<button type="button" class="iosplay" id="iosPlayBtn" aria-label="Play">▶</button>' +
       '<div class="iostitle" id="iosTitle"></div>' +
       '<div class="iossub" id="iosSub"></div>' +
-      '<div class="iosbadge" id="iosBadge"></div>' +
     '</div>';
-  wrap.appendChild(s);
+  wrap.appendChild(startEl);
 
-  var c = document.createElement('button');
-  c.id = 'iosClean';
-  c.type = 'button';
-  c.className = 'iosclean';
-  wrap.appendChild(c);
+  cleanEl = document.createElement('button');
+  cleanEl.id = 'iosClean';
+  cleanEl.type = 'button';
+  cleanEl.className = 'iosclean';
+  wrap.appendChild(cleanEl);
 
-  s.addEventListener('click', start);
-  s.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(); }
-  });
-  c.addEventListener('click', function (e) { e.stopPropagation(); restart(); });
+  var go = function (e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    start();
+  };
+  startEl.addEventListener('click', go);
+  startEl.addEventListener('touchend', go, { passive: false });
+  cleanEl.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); restart(); });
+  cleanEl.addEventListener('touchend', function (e) { e.preventDefault(); e.stopPropagation(); restart(); }, { passive: false });
+
   labels();
+  startEl.style.display = 'none';
+  cleanEl.style.display = 'none';
 }
 
 function labels() {
   var t = document.getElementById('iosTitle');
-  var sb = document.getElementById('iosSub');
-  var bd = document.getElementById('iosBadge');
-  var cl = document.getElementById('iosClean');
+  var s = document.getElementById('iosSub');
   if (t) t.textContent = ca() ? 'Toca per reproduir' : 'Toca para reproducir';
-  if (sb) sb.innerHTML = ca()
+  if (s) s.innerHTML = ca()
     ? 'El vídeo s\'obrirà a pantalla completa, sense controls.<br>Per sortir, prem la ✕ de dalt a la dreta.'
     : 'El vídeo se abrirá a pantalla completa, sin controles.<br>Para salir, pulsa la ✕ de arriba a la derecha.';
-  if (bd) bd.textContent = ca() ? 'Pantalla neta' : 'Pantalla limpia';
-  if (cl) cl.innerHTML = '⛶ ' + (ca() ? 'Pantalla neta' : 'Pantalla limpia');
+  if (cleanEl) cleanEl.innerHTML = '⛶ ' + (ca() ? 'Pantalla neta' : 'Pantalla limpia');
 }
 
-function srcFor(extra) {
+function urlFor(extra) {
   var base = window.currentVideoSrc;
   if (!base) return '';
-  var sep = base.indexOf('?') >= 0 ? '&' : '?';
-  return base + sep + 'autoplay=1&authuser=0' + (extra || '');
+  return base + (base.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0' + (extra || '');
+}
+
+function hideStart() {
+  if (startEl) { startEl.style.display = 'none'; startEl.style.pointerEvents = 'none'; }
+  if (cleanEl) cleanEl.style.display = 'inline-flex';
+}
+function showStart() {
+  if (startEl) { startEl.style.display = 'grid'; startEl.style.pointerEvents = 'auto'; }
+  if (cleanEl) cleanEl.style.display = 'none';
 }
 
 function start() {
-  var m = modal(), p = player();
-  if (!m || !p || !window.currentVideoSrc) return;
+  var p = pp(), m = mm();
+  if (!p || !m) return;
+  if (!window.currentVideoSrc) { toast(ca() ? 'Vídeo no disponible.' : 'Vídeo no disponible.'); return; }
+  build();
   p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  p.src = srcFor('');
+  loadedSrc = urlFor('');
+  p.src = loadedSrc;
   p.classList.add('active');
-  m.classList.remove('awaiting');
-  m.classList.add('playing');
+  m.classList.add('on', 'show-controls');
+  hideStart();
 }
 
 function restart() {
-  var m = modal(), p = player();
-  if (!m || !p || !window.currentVideoSrc) return;
-  p.src = srcFor('&r=' + Date.now());
+  var p = pp();
+  if (!p || !window.currentVideoSrc) return;
+  loadedSrc = urlFor('&r=' + Date.now());
+  p.src = loadedSrc;
   p.classList.add('active');
-  m.classList.add('playing');
-  if (typeof showToast === 'function') {
-    showToast(ca() ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…', 1800);
-  }
+  hideStart();
+  toast(ca() ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…');
 }
 
 window.openFullscreenVideo = function (src) {
-  if (!src) { if (typeof showToast === 'function') showToast(t().soon); return; }
-  window.currentVideoSrc = src;
-  var m = modal(), p = player(), ov = document.getElementById('videoOverlay');
+  if (!src) { toast(t().soon); return; }
+  var m = mm(), p = pp();
   if (!m || !p) return;
+
   var ios = (typeof isIOS === 'function') ? isIOS() : false;
   var mob = (typeof isMobileDevice === 'function') ? isMobileDevice() : false;
+
+  /* Si ja s'està reproduint aquest mateix vídeo, no el reiniciem */
+  if (m.classList.contains('on') && p.getAttribute('src') && window.currentVideoSrc === src) {
+    if (ios) hideStart();
+    return;
+  }
+
+  window.currentVideoSrc = src;
 
   /* ANDROID: pestanya nova, com sempre */
   if (!ios && mob) { window.open(src, '_blank'); return; }
@@ -7326,18 +7345,22 @@ window.openFullscreenVideo = function (src) {
   p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
   p.src = '';
   p.classList.remove('active');
+  loadedSrc = '';
+
+  var ov = document.getElementById('videoOverlay');
 
   if (ios) {
-    /* iOS: l'avís del nucli queda fora de joc i el gest el captura el
-       nostre botó, que és qui carrega el vídeo amb autoplay. */
-    m.classList.add('ios-device', 'ios-tap', 'awaiting');
-    if (ov) ov.classList.add('hidden');
+    m.classList.add('ios-device', 'ios-tap');
+    if (ov) { ov.classList.add('hidden'); ov.style.pointerEvents = 'none'; }
+    showStart();
   } else {
-    /* ESCRIPTORI: flux original provat, amb l'avís del nucli clicable. */
     m.classList.remove('ios-device', 'ios-tap');
+    if (startEl) startEl.style.display = 'none';
+    if (cleanEl) cleanEl.style.display = 'none';
     if (ov) {
       var tx = document.getElementById('overlayText');
       if (tx) tx.textContent = t().overlayText;
+      ov.style.pointerEvents = '';
       ov.classList.remove('hidden');
     }
     var wrap = document.querySelector('.wrap');
@@ -7351,7 +7374,7 @@ if (typeof window.iosTapTimer === 'undefined') window.iosTapTimer = null;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
 else build();
 
-window.GJPSIosPlay = { start: start, restart: restart, labels: labels };
+window.GJPSIosPlay = { start: start, restart: restart, labels: labels, rebuild: build };
 })();
 </script>
 
