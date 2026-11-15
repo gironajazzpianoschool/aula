@@ -2088,25 +2088,33 @@ html[data-theme="dark"] .cm-btn.pri{color:#14161c}
   }
 }
 
-/* ══ 37. AVÍS DE REPRODUCCIÓ iOS: instructiu però transparent als tocs ══ */
+/* ══ 37. REPRODUCTOR iOS · arrencada amb gest propi i pantalla neta ══ */
 .modal.ios-tap .video-overlay{
-  pointer-events:none;
-  z-index:99998;
-  background:linear-gradient(180deg,rgba(6,8,12,.78) 0%,rgba(6,8,12,.42) 42%,rgba(6,8,12,.78) 100%);
-  transition:opacity .45s ease;
+  pointer-events:auto;
+  cursor:pointer;
+  z-index:999999;
+  background:radial-gradient(62% 52% at 50% 44%,rgba(14,18,25,.86),rgba(5,7,10,.97));
+  transition:opacity .35s ease;
 }
 .modal.ios-tap .video-overlay .icon{
-  font-size:64px;
-  color:var(--gold);
-  text-shadow:0 0 26px rgba(232,176,75,.6);
-  animation:iosTapPulse 1.9s ease-in-out infinite;
+  width:106px;height:106px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:40px;line-height:1;padding-left:7px;margin-bottom:22px;
+  color:#0a0c10;
+  background:linear-gradient(150deg,#f7dc9a,#e8b04b 55%,#c98f3a);
+  box-shadow:0 16px 44px rgba(232,176,75,.45),0 0 0 11px rgba(232,176,75,.12);
+  animation:iosPlayBeat 2.4s ease-in-out infinite;
 }
-@keyframes iosTapPulse{
-  0%,100%{ transform:scale(1); opacity:.92; }
-  50%{ transform:scale(1.14); opacity:1; }
-}
-.modal.ios-tap .video-overlay .text{ max-width:min(420px,84%); }
-.modal.ios-tap .close{ z-index:100001; }
+@keyframes iosPlayBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.modal.ios-tap .video-overlay .text{max-width:min(440px,86%)}
+.modal.ios-tap .close{z-index:1000001}
+.iosclean{position:absolute;top:14px;left:14px;z-index:1000001;display:none;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:99px;background:rgba(0,0,0,.82);border:2px solid var(--gold);
+  color:var(--gold);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.5);transition:all .2s}
+.iosclean:active{transform:scale(.96)}
+.modal.ios-tap.armed .iosclean{display:inline-flex}
+html.fx-calm .modal.ios-tap .video-overlay .icon{animation:none}
 
 /* ══ 38. SELECTOR D'IDIOMA NEUTRAL · primera visita + login ══ */
 .login-lang{display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0 2px;position:static;top:auto;flex-wrap:wrap}
@@ -4587,6 +4595,24 @@ $('langToggle').onclick = function () {
 var currentVideoSrc = '';
 var iosTapTimer = null;
 
+function ensureCleanBtn() {
+  if ($('iosClean')) return;
+  var wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  var b = document.createElement('button');
+  b.id = 'iosClean'; b.type = 'button'; b.className = 'iosclean';
+  b.innerHTML = '⛶ ' + (LS.lang === 'ca' ? 'Pantalla neta' : 'Pantalla limpia');
+  b.onclick = function () {
+    if (!currentVideoSrc) return;
+    var p = $('player');
+    var sep = currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
+    p.src = currentVideoSrc + sep + 'autoplay=1&authuser=0&r=' + Date.now();
+    p.classList.add('active');
+    showToast(LS.lang === 'ca' ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…');
+  };
+  wrap.appendChild(b);
+}
+
 function openFullscreenVideo(src) {
   if (!src) { showToast(t().soon); return; }
   currentVideoSrc = src;
@@ -4595,8 +4621,7 @@ function openFullscreenVideo(src) {
   var modal = $('modal');
   var ios = isIOS();
 
-  /* ANDROID (mòbil i tauleta, també en app instal·lada): pestanya nova,
-     com sempre. No s'usa el reproductor integrat. */
+  /* ANDROID (mòbil i tauleta, també en app instal·lada): pestanya nova */
   if (!ios && isMobileDevice()) {
     window.open(src, '_blank');
     return;
@@ -4605,38 +4630,29 @@ function openFullscreenVideo(src) {
   pushVideoState();
   clearTimeout(iosTapTimer);
   document.documentElement.style.zoom = '1';
-  modal.classList.add('on');
-  modal.classList.add('show-controls');
+  modal.classList.add('on', 'show-controls');
+  modal.classList.remove('armed');
+
+  /* El src queda BUIT fins que l'usuari prem el nostre ▶. Així el gest
+     carrega el vídeo amb autoplay i Drive no rep cap toc directe:
+     arrenca sol i amaga els seus controls. */
+  player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
+  player.src = '';
+  player.classList.remove('active');
 
   if (ios) {
-    /* iOS: el reproductor de Drive no arrenca des de fora. Carreguem el
-       vídeo i deixem un avís transparent als tocs perquè el dit arribi
-       directament al play de Drive. */
     modal.classList.add('ios-device', 'ios-tap');
-    var iosSrc = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0';
-    player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-    player.src = iosSrc;
-    player.classList.add('active');
-    if (overlay) {
-      $('overlayText').innerHTML = LS.lang === 'ca'
-        ? '<div style="font-size:17px;font-weight:800;letter-spacing:.02em;margin-bottom:10px;">Toca el centre per reproduir</div>' +
-          '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.6;">iOS demana un toc per iniciar el vídeo.<br>Per sortir, prem la ✕ de dalt a la dreta.</div>'
-        : '<div style="font-size:17px;font-weight:800;letter-spacing:.02em;margin-bottom:10px;">Toca el centro para reproducir</div>' +
-          '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.6;">iOS pide un toque para iniciar el vídeo.<br>Para salir, pulsa la ✕ de arriba a la derecha.</div>';
-      overlay.classList.remove('hidden');
-      iosTapTimer = setTimeout(function () { overlay.classList.add('hidden'); }, 5000);
-    }
+    ensureCleanBtn();
+    $('overlayText').innerHTML = LS.lang === 'ca'
+      ? '<div style="font-size:19px;font-weight:800;letter-spacing:.01em;margin-bottom:10px;">Toca per reproduir</div>' +
+        '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.65;">El vídeo s\'obrirà a pantalla completa, sense controls.<br>Per sortir, prem la ✕ de dalt a la dreta.</div>'
+      : '<div style="font-size:19px;font-weight:800;letter-spacing:.01em;margin-bottom:10px;">Toca para reproducir</div>' +
+        '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.65;">El vídeo se abrirá a pantalla completa, sin controles.<br>Para salir, pulsa la ✕ de arriba a la derecha.</div>';
+    overlay.classList.remove('hidden');
   } else {
-    /* ESCRIPTORI: flux original provat. El modal s'obre a pantalla completa
-       amb el src BUIT i l'avís visible. El clic sobre l'avís és el gest
-       d'usuari que carrega el vídeo amb autoplay, i Drive arrenca sol. */
     modal.classList.remove('ios-device', 'ios-tap');
-    player.src = '';
-    player.classList.remove('active');
-    if (overlay) {
-      $('overlayText').textContent = t().overlayText;
-      overlay.classList.remove('hidden');
-    }
+    $('overlayText').textContent = t().overlayText;
+    overlay.classList.remove('hidden');
     var wrap = document.querySelector('.wrap');
     if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
     else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
@@ -4776,7 +4792,7 @@ window.addEventListener('popstate', function () {
 function closeVideoPlayer(fromPop) {
   clearTimeout(iosTapTimer);
   var mm = $('modal');
-  if (mm) { mm.classList.remove('ios-tap', 'ios-device'); }
+  if (mm) { mm.classList.remove('ios-tap', 'ios-device', 'armed'); }
   var ovv = $('videoOverlay');
   if (ovv) ovv.classList.remove('hidden');
   document.documentElement.style.zoom = '';
@@ -4793,10 +4809,12 @@ var overlayEl = $('videoOverlay');
 if (overlayEl) {
   overlayEl.addEventListener('click', function () {
     var player = $('player');
+    var modal = $('modal');
     if (currentVideoSrc) {
-      var finalSrc = currentVideoSrc.includes('?') ? currentVideoSrc + '&autoplay=1' : currentVideoSrc + '?autoplay=1';
-      player.src = finalSrc;
+      var sep = currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
+      player.src = currentVideoSrc + sep + 'autoplay=1&authuser=0';
       player.classList.add('active');
+      if (modal.classList.contains('ios-tap')) modal.classList.add('armed');
     }
     this.classList.add('hidden');
   });
@@ -7151,4 +7169,135 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 </script>
 
 
-<div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button></body></html>
+<div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button>
+
+<script>
+/* ═══ GJPS · ARRENCADA NETA DEL REPRODUCTOR iOS · guardià idempotent ═══ */
+(function () {
+'use strict';
+
+var CSS = [
+'.modal.ios-tap .video-overlay{pointer-events:auto;cursor:pointer;z-index:999999;',
+'  background:radial-gradient(62% 52% at 50% 44%,rgba(14,18,25,.86),rgba(5,7,10,.97));transition:opacity .35s ease}',
+'.modal.ios-tap .video-overlay.hidden{opacity:0;pointer-events:none}',
+'.modal.ios-tap .video-overlay .icon{width:106px;height:106px;border-radius:50%;display:grid;place-items:center;',
+'  font-size:40px;line-height:1;padding-left:7px;margin-bottom:22px;color:#0a0c10;',
+'  background:linear-gradient(150deg,#f7dc9a,#e8b04b 55%,#c98f3a);',
+'  box-shadow:0 16px 44px rgba(232,176,75,.45),0 0 0 11px rgba(232,176,75,.12);',
+'  animation:iosPlayBeat 2.4s ease-in-out infinite}',
+'@keyframes iosPlayBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}',
+'.modal.ios-tap .video-overlay .text{max-width:min(440px,86%)}',
+'.modal.ios-tap .close{z-index:1000001}',
+'.iosclean{position:absolute;top:14px;left:14px;z-index:1000001;display:none;align-items:center;gap:7px;',
+'  padding:9px 15px;border-radius:99px;background:rgba(0,0,0,.82);border:2px solid var(--gold);color:var(--gold);',
+'  font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:all .2s}',
+'.iosclean:active{transform:scale(.96)}',
+'.modal.ios-tap.armed .iosclean{display:inline-flex}',
+'html.fx-calm .modal.ios-tap .video-overlay .icon{animation:none}'
+].join('\n');
+
+function injectCSS() {
+  if (document.getElementById('gjpsIosPlayCSS')) return;
+  var s = document.createElement('style');
+  s.id = 'gjpsIosPlayCSS';
+  s.textContent = CSS;
+  document.head.appendChild(s);
+}
+
+function started() {
+  var p = document.getElementById('player');
+  return !!(p && p.getAttribute('src'));
+}
+
+function cleanBtn() {
+  if (document.getElementById('iosClean')) return;
+  var wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  var b = document.createElement('button');
+  b.id = 'iosClean';
+  b.type = 'button';
+  b.className = 'iosclean';
+  b.innerHTML = '⛶ ' + (LS.lang === 'ca' ? 'Pantalla neta' : 'Pantalla limpia');
+  b.onclick = function () {
+    if (!window.currentVideoSrc) return;
+    var p = document.getElementById('player');
+    var sep = window.currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
+    p.src = window.currentVideoSrc + sep + 'autoplay=1&authuser=0&r=' + Date.now();
+    p.classList.add('active');
+    if (typeof showToast === 'function') {
+      showToast(LS.lang === 'ca' ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…');
+    }
+  };
+  wrap.appendChild(b);
+}
+
+function loadNow() {
+  var p = document.getElementById('player');
+  var m = document.getElementById('modal');
+  if (!p || !m || !window.currentVideoSrc) return;
+  if (started()) return;
+  var sep = window.currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
+  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
+  p.src = window.currentVideoSrc + sep + 'autoplay=1&authuser=0';
+  p.classList.add('active');
+  m.classList.add('armed');
+  var ov = document.getElementById('videoOverlay');
+  if (ov) ov.classList.add('hidden');
+}
+
+/* Si algun listener antic amaga l'avís al pointerdown, el restaurem abans
+   que es dispatchi el click. Un cop el vídeo ha arrencat, no es toca mai. */
+window.addEventListener('pointerdown', function () {
+  var m = document.getElementById('modal');
+  if (!m || !m.classList.contains('on') || !m.classList.contains('ios-tap')) return;
+  try { clearTimeout(window.iosTapTimer); } catch (e) {}
+  if (started()) { m.classList.add('armed'); return; }
+  requestAnimationFrame(function () {
+    if (!m.classList.contains('on') || !m.classList.contains('ios-tap') || started()) return;
+    var ov = document.getElementById('videoOverlay');
+    if (ov) ov.classList.remove('hidden');
+  });
+}, true);
+
+/* Xarxa de seguretat: si el gest no ha carregat el vídeo, ho fem aquí.
+   Si el handler original ja l'ha carregat, started() és cert i no fem res. */
+function wireOverlay() {
+  var ov = document.getElementById('videoOverlay');
+  if (!ov || ov.dataset.gjpsWired === '1') return;
+  ov.dataset.gjpsWired = '1';
+  ov.addEventListener('click', function () { loadNow(); });
+}
+
+function sync() {
+  injectCSS();
+  wireOverlay();
+  var m = document.getElementById('modal');
+  if (!m) return;
+  if (m.classList.contains('ios-tap')) {
+    cleanBtn();
+    if (started()) m.classList.add('armed');
+  } else {
+    m.classList.remove('armed');
+  }
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync);
+else sync();
+
+new MutationObserver(function () {
+  var m = document.getElementById('modal');
+  if (!m) return;
+  if (m.classList.contains('ios-tap')) {
+    cleanBtn();
+    if (started()) m.classList.add('armed'); else m.classList.remove('armed');
+  } else if (m.classList.contains('armed')) {
+    m.classList.remove('armed');
+  }
+}).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'src'] });
+
+window.GJPSIosPlay = { sync: sync, start: loadNow, clean: function () { var b = document.getElementById('iosClean'); if (b) b.click(); } };
+})();
+</script>
+
+</body>
+</html>
