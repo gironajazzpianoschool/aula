@@ -278,13 +278,113 @@
     return o.join('\n');
   }
 
+  /* ── Accés: sessió d'admin, desbloqueig manual, o ?debug=1 ── */
+  var unlocked = false;
+  function hash(s) { var h = 5381, i = s.length; while (i) { h = (h * 33) ^ s.charCodeAt(--i); } return (h >>> 0).toString(36); }
+  function adminList() {
+    var db = window.USERS_DB;
+    if (!db || !db.length) return null;
+    return db.filter(function (u) { return u.role === 'admin'; });
+  }
+  /* Desa una empremta de la clau d'admin quan el nucli és viu: així el
+     guardià pot validar credencials encara que el script principal estigui mort.
+     Mai es desa la contrasenya en clar. */
+  function syncAdmin() {
+    try {
+      var a = adminList(); if (!a) return;
+      var s = localStorage.getItem('gjps_session');
+      for (var i = 0; i < a.length; i++) {
+        if (a[i].n === s) { localStorage.setItem('gjps_guard_h', hash(a[i].n + ':' + a[i].p)); return; }
+      }
+    } catch (e) {}
+  }
+  function tryUnlock(u, p) {
+    var a = adminList(), i;
+    if (a) {
+      for (i = 0; i < a.length; i++) {
+        if (a[i].n.toLowerCase() === String(u).toLowerCase() && a[i].p === p) {
+          unlocked = true; syncAdmin(); render(); return true;
+        }
+      }
+      return false;
+    }
+    try {
+      var h = localStorage.getItem('gjps_guard_h');
+      if (h && h === hash(u + ':' + p)) { unlocked = true; render(); return true; }
+    } catch (e) {}
+    return false;
+  }
+  function devMode() {
+    syncAdmin();
+    try {
+      if (/[?&]debug=1/.test(location.search)) { localStorage.setItem('gjps_debug', '1'); return true; }
+      if (/[?&]debug=0/.test(location.search)) {
+        localStorage.removeItem('gjps_debug'); localStorage.removeItem('gjps_guard_h'); unlocked = false; return false;
+      }
+      if (localStorage.getItem('gjps_debug') === '1') return true;
+      if (unlocked) return true;
+      var s = localStorage.getItem('gjps_session'), a = adminList();
+      if (a && s) { for (var i = 0; i < a.length; i++) if (a[i].n === s) return true; }
+      if (!a && s === 'admin') return true;
+    } catch (e) {}
+    return false;
+  }
+  function lockHTML() {
+    var noKey = !adminList() && !localStorage.getItem('gjps_guard_h');
+    return '<div class="gg-card" style="max-width:430px;margin:8px auto">' +
+      '<h4>' + (CA ? 'Accés d\'administrador' : 'Acceso de administrador') + '</h4>' +
+      '<div class="gg-find">' + (CA
+        ? 'Introdueix les credencials d\'administrador per veure el diagnòstic.'
+        : 'Introduce las credenciales de administrador para ver el diagnóstico.') + '</div>' +
+      '<input id="ggU" type="text" autocomplete="username" placeholder="' + (CA ? 'Usuari' : 'Usuario') + '" style="width:100%;padding:10px 12px;margin-bottom:8px;border-radius:9px;border:1px solid rgba(255,255,255,.16);background:#0b0e14;color:#f2f2f2;font:inherit;font-size:13px">' +
+      '<input id="ggP" type="password" autocomplete="current-password" placeholder="' + (CA ? 'Contrasenya' : 'Contraseña') + '" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.16);background:#0b0e14;color:#f2f2f2;font:inherit;font-size:13px">' +
+      '<div id="ggErr" style="min-height:18px;margin-top:8px;font-size:12px;color:#ff9fb2"></div>' +
+      (noKey ? '<div class="gg-hint" style="margin:6px 0 0">' + (CA
+        ? 'En aquest navegador encara no hi ha empremta d\'administrador. Obre el web una vegada amb ?debug=1 o inicia sessió com a admin amb el codi funcionant.'
+        : 'En este navegador aún no hay huella de administrador. Abre la web una vez con ?debug=1 o inicia sesión como admin con el código funcionando.') + '</div>' : '') +
+      '<button class="gg-btn pri" id="ggGo" style="width:100%;margin-top:10px">' + (CA ? 'Desbloca' : 'Desbloquear') + '</button>' +
+      '</div>';
+  }
+  function wireLock() {
+    var an = document.getElementById('ggAn'), co = document.getElementById('ggCo');
+    if (an) an.style.display = 'none';
+    if (co) co.style.display = 'none';
+    var go = document.getElementById('ggGo'); if (!go) return;
+    var submit = function () {
+      var u = document.getElementById('ggU').value.trim();
+      var p = document.getElementById('ggP').value;
+      if (!tryUnlock(u, p)) {
+        document.getElementById('ggErr').textContent = CA ? 'Credencials incorrectes.' : 'Credenciales incorrectas.';
+        document.getElementById('ggP').value = '';
+        document.getElementById('ggP').focus();
+      }
+    };
+    go.onclick = submit;
+    ['ggU', 'ggP'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+    });
+    setTimeout(function () { var u = document.getElementById('ggU'); if (u) u.focus(); }, 60);
+  }
   function render() {
     if (!document.body) return;
     mount();
     var w = document.getElementById('gjpsGuard'), p = document.getElementById('gjpsGuardPill');
     if (!errors.length) { w.classList.remove('on'); p.classList.remove('on'); return; }
+    if (!devMode()) {
+      if (hidden) { w.classList.remove('on'); p.classList.add('on'); return; }
+      p.classList.remove('on'); w.classList.add('on');
+      document.getElementById('ggCount').textContent = errors.length + ' ' + (errors.length === 1 ? T.err : T.errs);
+      document.getElementById('ggBody').innerHTML = lockHTML();
+      document.getElementById('ggStat').textContent = '';
+      wireLock();
+      return;
+    }
     if (hidden) { w.classList.remove('on'); p.classList.add('on'); return; }
     p.classList.remove('on'); w.classList.add('on');
+    var an2 = document.getElementById('ggAn'), co2 = document.getElementById('ggCo');
+    if (an2) an2.style.display = '';
+    if (co2) co2.style.display = '';
     document.getElementById('ggCount').textContent = errors.length + ' ' + (errors.length === 1 ? T.err : T.errs);
     var e = errors[Math.min(selected, errors.length - 1)];
     var h = '';
