@@ -2186,6 +2186,66 @@ html[data-theme="dark"] .login-lang button.on{color:#14161c}
   .lgate-opt:hover,.lgate-opt:focus-visible{transform:none}
 }
 
+/* ══ 39. PUBLICACIONS PROGRAMADES ══ */
+.pubcard{position:relative;margin-bottom:20px;padding:16px 18px;border-radius:var(--r-lg,16px);
+  background:linear-gradient(135deg,rgba(140,82,255,.10),rgba(255,43,214,.05));
+  border:1px solid rgba(140,82,255,.34);box-shadow:var(--elev-1,0 2px 10px rgba(0,0,0,.2));
+  animation:gjpsRise .42s cubic-bezier(.16,1,.3,1) both}
+.pubcard::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:99px;
+  background:linear-gradient(180deg,#8c52ff,#ff2bd6)}
+.pubhead{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-left:10px}
+.pubhead .t{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8c52ff}
+html:not([data-theme="dark"]) .pubhead .t{color:#6b3fd4}
+.pubhead .n{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--mut)}
+.pubitem{display:flex;gap:12px;align-items:flex-start;padding:12px 13px;margin-left:10px;margin-bottom:8px;
+  border-radius:var(--r-md,12px);background:var(--card);border:1px solid var(--hair,var(--line));
+  transition:border-color .2s,box-shadow .2s}
+.pubitem:hover{border-color:rgba(140,82,255,.45);box-shadow:var(--elev-1)}
+.pubitem:last-child{margin-bottom:0}
+.pubbadge{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:19px;
+  background:rgba(140,82,255,.14);border:1px solid rgba(140,82,255,.34)}
+.pubbody{flex:1;min-width:0}
+.publabel{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;background:rgba(140,82,255,.16);color:#8c52ff;margin-bottom:5px}
+html:not([data-theme="dark"]) .publabel{color:#5b32c4}
+.pubtitle{font-size:13.5px;font-weight:700;line-height:1.35;color:var(--ink)}
+.pubdesc{font-size:12px;line-height:1.6;color:var(--mut);margin-top:5px}
+.pubmeta{font-size:10.5px;color:var(--mut);margin-top:6px;font-weight:600}
+.pubacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pubacts button{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--r-xs,8px);
+  border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);
+  font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:all .16s}
+.pubacts button:hover{transform:translateY(-1px);border-color:var(--hair-2,var(--line))}
+.pubacts button.go{background:linear-gradient(135deg,#8c52ff,#6b3fd4);border-color:transparent;color:#fff}
+.pubacts button.ok{border-color:var(--ok);color:var(--ok)}
+.pubmrow{display:flex;align-items:center;gap:9px;padding:9px 11px;margin-bottom:6px;border-radius:9px;
+  background:var(--card);border:1px solid var(--hair,var(--line))}
+.pubmrow .ic{flex:none;font-size:15px}
+.pubmrow .tx{flex:1;min-width:0}
+.pubmrow .tx b{display:block;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pubmrow .tx span{display:block;font-size:10.5px;color:var(--mut);margin-top:2px}
+.pubstat{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
+.pubstat.live{border-color:var(--ok);color:var(--ok);background:rgba(57,217,138,.1)}
+.pubstat.soon{border-color:#4cc9f0;color:#4cc9f0}
+.pubstat.off{opacity:.6}
+.pubrowbtn{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--hair,var(--line));
+  background:var(--tap,transparent);color:var(--mut);cursor:pointer;font-size:12px;display:grid;place-items:center;
+  transition:all .16s}
+.pubrowbtn:hover{border-color:#8c52ff;color:#8c52ff}
+.pubrowbtn.never{border-color:rgba(140,82,255,.5);color:#8c52ff}
+.pubrowbtn.sched{border-color:#8c52ff;color:#fff;background:linear-gradient(135deg,#8c52ff,#6b3fd4)}
+.pubvlist{max-height:210px;overflow-y:auto;padding:2px}
+@media(max-width:767px){
+  .pubcard{padding:14px}
+  .pubitem{flex-direction:column;gap:9px;margin-left:6px}
+  .pubacts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .pubacts button{justify-content:center;min-height:38px}
+  .pubmrow{flex-wrap:wrap}
+}
+html.no-hover .pubitem:hover,html.no-hover .pubacts button:hover{transform:none!important}
+html.fx-calm .pubcard{animation:none!important}
+
 </style>
 </head>
 <body class="">
@@ -6269,6 +6329,461 @@ window.GJPSCourse = {
   else boot();
 
   window.GJPSLang = { open: open, close: close, chosen: has };
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · PUBLICACIONS PROGRAMADES  v1.0
+   ─────────────────────────────────────────────────────────────────────────
+   OV.rec[id+':'+idioma] = 'never'  → el vídeo no entra mai a l'itinerari
+   OV.pub = [ { id, lang, kind:'video'|'doc', vid, t, d, l, lvl, label,
+                from, to, active } ]
+     · lvl = -1 → es mostra a tots els nivells
+     · from buit → disponible des d'ara;  to buit → sense data de fi
+   LS.done['pub:'+id] → l'alumne l'ha marcada com a feta
+   Requereix el mòdul de gestió de nivells (GJPSCourse) carregat abans.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (!window.GJPSCourse) { console.warn('Publicacions: cal el gestor de nivells.'); return; }
+
+var B5 = ['t', 'g', 'r', 'a', 'p'];
+var BASE = {
+  ca: { w:'Benvinguda', t:'Tècnica', g:'Teoria', r:'Ritme', a:'Auditiu', p:'Pràctica', b:'Repàs' },
+  es: { w:'Bienvenida', t:'Técnica', g:'Teoría', r:'Ritmo', a:'Auditivo', p:'Práctica', b:'Repaso' }
+};
+var MES = {
+  ca: ['gener','febrer','març','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre'],
+  es: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+};
+var hidden = {};   /* «Ara no» : ocult només durant la sessió */
+
+function ca() { return LS.lang === 'ca'; }
+function L(c, e) { return ca() ? c : e; }
+function uid() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function nice(s) {
+  if (!s) return '';
+  var p = String(s).split('-');
+  if (p.length < 3) return s;
+  return parseInt(p[2], 10) + ' ' + MES[LS.lang][parseInt(p[1], 10) - 1] + ' ' + p[0];
+}
+function blkName(l, b) {
+  var o = OV.bn && OV.bn[String(l)] && OV.bn[String(l)][b];
+  return (o && o[LS.lang]) || BASE[LS.lang][b] || b;
+}
+function lvlName(l) {
+  if (l === -1) return L('Tots els nivells', 'Todos los niveles');
+  var o = OV.lnm && OV.lnm[String(l)];
+  if (o && o[LS.lang]) return o[LS.lang];
+  for (var i = 0; i < LEVELS.length; i++) if (LEVELS[i].id === l) return LEVELS[i].n[LS.lang];
+  return L('Nivell ' + l, 'Nivel ' + l);
+}
+function vLevel(id) {
+  var si = parseInt(String(id).split('.')[0], 10);
+  if (isNaN(si)) return 1;
+  if (si === 0) return 0;
+  if (si <= 6) return 1;
+  return si - 6;
+}
+
+/* ── §1 Model ── */
+function pubs() { if (!Array.isArray(OV.pub)) OV.pub = []; return OV.pub; }
+function recMode(id) {
+  if (getVideoImportance(id) === 'important') return 'auto';
+  return (OV.rec && OV.rec[id + ':' + LS.lang]) === 'never' ? 'never' : 'auto';
+}
+function setRec(id, mode) {
+  OV.rec = OV.rec || {};
+  if (mode === 'never') OV.rec[id + ':' + LS.lang] = 'never';
+  else delete OV.rec[id + ':' + LS.lang];
+}
+function pubOfVid(vid) {
+  var a = pubs();
+  for (var i = 0; i < a.length; i++) if (a[i].kind === 'video' && a[i].vid === vid && a[i].lang === LS.lang) return a[i];
+  return null;
+}
+function byId(id) { var a = pubs(); for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
+function upsert(p) {
+  var a = pubs();
+  for (var i = 0; i < a.length; i++) if (a[i].id === p.id) { a[i] = p; return; }
+  a.push(p);
+}
+function removePub(id) { OV.pub = pubs().filter(function (p) { return p.id !== id; }); }
+function state(p) {
+  if (!p.active) return 'off';
+  var t = today();
+  if (p.from && t < p.from) return 'soon';
+  if (p.to && t > p.to) return 'off';
+  return 'live';
+}
+function liveFor(lvl) {
+  return pubs().filter(function (p) {
+    if (p.lang !== LS.lang || state(p) !== 'live') return false;
+    if (p.lvl !== -1 && p.lvl !== lvl) return false;
+    if (LS.done['pub:' + p.id]) return false;
+    if (hidden[p.id]) return false;
+    if (p.kind === 'video' && !findVidById(p.vid)) return false;
+    return true;
+  });
+}
+function curLevel() {
+  var c = GJPSCourse.seq && GJPSCourse.seq();
+  if (c) return c.level;
+  var a = GJPSCourse.levels();
+  return a.length ? a[a.length - 1] : 1;
+}
+function levelVids(l) {
+  var out = [], bs = (l === 0) ? ['w'] : B5;
+  bs.forEach(function (b) {
+    GJPSCourse.blockSeq(l, b).forEach(function (id) { out.push({ id: id, b: b }); });
+  });
+  return out;
+}
+
+/* ── §2 Excloure els «Mai» de l'itinerari automàtic ── */
+var _findNext = window.findNext;
+window.findNext = function () {
+  var marked = [], guard = 0, v = null;
+  try {
+    while (guard++ < 600) {
+      v = _findNext();
+      if (!v) { v = null; break; }
+      if (recMode(v.id) !== 'never') break;
+      marked.push(v.id); LS.done[v.id] = 1; v = null;
+    }
+  } finally {
+    marked.forEach(function (id) { delete LS.done[id]; });
+  }
+  return v;
+};
+
+/* ── §3 Visor de documents ── */
+function openDoc(link) {
+  var id = parseDriveId(link);
+  if (!id) { showToast(L('Aquest document no té enllaç.', 'Este documento no tiene enlace.')); return; }
+  var view = 'https://drive.google.com/file/d/' + id + '/view';
+  if (!isIOS() && isMobileDevice() && !isStandaloneApp()) { window.open(view, '_blank'); return; }
+  var src = 'https://drive.google.com/file/d/' + id + '/preview';
+  currentVideoSrc = src;
+  pushVideoState();
+  document.documentElement.style.zoom = '1';
+  var m = $('modal'), p = $('player'), ov = $('videoOverlay');
+  m.classList.add('on', 'show-controls');
+  m.classList.remove('ios-device', 'ios-tap');
+  if (ov) ov.classList.add('hidden');
+  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
+  p.src = src; p.classList.add('active');
+  if (!isMobileDevice() && !isStandaloneApp()) {
+    var w = document.querySelector('.wrap');
+    if (w && w.requestFullscreen) w.requestFullscreen().catch(function () {});
+  }
+  showCloseBtn();
+}
+
+/* ── §4 Avís al Seguiment Continuat ── */
+function seenKey() { return 'gjps_pubseen_' + (LS.user || '') + '_' + LS.lang; }
+function banner() {
+  var lvl = curLevel(), list = liveFor(lvl);
+  if (!list.length) return null;
+  var box = document.createElement('div');
+  box.className = 'pubcard';
+  var h = '<div class="pubhead"><span class="t">' + L('Publicacions especials', 'Publicaciones especiales') +
+          '</span><span class="n">' + list.length + '</span></div>';
+  list.forEach(function (p) {
+    var isV = p.kind === 'video';
+    var v = isV ? findVidById(p.vid) : null;
+    var title = isV ? (v ? vidTitle(v.v, p.vid) : '') : (p.t || '');
+    var desc = isV ? (v ? vidDesc(v.v, p.vid, vLevel(p.vid) === 0 ? 'w' : 'p') : '') : (p.d || '');
+    var badge = isV ? '🎬' : '🎼';
+    var win = p.to ? L('Disponible fins al ', 'Disponible hasta el ') + nice(p.to)
+                 : L('Disponible per temps limitat', 'Disponible por tiempo limitado');
+    h += '<div class="pubitem">' +
+      '<div class="pubbadge">' + badge + '</div><div class="pubbody">' +
+      (p.label ? '<span class="publabel">' + esc(p.label) + '</span>' : '') +
+      '<div class="pubtitle">' + esc(title) + '</div>' +
+      (desc ? '<div class="pubdesc">' + esc(desc) + '</div>' : '') +
+      '<div class="pubmeta">🗓 ' + esc(win) + '</div>' +
+      '<div class="pubacts">' +
+        '<button class="go" data-pubopen="' + p.id + '">' + (isV ? '▶ ' + L('Reprodueix', 'Reproducir') : '📄 ' + L('Obre la partitura', 'Abre la partitura')) + '</button>' +
+        '<button class="ok" data-pubdone="' + p.id + '">✔ ' + L('Fet', 'Hecho') + '</button>' +
+        '<button data-publater="' + p.id + '">⏭ ' + L('Ara no', 'Ahora no') + '</button>' +
+      '</div></div></div>';
+  });
+  box.innerHTML = h;
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pubopen],[data-pubdone],[data-publater]');
+    if (!b) return;
+    var p;
+    if (b.dataset.pubopen) {
+      p = byId(b.dataset.pubopen); if (!p) return;
+      if (p.kind === 'video') {
+        var v = findVidById(p.vid);
+        var src = v ? driveSrc(v.v, p.vid) : null;
+        if (src) openFullscreenVideo(src);
+        else showToast(L('Aquest vídeo encara no té enllaç.', 'Este vídeo aún no tiene enlace.'));
+      } else openDoc(p.l);
+    } else if (b.dataset.pubdone) {
+      LS.done['pub:' + b.dataset.pubdone] = 1; saveDone(); render();
+      showToast(L('✔ Publicació marcada com a feta', '✔ Publicación marcada como hecha'));
+    } else if (b.dataset.publater) {
+      hidden[b.dataset.publater] = 1; render();
+    }
+  });
+  /* Avís una sola vegada per dia i publicació */
+  try {
+    var seen = lsJSON(seenKey(), {}), t = today(), fresh = null;
+    list.forEach(function (p) { if (seen[p.id] !== t && !fresh) fresh = p; seen[p.id] = t; });
+    lsSet(seenKey(), JSON.stringify(seen));
+    if (fresh) {
+      var v = fresh.kind === 'video' ? findVidById(fresh.vid) : null;
+      var ttl = fresh.kind === 'video' ? (v ? vidTitle(v.v, fresh.vid) : '') : fresh.t;
+      showToast('🗓 ' + (fresh.label ? fresh.label + ' · ' : '') + ttl, 4200);
+    }
+  } catch (e) {}
+  return box;
+}
+var _rt = window.renderTrack;
+window.renderTrack = function () {
+  _rt();
+  var tv = $('trackView');
+  if (!tv) return;
+  var b = banner();
+  if (b) tv.insertBefore(b, tv.firstChild);
+};
+
+/* ── §5 Formulari de publicació ── */
+var ctx = null;
+function openForm(opts) {
+  opts = opts || {};
+  var lvl = opts.lvl != null ? opts.lvl : mgrLvl();
+  var p = opts.pub ? JSON.parse(JSON.stringify(opts.pub)) : null;
+  var vid = opts.vid || (p && p.kind === 'video' ? p.vid : '');
+  var kind = p ? p.kind : (vid ? 'video' : 'doc');
+  var mode = p ? 'sched' : (vid ? (pubOfVid(vid) ? 'sched' : recMode(vid)) : 'sched');
+  if (vid && !p && pubOfVid(vid)) p = JSON.parse(JSON.stringify(pubOfVid(vid)));
+  ctx = { lvl: lvl, vid: vid, kind: kind, mode: mode === 'never' ? 'never' : (mode === 'auto' ? 'auto' : 'sched'), pub: p };
+
+  var m = $('pubModal');
+  if (!m) { m = document.createElement('div'); m.className = 'cm-scrim'; m.id = 'pubModal'; document.body.appendChild(m); }
+  paintForm();
+  m.classList.add('on');
+}
+function paintForm() {
+  var m = $('pubModal'), c = ctx, p = c.pub || {};
+  var isV = c.kind === 'video';
+  var vs = levelVids(c.lvl);
+  var h = '<div class="cm-box sm"><div class="cm-head"><h3>' +
+    (p.id ? L('Edita la publicació', 'Edita la publicación') : L('Nova publicació', 'Nueva publicación')) +
+    '</h3><button class="cm-x" id="pubX">✕</button></div><div class="cm-scroll">' +
+    '<div class="cm-note"><b>' + esc(lvlName(c.lvl)) + '</b> · ' + LS.lang.toUpperCase() + '</div>';
+
+  if (!p.id) {
+    h += '<div class="cm-fld"><span>' + L('Tipus', 'Tipo') + '</span><div class="cm-seg" id="pubKind">' +
+      '<button data-k="video"' + (isV ? ' class="on"' : '') + '>🎬 ' + L('Vídeo existent', 'Vídeo existente') + '</button>' +
+      '<button data-k="doc"' + (!isV ? ' class="on"' : '') + '>🎼 ' + L('Només document', 'Solo documento') + '</button>' +
+      '</div></div>';
+  }
+  if (isV) {
+    h += '<div class="cm-fld"><span>' + L('Vídeo', 'Vídeo') + '</span><select id="pubVid" class="pubvlist" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);font-family:inherit;font-size:13px">';
+    if (!vs.length) h += '<option value="">—</option>';
+    vs.forEach(function (o) {
+      var v = findVidById(o.id); if (!v) return;
+      var imp = getVideoImportance(o.id) === 'important';
+      h += '<option value="' + o.id + '"' + (o.id === c.vid ? ' selected' : '') + '>' +
+        esc(blkName(c.lvl, o.b) + ' · ' + vidTitle(v.v, o.id) + (imp ? ' ⭐' : ' ☆')) + '</option>';
+    });
+    h += '</select><div class="cm-hint">' + L('Tria un vídeo opcional (☆). Els importants sempre formen part de l\'itinerari.', 'Elige un vídeo opcional (☆). Los importantes siempre forman parte del itinerario.') + '</div></div>';
+    h += '<div class="cm-fld"><span>' + L('Com es recomana', 'Cómo se recomienda') + '</span><div class="cm-seg" id="pubMode">' +
+      '<button data-m="auto"' + (c.mode === 'auto' ? ' class="on"' : '') + '>' + L('Automàtica', 'Automática') + '</button>' +
+      '<button data-m="never"' + (c.mode === 'never' ? ' class="on"' : '') + '>' + L('Mai', 'Nunca') + '</button>' +
+      '<button data-m="sched"' + (c.mode === 'sched' ? ' class="on"' : '') + '>🗓 ' + L('Programada', 'Programada') + '</button>' +
+      '</div><div class="cm-hint">' + L('«Mai» el treu de l\'itinerari per sempre. «Programada» el treu i només l\'avisa dins les dates.', '«Nunca» lo saca del itinerario para siempre. «Programada» lo saca y solo lo avisa dentro de las fechas.') + '</div></div>';
+  } else {
+    h += '<label class="cm-fld"><span>' + L('Títol del document', 'Título del documento') + '</span><input id="pubT" value="' + esc(p.t || '') + '"></label>' +
+      '<label class="cm-fld"><span>' + L('Descripció', 'Descripción') + '</span><textarea id="pubD">' + esc(p.d || '') + '</textarea></label>' +
+      '<label class="cm-fld"><span>' + L('Enllaç de Google Drive (ID o URL)', 'Enlace de Google Drive (ID o URL)') + '</span><input id="pubL" value="' + esc(p.l || '') + '" placeholder="1B0keL0UC…"></label>';
+  }
+  if (!isV || c.mode === 'sched') {
+    h += '<label class="cm-fld"><span>' + L('Etiqueta destacada', 'Etiqueta destacada') + '</span><input id="pubLab" value="' + esc(p.label || '') + '" placeholder="' + L('🎄 Nadales', '🎄 Villancicos') + '"></label>' +
+      '<div class="cm-two">' +
+      '<label class="cm-fld"><span>' + L('Des del dia', 'Desde el día') + '</span><input id="pubFrom" type="date" value="' + esc(p.from || '') + '"></label>' +
+      '<label class="cm-fld"><span>' + L('Fins al dia', 'Hasta el día') + '</span><input id="pubTo" type="date" value="' + esc(p.to || '') + '"></label>' +
+      '</div><div class="cm-hint">' + L('Deixa «Des del dia» buit per activar-la ja. Deixa «Fins al dia» buit perquè no caduqui.', 'Deja «Desde el día» vacío para activarla ya. Deja «Hasta el día» vacío para que no caduque.') + '</div>' +
+      '<div class="cm-fld" style="margin-top:12px"><span>' + L('Abast', 'Alcance') + '</span><div class="cm-seg" id="pubScope">' +
+      '<button data-s="one"' + (p.lvl !== -1 ? ' class="on"' : '') + '>' + L('Aquest nivell', 'Este nivel') + '</button>' +
+      '<button data-s="all"' + (p.lvl === -1 ? ' class="on"' : '') + '>' + L('Tots els nivells', 'Todos los niveles') + '</button>' +
+      '</div></div>' +
+      '<button class="cm-sw" id="pubAct" aria-pressed="' + (p.active === false ? 'false' : 'true') + '" style="margin-top:4px"><span class="cm-swt"></span>' + L('Activa', 'Activa') + '</button>';
+  }
+  h += '</div><div class="cm-foot">' +
+    (p.id ? '<button class="cm-btn" id="pubDel" style="border-color:var(--danger);color:var(--danger)">' + L('Elimina', 'Eliminar') + '</button>' : '') +
+    '<button class="cm-btn" id="pubCancel">' + L('Cancel·la', 'Cancelar') + '</button>' +
+    '<button class="cm-btn pri" id="pubSave">' + L('Desa', 'Guardar') + '</button></div></div>';
+  m.innerHTML = h;
+
+  var close = function () { m.classList.remove('on'); };
+  $('pubX').onclick = close; $('pubCancel').onclick = close;
+  var kd = $('pubKind');
+  if (kd) kd.querySelectorAll('[data-k]').forEach(function (b) {
+    b.onclick = function () { ctx.kind = b.dataset.k; if (ctx.kind === 'doc') ctx.mode = 'sched'; paintForm(); };
+  });
+  var md = $('pubMode');
+  if (md) md.querySelectorAll('[data-m]').forEach(function (b) {
+    b.onclick = function () { ctx.mode = b.dataset.m; paintForm(); };
+  });
+  var sc = $('pubScope');
+  if (sc) sc.querySelectorAll('[data-s]').forEach(function (b) {
+    b.onclick = function () { ctx.pub = ctx.pub || {}; ctx.pub.lvl = b.dataset.s === 'all' ? -1 : ctx.lvl; paintForm(); };
+  });
+  var ac = $('pubAct');
+  if (ac) ac.onclick = function () {
+    ctx.pub = ctx.pub || {};
+    ctx.pub.active = !(ctx.pub.active !== false);
+    paintForm();
+  };
+  var vsel = $('pubVid');
+  if (vsel) vsel.onchange = function () { ctx.vid = vsel.value; };
+  var del = $('pubDel');
+  if (del) del.onclick = function () {
+    if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
+    removePub(ctx.pub.id);
+    if (ctx.vid) setRec(ctx.vid, 'auto');
+    close(); render(); decorate();
+    showToast(L('Publicació eliminada', 'Publicación eliminada'));
+  };
+  $('pubSave').onclick = function () {
+    var isVideo = ctx.kind === 'video';
+    if (isVideo) {
+      var vid = $('pubVid') ? $('pubVid').value : ctx.vid;
+      if (!vid) { showToast(L('Tria un vídeo.', 'Elige un vídeo.')); return; }
+      if (getVideoImportance(vid) === 'important' && ctx.mode !== 'auto') {
+        showToast(L('Un vídeo ⭐ important no es pot excloure de l\'itinerari.', 'Un vídeo ⭐ importante no se puede excluir del itinerario.'));
+        return;
+      }
+      var old = pubOfVid(vid);
+      if (ctx.mode !== 'sched') {
+        setRec(vid, ctx.mode);
+        if (old) removePub(old.id);
+      } else {
+        setRec(vid, 'never');
+        upsert(readFields(old && old.kind === 'video' ? old : null, 'video', vid, vLevel(vid)));
+      }
+    } else {
+      var t = $('pubT').value.trim();
+      if (!t) { $('pubT').focus(); return; }
+      upsert(readFields(ctx.pub && ctx.pub.kind === 'doc' ? ctx.pub : null, 'doc', '', ctx.lvl));
+    }
+    close(); render(); decorate();
+    showToast(L('💾 Publicació desada', '💾 Publicación guardada'));
+  };
+}
+function readFields(base, kind, vid, lvl) {
+  var g = function (id) { var e = $(id); return e ? e.value : ''; };
+  var p = base || {};
+  return {
+    id: p.id || uid(), lang: LS.lang, kind: kind, vid: vid || '',
+    t: kind === 'doc' ? g('pubT').trim() : '', d: kind === 'doc' ? g('pubD').trim() : '',
+    l: kind === 'doc' ? (parseDriveId(g('pubL')) || '') : '',
+    lvl: (p.lvl === -1 ? -1 : lvl), label: g('pubLab').trim(),
+    from: g('pubFrom'), to: g('pubTo'),
+    active: p.active !== false
+  };
+}
+
+/* ── §6 Decoració del gestor ── */
+function mgrLvl() {
+  var on = document.querySelector('#cmSide .cm-lv.on .cm-lvt');
+  if (!on) return 1;
+  var txt = on.textContent;
+  for (var l = 0; l <= 6; l++) if (lvlName(l) === txt) return l;
+  return 1;
+}
+function decorate() {
+  var m = $('cmModal');
+  if (!m || !m.classList.contains('on')) return;
+  var main = $('cmMain');
+  if (!main) return;
+  var lvl = mgrLvl();
+
+  /* Botó 🗓 a cada fila de vídeo */
+  main.querySelectorAll('.cm-vrow').forEach(function (row) {
+    if (row.querySelector('.pubrowbtn')) return;
+    var impBtn = row.querySelector('[data-imp]');
+    if (!impBtn) return;
+    var vid = impBtn.dataset.imp;
+    var b = document.createElement('button');
+    b.className = 'pubrowbtn';
+    var has = pubOfVid(vid);
+    if (has) { b.classList.add('sched'); b.textContent = '🗓'; b.title = L('Publicació programada', 'Publicación programada'); }
+    else if (recMode(vid) === 'never') { b.classList.add('never'); b.textContent = '🗓'; b.title = L('Mai recomanat', 'Nunca recomendado'); }
+    else { b.textContent = '🗓'; b.title = L('Recomanació / publicació', 'Recomendación / publicación'); }
+    b.onclick = function () { openForm({ lvl: lvl, vid: vid }); };
+    row.insertBefore(b, impBtn);
+  });
+
+  /* Targeta de publicacions del nivell */
+  if (main.querySelector('.pubcard-mgr')) return;
+  var list = pubs().filter(function (p) { return p.lang === LS.lang && (p.lvl === lvl || p.lvl === -1); });
+  var card = document.createElement('div');
+  card.className = 'cm-blk pubcard-mgr';
+  var h = '<div class="cm-bh"><div class="cm-btitle">🗓 ' + L('Publicacions programades', 'Publicaciones programadas') + '</div>' +
+    '<div class="cm-bmeta">' + list.length + '</div></div><div class="cm-vlist">';
+  if (!list.length) h += '<div class="cm-empty">' + L('Cap publicació en aquest nivell.', 'Ninguna publicación en este nivel.') + '</div>';
+  list.forEach(function (p) {
+    var st = state(p), v = p.kind === 'video' ? findVidById(p.vid) : null;
+    var title = p.kind === 'video' ? (v ? vidTitle(v.v, p.vid) : L('vídeo eliminat', 'vídeo eliminado')) : p.t;
+    var win = (p.from ? nice(p.from) : L('ara', 'ahora')) + ' → ' + (p.to ? nice(p.to) : '∞');
+    var lbl = st === 'live' ? L('En curs', 'En curso') : st === 'soon' ? L('Properament', 'Próximamente') : L('Inactiva', 'Inactiva');
+    h += '<div class="pubmrow"><span class="ic">' + (p.kind === 'video' ? '🎬' : '🎼') + '</span>' +
+      '<span class="tx"><b>' + esc(title) + '</b><span>' +
+      esc((p.label ? p.label + ' · ' : '') + win + (p.lvl === -1 ? ' · ' + L('tots els nivells', 'todos los niveles') : '')) +
+      '</span></span><span class="pubstat ' + st + '">' + lbl + '</span>' +
+      '<button class="cm-ib" data-pedit="' + p.id + '">✎</button>' +
+      '<button class="cm-ib d" data-pdel="' + p.id + '">🗑</button></div>';
+  });
+  h += '<button class="cm-add" id="pubAdd">＋ ' + L('Nova publicació', 'Nueva publicación') + '</button></div>';
+  card.innerHTML = h;
+  main.appendChild(card);
+  $('pubAdd').onclick = function () { openForm({ lvl: lvl }); };
+  card.querySelectorAll('[data-pedit]').forEach(function (b) {
+    b.onclick = function () { var p = byId(b.dataset.pedit); if (p) openForm({ lvl: lvl, pub: p }); };
+  });
+  card.querySelectorAll('[data-pdel]').forEach(function (b) {
+    b.onclick = function () {
+      if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
+      var p = byId(b.dataset.pdel);
+      if (p && p.kind === 'video' && p.vid) setRec(p.vid, 'auto');
+      removePub(b.dataset.pdel);
+      render(); decorate();
+      showToast(L('Publicació eliminada', 'Publicación eliminada'));
+    };
+  });
+}
+var queued = false;
+new MutationObserver(function () {
+  if (queued) return;
+  var m = $('cmModal');
+  if (!m || !m.classList.contains('on')) return;
+  queued = true;
+  requestAnimationFrame(function () { queued = false; decorate(); });
+}).observe(document.body, { childList: true, subtree: true });
+
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  var m = $('pubModal');
+  if (m && m.classList.contains('on')) { m.classList.remove('on'); e.stopPropagation(); }
+}, true);
+
+window.GJPSPub = {
+  list: pubs, live: liveFor, rec: recMode, setRec: setRec,
+  open: openForm, decorate: decorate,
+  reset: function () { hidden = {}; render(); }
+};
+render();
+console.log('🗓 GJPS · publicacions programades actives ·', pubs().length, 'registrades');
 })();
 </script>
 
