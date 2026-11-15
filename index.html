@@ -2246,6 +2246,66 @@ html:not([data-theme="dark"]) .publabel{color:#5b32c4}
 html.no-hover .pubitem:hover,html.no-hover .pubacts button:hover{transform:none!important}
 html.fx-calm .pubcard{animation:none!important}
 
+/* ══ 40. LABORATORI D'APPS · rècords i inspector ══ */
+.labhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.labhead .t{font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.labhead .sp{flex:1}
+.labbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm,10px);
+  border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);
+  font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .18s}
+.labbtn:hover{transform:translateY(-1px);border-color:var(--gold);color:var(--gold)}
+.labbtn.on{background:var(--gold);border-color:var(--gold);color:#fff}
+html[data-theme="dark"] .labbtn.on{color:#14161c}
+.rec{margin:0 0 14px;padding:14px;border-radius:var(--r-md,12px);text-align:center;
+  background:linear-gradient(150deg,rgba(232,176,75,.13),rgba(57,217,138,.07));
+  border:1px solid rgba(232,176,75,.42);position:relative;overflow:hidden}
+.rec::after{content:'';position:absolute;inset:-40% -10% auto;height:120%;pointer-events:none;opacity:.5;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,.16) 24deg,transparent 60deg,transparent 200deg,rgba(255,255,255,.12) 224deg,transparent 260deg);
+  animation:recSheen 14s linear infinite}
+@keyframes recSheen{to{transform:rotate(360deg)}}
+.rec .lb{position:relative;font-size:9.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.rec .big{position:relative;font-size:34px;font-weight:800;line-height:1.1;margin:4px 0 2px;
+  font-variant-numeric:tabular-nums;color:var(--ink)}
+.rec .big small{font-size:16px;font-weight:700;opacity:.7}
+.rec .mt{position:relative;font-size:11px;line-height:1.6;color:var(--mut);font-weight:600}
+.rec .ss{position:relative;font-size:10.5px;color:var(--mut);margin-top:5px}
+.rec .bars{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:26px;margin-top:9px}
+.rec .bars i{width:7px;border-radius:2px 2px 0 0;background:linear-gradient(180deg,var(--gold),rgba(232,176,75,.35));
+  min-height:3px;transition:height .4s cubic-bezier(.16,1,.3,1)}
+.rec .bars i.hi{background:linear-gradient(180deg,#39d98a,rgba(57,217,138,.4))}
+.recnone{margin:0 0 14px;padding:13px;border-radius:var(--r-md,12px);font-size:12px;line-height:1.65;
+  color:var(--mut);border:1px dashed var(--hair-2,var(--line));background:var(--tap,transparent)}
+.recnone b{color:var(--ink)}
+.insp{margin-bottom:20px;border-radius:var(--r-lg,16px);overflow:hidden;
+  border:1px solid rgba(76,201,240,.36);background:linear-gradient(180deg,rgba(76,201,240,.07),transparent)}
+.insp .ih{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--hair,var(--line))}
+.insp .ih b{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#4cc9f0}
+.insp .ih .sp{flex:1}
+.insp .ib{max-height:300px;overflow-y:auto;padding:12px 15px}
+.insp .row{display:flex;align-items:center;gap:9px;padding:9px 11px;margin-bottom:6px;border-radius:9px;
+  background:var(--card);border:1px solid var(--hair,var(--line))}
+.insp .row .k{flex:1;min-width:0}
+.insp .row .k b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.insp .row .k span{display:block;font-size:10.5px;color:var(--mut);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insp .row .tag{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
+.insp .row .tag.ok{border-color:var(--ok);color:var(--ok);background:rgba(57,217,138,.1)}
+.insp .empty{font-size:12px;color:var(--mut);line-height:1.7}
+.insp .ib::-webkit-scrollbar{width:10px}
+.insp .ib::-webkit-scrollbar-track{background:rgba(76,201,240,.07);border-radius:99px}
+.insp .ib::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#4cc9f0,#1f8fb5);border-radius:99px;
+  border:2px solid transparent;background-clip:content-box}
+.insp .ib::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#9fe3f8,#4cc9f0);background-clip:content-box}
+.insp .ib{scrollbar-width:thin;scrollbar-color:rgba(76,201,240,.6) rgba(76,201,240,.07)}
+html.fx-calm .rec::after{animation:none!important}
+html.no-hover .labbtn:hover{transform:none!important}
+@media(max-width:767px){
+  .labhead{gap:7px}.labbtn{flex:1;justify-content:center;min-height:38px}
+  .insp .row{flex-wrap:wrap}
+}
+
 </style>
 </head>
 <body class="">
@@ -6787,4 +6847,244 @@ console.log('🗓 GJPS · publicacions programades actives ·', pubs().length, '
 })();
 </script>
 
-</body></html>
+<script>
+/* ═══ GJPS · RÈCORDS D'APPS v2 · lectura tolerant + inspector ═══ */
+(function () {
+'use strict';
+var KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
+var inspOpen = false;
+function ca() { return LS.lang === 'ca'; }
+function L(a, b) { return ca() ? a : b; }
+function u() { return LS.user || ''; }
+function canon() { return 'gjps_tonal_stats_' + u(); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function dstr(v) {
+  var d = new Date(v); if (isNaN(d.getTime())) return '—';
+  return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
+}
+function allKeys() {
+  var out = [];
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k) out.push(k); } } catch (e) {}
+  return out;
+}
+function looksTonal(k) { return /tonal|ear|test|score|record|result/i.test(k); }
+
+/* Normalitza qualsevol forma plausible a {best,last,sessions,history} */
+function norm(raw) {
+  if (!raw) return null;
+  if (typeof raw === 'number') raw = { p: raw, date: Date.now() };
+  if (Array.isArray(raw)) {
+    if (!raw.length) return null;
+    var pts = raw.filter(function (x) { return x && typeof x.p === 'number'; });
+    if (!pts.length) return null;
+    var best = pts.reduce(function (a, b) { return b.p > a.p ? b : a; });
+    return { best: best, last: pts[pts.length - 1], sessions: pts.length, history: pts.slice(-12) };
+  }
+  if (raw.stats) return norm(raw.stats);
+  if (raw.best && typeof raw.best === 'object') {
+    return { best: raw.best, last: raw.last || raw.best, sessions: raw.sessions || 1,
+             history: Array.isArray(raw.history) ? raw.history.slice(-12) : null };
+  }
+  if (typeof raw.p === 'number') return { best: raw, last: raw, sessions: raw.sessions || 1, history: null };
+  if (typeof raw.bestScore === 'number') {
+    var b = { p: raw.bestScore, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
+    return { best: b, last: b, sessions: raw.sessions || 1, history: null };
+  }
+  if (typeof raw.percent === 'number') {
+    var b2 = { p: raw.percent, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
+    return { best: b2, last: b2, sessions: raw.sessions || 1, history: null };
+  }
+  return null;
+}
+function candidates() {
+  var n = u(), lg = LS.lang;
+  return [canon(), canon() + '_' + lg, 'gjps_tonal_stats', 'gjps_tonal_stats_' + lg,
+          'gjps_tonal_last_' + n, 'gjps_tonal_last', 'gjps_tonal_' + n,
+          'tonal_stats_' + n, 'tonal_stats', 'te_stats_' + n, 'gjps_tonal_history_' + n];
+}
+function findStats(adopt) {
+  var list = candidates(), i, s;
+  for (i = 0; i < list.length; i++) {
+    s = norm(lsJSON(list[i], null));
+    if (s) { if (adopt && list[i] !== canon()) lsSet(canon(), JSON.stringify(s)); return s; }
+  }
+  var ks = allKeys().filter(looksTonal);
+  for (i = 0; i < ks.length; i++) {
+    s = norm(lsJSON(ks[i], null));
+    if (s) { if (adopt) lsSet(canon(), JSON.stringify(s)); return s; }
+  }
+  return null;
+}
+function label(v, kind) {
+  if (kind === 'notes') return v === 'diatonic' ? L('Diatòniques','Diatónicas')
+    : v === 'non-diatonic' ? L('No diatòniques','No diatónicas') : L('Totes','Todas');
+  if (kind === 'diff') return v === 'hard' ? L('Difícil','Difícil') : L('Fàcil','Fácil');
+  if (kind === 'key') return (KEYS[v] || 'C') + ' ' + L('Major','Mayor');
+  return v == null ? '—' : String(v);
+}
+
+function statsCard() {
+  if (!LS.user || LS.user === 'guest') return '';
+  var s = findStats(true);
+  if (!s || typeof s.best.p !== 'number') {
+    return '<div class="recnone">🏆 <b>' + L('Encara no hi ha cap rècord registrat.', 'Aún no hay ningún récord registrado.') + '</b><br>' +
+      L('Obre TONAL EMOTIONS, completa un TEST i torna aquí. El resultat es desa automàticament.',
+        'Abre TONAL EMOTIONS, completa un TEST y vuelve aquí. El resultado se guarda automáticamente.') + '</div>';
+  }
+  var b = s.best, h = '';
+  h += '<div class="rec"><div class="lb">🏆 ' + L('Rècord personal', 'Récord personal') + '</div>';
+  h += '<div class="big">' + Math.round(b.p) + '<small>%</small></div>';
+  h += '<div class="mt">TEST · ' + esc(label(b.notes,'notes')) + ' · ' + esc(label(b.diff,'diff')) +
+       ' · ' + esc(label(b.key,'key')) + '<br>' + dstr(b.date) + '</div>';
+  if (s.history && s.history.length > 1) {
+    h += '<div class="bars">';
+    s.history.forEach(function (x) {
+      var pc = Math.max(4, Math.min(100, x.p));
+      h += '<i class="' + (x.p >= b.p ? 'hi' : '') + '" style="height:' + (pc * 0.26) + 'px" title="' + Math.round(x.p) + '%"></i>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="ss">🎯 ' + (s.sessions || 1) + ' ' + L('sessions', 'sesiones') +
+       (s.last && s.last !== b ? ' · ' + L('últim', 'último') + ' ' + Math.round(s.last.p) + '%' : '') + '</div></div>';
+  return h;
+}
+
+function inspector() {
+  var ks = allKeys().filter(looksTonal);
+  var h = '<div class="insp"><div class="ih"><b>' + L('Inspector d\'emmagatzematge', 'Inspector de almacenamiento') + '</b>' +
+    '<span class="sp"></span><button class="labbtn" id="labScan">🔍 ' + L('Cerca i adopta', 'Buscar y adoptar') + '</button>' +
+    '<button class="labbtn" id="labCopy">⧉ ' + L('Copia', 'Copiar') + '</button></div><div class="ib">';
+  h += '<div class="empty" style="margin-bottom:10px">' + L('Clau canònica:', 'Clave canónica:') +
+       ' <b style="font-family:ui-monospace,Menlo,monospace">' + esc(canon()) + '</b></div>';
+  if (!ks.length) {
+    h += '<div class="empty">' + L('No hi ha cap clau relacionada amb TONAL EMOTIONS en aquest navegador. Completa un TEST a l\'app i torna aquí.',
+      'No hay ninguna clave relacionada con TONAL EMOTIONS en este navegador. Completa un TEST en la app y vuelve aquí.') + '</div>';
+  } else {
+    ks.forEach(function (k) {
+      var raw = lsJSON(k, null), n = norm(raw), txt = '';
+      try { txt = JSON.stringify(raw); } catch (e) { txt = ''; }
+      if (txt && txt.length > 90) txt = txt.slice(0, 90) + '…';
+      h += '<div class="row"><span class="k"><b>' + esc(k) + '</b><span>' + esc(txt || '—') + '</span></span>' +
+        '<span class="tag' + (n ? ' ok' : '') + '">' + (n ? Math.round(n.best.p) + '%' : L('no llegible', 'no legible')) + '</span>' +
+        (n ? '<button class="cm-ib" data-adopt="' + esc(k) + '" title="' + L('Adopta com a rècord', 'Adoptar como récord') + '">✓</button>' : '') +
+        '<button class="cm-ib d" data-drop="' + esc(k) + '" title="' + L('Esborra', 'Borrar') + '">🗑</button></div>';
+    });
+  }
+  return h + '</div></div>';
+}
+
+window.readTonalStats = function () { return findStats(true); };
+window.tonalStatsHtml = statsCard;
+
+window.renderApps = function () {
+  var av = $('appsView'); if (!av) return;
+  av.innerHTML = '';
+  var head = document.createElement('div');
+  head.className = 'labhead';
+  head.innerHTML = '<span class="t">' + L('Laboratori d\'entrenament', 'Laboratorio de entrenamiento') + '</span><span class="sp"></span>';
+  var b1 = document.createElement('button');
+  b1.className = 'labbtn';
+  b1.innerHTML = '↻ ' + L('Actualitza', 'Actualizar');
+  b1.onclick = function () { findStats(true); render(); showToast(L('Rècords actualitzats', 'Récords actualizados')); };
+  head.appendChild(b1);
+  if (currentUserRole() === 'admin') {
+    var b2 = document.createElement('button');
+    b2.className = 'labbtn' + (inspOpen ? ' on' : '');
+    b2.innerHTML = '🔬 ' + L('Inspector', 'Inspector');
+    b2.onclick = function () { inspOpen = !inspOpen; render(); };
+    head.appendChild(b2);
+  }
+  av.appendChild(head);
+  if (inspOpen && currentUserRole() === 'admin') {
+    var wrap = document.createElement('div');
+    wrap.innerHTML = inspector();
+    av.appendChild(wrap);
+    var sc = $('labScan');
+    if (sc) sc.onclick = function () {
+      var s = findStats(true);
+      render();
+      showToast(s ? L('Rècord adoptat: ', 'Récord adoptado: ') + Math.round(s.best.p) + '%'
+                  : L('No s\'ha trobat cap resultat llegible.', 'No se ha encontrado ningún resultado legible.'));
+    };
+    var cp = $('labCopy');
+    if (cp) cp.onclick = function () {
+      var dump = allKeys().filter(looksTonal).map(function (k) { return k + ' = ' + lsGet(k); }).join('\n');
+      var done = function () { showToast(L('Copiat al porta-retalls', 'Copiado al portapapeles')); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(dump).then(done, done);
+      else done();
+    };
+    wrap.querySelectorAll('[data-adopt]').forEach(function (b) {
+      b.onclick = function () {
+        var n = norm(lsJSON(b.dataset.adopt, null));
+        if (!n) return;
+        lsSet(canon(), JSON.stringify(n)); render();
+        showToast(L('Rècord adoptat: ', 'Récord adoptado: ') + Math.round(n.best.p) + '%');
+      };
+    });
+    wrap.querySelectorAll('[data-drop]').forEach(function (b) {
+      b.onclick = function () {
+        if (!confirm(L('Esborrar aquesta clau?', '¿Borrar esta clave?'))) return;
+        try { localStorage.removeItem(b.dataset.drop); } catch (e) {}
+        render();
+      };
+    });
+  }
+  var g = document.createElement('div');
+  g.className = 'appgrid';
+  APPS.forEach(function (a, i) {
+    var c = document.createElement('div');
+    c.className = 'appcard';
+    var icon = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
+    var st = (a.url && /TONAL/i.test(a.url)) ? statsCard() : '';
+    c.innerHTML = '<div class="ae">' + icon + '</div>' +
+      '<h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3>' +
+      '<p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + st +
+      '<button class="labopen">' + t().appsOpen + '</button>';
+    c.querySelector('.labopen').onclick = function () { openApp(a.url); };
+    g.appendChild(c);
+  });
+  av.appendChild(g);
+  applyEditState();
+};
+
+window.refreshTonal = function () {
+  if (!LS.user || LS.mode !== 'apps') return;
+  var m = $('modal');
+  if (m && m.classList.contains('on')) return;
+  findStats(true);
+  render();
+};
+
+try { if (window.tonalPoll) { clearInterval(window.tonalPoll); window.tonalPoll = null; } } catch (e) {}
+var snap = null, tick = null;
+function poll() {
+  if (tick) clearInterval(tick);
+  snap = lsGet(canon());
+  tick = setInterval(function () {
+    if (document.hidden || LS.mode !== 'apps') return;
+    var cur = lsGet(canon());
+    if (cur !== snap) { snap = cur; window.refreshTonal(); }
+  }, 1200);
+  window.tonalPoll = tick;
+}
+window.addEventListener('storage', function (e) { if (!e.key || looksTonal(e.key)) window.refreshTonal(); });
+window.addEventListener('message', function (e) {
+  var d = e.data; if (!d || typeof d !== 'object') return;
+  if (!/tonal/i.test(String(d.type || ''))) return;
+  var n = norm(d.stats || d.payload || d);
+  if (!n) return;
+  lsSet(canon(), JSON.stringify(n));
+  window.refreshTonal();
+});
+document.addEventListener('visibilitychange', function () { if (!document.hidden) window.refreshTonal(); });
+window.addEventListener('pageshow', function () { window.refreshTonal(); });
+window.addEventListener('focus', function () { window.refreshTonal(); });
+
+poll();
+if (LS.mode === 'apps') render();
+console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', !!findStats(false));
+})();
+</script>
+
+</body>
+</html>
