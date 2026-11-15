@@ -7173,196 +7173,153 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · REPRODUCTOR iOS DEFINITIU  v4
-   L'estat es controla de forma imperativa amb style.display, no amb classes:
-   cap altre codi del web el pot alterar. El gest sobre el botó propi és qui
-   carrega el vídeo amb autoplay, i Drive arrenca sense haver rebut cap toc.
+   GJPS · REPRODUCTOR · flux mínim nadiu  v5
+   Un sol gest: el clic de la targeta carrega el vídeo amb autoplay i demana
+   pantalla completa NATIVA de l'iframe. Sense capes pròpies ni botons extra.
+   Si el navegador no admet fullscreen d'iframe, queda el vídeo incrustat
+   llest per reproduir amb un toc, i la ✕ sempre accessible.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
 
+/* Retirem qualsevol resta de les versions anteriors */
+['gjpsIosPlayV4', 'gjpsIosPlayV3', 'gjpsIosPlayCSS', 'gjpsIosNative'].forEach(function (id) {
+  var e = document.getElementById(id); if (e) e.remove();
+});
+['iosStart', 'iosClean', 'iosHint'].forEach(function (id) {
+  var e = document.getElementById(id); if (e) e.remove();
+});
+
 var CSS = [
-'.iosstart{position:absolute;inset:0;z-index:999998;display:none;place-items:center;padding:26px;',
-'  cursor:pointer;-webkit-tap-highlight-color:transparent;',
-'  background:radial-gradient(58% 48% at 50% 42%,rgba(20,25,34,.955),rgba(4,6,9,.99))}',
-'.iosstart::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;',
-'  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'3\'/%3E%3C/filter%3E%3Crect width=\'150\' height=\'150\' filter=\'url(%23n)\'/%3E%3C/svg%3E")}',
-'.iosstart-in{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;',
-'  animation:iosRise .5s cubic-bezier(.16,1,.3,1) both}',
-'@keyframes iosRise{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}',
-'.iosplay{position:relative;width:120px;height:120px;border-radius:50%;border:0;cursor:pointer;',
-'  display:grid;place-items:center;font-size:44px;line-height:1;padding-left:9px;color:#0a0c10;',
-'  background:linear-gradient(148deg,#fbe6b4,#e8b04b 52%,#b8842f);',
-'  box-shadow:0 20px 52px rgba(232,176,75,.46),0 0 0 13px rgba(232,176,75,.11),inset 0 2px 0 rgba(255,255,255,.5);',
-'  transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s;',
-'  animation:iosBeat 2.6s ease-in-out infinite;-webkit-tap-highlight-color:transparent}',
-'@keyframes iosBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}',
-'.iosplay:active{transform:scale(.94)}',
-'.iosplay::after{content:"";position:absolute;inset:-26px;border-radius:50%;pointer-events:none;',
-'  border:1px solid rgba(232,176,75,.24);animation:iosRing 3.2s ease-out infinite}',
-'@keyframes iosRing{0%{transform:scale(.86);opacity:.8}100%{transform:scale(1.18);opacity:0}}',
-'.iostitle{margin-top:28px;font-size:20px;font-weight:800;letter-spacing:.01em;color:#f4f1ea}',
-'.iossub{margin-top:10px;font-size:13.5px;font-weight:500;line-height:1.7;color:#a8b0be;max-width:min(430px,86vw)}',
-'.iosclean{position:absolute;top:14px;left:14px;z-index:1000002;display:none;align-items:center;gap:7px;',
-'  padding:9px 15px;border-radius:99px;background:rgba(0,0,0,.82);border:2px solid var(--gold);color:var(--gold);',
-'  font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5);',
-'  -webkit-tap-highlight-color:transparent;transition:transform .16s}',
-'.iosclean:active{transform:scale(.95)}',
-'.modal.ios-tap .close{z-index:1000003}',
-'@media(max-width:767px){.iosplay{width:100px;height:100px;font-size:36px;padding-left:7px}',
-'  .iostitle{font-size:17px;margin-top:22px}.iossub{font-size:12.5px}}',
-'html.fx-calm .iosplay,html.fx-calm .iosplay::after,html.fx-calm .iosstart-in{animation:none!important}',
-'@media (prefers-reduced-motion:reduce){.iosstart-in,.iosplay,.iosplay::after{animation:none!important}}'
+'.ioshint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999997;',
+'  display:none;flex-direction:column;align-items:center;gap:14px;pointer-events:none;text-align:center;',
+'  padding:26px 30px;border-radius:20px;max-width:min(400px,84vw);',
+'  background:radial-gradient(60% 60% at 50% 40%,rgba(10,13,19,.82),rgba(6,8,12,.62));',
+'  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);',
+'  animation:iosHintIn .4s cubic-bezier(.16,1,.3,1) both}',
+'@keyframes iosHintIn{from{opacity:0;transform:translate(-50%,-46%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}',
+'.ioshint.out{animation:iosHintOut .5s ease forwards}',
+'@keyframes iosHintOut{to{opacity:0}}',
+'.ioshint .g{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;',
+'  font-size:28px;line-height:1;padding-left:5px;color:#0a0c10;',
+'  background:linear-gradient(148deg,#fbe6b4,#e8b04b 55%,#b8842f);',
+'  box-shadow:0 12px 32px rgba(232,176,75,.42),0 0 0 9px rgba(232,176,75,.1);',
+'  animation:iosHintBeat 2.2s ease-in-out infinite}',
+'@keyframes iosHintBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}',
+'.ioshint .t{font-size:15.5px;font-weight:800;color:#f4f1ea;letter-spacing:.01em}',
+'.ioshint .s{font-size:12.5px;font-weight:500;line-height:1.6;color:#aeb6c2}',
+'.modal.ios-native .close{z-index:1000003;opacity:1}',
+'html.fx-calm .ioshint,html.fx-calm .ioshint .g{animation:none!important}',
+'@media (prefers-reduced-motion:reduce){.ioshint,.ioshint .g{animation:none!important}}'
 ].join('\n');
 
-var startEl = null, cleanEl = null, loadedSrc = '';
+var hintEl = null, hintTimer = null;
 
 function ca() { return !(window.LS && LS.lang === 'es'); }
 function mm() { return document.getElementById('modal'); }
 function pp() { return document.getElementById('player'); }
-function toast(msg) { if (typeof showToast === 'function') showToast(msg, 2000); }
 
-function build() {
-  if (startEl && document.body.contains(startEl)) return;
-  if (!document.getElementById('gjpsIosPlayV4')) {
+function ensure() {
+  if (!document.getElementById('gjpsIosNative')) {
     var st = document.createElement('style');
-    st.id = 'gjpsIosPlayV4';
+    st.id = 'gjpsIosNative';
     st.textContent = CSS;
     document.head.appendChild(st);
   }
+  if (hintEl && document.body.contains(hintEl)) return;
   var wrap = document.querySelector('.wrap');
   if (!wrap) return;
-
-  var old = document.getElementById('iosStart'); if (old) old.remove();
-  var oldc = document.getElementById('iosClean'); if (oldc) oldc.remove();
-
-  startEl = document.createElement('div');
-  startEl.id = 'iosStart';
-  startEl.className = 'iosstart';
-  startEl.innerHTML =
-    '<div class="iosstart-in">' +
-      '<button type="button" class="iosplay" id="iosPlayBtn" aria-label="Play">▶</button>' +
-      '<div class="iostitle" id="iosTitle"></div>' +
-      '<div class="iossub" id="iosSub"></div>' +
-    '</div>';
-  wrap.appendChild(startEl);
-
-  cleanEl = document.createElement('button');
-  cleanEl.id = 'iosClean';
-  cleanEl.type = 'button';
-  cleanEl.className = 'iosclean';
-  wrap.appendChild(cleanEl);
-
-  var go = function (e) {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    start();
-  };
-  startEl.addEventListener('click', go);
-  startEl.addEventListener('touchend', go, { passive: false });
-  cleanEl.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); restart(); });
-  cleanEl.addEventListener('touchend', function (e) { e.preventDefault(); e.stopPropagation(); restart(); }, { passive: false });
-
-  labels();
-  startEl.style.display = 'none';
-  cleanEl.style.display = 'none';
+  hintEl = document.createElement('div');
+  hintEl.id = 'iosHint';
+  hintEl.className = 'ioshint';
+  hintEl.innerHTML = '<div class="g">▶</div><div class="t"></div><div class="s"></div>';
+  wrap.appendChild(hintEl);
 }
 
-function labels() {
-  var t = document.getElementById('iosTitle');
-  var s = document.getElementById('iosSub');
-  if (t) t.textContent = ca() ? 'Toca per reproduir' : 'Toca para reproducir';
-  if (s) s.innerHTML = ca()
-    ? 'El vídeo s\'obrirà a pantalla completa, sense controls.<br>Per sortir, prem la ✕ de dalt a la dreta.'
-    : 'El vídeo se abrirá a pantalla completa, sin controles.<br>Para salir, pulsa la ✕ de arriba a la derecha.';
-  if (cleanEl) cleanEl.innerHTML = '⛶ ' + (ca() ? 'Pantalla neta' : 'Pantalla limpia');
+function showHint() {
+  ensure();
+  if (!hintEl) return;
+  hintEl.querySelector('.t').textContent = ca() ? 'Toca la pantalla per reproduir' : 'Toca la pantalla para reproducir';
+  hintEl.querySelector('.s').textContent = ca()
+    ? 'Si no s\'inicia sol, un toc n\'hi ha prou.'
+    : 'Si no se inicia solo, un toque es suficiente.';
+  hintEl.classList.remove('out');
+  hintEl.style.display = 'flex';
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(hideHint, 3600);
+}
+function hideHint() {
+  clearTimeout(hintTimer);
+  if (!hintEl) return;
+  hintEl.classList.add('out');
+  setTimeout(function () { if (hintEl) hintEl.style.display = 'none'; }, 500);
 }
 
-function urlFor(extra) {
-  var base = window.currentVideoSrc;
-  if (!base) return '';
-  return base + (base.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&authuser=0' + (extra || '');
-}
+document.addEventListener('pointerdown', function () {
+  var m = mm();
+  if (m && m.classList.contains('on') && m.classList.contains('ios-native')) hideHint();
+}, true);
 
-function hideStart() {
-  if (startEl) { startEl.style.display = 'none'; startEl.style.pointerEvents = 'none'; }
-  if (cleanEl) cleanEl.style.display = 'inline-flex';
-}
-function showStart() {
-  if (startEl) { startEl.style.display = 'grid'; startEl.style.pointerEvents = 'auto'; }
-  if (cleanEl) cleanEl.style.display = 'none';
-}
-
-function start() {
-  var p = pp(), m = mm();
-  if (!p || !m) return;
-  if (!window.currentVideoSrc) { toast(ca() ? 'Vídeo no disponible.' : 'Vídeo no disponible.'); return; }
-  build();
-  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  loadedSrc = urlFor('');
-  p.src = loadedSrc;
-  p.classList.add('active');
-  m.classList.add('on', 'show-controls');
-  hideStart();
-}
-
-function restart() {
-  var p = pp();
-  if (!p || !window.currentVideoSrc) return;
-  loadedSrc = urlFor('&r=' + Date.now());
-  p.src = loadedSrc;
-  p.classList.add('active');
-  hideStart();
-  toast(ca() ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…');
+function askNativeFullscreen(el) {
+  if (!el) return;
+  var fn = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if (!fn) return;
+  try {
+    var r = fn.call(el, { navigationUI: 'hide' });
+    if (r && typeof r.catch === 'function') r.catch(function () {});
+  } catch (e) {
+    try { var r2 = fn.call(el); if (r2 && r2.catch) r2.catch(function () {}); } catch (e2) {}
+  }
 }
 
 window.openFullscreenVideo = function (src) {
-  if (!src) { toast(t().soon); return; }
-  var m = mm(), p = pp();
+  if (!src) { if (typeof showToast === 'function') showToast(t().soon); return; }
+  window.currentVideoSrc = src;
+
+  var m = mm(), p = pp(), ov = document.getElementById('videoOverlay');
   if (!m || !p) return;
 
   var ios = (typeof isIOS === 'function') ? isIOS() : false;
   var mob = (typeof isMobileDevice === 'function') ? isMobileDevice() : false;
 
-  /* Si ja s'està reproduint aquest mateix vídeo, no el reiniciem */
-  if (m.classList.contains('on') && p.getAttribute('src') && window.currentVideoSrc === src) {
-    if (ios) hideStart();
-    return;
-  }
-
-  window.currentVideoSrc = src;
-
   /* ANDROID: pestanya nova, com sempre */
   if (!ios && mob) { window.open(src, '_blank'); return; }
 
-  build();
-  labels();
+  ensure();
   if (typeof pushVideoState === 'function') pushVideoState();
   try { clearTimeout(window.iosTapTimer); } catch (e) {}
   document.documentElement.style.zoom = '1';
 
-  m.classList.remove('awaiting', 'playing');
+  m.classList.remove('awaiting', 'playing', 'ios-tap');
   m.classList.add('on', 'show-controls');
   p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  p.src = '';
-  p.classList.remove('active');
-  loadedSrc = '';
+  p.setAttribute('allowfullscreen', 'true');
+  p.setAttribute('webkitallowfullscreen', 'true');
 
-  var ov = document.getElementById('videoOverlay');
+  var sep = src.indexOf('?') >= 0 ? '&' : '?';
 
   if (ios) {
-    m.classList.add('ios-device', 'ios-tap');
-    if (ov) { ov.classList.add('hidden'); ov.style.pointerEvents = 'none'; }
-    showStart();
+    /* Un sol gest: carreguem amb autoplay i demanem pantalla completa
+       NATIVA de l'iframe. Cap capa nostra intercepta el toc. */
+    m.classList.add('ios-device', 'ios-native');
+    if (ov) { ov.classList.add('hidden'); ov.style.display = 'none'; ov.style.pointerEvents = 'none'; }
+    p.src = src + sep + 'autoplay=1&authuser=0';
+    p.classList.add('active');
+    askNativeFullscreen(p);
+    showHint();
   } else {
-    m.classList.remove('ios-device', 'ios-tap');
-    if (startEl) startEl.style.display = 'none';
-    if (cleanEl) cleanEl.style.display = 'none';
+    /* ESCRIPTORI: flux original provat, amb l'avís del nucli clicable. */
+    m.classList.remove('ios-device', 'ios-native');
+    hideHint();
     if (ov) {
       var tx = document.getElementById('overlayText');
       if (tx) tx.textContent = t().overlayText;
+      ov.style.display = '';
       ov.style.pointerEvents = '';
       ov.classList.remove('hidden');
     }
+    p.src = '';
+    p.classList.remove('active');
     var wrap = document.querySelector('.wrap');
     if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
     else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
@@ -7371,10 +7328,10 @@ window.openFullscreenVideo = function (src) {
 };
 
 if (typeof window.iosTapTimer === 'undefined') window.iosTapTimer = null;
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
-else build();
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensure);
+else ensure();
 
-window.GJPSIosPlay = { start: start, restart: restart, labels: labels, rebuild: build };
+window.GJPSPlayer = { hint: showHint, hideHint: hideHint, nativeFullscreen: function () { askNativeFullscreen(pp()); } };
 })();
 </script>
 
