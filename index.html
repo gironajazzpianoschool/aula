@@ -7172,14 +7172,21 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 <div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button>
 
 <script>
-/* ═══ GJPS · CINEMA v15 · bloc únic del reproductor ═══ */
+/* ═══ GJPS · CINEMA v17 · NOMÉS iOS ═══
+   PC i Android conserven EXACTAMENT el comportament original del nucli.
+   El cinema (gate + retirada de controls) només s'activa en dispositius iOS.
+   ═══ */
 (function () {
 'use strict';
 if (window.__gjCinemaLoaded) return;
 window.__gjCinemaLoaded = true;
 
+/* Capturo els originals ABANS de tocar res */
+var _origOpen  = window.openFullscreenVideo;
+var _origClose = window.closeVideoPlayer;
+
 ['gjpsIosPlayCSS','gjpsIosPlayV3','gjpsIosPlayV4','gjpsIosNative','gjpsNatV6','gjpsNatV7','gjpsPlayV8','gjpsPlayV9',
- 'gjCinemaCSS','gjCinemaV11','gjCinemaV12','gjCinemaV13','gjCinemaV14','gjCinemaV15']
+ 'gjCinemaCSS','gjCinemaV11','gjCinemaV12','gjCinemaV13','gjCinemaV14','gjCinemaV15','gjCinemaV16','gjCinemaV17']
   .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
 ['iosStart','iosClean','iosHint','gjpsNative','npSrcModal','npSrcBtn','npV8','npV8Src','gjPlayer','gjSrc','gjCinema']
   .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
@@ -7200,9 +7207,10 @@ var CSS = `
 #gjCinema .shell{position:absolute;inset:0;display:flex;flex-direction:row}
 #gjCinema .stage{position:relative;flex:1;min-width:0;min-height:0;overflow:hidden;background:#000}
 #gjCinema .frame{position:absolute;left:50%;top:50%;z-index:1;background:#000;overflow:hidden;
-  transform:translate(-50%,-50%) scale(var(--z,1)) translate(calc(var(--dx,0)*1%),calc(var(--dy,0)*1%));
+  transform:translate(-50%,-50%) translate(0,var(--nudge,0px)) scale(var(--z,1))
+             translate(calc(var(--dx,0)*1%),calc(var(--dy,0)*1%));
   border-radius:var(--rad,0px);filter:brightness(var(--br,1)) contrast(var(--ct,1)) saturate(var(--sa,1));
-  transition:transform .2s cubic-bezier(.22,.61,.36,1),border-radius .2s,filter .2s}
+  transition:border-radius .2s,filter .2s}
 #gjCinema .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
 #gjCinema .swap{position:absolute;inset:0;z-index:2;background:transparent;display:none}
 #gjCinema .veil{position:absolute;inset:0;z-index:2;background:transparent;pointer-events:none}
@@ -7335,9 +7343,9 @@ html.fx-calm #gjCinema .gate .pb,html.fx-calm #gjCinema .gate .pb::after{animati
 `;
 
 var DEF = {
-  tablet:  { z:1, dx:0, dy:0, mt:0, mb:12, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:4, hold:150, spacing:1200, retap:true },
-  phone:   { z:1, dx:0, dy:0, mt:0, mb:14, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:5, hold:160, spacing:1100, retap:true },
-  desktop: { z:1, dx:0, dy:0, mt:0, mb:9,  rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:3, hold:130, spacing:1300, retap:true }
+  tablet:  { z:1, dx:0, dy:0, mt:0, mb:12, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:5, hold:170, spacing:1100, nudge:3, retap:true },
+  phone:   { z:1, dx:0, dy:0, mt:0, mb:14, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:6, hold:180, spacing:1000, nudge:3, retap:true },
+  desktop: { z:1, dx:0, dy:0, mt:0, mb:9,  rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:4, hold:150, spacing:1200, nudge:2, retap:true }
 };
 var AR = { auto:0, '16:9':16/9, '4:3':4/3, '21:9':21/9, '1:1':1 };
 
@@ -7349,6 +7357,7 @@ function ca(){ return !(window.LS&&LS.lang==='es'); }
 function T(a,b){ return ca()?a:b; }
 function toast(m,d){ if(typeof showToast==='function') showToast(m,d||1500); }
 function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function isIOSdev(){ try{ return (typeof isIOS==='function')?isIOS():false; }catch(e){ return false; } }
 function devClass(){
   try{ if(typeof isSmartphone==='function'&&isSmartphone()) return 'phone';
        if(typeof isTabletDevice==='function'&&isTabletDevice()) return 'tablet'; }catch(e){}
@@ -7357,8 +7366,8 @@ function devClass(){
 function store(){ if(!OV.vframe||typeof OV.vframe!=='object') OV.vframe={}; return OV.vframe; }
 function conf(){ var d=devClass(),s=store(); if(!s[d]) s[d]=Object.assign({},DEF[d]); return Object.assign({},DEF[d],s[d]); }
 function save(){ store()[devClass()]=Object.assign({},cur); }
-function inject(){ if(document.getElementById('gjCinemaV15')) return;
-  var st=document.createElement('style'); st.id='gjCinemaV15'; st.textContent=CSS; document.head.appendChild(st); }
+function inject(){ if(document.getElementById('gjCinemaV17')) return;
+  var st=document.createElement('style'); st.id='gjCinemaV17'; st.textContent=CSS; document.head.appendChild(st); }
 function sl(k,l,mn,mx,st){ return '<div class="ctl"><div class="lb"><b>'+l+'</b><i id="v_'+k+'"></i></div>'+
   '<input type="range" id="s_'+k+'" min="'+mn+'" max="'+mx+'" step="'+st+'" data-k="'+k+'"></div>'; }
 
@@ -7387,9 +7396,10 @@ function build(){
     '<h3>'+T('Ajustos','Ajustes')+'</h3><p id="wDev"></p></div>'+
     '<button class="cl" id="wHide">✕</button></div><div class="rb">'+
     '<div class="grp"><h5>'+T('Retirada de controls','Retirada de controles')+'</h5>'+
-      sl('strikes',T('Dobles trets en arrencar','Dobles disparos al arrancar'),1,10,1)+
+      sl('strikes',T('Trets en arrencar','Disparos al arrancar'),1,12,1)+
       sl('spacing',T('Separació entre trets','Separación entre disparos'),400,3000,50)+
       sl('hold',T('Durada de cada fase','Duración de cada fase'),40,400,10)+
+      sl('nudge',T('Desplaçament del vídeo','Desplazamiento del vídeo'),0,10,1)+
       '<button class="tg" id="t_retap" aria-pressed="true"><span class="sw"></span>'+T('Re-tret després de tocar','Re-disparo tras tocar')+'</button>'+
       '<div class="acts"><button class="cy" id="wNow">✦ '+T('Retira ara','Retirar ahora')+'</button>'+
       '<button class="vi" id="wAgain">↻ '+T('Repeteix tanda','Repetir tanda')+'</button></div></div>'+
@@ -7430,11 +7440,13 @@ function phase(){
   if(!root||!started) return;
   runs++;
   clearTimeout(tA); clearTimeout(tB);
+  S.wFrame.style.setProperty('--nudge',(-cur.nudge)+'px');
   S.wSwap.style.display='block';
   S.wVeil.style.pointerEvents='none';
   S.wFrame.style.pointerEvents='';
   S.wRel.classList.add('busy');
   tA=setTimeout(function(){
+    S.wFrame.style.setProperty('--nudge','0px');
     S.wSwap.style.display='none';
     S.wVeil.style.pointerEvents='auto';
     S.wFrame.style.pointerEvents='none';
@@ -7463,7 +7475,8 @@ function halt(){
   planClear();
   clearTimeout(tA); clearTimeout(tB); clearTimeout(busyT);
   if(S.wSwap){ S.wSwap.style.display='none'; S.wVeil.style.pointerEvents='none';
-    S.wFrame.style.pointerEvents=''; S.wRel.classList.remove('busy'); }
+    S.wFrame.style.pointerEvents=''; S.wFrame.style.setProperty('--nudge','0px');
+    S.wRel.classList.remove('busy'); }
 }
 
 function apply(){
@@ -7478,14 +7491,14 @@ function apply(){
   S.t_masks.setAttribute('aria-pressed',cur.masks?'true':'false');
   S.t_guides.setAttribute('aria-pressed',cur.guides?'true':'false');
   S.s_ar.value=cur.ar;
-  ['strikes','spacing','hold','z','dx','dy','rad','mt','mb','br','ct','sa'].forEach(function(k){
+  ['strikes','spacing','hold','nudge','z','dx','dy','rad','mt','mb','br','ct','sa'].forEach(function(k){
     var r=root.querySelector('#s_'+k), v=root.querySelector('#v_'+k);
     if(r) r.value=cur[k];
     if(v){ var x=cur[k];
       if(k==='strikes') v.textContent=Math.round(x);
       else if(k==='spacing'||k==='hold') v.textContent=Math.round(x)+' ms';
+      else if(k==='nudge'||k==='rad') v.textContent=Math.round(x)+' px';
       else if(k==='z'||k==='br'||k==='ct'||k==='sa') v.textContent=x.toFixed(2)+'×';
-      else if(k==='rad') v.textContent=Math.round(x)+' px';
       else v.textContent=(x>0?'+':'')+x.toFixed(1)+' %';
     }
   });
@@ -7546,33 +7559,6 @@ function close(){
   try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
   try{ if(document.webkitFullscreenElement&&document.webkitExitFullscreen) document.webkitExitFullscreen(); }catch(e){}
 }
-function closeAll(){
-  close();
-  var m=document.getElementById('modal'), p=document.getElementById('player'), ov=document.getElementById('videoOverlay');
-  if(m) m.classList.remove('on','show-controls','ios-device','gj-ios','ios-tap');
-  if(p){ p.src=''; p.classList.remove('active'); }
-  if(ov){ ov.style.display=''; ov.style.pointerEvents=''; ov.classList.remove('hidden'); }
-  document.body.style.overflow=''; document.documentElement.style.zoom='';
-  try{ window.videoHistoryGuard=false; }catch(e){}
-  try{ clearTimeout(window.iosTapTimer); }catch(e){}
-}
-function legacy(){
-  var m=document.getElementById('modal'),p=document.getElementById('player'),ov=document.getElementById('videoOverlay');
-  if(!m||!p) return;
-  var ios=(typeof isIOS==='function')?isIOS():false;
-  m.classList.remove('on','gj-ios','ios-tap');
-  p.setAttribute('allow','autoplay; fullscreen; encrypted-media; picture-in-picture');
-  var sep=src.indexOf('?')>=0?'&':'?';
-  if(ios){ m.classList.add('ios-device','gj-ios');
-    if(ov){ ov.style.display='none'; ov.classList.add('hidden'); }
-    p.src=src+sep+'autoplay=1&authuser=0'; p.classList.add('active');
-  } else { m.classList.remove('ios-device');
-    if(ov){ var tx=document.getElementById('overlayText'); if(tx) tx.textContent=t().overlayText;
-      ov.style.display=''; ov.classList.remove('hidden'); }
-    p.src=''; p.classList.remove('active'); }
-  document.documentElement.style.zoom='1'; m.classList.add('on','show-controls');
-  if(typeof showCloseBtn==='function') showCloseBtn();
-}
 function titleFor(u){
   try{ var m=String(u).match(/\/d\/([a-zA-Z0-9_-]{10,})/),d=m?m[1]:'';
     var a=allVids();
@@ -7615,9 +7601,9 @@ function wire(){
   S.wCopy.onclick=function(){ var txt=JSON.stringify(cur,null,2);
     var ok=function(){ toast(T('Copiat','Copiado')); };
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok,ok); else ok(); };
-  S.wDrive.onclick=function(){ close(); legacy(); };
+  S.wDrive.onclick=function(){ close(); if(typeof _origOpen==='function') _origOpen(src); };
   S.wHide.onclick=function(){ studio(false); };
-  S.wClose.onclick=function(e){ e.stopPropagation(); e.preventDefault(); closeAll(); };
+  S.wClose.onclick=function(e){ e.stopPropagation(); e.preventDefault(); close(); };
   S.wRel.addEventListener('pointerdown',function(e){
     e.stopPropagation(); longFired=false;
     clearTimeout(pressT);
@@ -7649,28 +7635,37 @@ function wire(){
   };
   S.wStage.addEventListener('pointerup',rel,{passive:true});
   S.wStage.addEventListener('pointercancel',rel,{passive:true});
-  window.addEventListener('resize',function(){ if(root.classList.contains('on')){ narrow(); layout(); } });
+  window.addEventListener('resize',function(){ if(root&&root.classList.contains('on')){ narrow(); layout(); } });
   window.addEventListener('orientationchange',function(){ setTimeout(function(){
-    if(root.classList.contains('on')){ narrow(); layout(); if(started) runSet(); } },240); });
+    if(root&&root.classList.contains('on')){ narrow(); layout(); if(started) runSet(); } },240); });
   document.addEventListener('visibilitychange',function(){ if(!document.hidden&&started) runSet(); });
 }
 
+/* ── Encaminament per dispositiu: NOMÉS iOS usa el cinema ── */
 window.openFullscreenVideo=function(u){
   if(!u){ toast(t().soon); return; }
   window.currentVideoSrc=u;
-  var ios=(typeof isIOS==='function')?isIOS():false;
-  var mob=(typeof isMobileDevice==='function')?isMobileDevice():false;
-  if(!ios&&mob){ window.open(u,'_blank'); return; }
-  open(u,titleFor(u));
+  if(isIOSdev()){ open(u,titleFor(u)); return; }
+  if(typeof _origOpen==='function') return _origOpen(u);
+  /* fallback si el nucli no exposa l'original */
+  var m=document.getElementById('modal'),p=document.getElementById('player'),ov=document.getElementById('videoOverlay');
+  if(!m||!p) return;
+  m.classList.add('on','show-controls');
+  if(ov){ var tx=document.getElementById('overlayText'); if(tx) tx.textContent=t().overlayText; ov.classList.remove('hidden'); }
+  p.src=''; p.classList.remove('active');
+  var w=document.querySelector('.wrap'); if(w&&w.requestFullscreen) w.requestFullscreen().catch(function(){});
 };
-window.closeVideoPlayer=function(){ closeAll(); };
-window.addEventListener('popstate',function(){ if(root&&root.classList.contains('on')) closeAll(); });
+window.closeVideoPlayer=function(a){
+  if(root&&root.classList.contains('on')){ close(); return; }
+  if(typeof _origClose==='function') return _origClose(a);
+};
+window.addEventListener('popstate',function(){ if(root&&root.classList.contains('on')) close(); });
 
 document.addEventListener('keydown',function(e){
   if(!root||!root.classList.contains('on')) return;
   if(/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')) return;
   var k=e.key;
-  if(k==='Escape'){ e.preventDefault(); e.stopPropagation(); closeAll(); }
+  if(k==='Escape'){ e.preventDefault(); e.stopPropagation(); close(); }
   else if(k==='h'||k==='H'){ studio(!root.classList.contains('studio')); }
   else if(k==='g'||k==='G'){ cur.guides=!cur.guides; apply(); save(); }
   else if(k==='r'||k==='R'){ cur=Object.assign({},DEF[devClass()]); apply(); save(); }
@@ -7680,12 +7675,10 @@ document.addEventListener('keydown',function(e){
   else if(k==='ArrowLeft'){ e.preventDefault(); cur.z=clamp(cur.z-.02,.6,2.2); apply(); save(); }
   else if(k===' '){ e.preventDefault(); started?strike():start(); }
 },true);
-if(typeof window.iosTapTimer==='undefined') window.iosTapTimer=null;
-function boot(){ build(); }
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
-window.GJSCinema={ open:open, close:closeAll, strike:strike, set:runSet, studio:studio,
+
+window.GJSCinema={ open:open, close:close, strike:strike, set:runSet, studio:studio,
   config:function(){ return Object.assign({},cur||{}); },
-  setParam:function(k,v){ if(cur&&k in cur){ cur[k]=v; apply(); save(); } }, legacy:legacy };
+  setParam:function(k,v){ if(cur&&k in cur){ cur[k]=v; apply(); save(); } } };
 })();
 </script>
 
