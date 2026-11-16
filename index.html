@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ca" data-theme="dark" class="can-hover"><head>
+<html lang="ca" data-theme="dark" class="can-hover">
+<head>
 <script>
 /* ═══ GJPS · GUARDIÀ D'ARRENCADA v2 · amb analitzador de balanç de claus ═══ */
 (function () {
@@ -59,7 +60,6 @@
            file: 'index.html', line: 0, col: 0, stack: r.stack || '' });
   });
 
-  /* ── Analitzador: recorre el text d'un script i balanceja obertures ── */
   var KW = { return:1, typeof:1, instanceof:1, in:1, of:1, new:1, delete:1, void:1,
              case:1, do:1, else:1, yield:1, await:1, throw:1 };
   function scan(text) {
@@ -277,7 +277,6 @@
     return o.join('\n');
   }
 
-  /* ── Accés: sessió d'admin, desbloqueig manual, o ?debug=1 ── */
   var unlocked = false;
   function hash(s) { var h = 5381, i = s.length; while (i) { h = (h * 33) ^ s.charCodeAt(--i); } return (h >>> 0).toString(36); }
   function adminList() {
@@ -285,9 +284,6 @@
     if (!db || !db.length) return null;
     return db.filter(function (u) { return u.role === 'admin'; });
   }
-  /* Desa una empremta de la clau d'admin quan el nucli és viu: així el
-     guardià pot validar credencials encara que el script principal estigui mort.
-     Mai es desa la contrasenya en clar. */
   function syncAdmin() {
     try {
       var a = adminList(); if (!a) return;
@@ -472,45 +468,18 @@
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
    GJPS · GIRONA JAZZ PIANO SCHOOL®
-   Full reescrit v3.0 · 2026-11-15
+   Full reescrit v4.0 · 2026-11-16
    ═══════════════════════════════════════════════════════════════════════════
 
    ÍNDEX CSS
-   1.  Variables i reset
-   2.  Marca d'aigua i capçalera
-   3.  Botons de navegació (header)
-   4.  Botons d'edició (fixos)
-   5.  Layout principal i selector de nivell
-   6.  Seguiment Continuat
-   7.  Navegació Lliure
-   8.  Targeta de vídeo
-   9.  Botons d'acció (unificats)
-   10. Drag & Drop i botons d'edició
-   11. Editor de partitures
-   12. Apps i FAQ
-   13. Reproductor a pantalla completa
-   14. Modals
-   15. Animacions (play, tooltip, obre)
-   16. Responsive — PC / Tablet (> 767px)
-   17. Responsive — Smartphone (≤ 767px)
-   18. Temes clars — Blau nit + Sèpia
-   19. Cerca, diploma, versió
-   20. Títol mode clar — estable
-   21. Capa de refinament
-   22. Logo en smartphones verticals
-   23. Mode fosc: botons de bloc
-   24. Mode fosc: playGlow intens
-   25. Barra d'accions en una fila (mòbil vertical)
-   26. Selector de nivell personalitzat
-   27. Hover reactiu
-   28. «Properament» del selector
-   29. Insígnia d'importància (medalló)
-   30. Entrada de FAQ i ajuda
-   31. Mode fosc al PC
-   32. Play del seguiment: reacció 3D
-   33. Reflex del medalló (Safari/iPad)
-   34. Estrella del medalló: groc únic
-   35. Gestor del curs
+   1-34.  CSS base (variables, layout, targetes, modals, responsive, temes…)
+   35.    Gestor del curs
+   36.    Reproductor integrat (creu accessible)
+   37.    Reproductor iOS (estils per al toc)
+   38.    Selector d'idioma neutral
+   39.    Publicacions programades
+   40.    Laboratori d'apps (rècords, inspector)
+   41.    Avís iOS breu (gjnote)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ============================================================
@@ -1103,7 +1072,8 @@ html:not([data-theme="dark"]) .now .play { border-color: var(--play) !important;
 @media (min-width: 768px) { #mSearch { display: none !important; } }
 .searchbox input { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 9px 16px 9px 38px; color: var(--ink); font-size: var(--fs-btn); font-family: inherit; transition: border-color .2s; }
 .searchbox input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 2px rgba(232,176,75,.2); }
-#appVer { position: fixed; left: 10px; bottom: 8px; z-index: 5; font-size: 10px; letter-spacing: .5px; color: var(--mut); opacity: .55; pointer-events: none; }
+#appVer { position: fixed; left: 10px; bottom: 8px; z-index: 5; font-size: 10px; letter-spacing: .5px; color: var(--mut); opacity: .55; pointer-events: none; display: none; }
+body.editmode #appVer { display: block; }
 
 .search-highlight { background: rgba(232, 176, 75, 0.35); color: #fff; font-weight: 700; border-radius: 3px; padding: 0 2px; box-shadow: 0 0 4px rgba(232,176,75,0.5); }
 html:not([data-theme="dark"]) .search-highlight { background: rgba(61, 90, 128, 0.25); color: #1a2030; box-shadow: none; }
@@ -2058,7 +2028,9 @@ html[data-theme="dark"] .cm-seg button.on{color:#14161c}
 html[data-theme="dark"] .cm-btn.pri{color:#14161c}
 @media(max-width:860px){.cm-body{grid-template-columns:1fr}.cm-side{border-right:0;border-bottom:1px solid var(--hair,var(--line));display:flex;gap:6px;overflow-x:auto}.cm-st{display:none}.cm-lv{flex:0 0 auto;min-width:148px;margin-bottom:0}.cm-two{grid-template-columns:1fr}}
 
-/* ══ 36. REPRODUCTOR INTEGRAT: sortida sempre accessible i llegible ══ */
+/* ============================================================
+   36. REPRODUCTOR INTEGRAT: sortida sempre accessible
+   ============================================================ */
 .modal.on{ touch-action:manipulation; }
 .modal.on .frame iframe{ background:#000; }
 @media (min-width: 768px){
@@ -2088,7 +2060,9 @@ html[data-theme="dark"] .cm-btn.pri{color:#14161c}
   }
 }
 
-/* ══ 37. REPRODUCTOR iOS · arrencada amb gest propi i pantalla neta ══ */
+/* ============================================================
+   37. REPRODUCTOR iOS · arrencada amb gest propi
+   ============================================================ */
 .modal.ios-tap .video-overlay{
   pointer-events:auto;
   cursor:pointer;
@@ -2116,7 +2090,9 @@ html[data-theme="dark"] .cm-btn.pri{color:#14161c}
 .modal.ios-tap.armed .iosclean{display:inline-flex}
 html.fx-calm .modal.ios-tap .video-overlay .icon{animation:none}
 
-/* ══ 38. SELECTOR D'IDIOMA NEUTRAL · primera visita + login ══ */
+/* ============================================================
+   38. SELECTOR D'IDIOMA NEUTRAL · primera visita + login
+   ============================================================ */
 .login-lang{display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0 2px;position:static;top:auto;flex-wrap:wrap}
 .login-lang-lbl{font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-right:2px}
 .login-lang button{background:var(--tap,transparent);border:1px solid var(--hair,var(--line));color:var(--mut);border-radius:999px;padding:7px 16px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;transition:all .2s}
@@ -2193,7 +2169,9 @@ html[data-theme="dark"] .login-lang button.on{color:#14161c}
   .lgate-opt:hover,.lgate-opt:focus-visible{transform:none}
 }
 
-/* ══ 39. PUBLICACIONS PROGRAMADES ══ */
+/* ============================================================
+   39. PUBLICACIONS PROGRAMADES
+   ============================================================ */
 .pubcard{position:relative;margin-bottom:20px;padding:16px 18px;border-radius:var(--r-lg,16px);
   background:linear-gradient(135deg,rgba(140,82,255,.10),rgba(255,43,214,.05));
   border:1px solid rgba(140,82,255,.34);box-shadow:var(--elev-1,0 2px 10px rgba(0,0,0,.2));
@@ -2253,7 +2231,9 @@ html:not([data-theme="dark"]) .publabel{color:#5b32c4}
 html.no-hover .pubitem:hover,html.no-hover .pubacts button:hover{transform:none!important}
 html.fx-calm .pubcard{animation:none!important}
 
-/* ══ 40. LABORATORI D'APPS · rècords i inspector ══ */
+/* ============================================================
+   40. LABORATORI D'APPS · rècords i inspector
+   ============================================================ */
 .labhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .labhead .t{font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .labhead .sp{flex:1}
@@ -2313,73 +2293,35 @@ html.no-hover .labbtn:hover{transform:none!important}
   .insp .row{flex-wrap:wrap}
 }
 
+/* ============================================================
+   41. AVÍS iOS BREU (gjnote)
+   ============================================================ */
+.gjnote{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999998;
+  display:none;pointer-events:none;text-align:center;padding:26px 30px;border-radius:22px;
+  background:radial-gradient(60% 60% at 50% 40%,rgba(12,16,23,.86),rgba(5,7,10,.72));
+  border:1px solid rgba(232,176,75,.34);box-shadow:0 18px 50px rgba(0,0,0,.6);
+  font-family:'Inter',system-ui,sans-serif;color:#f4f1ea;
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.gjnote.on{display:block;animation:gjnIn .45s cubic-bezier(.16,1,.3,1) both}
+.gjnote.out{animation:gjnOut .5s ease forwards}
+@keyframes gjnIn{from{opacity:0;transform:translate(-50%,-46%) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes gjnOut{to{opacity:0;transform:translate(-50%,-54%) scale(.97)}}
+.gjnote .pb{width:86px;height:86px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;
+  font-size:32px;line-height:1;padding-left:6px;color:#0a0c10;
+  background:linear-gradient(148deg,#fbe6b4,#e8b04b 54%,#a9762a);
+  box-shadow:0 14px 36px rgba(232,176,75,.42),0 0 0 10px rgba(232,176,75,.1);
+  animation:gjnBeat 2.2s ease-in-out infinite}
+@keyframes gjnBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.gjnote .tx{font-size:15px;font-weight:800;letter-spacing:.01em}
+.gjnote .sb{margin-top:7px;font-size:12px;font-weight:500;line-height:1.6;color:#a8b0be}
+.modal.gj-iosnote .close{display:flex!important;opacity:1!important;pointer-events:auto!important;
+  background:rgba(0,0,0,.85)!important;border:2px solid var(--gold)!important;color:var(--gold)!important;
+  box-shadow:0 4px 14px rgba(0,0,0,.55)!important}
+html.fx-calm .gjnote .pb{animation:none}
+@media (prefers-reduced-motion:reduce){.gjnote,.gjnote .pb{animation-duration:1ms!important}}
 </style>
-<style>#gjpsGuard{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;padding:18px;
-background:radial-gradient(70% 60% at 50% 0%,rgba(255,85,119,.14),transparent 60%),rgba(6,8,12,.88);
-backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:Inter,system-ui,sans-serif;color:#f2f2f2}
-#gjpsGuard.on{display:grid}#gjpsGuard *{box-sizing:border-box}
-.gg-box{width:min(980px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
-background:linear-gradient(180deg,#1b202b,#12161e);border:1px solid rgba(255,255,255,.14);border-radius:18px;
-box-shadow:0 30px 80px rgba(0,0,0,.65)}
-.gg-head{display:flex;align-items:flex-start;gap:14px;padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.1);
-background:linear-gradient(135deg,rgba(255,85,119,.14),rgba(232,176,75,.06))}
-.gg-badge{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
-background:rgba(255,85,119,.18);border:1px solid rgba(255,85,119,.45);color:#ff8fa6}
-.gg-ht{flex:1;min-width:0}.gg-ht h2{margin:0;font-size:17px;font-weight:800;color:#ffd884}
-.gg-ht p{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:#a8b0be}
-.gg-count{flex:none;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;
-border-radius:99px;background:rgba(255,85,119,.16);border:1px solid rgba(255,85,119,.4);color:#ff9fb2}
-.gg-body{flex:1;min-height:0;overflow-y:auto;padding:16px 20px}
-.gg-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
-.gg-tab{padding:7px 12px;border-radius:9px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:700;
-background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#a8b0be}
-.gg-tab.on{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}
-.gg-msg{padding:12px 14px;border-radius:12px;margin-bottom:11px;font-size:12.5px;line-height:1.6;
-background:rgba(255,85,119,.1);border:1px solid rgba(255,85,119,.32);color:#ffc2ce;
-font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-word}
-.gg-loc{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
-.gg-chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(76,201,240,.12);
-border:1px solid rgba(76,201,240,.35);color:#9fe3f8;font-family:ui-monospace,Menlo,Consolas,monospace}
-.gg-hint{padding:11px 13px;border-radius:12px;margin-bottom:13px;font-size:12.5px;line-height:1.6;
-background:rgba(232,176,75,.09);border:1px solid rgba(232,176,75,.3);color:#f0d9a8}
-.gg-sec{margin:16px 0 9px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#e8b04b}
-.gg-card{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px;margin-bottom:11px;background:rgba(0,0,0,.25)}
-.gg-card h4{margin:0 0 8px;font-size:12.5px;font-weight:800;color:#f2f2f2}
-.gg-find{font-size:11px;color:#8d95a3;margin-bottom:9px;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
-.gg-code{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#080a0e;margin-top:8px}
-.gg-code pre{margin:0;padding:10px 0;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7}
-.gg-ln{display:block;white-space:pre;padding:0 12px 0 0;color:#cfd6e2}
-.gg-ln .n{display:inline-block;width:60px;padding-right:12px;text-align:right;color:#5c6675;user-select:none;
-border-right:1px solid rgba(255,255,255,.08);margin-right:12px}
-.gg-ln.hit{background:rgba(255,85,119,.16);color:#fff;box-shadow:inset 3px 0 0 #ff5577}
-.gg-ln.hit .n{color:#ff9fb2;font-weight:700}
-.gg-caret{display:block;white-space:pre;color:#ff5577;font-weight:700;padding:0 12px 0 0}
-.gg-caret .n{display:inline-block;width:60px;padding-right:12px;margin-right:12px;border-right:1px solid transparent}
-.gg-ok{padding:11px 13px;border-radius:10px;font-size:12px;background:rgba(57,217,138,.1);
-border:1px solid rgba(57,217,138,.32);color:#9be8c4}
-.gg-sus{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.gg-sus span{font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;padding:4px 9px;border-radius:99px;
-background:rgba(140,82,255,.14);border:1px solid rgba(140,82,255,.4);color:#c9b3ff}
-.gg-foot{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap;padding:13px 20px;
-border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.25)}
-.gg-btn{padding:10px 15px;border-radius:10px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:700;
-background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#f2f2f2;transition:all .18s}
-.gg-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.3)}
-.gg-btn.pri{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}
-.gg-btn.cy{background:linear-gradient(135deg,#4cc9f0,#1f8fb5);border-color:transparent;color:#04222c}
-.gg-stat{margin-right:auto;font-size:11.5px;color:#6d7686}
-#gjpsGuardPill{position:fixed;left:14px;bottom:14px;z-index:2147482999;display:none;align-items:center;gap:8px;
-padding:9px 14px;border-radius:99px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:800;
-background:linear-gradient(135deg,#ff5577,#b32b48);border:0;color:#fff;box-shadow:0 8px 24px rgba(255,85,119,.4)}
-#gjpsGuardPill.on{display:inline-flex}
-#gjpsGuard *{scrollbar-width:thin;scrollbar-color:rgba(232,176,75,.55) rgba(255,255,255,.05)}
-#gjpsGuard ::-webkit-scrollbar{width:10px;height:10px}
-#gjpsGuard ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);border-radius:99px}
-#gjpsGuard ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8b04b,#a9762a);border-radius:99px;
-border:2px solid transparent;background-clip:content-box}
-@media(max-width:760px){#gjpsGuard{padding:10px;align-items:end}.gg-box{max-height:94vh}
-.gg-head,.gg-body,.gg-foot{padding:13px}.gg-btn{flex:1;text-align:center}.gg-stat{width:100%;margin:0 0 4px}
-.gg-ln .n,.gg-caret .n{width:44px;padding-right:9px;margin-right:9px}}</style></head>
+</head>
+
 <body class="">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
@@ -2461,28 +2403,21 @@ border:2px solid transparent;background-clip:content-box}
 <button id="mEdit" title="Mode edició" class="" style="display: flex;">⚙️</button>
 <button id="mSave" title="Guardar" style="display: none;">💾</button>
 
+<div class="lgin" id="faqModal">
+  <div class="lbox" style="width:min(600px,90vw);max-height:85vh;overflow-y:auto;text-align:left;padding:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px;">
+      <h2 style="margin:0;font-size:18px;color:var(--gold);">Preguntes Freqüents</h2>
+      <button onclick="$('faqModal').classList.remove('on')" style="background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div id="faqGuestContent"></div>
+  </div>
+</div>
+
+<div id="appVer"></div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · JAVASCRIPT PRINCIPAL
-   Full reescrit v3.0 · 2026-11-15
-   ═══════════════════════════════════════════════════════════════════════════
-
-   ÍNDEX JS
-   1.  Utilitats i estat global
-   2.  Dades del curs (LEVELS, D, LINKS, GIFT, APPS, USERS_DB)
-   3.  Textos d'interfície (UI, FAQS, HELP)
-   4.  Dades editables persistides (OV)
-   5.  Sistema d'ordre global
-   6.  Adjunts
-   7.  Mode edició i guardat
-   8.  Construcció targeta vídeo
-   9.  Vistes i renderitzat
-   10. Login i canvi d'idioma
-   11. Reproductor a pantalla completa
-   12. Drag & Drop
-   13. Editor de partitures
-   14. Selector de nivell personalitzat
-   15. Arrencada
+   GJPS · JAVASCRIPT PRINCIPAL v4.0
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ================================================================
@@ -2501,7 +2436,7 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var APP_VERSION = '2.0', APP_BUILD = '2026-11-07';
+var APP_VERSION = '4.0', APP_BUILD = '2026-11-16';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 function loadSkip() {
   var u = LS.user || 'guest';
@@ -2538,7 +2473,6 @@ function isSmartphone() {
   return false;
 }
 function isTabletDevice() { return isMobileDevice() && !isSmartphone(); }
-/* App instal·lada a l'escriptori / pantalla d'inici: no admet pestanyes noves */
 function isStandaloneApp() {
   try {
     return window.navigator.standalone === true ||
@@ -2821,7 +2755,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ============================================================ */
-var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom.","es":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat","es":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.","es":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard","es":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.","es":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure","es":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.","es":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals","es":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.","es":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs","es":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.","es":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor","es":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.","es":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament","es":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.","es":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…","es":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉","es":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés","es":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.","es":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?","es":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.","es":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar","es":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.","es":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents","es":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.","es":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori","es":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova.","es":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{},"pub":[]};/*OV-END*/
+var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom.","es":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat","es":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.","es":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard","es":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.","es":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure","es":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.","es":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals","es":"Vídeos importantes y opcionales"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.","es":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs","es":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.","es":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor","es":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.","es":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament","es":"Aplicaciones de entrenamiento"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.","es":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…","es":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉","es":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés","es":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.","es":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?","es":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.","es":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar","es":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.","es":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents","es":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.","es":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori","es":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova.","es":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{},"pub":[]};/*OV-END*/
 
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
@@ -3717,6 +3651,10 @@ function tt() {
   return LS.lang === 'ca' ? { open: 'Obrir aquest vídeo', remove: 'Treure de la llista de repàs', done: 'Marcar com a fet i treure de la llista', bkOn: 'Marcar per repassar més endavant', bkOff: 'Ja és a la llista de repàs. Clica per treure\'l.' } : { open: 'Abrir este vídeo', remove: 'Quitar de la lista de repaso', done: 'Marcar como hecho y quitar de la lista', bkOn: 'Marcar para repasar más adelante', bkOff: 'Ya está en la lista de repaso. Clic para quitarlo.' };
 }
 function blockName(b) { return t().blocks[b] || b; }
+</script>
+
+<script>
+/* ═══ GJPS · JS PRINCIPAL v4.0 · continuació (seccions 9-15) ═══ */
 
 /* ================================================================
    9. VISTES I RENDERITZAT
@@ -3771,6 +3709,7 @@ function pieSlice(cx, cy, r, pct, color) {
   var largeArc = pct > 50 ? 1 : 0;
   return '<path d="M ' + cx + ' ' + cy + ' L ' + x1 + ' ' + y1 + ' A ' + r + ' ' + r + ' 0 ' + largeArc + ' 1 ' + x2 + ' ' + y2 + ' Z" fill="' + color + '"/>';
 }
+function fmtDate(ts) { var d = new Date(ts); var pad = function (n) { return n < 10 ? '0' + n : n; }; return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
 function sendNotesByEmail(videoId) {
   var nkey = 'gjps_notes_' + LS.user + '_' + videoId + ':' + LS.lang;
   var notes = lsJSON(nkey, []);
@@ -3781,8 +3720,8 @@ function sendNotesByEmail(videoId) {
   var v = findVidById(videoId);
   var title = v ? vidTitle(v.v, v.id) : videoId;
   var subject = (LS.lang === 'ca' ? 'Notes del vídeo: ' : 'Notas del vídeo: ') + title + ' — ' + LS.user;
-  var body = (LS.lang === 'ca' 
-    ? 'Hola,\n\nEt faig arribar les notes personals que he anat apuntant al vídeo:\n\n' 
+  var body = (LS.lang === 'ca'
+    ? 'Hola,\n\nEt faig arribar les notes personals que he anat apuntant al vídeo:\n\n'
     : 'Hola,\n\nTe hago llegar las notas personales que he ido apuntando en el vídeo:\n\n');
   body += '📺 ' + title + '\n';
   body += ' ' + LS.user + '\n';
@@ -3794,7 +3733,6 @@ function sendNotesByEmail(videoId) {
   body += (LS.lang === 'ca' ? '─────────────────────\n\nGràcies!' : '─────────────────────\n\n¡Gracias!');
   window.location.href = 'mailto:gironajazz@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
-function fmtDate(ts) { var d = new Date(ts); var pad = function (n) { return n < 10 ? '0' + n : n; }; return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
 
 function renderTrack() {
   initializeOrder();
@@ -3819,7 +3757,6 @@ function renderTrack() {
       card.style.position = 'relative';
       card.innerHTML = '<h3 data-ovid="gift.' + i + '" data-ovk="t">' + vidTitle(g, 'gift.' + i) + '</h3><p>' + (LS.lang === 'ca' ? 'Masterclass exclusiva' : 'Masterclass exclusiva') + '</p>';
       card.onclick = function () { var src = driveSrc(g, 'gift.' + i); if (src) openFullscreenVideo(src); else showToast(t().soon); };
-      
       if (editModeOn) {
         var editBar = document.createElement('div');
         editBar.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:5;';
@@ -4031,7 +3968,6 @@ function filterFreeGrid(q) {
     g.querySelectorAll('.vid').forEach(function (card) {
       var vt = card.querySelector('.vt');
       var origText = vt ? (vt.dataset.origTitle || vt.textContent) : '';
-      /* NOMÉS el títol: mai la descripció */
       var textMatch = !nq || normTxt(origText).indexOf(nq) >= 0;
       var blockMatch = isSearching || (card.dataset.block === freeBlock);
       var show = textMatch && blockMatch;
@@ -4122,7 +4058,7 @@ function renderFree() {
       empty.innerHTML = '<div style="font-size:48px;margin-bottom:12px;opacity:.5">🔖</div><p>' + (LS.lang === 'ca' ? 'Encara no has marcat cap vídeo per repassar.' : 'Aún no has marcado ningún vídeo para repasar.') + '</p>';
       gridB.appendChild(empty);
     } else {
-      bm.forEach(function (id) { var v = findVidById(id); if (v) gridB.appendChild(makeVid(v.v, v.id, false, D[v.si].n[LS.lang])); });
+      bm.forEach(function (id) { var v = findVidById(id); if (v) gridB.appendChild(makeVid(v.v, id, false, D[v.si].n[LS.lang])); });
     }
     fv.appendChild(gridB);
     return;
@@ -4177,8 +4113,6 @@ function renderFree() {
     if (vtEl) vtEl.dataset.origTitle = vtEl.textContent;
     if (!freeQuery && x.b !== freeBlock) vidEl.style.display = 'none';
     if (editModeOn) {
-      var vIdx = -1;
-      for (var i = 0; i < vids.length; i++) { if (vids[i].id === x.id) { vIdx = i; break; } }
       var editBtns = document.createElement('div');
       editBtns.style.cssText = 'position:absolute;top:48px;right:8px;display:flex;gap:8px;z-index:10';
       var delBtn = document.createElement('button');
@@ -4231,43 +4165,112 @@ function renderFree() {
   }
   fv.appendChild(grid);
 }
-/* Llegeix el rècord amb tolerància de claus i el normalitza a la clau canònica */
-function readTonalStats() {
-  var u = LS.user || '';
-  var keys = ['gjps_tonal_stats_' + u, 'gjps_tonal_stats', 'gjps_tonal_last_' + u, 'gjps_tonal_last'];
-  for (var i = 0; i < keys.length; i++) {
-    var s = lsJSON(keys[i], null);
-    if (!s) continue;
-    if (!s.best && s.p !== undefined) s = { best: s, last: s, sessions: s.sessions || 1 };
-    if (!s.best) continue;
-    if (i > 0) lsSet('gjps_tonal_stats_' + u, JSON.stringify(s));
-    return s;
+
+/* ── Rècords de TONAL EMOTIONS (lectura tolerant + inspector) ── */
+var TONAL_KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
+function tonalCanon() { return 'gjps_tonal_stats_' + (LS.user || ''); }
+function tonalNorm(raw) {
+  if (!raw) return null;
+  if (typeof raw === 'number') raw = { p: raw, date: Date.now() };
+  if (Array.isArray(raw)) {
+    if (!raw.length) return null;
+    var pts = raw.filter(function (x) { return x && typeof x.p === 'number'; });
+    if (!pts.length) return null;
+    var best = pts.reduce(function (a, b) { return b.p > a.p ? b : a; });
+    return { best: best, last: pts[pts.length - 1], sessions: pts.length, history: pts.slice(-12) };
+  }
+  if (raw.stats) return tonalNorm(raw.stats);
+  if (raw.best && typeof raw.best === 'object') {
+    return { best: raw.best, last: raw.last || raw.best, sessions: raw.sessions || 1,
+             history: Array.isArray(raw.history) ? raw.history.slice(-12) : null };
+  }
+  if (typeof raw.p === 'number') return { best: raw, last: raw, sessions: raw.sessions || 1, history: null };
+  if (typeof raw.bestScore === 'number') {
+    var b = { p: raw.bestScore, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
+    return { best: b, last: b, sessions: raw.sessions || 1, history: null };
+  }
+  if (typeof raw.percent === 'number') {
+    var b2 = { p: raw.percent, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
+    return { best: b2, last: b2, sessions: raw.sessions || 1, history: null };
   }
   return null;
 }
-
+function readTonalStats() {
+  var u = LS.user || '';
+  var keys = ['gjps_tonal_stats_' + u, 'gjps_tonal_stats_' + u + '_' + LS.lang, 'gjps_tonal_stats',
+              'gjps_tonal_last_' + u, 'gjps_tonal_last', 'tonal_stats_' + u, 'tonal_stats'];
+  for (var i = 0; i < keys.length; i++) {
+    var s = tonalNorm(lsJSON(keys[i], null));
+    if (s) { if (i > 0) lsSet(tonalCanon(), JSON.stringify(s)); return s; }
+  }
+  return null;
+}
+function tonalLabel(v, kind) {
+  var ca = LS.lang === 'ca';
+  if (kind === 'notes') return v === 'diatonic' ? (ca?'Diatòniques':'Diatónicas')
+    : v === 'non-diatonic' ? (ca?'No diatòniques':'No diatónicas') : (ca?'Totes':'Todas');
+  if (kind === 'diff') return v === 'hard' ? (ca?'Difícil':'Difícil') : (ca?'Fàcil':'Fácil');
+  if (kind === 'key') return (TONAL_KEYS[v] || 'C') + ' ' + (ca?'Major':'Mayor');
+  return v == null ? '—' : String(v);
+}
 function tonalStatsHtml() {
   if (!LS.user || LS.user === 'guest') return '';
-  var KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
   var ca = LS.lang === 'ca';
   var s = readTonalStats();
-  if (!s || !s.best) {
-    return '<div style="margin:0 0 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;color:var(--mut);font-size:var(--fs-sm);line-height:1.5;">' + (ca ? '🏆 Encara no tens cap rècord a TONAL EMOTIONS: completa un TEST per estrenar el teu marcador!' : '🏆 Aún no tienes ningún récord en TONAL EMOTIONS: ¡completa un TEST para estrenar tu marcador!') + '</div>';
+  if (!s || typeof s.best.p !== 'number') {
+    return '<div class="recnone">🏆 <b>' + (ca ? 'Encara no hi ha cap rècord registrat.' : 'Aún no hay ningún récord registrado.') + '</b><br>' +
+      (ca ? 'Obre TONAL EMOTIONS, completa un TEST i torna aquí. El resultat es desa automàticament.'
+          : 'Abre TONAL EMOTIONS, completa un TEST y vuelve aquí. El resultado se guarda automáticamente.') + '</div>';
   }
   var b = s.best;
   var d = new Date(b.date);
   var pad = function (n) { return n < 10 ? '0' + n : n; };
   var dateStr = pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
-  var notesLbl = b.notes === 'diatonic' ? (ca ? 'Diatòniques' : 'Diatónicas') : b.notes === 'non-diatonic' ? (ca ? 'No-Diatòniques' : 'No-Diatónicas') : (ca ? 'Totes' : 'Todas');
-  var diffLbl = b.diff === 'hard' ? 'Difícil' : (ca ? 'Fàcil' : 'Fácil');
-  var keyLbl = (KEYS[b.key] || 'C') + ' ' + (ca ? 'Major' : 'Mayor');
-  var h = '<div style="margin:0 0 12px;padding:10px 12px;border:1px solid var(--gold);border-radius:10px;background:rgba(232,176,75,0.06);text-align:center;">';
-  h += '<div style="color:var(--gold);font-size:var(--fs-xs);letter-spacing:2px;font-weight:800;text-transform:uppercase;">' + (ca ? '🏆 Rècord personal' : '🏆 Récord personal') + '</div>';
-  h += '<div style="color:var(--ink);font-size:26px;font-weight:800;margin:4px 0 2px;">' + b.p + '%</div>';
-  h += '<div style="color:var(--mut);font-size:var(--fs-xs);line-height:1.5;">TEST · ' + notesLbl + ' · ' + diffLbl + ' · ' + keyLbl + ' · ' + dateStr + '</div>';
-  h += '<div style="color:var(--mut);font-size:var(--fs-xs);margin-top:4px;">' + (ca ? '🎯 ' + s.sessions + ' sessions · Últim: ' : '🎯 ' + s.sessions + ' sesiones · Último: ') + (s.last ? s.last.p + '%' : '—') + '</div>';
-  h += '</div>';
+  var h = '<div class="rec"><div class="lb">🏆 ' + (ca ? 'Rècord personal' : 'Récord personal') + '</div>';
+  h += '<div class="big">' + Math.round(b.p) + '<small>%</small></div>';
+  h += '<div class="mt">TEST · ' + esc(tonalLabel(b.notes,'notes')) + ' · ' + esc(tonalLabel(b.diff,'diff')) +
+       ' · ' + esc(tonalLabel(b.key,'key')) + '<br>' + dateStr + '</div>';
+  if (s.history && s.history.length > 1) {
+    h += '<div class="bars">';
+    s.history.forEach(function (x) {
+      var pc = Math.max(4, Math.min(100, x.p));
+      h += '<i class="' + (x.p >= b.p ? 'hi' : '') + '" style="height:' + (pc * 0.26) + 'px" title="' + Math.round(x.p) + '%"></i>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="ss">🎯 ' + (s.sessions || 1) + ' ' + (ca ? 'sessions' : 'sesiones') +
+       (s.last && s.last !== b ? ' · ' + (ca ? 'últim' : 'último') + ' ' + Math.round(s.last.p) + '%' : '') + '</div></div>';
   return h;
+}
+var tonalInspOpen = false;
+function tonalAllKeys() {
+  var out = [];
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k) out.push(k); } } catch (e) {}
+  return out;
+}
+function tonalInspectorHtml() {
+  var ca = LS.lang === 'ca';
+  var ks = tonalAllKeys().filter(function (k) { return /tonal|ear|test|score|record|result/i.test(k); });
+  var h = '<div class="insp"><div class="ih"><b>' + (ca ? 'Inspector d\'emmagatzematge' : 'Inspector de almacenamiento') + '</b>' +
+    '<span class="sp"></span><button class="labbtn" id="labScan">🔍 ' + (ca ? 'Cerca i adopta' : 'Buscar y adoptar') + '</button>' +
+    '<button class="labbtn" id="labCopy">⧉ ' + (ca ? 'Copia' : 'Copiar') + '</button></div><div class="ib">';
+  h += '<div class="empty" style="margin-bottom:10px">' + (ca ? 'Clau canònica:' : 'Clave canónica:') +
+       ' <b style="font-family:ui-monospace,Menlo,monospace">' + esc(tonalCanon()) + '</b></div>';
+  if (!ks.length) {
+    h += '<div class="empty">' + (ca ? 'No hi ha cap clau relacionada amb TONAL EMOTIONS en aquest navegador. Completa un TEST a l\'app i torna aquí.'
+      : 'No hay ninguna clave relacionada con TONAL EMOTIONS en este navegador. Completa un TEST en la app y vuelve aquí.') + '</div>';
+  } else {
+    ks.forEach(function (k) {
+      var raw = lsJSON(k, null), n = tonalNorm(raw), txt = '';
+      try { txt = JSON.stringify(raw); } catch (e) { txt = ''; }
+      if (txt && txt.length > 90) txt = txt.slice(0, 90) + '…';
+      h += '<div class="row"><span class="k"><b>' + esc(k) + '</b><span>' + esc(txt || '—') + '</span></span>' +
+        '<span class="tag' + (n ? ' ok' : '') + '">' + (n ? Math.round(n.best.p) + '%' : (ca ? 'no llegible' : 'no legible')) + '</span>' +
+        (n ? '<button class="cm-ib" data-adopt="' + esc(k) + '" title="' + (ca ? 'Adopta com a rècord' : 'Adoptar como récord') + '">✓</button>' : '') +
+        '<button class="cm-ib d" data-drop="' + esc(k) + '" title="' + (ca ? 'Esborra' : 'Borrar') + '">🗑</button></div>';
+    });
+  }
+  return h + '</div></div>';
 }
 function openApp(url) {
   if (!url) { alert(t().appsSoon); return; }
@@ -4276,47 +4279,116 @@ function openApp(url) {
   fullUrl += (fullUrl.indexOf('?') >= 0 ? '&' : '?') +
              'lang=' + encodeURIComponent(LS.lang) +
              '&user=' + encodeURIComponent(LS.user || '');
-  /* Recorda on érem per tornar-ho a obrir en tornar de l'app */
   lsSet('gjps_return_mode', LS.mode);
   if (isStandaloneApp() || isMobileDevice()) window.location.href = fullUrl;
   else window.open(fullUrl, '_blank');
 }
 function renderApps() {
-  var av = $('appsView');
+  var ca = LS.lang === 'ca';
+  var av = $('appsView'); if (!av) return;
   av.innerHTML = '';
-  var bar = document.createElement('div');
-  bar.className = 'blkhead';
-  bar.innerHTML = '<span class="blkt">' + (LS.lang === 'ca' ? 'Aplicacions d\'entrenament' : 'Aplicaciones de entrenamiento') + '</span>';
-  var rb = document.createElement('button');
-  rb.className = 'adjb';
-  rb.textContent = LS.lang === 'ca' ? '↻ Actualitza rècords' : '↻ Actualizar récords';
-  rb.onclick = function () {
-    readTonalStats();
-    render();
-    showToast(LS.lang === 'ca' ? 'Rècords actualitzats' : 'Récords actualizados');
-  };
-  bar.appendChild(rb);
-  av.appendChild(bar);
+  var head = document.createElement('div');
+  head.className = 'labhead';
+  head.innerHTML = '<span class="t">' + (ca ? 'Laboratori d\'entrenament' : 'Laboratorio de entrenamiento') + '</span><span class="sp"></span>';
+  var b1 = document.createElement('button');
+  b1.className = 'labbtn';
+  b1.innerHTML = '↻ ' + (ca ? 'Actualitza' : 'Actualizar');
+  b1.onclick = function () { readTonalStats(); render(); showToast(ca ? 'Rècords actualitzats' : 'Récords actualizados'); };
+  head.appendChild(b1);
+  if (currentUserRole() === 'admin') {
+    var b2 = document.createElement('button');
+    b2.className = 'labbtn' + (tonalInspOpen ? ' on' : '');
+    b2.innerHTML = '🔬 ' + (ca ? 'Inspector' : 'Inspector');
+    b2.onclick = function () { tonalInspOpen = !tonalInspOpen; render(); };
+    head.appendChild(b2);
+  }
+  av.appendChild(head);
+  if (tonalInspOpen && currentUserRole() === 'admin') {
+    var wrap = document.createElement('div');
+    wrap.innerHTML = tonalInspectorHtml();
+    av.appendChild(wrap);
+    var sc = $('labScan');
+    if (sc) sc.onclick = function () {
+      var s = readTonalStats();
+      render();
+      showToast(s ? (ca ? 'Rècord adoptat: ' : 'Récord adoptado: ') + Math.round(s.best.p) + '%'
+                  : (ca ? 'No s\'ha trobat cap resultat llegible.' : 'No se ha encontrado ningún resultado legible.'));
+    };
+    var cp = $('labCopy');
+    if (cp) cp.onclick = function () {
+      var dump = tonalAllKeys().filter(function (k) { return /tonal/i.test(k); }).map(function (k) { return k + ' = ' + lsGet(k); }).join('\n');
+      var done = function () { showToast(ca ? 'Copiat al porta-retalls' : 'Copiado al portapapeles'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(dump).then(done, done);
+      else done();
+    };
+    wrap.querySelectorAll('[data-adopt]').forEach(function (b) {
+      b.onclick = function () {
+        var n = tonalNorm(lsJSON(b.dataset.adopt, null));
+        if (!n) return;
+        lsSet(tonalCanon(), JSON.stringify(n)); render();
+        showToast((ca ? 'Rècord adoptat: ' : 'Récord adoptado: ') + Math.round(n.best.p) + '%');
+      };
+    });
+    wrap.querySelectorAll('[data-drop]').forEach(function (b) {
+      b.onclick = function () {
+        if (!confirm(ca ? 'Esborrar aquesta clau?' : '¿Borrar esta clave?')) return;
+        try { localStorage.removeItem(b.dataset.drop); } catch (e) {}
+        render();
+      };
+    });
+  }
   var g = document.createElement('div');
   g.className = 'appgrid';
   APPS.forEach(function (a, i) {
     var c = document.createElement('div');
     c.className = 'appcard';
-    var iconHtml = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
-    var statsHtml = (a.url && a.url.indexOf('TONAL') >= 0) ? tonalStatsHtml() : '';
-    c.innerHTML = '<div class="ae">' + iconHtml + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3><p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + statsHtml + '<button>' + t().appsOpen + '</button>';
-    c.querySelector('button').onclick = function () { openApp(a.url); };
+    var icon = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
+    var st = (a.url && /TONAL/i.test(a.url)) ? tonalStatsHtml() : '';
+    c.innerHTML = '<div class="ae">' + icon + '</div><h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3>' +
+      '<p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + st +
+      '<button class="labopen">' + t().appsOpen + '</button>';
+    c.querySelector('.labopen').onclick = function () { openApp(a.url); };
     g.appendChild(c);
   });
   av.appendChild(g);
   applyEditState();
 }
+function refreshTonal() {
+  if (!LS.user || LS.mode !== 'apps') return;
+  var m = $('modal');
+  if (m && m.classList.contains('on')) return;
+  readTonalStats();
+  render();
+}
+window.addEventListener('storage', function (e) { if (!e.key || /tonal/i.test(e.key)) refreshTonal(); });
+document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshTonal(); });
+window.addEventListener('pageshow', refreshTonal);
+window.addEventListener('focus', refreshTonal);
+window.addEventListener('message', function (e) {
+  var d = e.data;
+  if (!d || typeof d !== 'object') return;
+  if (!/tonal/i.test(String(d.type || ''))) return;
+  var n = tonalNorm(d.stats || d.payload || d);
+  if (!n) return;
+  lsSet(tonalCanon(), JSON.stringify(n));
+  refreshTonal();
+});
+var tonalPoll = null, tonalSnap = null;
+function startTonalPoll() {
+  if (tonalPoll) clearInterval(tonalPoll);
+  tonalSnap = lsGet(tonalCanon());
+  tonalPoll = setInterval(function () {
+    if (document.hidden || LS.mode !== 'apps') return;
+    var cur = lsGet(tonalCanon());
+    if (cur !== tonalSnap) { tonalSnap = cur; refreshTonal(); }
+  }, 1500);
+}
 
 function renderHelp() {
   var hv = $('helpView');
   var h = '<div class="info-container"><h2>' + (LS.lang === 'ca' ? 'Com funciona aquest web' : 'Cómo funciona esta web') + '</h2>';
-  var intro = LS.lang === 'ca' 
-    ? 'Benvingut/da a l\'aula virtual! Aquesta guia ràpida t\'explica com treure-li tot el partit en 2 minuts.' 
+  var intro = LS.lang === 'ca'
+    ? 'Benvingut/da a l\'aula virtual! Aquesta guia ràpida t\'explica com treure-li tot el partit en 2 minuts.'
     : '¡Bienvenido/a al aula virtual! Esta guía rápida te explica cómo sacarle todo el partido en 2 minutos.';
   h += '<p style="color:var(--mut);font-size:var(--fs);line-height:1.6;margin-bottom:16px;">' + intro + '</p>';
   HELP.forEach(function (s, i) {
@@ -4457,8 +4529,8 @@ $('lgBtn').onclick = function () {
 $('lgPin').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('lgBtn').onclick(); });
 $('lgName').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('lgPin').focus(); });
 $('btnUser').onclick = function () {
-  var msg = LS.lang === 'ca' 
-    ? 'Segur que vols tancar sessió?' 
+  var msg = LS.lang === 'ca'
+    ? 'Segur que vols tancar sessió?'
     : '¿Seguro que quieres cerrar sesión?';
   if (!confirm(msg)) return;
   lsSet('gjps_session', '');
@@ -4590,69 +4662,70 @@ $('langToggle').onclick = function () {
 };
 
 /* ================================================================
-   11. REPRODUCTOR A PANTALLA COMPLETA
+   11. REPRODUCTOR A PANTALLA COMPLETA (amb avís iOS integrat)
    ================================================================ */
 var currentVideoSrc = '';
-var iosTapTimer = null;
 
-function ensureCleanBtn() {
-  if ($('iosClean')) return;
-  var wrap = document.querySelector('.wrap');
-  if (!wrap) return;
-  var b = document.createElement('button');
-  b.id = 'iosClean'; b.type = 'button'; b.className = 'iosclean';
-  b.innerHTML = '⛶ ' + (LS.lang === 'ca' ? 'Pantalla neta' : 'Pantalla limpia');
-  b.onclick = function () {
-    if (!currentVideoSrc) return;
-    var p = $('player');
-    var sep = currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
-    p.src = currentVideoSrc + sep + 'autoplay=1&authuser=0&r=' + Date.now();
-    p.classList.add('active');
-    showToast(LS.lang === 'ca' ? 'Reiniciant sense controls…' : 'Reiniciando sin controles…');
-  };
-  wrap.appendChild(b);
+var gjNote = null, gjNoteT = null;
+function ensureIosNote() {
+  if (gjNote && document.body.contains(gjNote)) return gjNote;
+  var wrap = document.querySelector('.wrap'); if (!wrap) return null;
+  gjNote = document.createElement('div');
+  gjNote.id = 'gjIosNote'; gjNote.className = 'gjnote';
+  gjNote.innerHTML = '<div class="pb">▶</div><div class="tx"></div><div class="sb"></div>';
+  wrap.appendChild(gjNote);
+  return gjNote;
 }
+function showIosNote() {
+  var n = ensureIosNote(); if (!n) return;
+  n.querySelector('.tx').textContent = LS.lang === 'ca' ? 'Toca el vídeo per iniciar-lo' : 'Toca el vídeo para iniciarlo';
+  n.querySelector('.sb').textContent = LS.lang === 'ca'
+    ? 'Si els controls no marxen sols, pausa i torna a reproduir.'
+    : 'Si los controles no se van solos, pausa y vuelve a reproducir.';
+  n.classList.remove('out'); n.classList.add('on');
+  clearTimeout(gjNoteT); gjNoteT = setTimeout(hideIosNote, 3600);
+}
+function hideIosNote() {
+  clearTimeout(gjNoteT);
+  if (!gjNote) return;
+  if (gjNote.classList.contains('on')) { gjNote.classList.add('out'); setTimeout(function () { gjNote.classList.remove('on', 'out'); }, 520); }
+  else gjNote.classList.remove('on', 'out');
+}
+document.addEventListener('touchstart', function () {
+  var m = $('modal');
+  if (m && m.classList.contains('gj-iosnote')) hideIosNote();
+}, { passive: true, capture: true });
 
 function openFullscreenVideo(src) {
   if (!src) { showToast(t().soon); return; }
   currentVideoSrc = src;
-  var player = $('player');
-  var overlay = $('videoOverlay');
-  var modal = $('modal');
+  var player = $('player'), overlay = $('videoOverlay'), modal = $('modal');
   var ios = isIOS();
 
-  /* ANDROID (mòbil i tauleta, també en app instal·lada): pestanya nova */
-  if (!ios && isMobileDevice()) {
-    window.open(src, '_blank');
-    return;
-  }
+  if (!ios && isMobileDevice()) { window.open(src, '_blank'); return; }
 
   pushVideoState();
-  clearTimeout(iosTapTimer);
   document.documentElement.style.zoom = '1';
   modal.classList.add('on', 'show-controls');
-  modal.classList.remove('armed');
-
-  /* El src queda BUIT fins que l'usuari prem el nostre ▶. Així el gest
-     carrega el vídeo amb autoplay i Drive no rep cap toc directe:
-     arrenca sol i amaga els seus controls. */
-  player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  player.src = '';
-  player.classList.remove('active');
 
   if (ios) {
-    modal.classList.add('ios-device', 'ios-tap');
-    ensureCleanBtn();
-    $('overlayText').innerHTML = LS.lang === 'ca'
-      ? '<div style="font-size:19px;font-weight:800;letter-spacing:.01em;margin-bottom:10px;">Toca per reproduir</div>' +
-        '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.65;">El vídeo s\'obrirà a pantalla completa, sense controls.<br>Per sortir, prem la ✕ de dalt a la dreta.</div>'
-      : '<div style="font-size:19px;font-weight:800;letter-spacing:.01em;margin-bottom:10px;">Toca para reproducir</div>' +
-        '<div style="font-size:13.5px;font-weight:500;color:#c3c9d4;line-height:1.65;">El vídeo se abrirá a pantalla completa, sin controles.<br>Para salir, pulsa la ✕ de arriba a la derecha.</div>';
-    overlay.classList.remove('hidden');
+    modal.classList.add('ios-device', 'gj-iosnote');
+    if (overlay) overlay.style.display = 'none';
+    player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
+    player.setAttribute('allowfullscreen', 'true');
+    var sep = src.indexOf('?') >= 0 ? '&' : '?';
+    player.src = src + sep + 'autoplay=1&authuser=0';
+    player.classList.add('active');
+    showIosNote();
   } else {
-    modal.classList.remove('ios-device', 'ios-tap');
-    $('overlayText').textContent = t().overlayText;
-    overlay.classList.remove('hidden');
+    modal.classList.remove('ios-device', 'gj-iosnote');
+    if (overlay) {
+      overlay.style.display = '';
+      $('overlayText').textContent = t().overlayText;
+      overlay.classList.remove('hidden');
+    }
+    player.src = '';
+    player.classList.remove('active');
     var wrap = document.querySelector('.wrap');
     if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
     else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
@@ -4709,10 +4782,6 @@ function openFullscreenVideo(src) {
   window.addEventListener('keydown', function (e) {
     if (e.key === 'Tab' || e.key.indexOf('Arrow') === 0) promote();
   }, { passive: true, capture: true });
-  console.log('🖱️ hover:', mq('(hover: hover)'), '| any-hover:', mq('(any-hover: hover)'),
-              '| pointer:', mq('(pointer: fine)') ? 'fine' : 'coarse',
-              '| touchPoints:', navigator.maxTouchPoints || 0,
-              '| efectes actius:', root.classList.contains('can-hover'));
 })();
 
 (function () {
@@ -4790,11 +4859,11 @@ window.addEventListener('popstate', function () {
   if (videoHistoryGuard) { videoHistoryGuard = false; closeVideoPlayer(true); }
 });
 function closeVideoPlayer(fromPop) {
-  clearTimeout(iosTapTimer);
-  var mm = $('modal');
-  if (mm) { mm.classList.remove('ios-tap', 'ios-device', 'armed'); }
-  var ovv = $('videoOverlay');
-  if (ovv) ovv.classList.remove('hidden');
+  var m = $('modal');
+  if (m) m.classList.remove('gj-iosnote', 'ios-tap', 'ios-device', 'armed');
+  var ov = $('videoOverlay');
+  if (ov) ov.style.display = '';
+  hideIosNote();
   document.documentElement.style.zoom = '';
   try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
   if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen();
@@ -4809,12 +4878,10 @@ var overlayEl = $('videoOverlay');
 if (overlayEl) {
   overlayEl.addEventListener('click', function () {
     var player = $('player');
-    var modal = $('modal');
     if (currentVideoSrc) {
       var sep = currentVideoSrc.indexOf('?') >= 0 ? '&' : '?';
       player.src = currentVideoSrc + sep + 'autoplay=1&authuser=0';
       player.classList.add('active');
-      if (modal.classList.contains('ios-tap')) modal.classList.add('armed');
     }
     this.classList.add('hidden');
   });
@@ -4853,8 +4920,8 @@ function showCloseBtn() {
   hideTimer = setTimeout(function () { modalEl.classList.remove('show-controls'); }, 2500);
 }
 document.addEventListener('mousemove', showCloseBtn);
-document.addEventListener('mouseleave', function () { 
-  if (!isMobileDevice()) modalEl.classList.remove('show-controls'); 
+document.addEventListener('mouseleave', function () {
+  if (!isMobileDevice()) modalEl.classList.remove('show-controls');
 });
 
 /* ================================================================
@@ -5130,41 +5197,6 @@ document.addEventListener('mouseout', function (e) {
   }
 });
 
-function refreshTonal() {
-  if (!LS.user || LS.mode !== 'apps') return;
-  var m = $('modal');
-  if (m && m.classList.contains('on')) return;   /* no interrompre un vídeo */
-  readTonalStats();
-  render();
-}
-window.addEventListener('storage', function (e) {
-  if (e.key && e.key.indexOf('gjps_tonal') === 0) refreshTonal();
-});
-document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshTonal(); });
-window.addEventListener('pageshow', refreshTonal);
-window.addEventListener('focus', refreshTonal);
-/* L'app pot avisar per postMessage quan acaba un TEST */
-window.addEventListener('message', function (e) {
-  var d = e.data;
-  if (!d || typeof d !== 'object') return;
-  if (d.type !== 'gjps:tonal' && d.type !== 'tonal-stats') return;
-  var p = d.stats || d.payload || d;
-  if (!p || !p.best) return;
-  lsSet('gjps_tonal_stats_' + (LS.user || ''), JSON.stringify(p));
-  refreshTonal();
-});
-/* Sondeig lleuger: només mentre la vista Apps és visible i la pestanya activa */
-var tonalPoll = null, tonalSnap = null;
-function startTonalPoll() {
-  if (tonalPoll) clearInterval(tonalPoll);
-  tonalSnap = lsGet('gjps_tonal_stats_' + (LS.user || ''));
-  tonalPoll = setInterval(function () {
-    if (document.hidden || LS.mode !== 'apps') return;
-    var cur = lsGet('gjps_tonal_stats_' + (LS.user || ''));
-    if (cur !== tonalSnap) { tonalSnap = cur; refreshTonal(); }
-  }, 1500);
-}
-
 /* ================================================================
    14. SELECTOR DE NIVELL PERSONALITZAT
    ================================================================ */
@@ -5337,6 +5369,44 @@ function buildLevelPicker() {
   return wrap;
 }
 
+/* ── Nota d'ajuda: reproducció per plataforma (nativa a HELP) ── */
+(function () {
+  if (!window.HELP || !Array.isArray(HELP)) return;
+  for (var i = 0; i < HELP.length; i++) if (HELP[i] && HELP[i].gjios) return;
+  HELP.push({
+    gjios: true,
+    ico: '📱',
+    t: {
+      ca: 'Com es reprodueixen els vídeos (iPhone, iPad, Android i ordinador)',
+      es: 'Cómo se reproducen los vídeos (iPhone, iPad, Android y ordenador)'
+    },
+    p: {
+      ca: '🍎 IPHONE I IPAD\n' +
+         'En prémer ▶ sobre un vídeo, aquest s\'obre dins de la pròpia aula. Veureu un avís breu amb un botó de reproducció: és normal, desapareix sol en pocs segons.\n' +
+         '1. Toqueu la imatge del vídeo una vegada per iniciar-lo. Apple no permet que un vídeo arrenqui sol sense un toc de l\'usuari.\n' +
+         '2. Els controls del reproductor (barra inferior) poden quedar visibles uns instants. Si no marxen sols, feu una pausa i torneu a reproduir: desapareixeran i podreu veure el vídeo a pantalla neta.\n' +
+         '3. Per tancar el vídeo i tornar a l\'aula, premeu la ✕ de dalt a la dreta.\n' +
+         'Si en algun moment el vídeo no respon, tanqueu-lo amb la ✕ i torneu-lo a obrir: es resol sempre sense perdre el vostre progrés.\n\n' +
+         '🤖 ANDROID\n' +
+         'El vídeo s\'obre en una pestanya nova del navegador, a pantalla completa. Per tornar a l\'aula, premeu el botó ENRERE del mòbil o tablet una sola vegada.\n\n' +
+         '💻 ORDINADOR\n' +
+         'El vídeo s\'obre a pantalla completa dins de l\'aula. Feu un clic sobre la imatge per iniciar-lo. Per sortir, premeu la tecla Esc o la ✕ de dalt a la dreta.\n\n' +
+         'En tots els casos el progrés (vídeos completats, notes i repàs) es conserva exactament com estava abans d\'obrir el vídeo.',
+      es: '🍎 IPHONE Y IPAD\n' +
+         'Al pulsar ▶ sobre un vídeo, este se abre dentro de la propia aula. Veréis un aviso breve con un botón de reproducción: es normal, desaparece solo en pocos segundos.\n' +
+         '1. Tocad la imagen del vídeo una vez para iniciarlo. Apple no permite que un vídeo arranque solo sin un toque del usuario.\n' +
+         '2. Los controles del reproductor (barra inferior) pueden quedar visibles unos instantes. Si no se van solos, haced una pausa y volved a reproducir: desaparecerán y podréis ver el vídeo a pantalla limpia.\n' +
+         '3. Para cerrar el vídeo y volver al aula, pulsad la ✕ de arriba a la derecha.\n' +
+         'Si en algún momento el vídeo no responde, cerradlo con la ✕ y volved a abrirlo: se resuelve siempre sin perder vuestro progreso.\n\n' +
+         '🤖 ANDROID\n' +
+         'El vídeo se abre en una pestaña nueva del navegador, a pantalla completa. Para volver al aula, pulsad el botón ATRÁS del móvil o tablet una sola vez.\n\n' +
+         '💻 ORDINADOR\n' +
+         'El vídeo se abre a pantalla completa dentro del aula. Haced un clic sobre la imagen para iniciarlo. Para salir, pulsad la tecla Esc o la ✕ de arriba a la derecha.\n\n' +
+         'En todos los casos el progreso (vídeos completados, notas y repaso) se conserva exactamente como estaba antes de abrir el vídeo.'
+    }
+  });
+})();
+
 /* ================================================================
    15. ARRENCADA
    ================================================================ */
@@ -5355,27 +5425,16 @@ try {
   lsSet('gjps_mode', LS.mode);
   readTonalStats();
   startTonalPoll();
-  render();  
+  render();
 } catch (e) {
   var f = document.getElementById('fatal');
   f.style.display = 'block';
-  f.textContent = '️ Error init: ' + e.message;
+  f.textContent = '⚠️ Error init: ' + e.message;
 }
 </script>
 
-<div id="appVer"></div>
-
-<div class="lgin" id="faqModal">
-  <div class="lbox" style="width:min(600px,90vw);max-height:85vh;overflow-y:auto;text-align:left;padding:24px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px;">
-      <h2 style="margin:0;font-size:18px;color:var(--gold);">Preguntes Freqüents</h2>
-      <button onclick="$('faqModal').classList.remove('on')" style="background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;line-height:1;">✕</button>
-    </div>
-    <div id="faqGuestContent"></div>
-  </div>
-</div>
-
 <script>
+/* ═══ GJPS · PWA (manifest + service worker) ═══ */
 (function () {
   var ua = navigator.userAgent;
   var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
@@ -5432,16 +5491,120 @@ try {
   }
 })();
 </script>
-<button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border-color: var(--line); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; color: var(--mut); cursor: pointer; opacity: 0.65; transition: opacity 0.2s; padding: 0px;" title="Tema: Fosc · Clica per passar a Blau nit" aria-label="Tema: Fosc · Clica per passar a Blau nit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button>
+
+<script>
+/* ═══ GJPS · SELECTOR D'IDIOMA DE PRIMERA VISITA · neutral ═══ */
+(function () {
+  'use strict';
+  var KEY = 'gjps_lang';
+  var GLOBE = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z"/></svg>';
+  var gate = null, opts = [];
+
+  function has() { try { return !!localStorage.getItem(KEY); } catch (e) { return true; } }
+
+  function build() {
+    if (gate) return;
+    gate = document.createElement('div');
+    gate.className = 'lgate';
+    gate.id = 'langGate';
+    gate.setAttribute('role', 'dialog');
+    gate.setAttribute('aria-modal', 'true');
+    gate.setAttribute('aria-label', 'Tria el teu idioma · Elige tu idioma');
+    gate.innerHTML =
+      '<div class="lgate-bg"></div><div class="lgate-grain"></div><div class="lgate-keys"></div>' +
+      '<div class="lgate-card">' +
+        '<div class="lgate-brand">GIRONA JAZZ PIANO SCHOOL<sup>®</sup></div>' +
+        '<div class="lgate-globe">' + GLOBE + '</div>' +
+        '<div class="lgate-prompt"><span>Tria el teu idioma</span><i></i><span>Elige tu idioma</span></div>' +
+        '<div class="lgate-opts">' +
+          '<button type="button" class="lgate-opt" data-lang="ca">' +
+            '<span class="lgate-code">CA</span>' +
+            '<span class="lgate-txt"><span class="lgate-name">Català</span>' +
+            '<span class="lgate-hello">Benvingut/da</span></span>' +
+          '</button>' +
+          '<button type="button" class="lgate-opt" data-lang="es">' +
+            '<span class="lgate-code">ES</span>' +
+            '<span class="lgate-txt"><span class="lgate-name">Español</span>' +
+            '<span class="lgate-hello">Bienvenido/a</span></span>' +
+          '</button>' +
+        '</div>' +
+        '<div class="lgate-foot">' +
+          '<b>Pots canviar-lo en qualsevol moment</b><br>' +
+          'Podrás cambiarlo en cualquier momento' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(gate);
+    opts = Array.prototype.slice.call(gate.querySelectorAll('.lgate-opt'));
+    opts.forEach(function (b) { b.addEventListener('click', function () { pick(b); }); });
+    gate.addEventListener('keydown', onKey);
+  }
+
+  function onKey(e) {
+    var i = opts.indexOf(document.activeElement);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); opts[(i + 1 + opts.length) % opts.length].focus(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); opts[(i - 1 + opts.length) % opts.length].focus(); }
+    else if (e.key === '1') { e.preventDefault(); pick(opts[0]); }
+    else if (e.key === '2') { e.preventDefault(); pick(opts[1]); }
+    else if (e.key === 'Escape') { e.preventDefault(); }
+  }
+
+  function pick(btn) {
+    if (!btn) return;
+    var lang = btn.dataset.lang;
+    btn.classList.add('pick');
+    opts.forEach(function (b) { b.disabled = true; });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+    if (typeof LS !== 'undefined') LS.lang = lang;
+    setTimeout(function () {
+      if (typeof loadDone === 'function') loadDone();
+      if (typeof loadSkip === 'function') loadSkip();
+      if (typeof setLabels === 'function') setLabels();
+      close();
+      var logged = (typeof LS !== 'undefined') && LS.user;
+      if (logged && typeof render === 'function') render();
+      else if (typeof showLogin === 'function') showLogin();
+      if (typeof showToast === 'function') {
+        showToast(lang === 'ca' ? 'Idioma: Català' : 'Idioma: Español', 1800);
+      }
+    }, 260);
+  }
+
+  function open() {
+    build();
+    window.__gjpsLangPending = true;
+    gate.classList.remove('out');
+    gate.classList.add('on');
+    opts.forEach(function (b) { b.disabled = false; b.classList.remove('pick'); });
+    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+    setTimeout(function () { opts[0].focus(); }, 220);
+    setTimeout(function () {
+      try { if (document.activeElement && $('lgName') === document.activeElement) document.activeElement.blur(); } catch (e) {}
+      opts[0].focus();
+    }, 420);
+  }
+
+  function close() {
+    window.__gjpsLangPending = false;
+    if (!gate) return;
+    gate.classList.add('out');
+    setTimeout(function () { gate.classList.remove('on', 'out'); }, 380);
+  }
+
+  function boot() { if (!has()) open(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  window.GJPSLang = { open: open, close: close, chosen: has };
+})();
+</script>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · GESTIÓ DE NIVELLS (integrat)  v1.2
-   CA i ES són DOS CURSOS INDEPENDENTS: cada vídeo nou pertany a un sol idioma,
-   i títol/descripció/enllaç/importància es desen a OV.t / OV.d / OV.l / OV.imp
-   amb clau d'idioma, igual que els vídeos llegats. L'ordre (OV.order) i els
-   fets (LS.done) ja eren per idioma, així que la independència és total.
-   Novetat v1.2: eliminar vídeos (llegats o nous) es desa per idioma via OV.del.
+   GJPS · GESTOR DE NIVELLS + PUBLICACIONS PROGRAMADES  v2.0 (unificat)
+   CA i ES són DOS CURSOS INDEPENDENTS. Les publicacions (OV.pub) i les
+   recomanacions excloses (OV.rec) viuen dins d'aquest mateix mòdul:
+   · «Mai»  → el vídeo no entra mai al Seguiment Continuat (sí a Navegació).
+   · «Programada» → avís destacat amb dates dins del Seguiment Continuat.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
@@ -5450,6 +5613,7 @@ var B5 = ['t', 'g', 'r', 'a', 'p'];
 var MAX_LVL = 6;
 var CTX = 1;
 function ca() { return LS.lang === 'ca'; }
+function L(c, e) { return ca() ? c : e; }
 function lvKey(l) { return String(l); }
 function el(tag, cls, html) {
   var n = document.createElement(tag);
@@ -5458,6 +5622,7 @@ function el(tag, cls, html) {
   return n;
 }
 
+/* ── Nivells ── */
 function videoLevel(id) {
   if (isGiftId(id)) return -1;
   var si = parseInt(String(id).split('.')[0], 10);
@@ -5478,14 +5643,14 @@ function levelObj(l) {
 function levelName(l) {
   var o = OV.lnm && OV.lnm[lvKey(l)];
   if (o && o[LS.lang]) return o[LS.lang];
-  var L = levelObj(l);
-  return L ? L.n[LS.lang] : (ca() ? 'Nivell ' + l : 'Nivel ' + l);
+  var Lv = levelObj(l);
+  return Lv ? Lv.n[LS.lang] : (ca() ? 'Nivell ' + l : 'Nivel ' + l);
 }
 function levelActive(l) {
   var v = OV.lv && OV.lv[lvKey(l)];
   if (typeof v === 'boolean') return v;
-  var L = levelObj(l);
-  return !!(L && L.active);
+  var Lv = levelObj(l);
+  return !!(Lv && Lv.active);
 }
 function levelState(l) {
   var s = OV.lst && OV.lst[lvKey(l)];
@@ -5499,13 +5664,9 @@ function activeLevels() {
   for (var l = 0; l <= MAX_LVL; l++) if (levelActive(l)) out.push(l);
   return out;
 }
-function seqMode(l) {
-  var m = OV.seq && OV.seq[lvKey(l)];
-  if (m === 'blocks' || m === 'order') return m;
-  return l <= 1 ? 'order' : 'blocks';
-}
+function seqMode(l) { return 'order'; }
 function ensureSections() {
-  var l, k, si, unit, L, o, st;
+  var l, k, si, unit, Lv, o, st;
   for (l = 2; l <= MAX_LVL; l++) {
     si = 6 + l;
     if (D[si]) continue;
@@ -5514,15 +5675,15 @@ function ensureSections() {
     D[si] = { n: { ca: levelName(l), es: levelName(l) }, u: [unit], _synthetic: true };
   }
   for (k = 0; k <= MAX_LVL; k++) {
-    L = levelObj(k);
-    if (!L) continue;
-    L.active = levelActive(k);
+    Lv = levelObj(k);
+    if (!Lv) continue;
+    Lv.active = levelActive(k);
     o = OV.lnm && OV.lnm[lvKey(k)];
-    if (o) { if (o.ca) L.n.ca = o.ca; if (o.es) L.n.es = o.es; }
+    if (o) { if (o.ca) Lv.n.ca = o.ca; if (o.es) Lv.n.es = o.es; }
     st = levelState(k);
-    L.wip = (st === 'wip');
-    L.pending = (st === 'soon');
-    if (D[6 + k]) D[6 + k].n = { ca: L.n.ca, es: L.n.es };
+    Lv.wip = (st === 'wip');
+    Lv.pending = (st === 'soon');
+    if (D[6 + k]) D[6 + k].n = { ca: Lv.n.ca, es: Lv.n.es };
   }
 }
 
@@ -5682,8 +5843,64 @@ function allImpDone(ids) {
   if (imp.length === 0) return true;
   return imp.every(function (id) { return !!LS.done[id]; });
 }
+
+/* ── Publicacions: model ── */
+function pubs() { if (!Array.isArray(OV.pub)) OV.pub = []; return OV.pub; }
+function recMode(id) {
+  if (getVideoImportance(id) === 'important') return 'auto';
+  return (OV.rec && OV.rec[id + ':' + LS.lang]) === 'never' ? 'never' : 'auto';
+}
+function setRec(id, mode) {
+  OV.rec = OV.rec || {};
+  if (mode === 'never') OV.rec[id + ':' + LS.lang] = 'never';
+  else delete OV.rec[id + ':' + LS.lang];
+}
+function pubOfVid(vid) {
+  var a = pubs();
+  for (var i = 0; i < a.length; i++) if (a[i].kind === 'video' && a[i].vid === vid && a[i].lang === LS.lang) return a[i];
+  return null;
+}
+function pubById(id) { var a = pubs(); for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
+function pubUpsert(p) {
+  var a = pubs();
+  for (var i = 0; i < a.length; i++) if (a[i].id === p.id) { a[i] = p; return; }
+  a.push(p);
+}
+function pubRemove(id) { OV.pub = pubs().filter(function (p) { return p.id !== id; }); }
+function pubState(p) {
+  if (!p.active) return 'off';
+  var t = todayStr();
+  if (p.from && t < p.from) return 'soon';
+  if (p.to && t > p.to) return 'off';
+  return 'live';
+}
+function pad2(n) { return (n < 10 ? '0' : '') + n; }
+function todayStr() { var d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function niceDate(s) {
+  if (!s) return '';
+  var p = String(s).split('-');
+  if (p.length < 3) return s;
+  var MES = ca()
+    ? ['gener','febrer','març','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre']
+    : ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return parseInt(p[2], 10) + ' ' + MES[parseInt(p[1], 10) - 1] + ' ' + p[0];
+}
+function pubUid() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function liveFor(lvl) {
+  return pubs().filter(function (p) {
+    if (p.lang !== LS.lang || pubState(p) !== 'live') return false;
+    if (p.lvl !== -1 && p.lvl !== lvl) return false;
+    if (LS.done['pub:' + p.id]) return false;
+    if (pubHidden[p.id]) return false;
+    if (p.kind === 'video' && !findVidById(p.vid)) return false;
+    return true;
+  });
+}
+var pubHidden = {};
+
+/* ── Selecció del següent vídeo (respecta «Mai») ── */
 function pickFrom(ids) {
-  var pool = withLink(ids);
+  var pool = withLink(ids).filter(function (id) { return recMode(id) !== 'never'; });
   if (!pool.length) return null;
   var skipped = LS.skipped || [];
   LS.skipAfter = LS.skipAfter || {};
@@ -5723,7 +5940,7 @@ function trackContext() {
           if (parseInt(id.split('.')[0], 10) === si && !isGiftId(id)) ids.push(id);
         });
       });
-      pend = withLink(ids).filter(function (id) { return !LS.done[id]; });
+      pend = withLink(ids).filter(function (id) { return !LS.done[id] && recMode(id) !== 'never'; });
       if (pend.length) return { level: l, block: vidBlockById(pend[0]), mode: 'order', ids: ids };
       continue;
     }
@@ -5732,7 +5949,7 @@ function trackContext() {
       seq = withLink(blockSeq(l, b));
       if (!seq.length) continue;
       if (!allImpDone(seq)) return { level: l, block: b, mode: 'blocks', ids: seq, index: j };
-      if (j === 0 && seq.some(function (id) { return !LS.done[id]; })) return { level: l, block: b, mode: 'blocks', ids: seq, index: j };
+      if (j === 0 && seq.some(function (id) { return !LS.done[id] && recMode(id) !== 'never'; })) return { level: l, block: b, mode: 'blocks', ids: seq, index: j };
     }
   }
   return null;
@@ -5745,7 +5962,7 @@ window.findNext = function () {
     got = pickFrom(ctx.ids || blockSeq(ctx.level, ctx.block));
     if (got) return got;
   }
-  rest = orderList().filter(function (id) { return !isGiftId(id) && !LS.done[id]; });
+  rest = orderList().filter(function (id) { return !isGiftId(id) && !LS.done[id] && recMode(id) !== 'never'; });
   v = pickFrom(rest);
   if (v) return v;
   return null;
@@ -5806,12 +6023,15 @@ window.collectAll = function () {
 };
 document.addEventListener('keydown', function (e) {
   if (e.key !== 'Escape') return;
+  var pm = $('pubModal');
+  if (pm && pm.classList.contains('on')) { pm.classList.remove('on'); e.stopPropagation(); return; }
   var cm = $('cmModal');
   if (cm && cm.classList.contains('on')) { closeManager(); e.stopPropagation(); return; }
   var vf = $('vfModal');
   if (vf && vf.classList.contains('on')) { vf.classList.remove('on'); e.stopPropagation(); }
 }, true);
 
+/* ── Gestor: obertura / tancament / idioma ── */
 var mgrLevel = 1;
 function openManager() {
   if (currentUserRole() !== 'admin') return;
@@ -5846,7 +6066,6 @@ function closeManager() {
   rebuild();
   render();
 }
-/* Commuta l'idioma de tot el web sense sortir del gestor */
 function switchLangInManager(lang) {
   if (!lang || LS.lang === lang) return;
   if (editModeOn) collectAll();
@@ -5855,13 +6074,12 @@ function switchLangInManager(lang) {
   loadDone();
   loadSkip();
   setLabels();
-  var vf = $('vfModal');
-  if (vf) vf.classList.remove('on');
+  var vf = $('vfModal'); if (vf) vf.classList.remove('on');
+  var pm = $('pubModal'); if (pm) pm.classList.remove('on');
   render();
   applyManagerLang();
   paintManager();
 }
-/* Refresca els textos estàtics del gestor al idioma actiu */
 function applyManagerLang() {
   var h3 = document.querySelector('#cmModal .cm-head h3');
   if (h3) h3.textContent = ca() ? 'Gestor del curs' : 'Gestor del curso';
@@ -5877,6 +6095,16 @@ function stateIcon(l) {
   if (s === 'soon') return '⏳';
   return '';
 }
+function countDeleted(lv) {
+  var n = 0;
+  if (!OV.del) return 0;
+  Object.keys(OV.del).forEach(function (id) {
+    if (OV.del[id] && OV.del[id][LS.lang] && videoLevel(id) === lv) n++;
+  });
+  return n;
+}
+
+/* ── Gestor: pintat (amb publicacions integrades, sense observers) ── */
 function paintManager() {
   var side = $('cmSide');
   var main = $('cmMain');
@@ -5920,7 +6148,7 @@ function paintManager() {
     : "Cada idioma se gestiona por separado: lo que edites ahora solo afecta al curso en " + (ca() ? 'catalán' : 'castellano') + ". «Publicado» controla la navegación; el estado solo cambia el icono del listado.";
 
   var h = '<div class="cm-lvhead"><div class="cm-two">' +
-    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (CA)' : 'Nombre del nivel (CA') + ')</span>' +
+    '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (CA)' : 'Nombre del nivel (CA)') + ')</span>' +
     '<input data-lvnm="ca" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].ca) || levelObj(l).n.ca) + '"></label>' +
     '<label class="cm-fld"><span>' + (ca() ? 'Nom del nivell (ES)' : 'Nombre del nivel (ES)') + '</span>' +
     '<input data-lvnm="es" value="' + esc((OV.lnm && OV.lnm[lvKey(l)] && OV.lnm[lvKey(l)].es) || levelObj(l).n.es) + '"></label>' +
@@ -5934,11 +6162,8 @@ function paintManager() {
 
   if (l >= 1) {
     h += '<div class="cm-note">' + (ca()
-      ? "<b>Seqüenciació.</b> «Per blocs» no serveix el bloc següent fins que tots els ⭐ importants de l'anterior estan fets. «Ordre del curs» respecta l'itinerari entrellaçat."
-      : "<b>Secuenciación.</b> «Por bloques» no sirve el bloque siguiente hasta que todos los ⭐ importantes del anterior están hechos. «Orden del curso» respeta el itinerario entrelazado.") + '</div>';
-    h += '<div class="cm-seg" id="cmSeq">' +
-      '<button data-seq="order"' + (seqMode(l) === 'order' ? ' class="on"' : '') + '>' + (ca() ? 'Ordre del curs' : 'Orden del curso') + '</button>' +
-      '<button data-seq="blocks"' + (seqMode(l) === 'blocks' ? ' class="on"' : '') + '>' + (ca() ? 'Per blocs' : 'Por bloques') + '</button></div>';
+      ? "<b>Itinerari.</b> El Seguiment Continuat d'aquest nivell segueix sempre l'ordre del curs (entrellaçat entre blocs). No hi ha bloqueig per blocs: els ⭐ importants continuen sent els que marquen el progrés i la graduació."
+      : "<b>Itinerario.</b> El Seguimiento Continuo de este nivel sigue siempre el orden del curso (entrelazado entre bloques). No hay bloqueo por bloques: los ⭐ importantes siguen siendo los que marcan el progreso y la graduación.") + '</div>';
   }
 
   var blocks = (l === 0) ? ['w'] : B5;
@@ -5963,11 +6188,18 @@ function paintManager() {
       var nv = nvIndexOf(id);
       var isNew = !!(nv && nv.lang === LS.lang);
       var link = !!driveSrc(v.v, id);
+      var hasPub = !!pubOfVid(id);
+      var isNever = recMode(id) === 'never';
+      var pubCls = hasPub ? ' sched' : (isNever ? ' never' : '');
+      var pubTtl = hasPub ? L('Publicació programada', 'Publicación programada')
+                 : isNever ? L('Mai recomanat', 'Nunca recomendado')
+                 : L('Recomanació / publicació', 'Recomendación / publicación');
       h += '<div class="cm-vrow">' +
         '<span class="cm-vn">' + (i + 1) + '</span>' +
         '<span class="cm-vt">' + esc(vidTitle(v.v, id)) + '</span>' +
         '<span class="cm-vl' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
         (isNew ? '<span class="cm-vnew">' + (ca() ? 'nou' : 'nuevo') + '</span>' : '') +
+        '<button class="cm-ib pubrowbtn' + pubCls + '" data-pub="' + id + '" title="' + pubTtl + '">🗓</button>' +
         '<button class="cm-ib" data-imp="' + id + '" title="' + (ca() ? 'Important / opcional' : 'Importante / opcional') + '">' + (isImp(id) ? '⭐' : '☆') + '</button>' +
         '<button class="cm-ib" data-edit="' + id + '" title="' + (ca() ? 'Edita' : 'Edita') + '">✎</button>' +
         '<button class="cm-ib" data-up="' + id + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
@@ -5978,6 +6210,26 @@ function paintManager() {
     if (b !== 'w') h += '<button class="cm-add" data-add="' + l + '|' + b + '">＋ ' + (ca() ? 'Afegir vídeo (' + LS.lang.toUpperCase() + ')' : 'Añadir vídeo (' + LS.lang.toUpperCase() + ')') + '</button>';
     h += '</div></div>';
   });
+
+  /* Targeta de publicacions del nivell */
+  var plist = pubs().filter(function (p) { return p.lang === LS.lang && (p.lvl === l || p.lvl === -1); });
+  h += '<div class="cm-blk pubcard-mgr"><div class="cm-bh"><div class="cm-btitle">🗓 ' +
+    L('Publicacions programades', 'Publicaciones programadas') + '</div><div class="cm-bmeta">' + plist.length + '</div></div><div class="cm-vlist">';
+  if (!plist.length) h += '<div class="cm-empty">' + L('Cap publicació en aquest nivell.', 'Ninguna publicación en este nivel.') + '</div>';
+  plist.forEach(function (p) {
+    var st = pubState(p), v = p.kind === 'video' ? findVidById(p.vid) : null;
+    var title = p.kind === 'video' ? (v ? vidTitle(v.v, p.vid) : L('vídeo eliminat', 'vídeo eliminado')) : p.t;
+    var win = (p.from ? niceDate(p.from) : L('ara', 'ahora')) + ' → ' + (p.to ? niceDate(p.to) : '∞');
+    var lbl = st === 'live' ? L('En curs', 'En curso') : st === 'soon' ? L('Properament', 'Próximamente') : L('Inactiva', 'Inactiva');
+    h += '<div class="pubmrow"><span class="ic">' + (p.kind === 'video' ? '🎬' : '🎼') + '</span>' +
+      '<span class="tx"><b>' + esc(title) + '</b><span>' +
+      esc((p.label ? p.label + ' · ' : '') + win + (p.lvl === -1 ? ' · ' + L('tots els nivells', 'todos los niveles') : '')) +
+      '</span></span><span class="pubstat ' + st + '">' + lbl + '</span>' +
+      '<button class="cm-ib" data-pedit="' + p.id + '">✎</button>' +
+      '<button class="cm-ib d" data-pdel="' + p.id + '">🗑</button></div>';
+  });
+  h += '<button class="cm-add" id="pubAdd">＋ ' + L('Nova publicació', 'Nueva publicación') + '</button></div></div>';
+
   main.innerHTML = h;
 
   main.querySelectorAll('[data-lvnm]').forEach(function (inp) {
@@ -6010,14 +6262,7 @@ function paintManager() {
       showToast(ico + levelName(l));
     };
   });
-  var seg = $('cmSeq');
-  if (seg) seg.querySelectorAll('[data-seq]').forEach(function (btn) {
-    btn.onclick = function () {
-      OV.seq = OV.seq || {};
-      OV.seq[lvKey(l)] = btn.dataset.seq;
-      paintManager();
-    };
-  });
+  /* Seqüenciació fixa: sempre ordre del curs. Sense selector. */
   main.querySelectorAll('[data-bn]').forEach(function (inp) {
     inp.onchange = function () {
       var p = inp.dataset.bn.split('|');
@@ -6070,16 +6315,28 @@ function paintManager() {
       showToast(ca() ? '🗑 Vídeo eliminat de ' + LS.lang.toUpperCase() : '🗑 Vídeo eliminado de ' + LS.lang.toUpperCase());
     };
   });
-}
-function countDeleted(lv) {
-  var n = 0;
-  if (!OV.del) return 0;
-  Object.keys(OV.del).forEach(function (id) {
-    if (OV.del[id] && OV.del[id][LS.lang] && videoLevel(id) === lv) n++;
+  /* Publicacions */
+  main.querySelectorAll('[data-pub]').forEach(function (btn) {
+    btn.onclick = function () { openPubForm({ lvl: l, vid: btn.dataset.pub }); };
   });
-  return n;
+  var pa = $('pubAdd');
+  if (pa) pa.onclick = function () { openPubForm({ lvl: l }); };
+  main.querySelectorAll('[data-pedit]').forEach(function (btn) {
+    btn.onclick = function () { var p = pubById(btn.dataset.pedit); if (p) openPubForm({ lvl: l, pub: p }); };
+  });
+  main.querySelectorAll('[data-pdel]').forEach(function (btn) {
+    btn.onclick = function () {
+      if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
+      var p = pubById(btn.dataset.pdel);
+      if (p && p.kind === 'video' && p.vid) setRec(p.vid, 'auto');
+      pubRemove(btn.dataset.pdel);
+      render(); paintManager();
+      showToast(L('Publicació eliminada', 'Publicación eliminada'));
+    };
+  });
 }
 
+/* ── Formulari de vídeo ── */
 var vfCtx = null;
 function openVideoForm(id, l, b) {
   var lang = LS.lang;
@@ -6141,6 +6398,239 @@ function openVideoForm(id, l, b) {
   setTimeout(function () { $('vfT').focus(); }, 50);
 }
 
+/* ── Publicacions: visor de documents ── */
+function openPubDoc(link) {
+  var id = parseDriveId(link);
+  if (!id) { showToast(L('Aquest document no té enllaç.', 'Este documento no tiene enlace.')); return; }
+  var view = 'https://drive.google.com/file/d/' + id + '/view';
+  if (!isIOS() && isMobileDevice() && !isStandaloneApp()) { window.open(view, '_blank'); return; }
+  var src = 'https://drive.google.com/file/d/' + id + '/preview';
+  currentVideoSrc = src;
+  pushVideoState();
+  document.documentElement.style.zoom = '1';
+  var m = $('modal'), p = $('player'), ov = $('videoOverlay');
+  m.classList.add('on', 'show-controls');
+  m.classList.remove('ios-device', 'ios-tap', 'gj-iosnote');
+  if (ov) ov.classList.add('hidden');
+  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
+  p.src = src; p.classList.add('active');
+  if (!isMobileDevice() && !isStandaloneApp()) {
+    var w = document.querySelector('.wrap');
+    if (w && w.requestFullscreen) w.requestFullscreen().catch(function () {});
+  }
+  showCloseBtn();
+}
+
+/* ── Publicacions: banner al Seguiment Continuat ── */
+function pubSeenKey() { return 'gjps_pubseen_' + (LS.user || '') + '_' + LS.lang; }
+function pubBanner() {
+  var ctx = trackContext();
+  var lvl = ctx ? ctx.level : (activeLevels().slice(-1)[0] || 1);
+  var list = liveFor(lvl);
+  if (!list.length) return null;
+  var box = document.createElement('div');
+  box.className = 'pubcard';
+  var h = '<div class="pubhead"><span class="t">' + L('Publicacions especials', 'Publicaciones especiales') +
+          '</span><span class="n">' + list.length + '</span></div>';
+  list.forEach(function (p) {
+    var isV = p.kind === 'video';
+    var v = isV ? findVidById(p.vid) : null;
+    var title = isV ? (v ? vidTitle(v.v, p.vid) : '') : (p.t || '');
+    var desc = isV ? (v ? vidDesc(v.v, p.vid, videoLevel(p.vid) === 0 ? 'w' : 'p') : '') : (p.d || '');
+    var badge = isV ? '🎬' : '🎼';
+    var win = p.to ? L('Disponible fins al ', 'Disponible hasta el ') + niceDate(p.to)
+                 : L('Disponible per temps limitat', 'Disponible por tiempo limitado');
+    h += '<div class="pubitem">' +
+      '<div class="pubbadge">' + badge + '</div><div class="pubbody">' +
+      (p.label ? '<span class="publabel">' + esc(p.label) + '</span>' : '') +
+      '<div class="pubtitle">' + esc(title) + '</div>' +
+      (desc ? '<div class="pubdesc">' + esc(desc) + '</div>' : '') +
+      '<div class="pubmeta">🗓 ' + esc(win) + '</div>' +
+      '<div class="pubacts">' +
+        '<button class="go" data-pubopen="' + p.id + '">' + (isV ? '▶ ' + L('Reprodueix', 'Reproducir') : '📄 ' + L('Obre la partitura', 'Abre la partitura')) + '</button>' +
+        '<button class="ok" data-pubdone="' + p.id + '">✔ ' + L('Fet', 'Hecho') + '</button>' +
+        '<button data-publater="' + p.id + '">⏭ ' + L('Ara no', 'Ahora no') + '</button>' +
+      '</div></div></div>';
+  });
+  box.innerHTML = h;
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pubopen],[data-pubdone],[data-publater]');
+    if (!b) return;
+    var p;
+    if (b.dataset.pubopen) {
+      p = pubById(b.dataset.pubopen); if (!p) return;
+      if (p.kind === 'video') {
+        var v = findVidById(p.vid);
+        var src = v ? driveSrc(v.v, p.vid) : null;
+        if (src) openFullscreenVideo(src);
+        else showToast(L('Aquest vídeo encara no té enllaç.', 'Este vídeo aún no tiene enlace.'));
+      } else openPubDoc(p.l);
+    } else if (b.dataset.pubdone) {
+      LS.done['pub:' + b.dataset.pubdone] = 1; saveDone(); render();
+      showToast(L('✔ Publicació marcada com a feta', '✔ Publicación marcada como hecha'));
+    } else if (b.dataset.publater) {
+      pubHidden[b.dataset.publater] = 1; render();
+    }
+  });
+  try {
+    var seen = lsJSON(pubSeenKey(), {}), t = todayStr(), fresh = null;
+    list.forEach(function (p) { if (seen[p.id] !== t && !fresh) fresh = p; seen[p.id] = t; });
+    lsSet(pubSeenKey(), JSON.stringify(seen));
+    if (fresh) {
+      var v2 = fresh.kind === 'video' ? findVidById(fresh.vid) : null;
+      var ttl = fresh.kind === 'video' ? (v2 ? vidTitle(v2.v, fresh.vid) : '') : fresh.t;
+      showToast('🗓 ' + (fresh.label ? fresh.label + ' · ' : '') + ttl, 4200);
+    }
+  } catch (e) {}
+  return box;
+}
+
+/* ── Publicacions: formulari ── */
+var pubCtx = null;
+function levelVids(l) {
+  var out = [], bs = (l === 0) ? ['w'] : B5;
+  bs.forEach(function (b) {
+    blockSeq(l, b).forEach(function (id) { out.push({ id: id, b: b }); });
+  });
+  return out;
+}
+function openPubForm(opts) {
+  opts = opts || {};
+  var lvl = opts.lvl != null ? opts.lvl : mgrLevel;
+  var p = opts.pub ? JSON.parse(JSON.stringify(opts.pub)) : null;
+  var vid = opts.vid || (p && p.kind === 'video' ? p.vid : '');
+  var kind = p ? p.kind : (vid ? 'video' : 'doc');
+  var mode = p ? 'sched' : (vid ? (pubOfVid(vid) ? 'sched' : recMode(vid)) : 'sched');
+  if (vid && !p && pubOfVid(vid)) p = JSON.parse(JSON.stringify(pubOfVid(vid)));
+  pubCtx = { lvl: lvl, vid: vid, kind: kind, mode: mode === 'never' ? 'never' : (mode === 'auto' ? 'auto' : 'sched'), pub: p };
+  var m = $('pubModal');
+  if (!m) { m = document.createElement('div'); m.className = 'cm-scrim'; m.id = 'pubModal'; document.body.appendChild(m); }
+  paintPubForm();
+  m.classList.add('on');
+}
+function paintPubForm() {
+  var m = $('pubModal'), c = pubCtx, p = c.pub || {};
+  var isV = c.kind === 'video';
+  var vs = levelVids(c.lvl);
+  var h = '<div class="cm-box sm"><div class="cm-head"><h3>' +
+    (p.id ? L('Edita la publicació', 'Edita la publicación') : L('Nova publicació', 'Nueva publicación')) +
+    '</h3><button class="cm-x" id="pubX">✕</button></div><div class="cm-scroll">' +
+    '<div class="cm-note"><b>' + esc(levelName(c.lvl)) + '</b> · ' + LS.lang.toUpperCase() + '</div>';
+
+  if (!p.id) {
+    h += '<div class="cm-fld"><span>' + L('Tipus', 'Tipo') + '</span><div class="cm-seg" id="pubKind">' +
+      '<button data-k="video"' + (isV ? ' class="on"' : '') + '>🎬 ' + L('Vídeo existent', 'Vídeo existente') + '</button>' +
+      '<button data-k="doc"' + (!isV ? ' class="on"' : '') + '>🎼 ' + L('Només document', 'Solo documento') + '</button>' +
+      '</div></div>';
+  }
+  if (isV) {
+    h += '<div class="cm-fld"><span>' + L('Vídeo', 'Vídeo') + '</span><select id="pubVid" class="pubvlist" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);font-family:inherit;font-size:13px">';
+    if (!vs.length) h += '<option value="">—</option>';
+    vs.forEach(function (o) {
+      var v = findVidById(o.id); if (!v) return;
+      var imp = getVideoImportance(o.id) === 'important';
+      h += '<option value="' + o.id + '"' + (o.id === c.vid ? ' selected' : '') + '>' +
+        esc(blockNames(c.lvl, LS.lang)[o.b] + ' · ' + vidTitle(v.v, o.id) + (imp ? ' ⭐' : ' ☆')) + '</option>';
+    });
+    h += '</select><div class="cm-hint">' + L('Tria un vídeo opcional (☆). Els importants sempre formen part de l\'itinerari.', 'Elige un vídeo opcional (☆). Los importantes siempre forman parte del itinerario.') + '</div></div>';
+    h += '<div class="cm-fld"><span>' + L('Com es recomana', 'Cómo se recomienda') + '</span><div class="cm-seg" id="pubMode">' +
+      '<button data-m="auto"' + (c.mode === 'auto' ? ' class="on"' : '') + '>' + L('Automàtica', 'Automática') + '</button>' +
+      '<button data-m="never"' + (c.mode === 'never' ? ' class="on"' : '') + '>' + L('Mai', 'Nunca') + '</button>' +
+      '<button data-m="sched"' + (c.mode === 'sched' ? ' class="on"' : '') + '>🗓 ' + L('Programada', 'Programada') + '</button>' +
+      '</div><div class="cm-hint">' + L('«Mai» el treu de l\'itinerari per sempre. «Programada» el treu i només l\'avisa dins les dates.', '«Nunca» lo saca del itinerario para siempre. «Programada» lo saca y solo lo avisa dentro de las fechas.') + '</div></div>';
+  } else {
+    h += '<label class="cm-fld"><span>' + L('Títol del document', 'Título del documento') + '</span><input id="pubT" value="' + esc(p.t || '') + '"></label>' +
+      '<label class="cm-fld"><span>' + L('Descripció', 'Descripción') + '</span><textarea id="pubD">' + esc(p.d || '') + '</textarea></label>' +
+      '<label class="cm-fld"><span>' + L('Enllaç de Google Drive (ID o URL)', 'Enlace de Google Drive (ID o URL)') + '</span><input id="pubL" value="' + esc(p.l || '') + '" placeholder="1B0keL0UC…"></label>';
+  }
+  if (!isV || c.mode === 'sched') {
+    h += '<label class="cm-fld"><span>' + L('Etiqueta destacada', 'Etiqueta destacada') + '</span><input id="pubLab" value="' + esc(p.label || '') + '" placeholder="' + L('🎄 Nadales', '🎄 Villancicos') + '"></label>' +
+      '<div class="cm-two">' +
+      '<label class="cm-fld"><span>' + L('Des del dia', 'Desde el día') + '</span><input id="pubFrom" type="date" value="' + esc(p.from || '') + '"></label>' +
+      '<label class="cm-fld"><span>' + L('Fins al dia', 'Hasta el día') + '</span><input id="pubTo" type="date" value="' + esc(p.to || '') + '"></label>' +
+      '</div><div class="cm-hint">' + L('Deixa «Des del dia» buit per activar-la ja. Deixa «Fins al dia» buit perquè no caduqui.', 'Deja «Desde el día» vacío para activarla ya. Deja «Hasta el día» vacío para que no caduque.') + '</div>' +
+      '<div class="cm-fld" style="margin-top:12px"><span>' + L('Abast', 'Alcance') + '</span><div class="cm-seg" id="pubScope">' +
+      '<button data-s="one"' + (p.lvl !== -1 ? ' class="on"' : '') + '>' + L('Aquest nivell', 'Este nivel') + '</button>' +
+      '<button data-s="all"' + (p.lvl === -1 ? ' class="on"' : '') + '>' + L('Tots els nivells', 'Todos los niveles') + '</button>' +
+      '</div></div>' +
+      '<button class="cm-sw" id="pubAct" aria-pressed="' + (p.active === false ? 'false' : 'true') + '" style="margin-top:4px"><span class="cm-swt"></span>' + L('Activa', 'Activa') + '</button>';
+  }
+  h += '</div><div class="cm-foot">' +
+    (p.id ? '<button class="cm-btn" id="pubDel" style="border-color:var(--danger);color:var(--danger)">' + L('Elimina', 'Eliminar') + '</button>' : '') +
+    '<button class="cm-btn" id="pubCancel">' + L('Cancel·la', 'Cancelar') + '</button>' +
+    '<button class="cm-btn pri" id="pubSave">' + L('Desa', 'Guardar') + '</button></div></div>';
+  m.innerHTML = h;
+
+  var close = function () { m.classList.remove('on'); };
+  $('pubX').onclick = close; $('pubCancel').onclick = close;
+  var kd = $('pubKind');
+  if (kd) kd.querySelectorAll('[data-k]').forEach(function (b) {
+    b.onclick = function () { pubCtx.kind = b.dataset.k; if (pubCtx.kind === 'doc') pubCtx.mode = 'sched'; paintPubForm(); };
+  });
+  var md = $('pubMode');
+  if (md) md.querySelectorAll('[data-m]').forEach(function (b) {
+    b.onclick = function () { pubCtx.mode = b.dataset.m; paintPubForm(); };
+  });
+  var sc = $('pubScope');
+  if (sc) sc.querySelectorAll('[data-s]').forEach(function (b) {
+    b.onclick = function () { pubCtx.pub = pubCtx.pub || {}; pubCtx.pub.lvl = b.dataset.s === 'all' ? -1 : pubCtx.lvl; paintPubForm(); };
+  });
+  var ac = $('pubAct');
+  if (ac) ac.onclick = function () {
+    pubCtx.pub = pubCtx.pub || {};
+    pubCtx.pub.active = !(pubCtx.pub.active !== false);
+    paintPubForm();
+  };
+  var vsel = $('pubVid');
+  if (vsel) vsel.onchange = function () { pubCtx.vid = vsel.value; };
+  var del = $('pubDel');
+  if (del) del.onclick = function () {
+    if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
+    pubRemove(pubCtx.pub.id);
+    if (pubCtx.vid) setRec(pubCtx.vid, 'auto');
+    close(); render(); paintManager();
+    showToast(L('Publicació eliminada', 'Publicación eliminada'));
+  };
+  $('pubSave').onclick = function () {
+    var isVideo = pubCtx.kind === 'video';
+    if (isVideo) {
+      var vid = $('pubVid') ? $('pubVid').value : pubCtx.vid;
+      if (!vid) { showToast(L('Tria un vídeo.', 'Elige un vídeo.')); return; }
+      if (getVideoImportance(vid) === 'important' && pubCtx.mode !== 'auto') {
+        showToast(L('Un vídeo ⭐ important no es pot excloure de l\'itinerari.', 'Un vídeo ⭐ importante no se puede excluir del itinerario.'));
+        return;
+      }
+      var old = pubOfVid(vid);
+      if (pubCtx.mode !== 'sched') {
+        setRec(vid, pubCtx.mode);
+        if (old) pubRemove(old.id);
+      } else {
+        setRec(vid, 'never');
+        pubUpsert(pubReadFields(old && old.kind === 'video' ? old : null, 'video', vid, videoLevel(vid)));
+      }
+    } else {
+      var t = $('pubT').value.trim();
+      if (!t) { $('pubT').focus(); return; }
+      pubUpsert(pubReadFields(pubCtx.pub && pubCtx.pub.kind === 'doc' ? pubCtx.pub : null, 'doc', '', pubCtx.lvl));
+    }
+    close(); render(); paintManager();
+    showToast(L('💾 Publicació desada', '💾 Publicación guardada'));
+  };
+}
+function pubReadFields(base, kind, vid, lvl) {
+  var g = function (id) { var e = $(id); return e ? e.value : ''; };
+  var p = base || {};
+  return {
+    id: p.id || pubUid(), lang: LS.lang, kind: kind, vid: vid || '',
+    t: kind === 'doc' ? g('pubT').trim() : '', d: kind === 'doc' ? g('pubD').trim() : '',
+    l: kind === 'doc' ? (parseDriveId(g('pubL')) || '') : '',
+    lvl: (p.lvl === -1 ? -1 : lvl), label: g('pubLab').trim(),
+    from: g('pubFrom'), to: g('pubTo'),
+    active: p.active !== false
+  };
+}
+
+/* ── Vistes sobreescrites ── */
 window.renderFree = function () {
   if (autoLevelPending) { smartFreeLevel(); autoLevelPending = false; }
   CTX = freeLevel;
@@ -6244,7 +6734,6 @@ window.renderFree = function () {
     fv.appendChild(head);
   }
 
-  /* Cerca GLOBAL: tots els nivells publicats (tots, si estem en mode edició) */
   var globalSearch = !!(freeQuery || allVideosLoaded);
   var ids2;
   if (globalSearch) {
@@ -6307,6 +6796,8 @@ window.renderTrack = function () {
   CTX = ctx ? ctx.level : (activeLevels().slice(-1)[0] || 1);
   _renderTrack();
   var tv = $('trackView');
+  var b = pubBanner();
+  if (b) tv.insertBefore(b, tv.firstChild);
   var dw = tv.querySelector('.donuts');
   if (!dw || CTX === 0) return;
   var names = blockNames(CTX, LS.lang);
@@ -6317,8 +6808,8 @@ window.renderTrack = function () {
     if (s.length && !allImpDone(s)) { openIdx = j; break; }
   }
   var h = '', total = 0, totalDone = 0;
-  B5.forEach(function (b, jj) {
-    var ids = withLink(blockSeq(CTX, b));
+  B5.forEach(function (bb, jj) {
+    var ids = withLink(blockSeq(CTX, bb));
     var imp = ids.filter(isImp);
     var d = imp.filter(function (id) { return LS.done[id]; }).length;
     var p = !ids.length ? 0 : (imp.length ? Math.round(d / imp.length * 100) : 100);
@@ -6327,13 +6818,14 @@ window.renderTrack = function () {
     var locked = (seqMode(CTX) === 'blocks' && jj > openIdx);
     h += '<div class="donut' + ((!ids.length || locked) ? ' dim' : '') + '" title="' +
       (locked ? (ca() ? 'Bloc bloquejat: completa els ⭐ de l\'anterior' : 'Bloque bloqueado: completa los ⭐ del anterior') : '') + '">' +
-      donut(p, BC[b]) + '<div class="lbl">' + esc(names[b]) + '</div></div>';
+      donut(p, BC[bb]) + '<div class="lbl">' + esc(names[bb]) + '</div></div>';
   });
   var pt = total ? Math.round(totalDone / total * 100) : 0;
   h += '<div class="donut tot">' + donut(pt, '#e8b04b') + '<div class="lbl">' + t().total + '</div></div>';
   dw.innerHTML = h;
 };
 
+/* ── Instal·lació ── */
 function install() {
   if (!$('mCourse')) {
     var b = el('button', '', '📋');
@@ -6342,6 +6834,8 @@ function install() {
     b.title = ca() ? 'Gestor del curs' : 'Gestor del curso';
     b.onclick = openManager;
     document.body.appendChild(b);
+  } else {
+    $('mCourse').onclick = openManager;
   }
   var _render = window.render;
   window.render = function () {
@@ -6356,979 +6850,20 @@ function install() {
   };
   rebuild();
   render();
-  console.log('🗂 GJPS · gestor del curs v1.2 · idioma actiu:', LS.lang, '· nivells:', activeLevels().join(', '));
+  console.log('🗂 GJPS · gestor del curs v2.0 · idioma actiu:', LS.lang, '· nivells:', activeLevels().join(', '), '· publicacions:', pubs().length);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
 else install();
+
 window.GJPSCourse = {
   rebuild: rebuild, open: openManager, levels: activeLevels, seq: trackContext,
   blockSeq: blockSeq, deleted: function () { return OV.del || {}; },
   data: function () { return OV; }
 };
-})();
-</script>
-
-<script>
-/* ═══ GJPS · SELECTOR D'IDIOMA DE PRIMERA VISITA · neutral ═══ */
-(function () {
-  'use strict';
-  var KEY = 'gjps_lang';
-  var GLOBE = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z"/></svg>';
-  var gate = null, opts = [];
-
-  function has() { try { return !!localStorage.getItem(KEY); } catch (e) { return true; } }
-
-  function build() {
-    if (gate) return;
-    gate = document.createElement('div');
-    gate.className = 'lgate';
-    gate.id = 'langGate';
-    gate.setAttribute('role', 'dialog');
-    gate.setAttribute('aria-modal', 'true');
-    gate.setAttribute('aria-label', 'Tria el teu idioma · Elige tu idioma');
-    gate.innerHTML =
-      '<div class="lgate-bg"></div><div class="lgate-grain"></div><div class="lgate-keys"></div>' +
-      '<div class="lgate-card">' +
-        '<div class="lgate-brand">GIRONA JAZZ PIANO SCHOOL<sup>®</sup></div>' +
-        '<div class="lgate-globe">' + GLOBE + '</div>' +
-        '<div class="lgate-prompt"><span>Tria el teu idioma</span><i></i><span>Elige tu idioma</span></div>' +
-        '<div class="lgate-opts">' +
-          '<button type="button" class="lgate-opt" data-lang="ca">' +
-            '<span class="lgate-code">CA</span>' +
-            '<span class="lgate-txt"><span class="lgate-name">Català</span>' +
-            '<span class="lgate-hello">Benvingut/da</span></span>' +
-          '</button>' +
-          '<button type="button" class="lgate-opt" data-lang="es">' +
-            '<span class="lgate-code">ES</span>' +
-            '<span class="lgate-txt"><span class="lgate-name">Español</span>' +
-            '<span class="lgate-hello">Bienvenido/a</span></span>' +
-          '</button>' +
-        '</div>' +
-        '<div class="lgate-foot">' +
-          '<b>Pots canviar-lo en qualsevol moment</b><br>' +
-          'Podrás cambiarlo en cualquier momento' +
-        '</div>' +
-      '</div>';
-    document.body.appendChild(gate);
-    opts = Array.prototype.slice.call(gate.querySelectorAll('.lgate-opt'));
-    opts.forEach(function (b) { b.addEventListener('click', function () { pick(b); }); });
-    gate.addEventListener('keydown', onKey);
-  }
-
-  function onKey(e) {
-    var i = opts.indexOf(document.activeElement);
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); opts[(i + 1 + opts.length) % opts.length].focus(); }
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); opts[(i - 1 + opts.length) % opts.length].focus(); }
-    else if (e.key === '1') { e.preventDefault(); pick(opts[0]); }
-    else if (e.key === '2') { e.preventDefault(); pick(opts[1]); }
-    else if (e.key === 'Escape' || e.key === 'Tab') { if (e.key === 'Escape') e.preventDefault(); }
-  }
-
-  function pick(btn) {
-    if (!btn) return;
-    var lang = btn.dataset.lang;
-    btn.classList.add('pick');
-    opts.forEach(function (b) { b.disabled = true; });
-    try { localStorage.setItem(KEY, lang); } catch (e) {}
-    if (typeof LS !== 'undefined') LS.lang = lang;
-    setTimeout(function () {
-      if (typeof loadDone === 'function') loadDone();
-      if (typeof loadSkip === 'function') loadSkip();
-      if (typeof setLabels === 'function') setLabels();
-      close();
-      var logged = (typeof LS !== 'undefined') && LS.user;
-      if (logged && typeof render === 'function') render();
-      else if (typeof showLogin === 'function') showLogin();
-      if (typeof showToast === 'function') {
-        showToast(lang === 'ca' ? 'Idioma: Català' : 'Idioma: Español', 1800);
-      }
-    }, 260);
-  }
-
-  function open() {
-    build();
-    window.__gjpsLangPending = true;
-    gate.classList.remove('out');
-    gate.classList.add('on');
-    opts.forEach(function (b) { b.disabled = false; b.classList.remove('pick'); });
-    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
-    setTimeout(function () { opts[0].focus(); }, 220);
-    setTimeout(function () {
-      try { if (document.activeElement && $('lgName') === document.activeElement) document.activeElement.blur(); } catch (e) {}
-      opts[0].focus();
-    }, 420);
-  }
-
-  function close() {
-    window.__gjpsLangPending = false;
-    if (!gate) return;
-    gate.classList.add('out');
-    setTimeout(function () { gate.classList.remove('on', 'out'); }, 380);
-  }
-
-  function boot() { if (!has()) open(); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-
-  window.GJPSLang = { open: open, close: close, chosen: has };
-})();
-</script>
-
-<script>
-/* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · PUBLICACIONS PROGRAMADES  v1.0
-   ─────────────────────────────────────────────────────────────────────────
-   OV.rec[id+':'+idioma] = 'never'  → el vídeo no entra mai a l'itinerari
-   OV.pub = [ { id, lang, kind:'video'|'doc', vid, t, d, l, lvl, label,
-                from, to, active } ]
-     · lvl = -1 → es mostra a tots els nivells
-     · from buit → disponible des d'ara;  to buit → sense data de fi
-   LS.done['pub:'+id] → l'alumne l'ha marcada com a feta
-   Requereix el mòdul de gestió de nivells (GJPSCourse) carregat abans.
-   ═══════════════════════════════════════════════════════════════════════════ */
-(function () {
-'use strict';
-if (!window.GJPSCourse) { console.warn('Publicacions: cal el gestor de nivells.'); return; }
-
-var B5 = ['t', 'g', 'r', 'a', 'p'];
-var BASE = {
-  ca: { w:'Benvinguda', t:'Tècnica', g:'Teoria', r:'Ritme', a:'Auditiu', p:'Pràctica', b:'Repàs' },
-  es: { w:'Bienvenida', t:'Técnica', g:'Teoría', r:'Ritmo', a:'Auditivo', p:'Práctica', b:'Repaso' }
-};
-var MES = {
-  ca: ['gener','febrer','març','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre'],
-  es: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
-};
-var hidden = {};   /* «Ara no» : ocult només durant la sessió */
-
-function ca() { return LS.lang === 'ca'; }
-function L(c, e) { return ca() ? c : e; }
-function uid() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-function pad(n) { return (n < 10 ? '0' : '') + n; }
-function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
-function nice(s) {
-  if (!s) return '';
-  var p = String(s).split('-');
-  if (p.length < 3) return s;
-  return parseInt(p[2], 10) + ' ' + MES[LS.lang][parseInt(p[1], 10) - 1] + ' ' + p[0];
-}
-function blkName(l, b) {
-  var o = OV.bn && OV.bn[String(l)] && OV.bn[String(l)][b];
-  return (o && o[LS.lang]) || BASE[LS.lang][b] || b;
-}
-function lvlName(l) {
-  if (l === -1) return L('Tots els nivells', 'Todos los niveles');
-  var o = OV.lnm && OV.lnm[String(l)];
-  if (o && o[LS.lang]) return o[LS.lang];
-  for (var i = 0; i < LEVELS.length; i++) if (LEVELS[i].id === l) return LEVELS[i].n[LS.lang];
-  return L('Nivell ' + l, 'Nivel ' + l);
-}
-function vLevel(id) {
-  var si = parseInt(String(id).split('.')[0], 10);
-  if (isNaN(si)) return 1;
-  if (si === 0) return 0;
-  if (si <= 6) return 1;
-  return si - 6;
-}
-
-/* ── §1 Model ── */
-function pubs() { if (!Array.isArray(OV.pub)) OV.pub = []; return OV.pub; }
-function recMode(id) {
-  if (getVideoImportance(id) === 'important') return 'auto';
-  return (OV.rec && OV.rec[id + ':' + LS.lang]) === 'never' ? 'never' : 'auto';
-}
-function setRec(id, mode) {
-  OV.rec = OV.rec || {};
-  if (mode === 'never') OV.rec[id + ':' + LS.lang] = 'never';
-  else delete OV.rec[id + ':' + LS.lang];
-}
-function pubOfVid(vid) {
-  var a = pubs();
-  for (var i = 0; i < a.length; i++) if (a[i].kind === 'video' && a[i].vid === vid && a[i].lang === LS.lang) return a[i];
-  return null;
-}
-function byId(id) { var a = pubs(); for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
-function upsert(p) {
-  var a = pubs();
-  for (var i = 0; i < a.length; i++) if (a[i].id === p.id) { a[i] = p; return; }
-  a.push(p);
-}
-function removePub(id) { OV.pub = pubs().filter(function (p) { return p.id !== id; }); }
-function state(p) {
-  if (!p.active) return 'off';
-  var t = today();
-  if (p.from && t < p.from) return 'soon';
-  if (p.to && t > p.to) return 'off';
-  return 'live';
-}
-function liveFor(lvl) {
-  return pubs().filter(function (p) {
-    if (p.lang !== LS.lang || state(p) !== 'live') return false;
-    if (p.lvl !== -1 && p.lvl !== lvl) return false;
-    if (LS.done['pub:' + p.id]) return false;
-    if (hidden[p.id]) return false;
-    if (p.kind === 'video' && !findVidById(p.vid)) return false;
-    return true;
-  });
-}
-function curLevel() {
-  var c = GJPSCourse.seq && GJPSCourse.seq();
-  if (c) return c.level;
-  var a = GJPSCourse.levels();
-  return a.length ? a[a.length - 1] : 1;
-}
-function levelVids(l) {
-  var out = [], bs = (l === 0) ? ['w'] : B5;
-  bs.forEach(function (b) {
-    GJPSCourse.blockSeq(l, b).forEach(function (id) { out.push({ id: id, b: b }); });
-  });
-  return out;
-}
-
-/* ── §2 Excloure els «Mai» de l'itinerari automàtic ── */
-var _findNext = window.findNext;
-window.findNext = function () {
-  var marked = [], guard = 0, v = null;
-  try {
-    while (guard++ < 600) {
-      v = _findNext();
-      if (!v) { v = null; break; }
-      if (recMode(v.id) !== 'never') break;
-      marked.push(v.id); LS.done[v.id] = 1; v = null;
-    }
-  } finally {
-    marked.forEach(function (id) { delete LS.done[id]; });
-  }
-  return v;
-};
-
-/* ── §3 Visor de documents ── */
-function openDoc(link) {
-  var id = parseDriveId(link);
-  if (!id) { showToast(L('Aquest document no té enllaç.', 'Este documento no tiene enlace.')); return; }
-  var view = 'https://drive.google.com/file/d/' + id + '/view';
-  if (!isIOS() && isMobileDevice() && !isStandaloneApp()) { window.open(view, '_blank'); return; }
-  var src = 'https://drive.google.com/file/d/' + id + '/preview';
-  currentVideoSrc = src;
-  pushVideoState();
-  document.documentElement.style.zoom = '1';
-  var m = $('modal'), p = $('player'), ov = $('videoOverlay');
-  m.classList.add('on', 'show-controls');
-  m.classList.remove('ios-device', 'ios-tap');
-  if (ov) ov.classList.add('hidden');
-  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
-  p.src = src; p.classList.add('active');
-  if (!isMobileDevice() && !isStandaloneApp()) {
-    var w = document.querySelector('.wrap');
-    if (w && w.requestFullscreen) w.requestFullscreen().catch(function () {});
-  }
-  showCloseBtn();
-}
-
-/* ── §4 Avís al Seguiment Continuat ── */
-function seenKey() { return 'gjps_pubseen_' + (LS.user || '') + '_' + LS.lang; }
-function banner() {
-  var lvl = curLevel(), list = liveFor(lvl);
-  if (!list.length) return null;
-  var box = document.createElement('div');
-  box.className = 'pubcard';
-  var h = '<div class="pubhead"><span class="t">' + L('Publicacions especials', 'Publicaciones especiales') +
-          '</span><span class="n">' + list.length + '</span></div>';
-  list.forEach(function (p) {
-    var isV = p.kind === 'video';
-    var v = isV ? findVidById(p.vid) : null;
-    var title = isV ? (v ? vidTitle(v.v, p.vid) : '') : (p.t || '');
-    var desc = isV ? (v ? vidDesc(v.v, p.vid, vLevel(p.vid) === 0 ? 'w' : 'p') : '') : (p.d || '');
-    var badge = isV ? '🎬' : '🎼';
-    var win = p.to ? L('Disponible fins al ', 'Disponible hasta el ') + nice(p.to)
-                 : L('Disponible per temps limitat', 'Disponible por tiempo limitado');
-    h += '<div class="pubitem">' +
-      '<div class="pubbadge">' + badge + '</div><div class="pubbody">' +
-      (p.label ? '<span class="publabel">' + esc(p.label) + '</span>' : '') +
-      '<div class="pubtitle">' + esc(title) + '</div>' +
-      (desc ? '<div class="pubdesc">' + esc(desc) + '</div>' : '') +
-      '<div class="pubmeta">🗓 ' + esc(win) + '</div>' +
-      '<div class="pubacts">' +
-        '<button class="go" data-pubopen="' + p.id + '">' + (isV ? '▶ ' + L('Reprodueix', 'Reproducir') : '📄 ' + L('Obre la partitura', 'Abre la partitura')) + '</button>' +
-        '<button class="ok" data-pubdone="' + p.id + '">✔ ' + L('Fet', 'Hecho') + '</button>' +
-        '<button data-publater="' + p.id + '">⏭ ' + L('Ara no', 'Ahora no') + '</button>' +
-      '</div></div></div>';
-  });
-  box.innerHTML = h;
-  box.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-pubopen],[data-pubdone],[data-publater]');
-    if (!b) return;
-    var p;
-    if (b.dataset.pubopen) {
-      p = byId(b.dataset.pubopen); if (!p) return;
-      if (p.kind === 'video') {
-        var v = findVidById(p.vid);
-        var src = v ? driveSrc(v.v, p.vid) : null;
-        if (src) openFullscreenVideo(src);
-        else showToast(L('Aquest vídeo encara no té enllaç.', 'Este vídeo aún no tiene enlace.'));
-      } else openDoc(p.l);
-    } else if (b.dataset.pubdone) {
-      LS.done['pub:' + b.dataset.pubdone] = 1; saveDone(); render();
-      showToast(L('✔ Publicació marcada com a feta', '✔ Publicación marcada como hecha'));
-    } else if (b.dataset.publater) {
-      hidden[b.dataset.publater] = 1; render();
-    }
-  });
-  /* Avís una sola vegada per dia i publicació */
-  try {
-    var seen = lsJSON(seenKey(), {}), t = today(), fresh = null;
-    list.forEach(function (p) { if (seen[p.id] !== t && !fresh) fresh = p; seen[p.id] = t; });
-    lsSet(seenKey(), JSON.stringify(seen));
-    if (fresh) {
-      var v = fresh.kind === 'video' ? findVidById(fresh.vid) : null;
-      var ttl = fresh.kind === 'video' ? (v ? vidTitle(v.v, fresh.vid) : '') : fresh.t;
-      showToast('🗓 ' + (fresh.label ? fresh.label + ' · ' : '') + ttl, 4200);
-    }
-  } catch (e) {}
-  return box;
-}
-var _rt = window.renderTrack;
-window.renderTrack = function () {
-  _rt();
-  var tv = $('trackView');
-  if (!tv) return;
-  var b = banner();
-  if (b) tv.insertBefore(b, tv.firstChild);
-};
-
-/* ── §5 Formulari de publicació ── */
-var ctx = null;
-function openForm(opts) {
-  opts = opts || {};
-  var lvl = opts.lvl != null ? opts.lvl : mgrLvl();
-  var p = opts.pub ? JSON.parse(JSON.stringify(opts.pub)) : null;
-  var vid = opts.vid || (p && p.kind === 'video' ? p.vid : '');
-  var kind = p ? p.kind : (vid ? 'video' : 'doc');
-  var mode = p ? 'sched' : (vid ? (pubOfVid(vid) ? 'sched' : recMode(vid)) : 'sched');
-  if (vid && !p && pubOfVid(vid)) p = JSON.parse(JSON.stringify(pubOfVid(vid)));
-  ctx = { lvl: lvl, vid: vid, kind: kind, mode: mode === 'never' ? 'never' : (mode === 'auto' ? 'auto' : 'sched'), pub: p };
-
-  var m = $('pubModal');
-  if (!m) { m = document.createElement('div'); m.className = 'cm-scrim'; m.id = 'pubModal'; document.body.appendChild(m); }
-  paintForm();
-  m.classList.add('on');
-}
-function paintForm() {
-  var m = $('pubModal'), c = ctx, p = c.pub || {};
-  var isV = c.kind === 'video';
-  var vs = levelVids(c.lvl);
-  var h = '<div class="cm-box sm"><div class="cm-head"><h3>' +
-    (p.id ? L('Edita la publicació', 'Edita la publicación') : L('Nova publicació', 'Nueva publicación')) +
-    '</h3><button class="cm-x" id="pubX">✕</button></div><div class="cm-scroll">' +
-    '<div class="cm-note"><b>' + esc(lvlName(c.lvl)) + '</b> · ' + LS.lang.toUpperCase() + '</div>';
-
-  if (!p.id) {
-    h += '<div class="cm-fld"><span>' + L('Tipus', 'Tipo') + '</span><div class="cm-seg" id="pubKind">' +
-      '<button data-k="video"' + (isV ? ' class="on"' : '') + '>🎬 ' + L('Vídeo existent', 'Vídeo existente') + '</button>' +
-      '<button data-k="doc"' + (!isV ? ' class="on"' : '') + '>🎼 ' + L('Només document', 'Solo documento') + '</button>' +
-      '</div></div>';
-  }
-  if (isV) {
-    h += '<div class="cm-fld"><span>' + L('Vídeo', 'Vídeo') + '</span><select id="pubVid" class="pubvlist" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);font-family:inherit;font-size:13px">';
-    if (!vs.length) h += '<option value="">—</option>';
-    vs.forEach(function (o) {
-      var v = findVidById(o.id); if (!v) return;
-      var imp = getVideoImportance(o.id) === 'important';
-      h += '<option value="' + o.id + '"' + (o.id === c.vid ? ' selected' : '') + '>' +
-        esc(blkName(c.lvl, o.b) + ' · ' + vidTitle(v.v, o.id) + (imp ? ' ⭐' : ' ☆')) + '</option>';
-    });
-    h += '</select><div class="cm-hint">' + L('Tria un vídeo opcional (☆). Els importants sempre formen part de l\'itinerari.', 'Elige un vídeo opcional (☆). Los importantes siempre forman parte del itinerario.') + '</div></div>';
-    h += '<div class="cm-fld"><span>' + L('Com es recomana', 'Cómo se recomienda') + '</span><div class="cm-seg" id="pubMode">' +
-      '<button data-m="auto"' + (c.mode === 'auto' ? ' class="on"' : '') + '>' + L('Automàtica', 'Automática') + '</button>' +
-      '<button data-m="never"' + (c.mode === 'never' ? ' class="on"' : '') + '>' + L('Mai', 'Nunca') + '</button>' +
-      '<button data-m="sched"' + (c.mode === 'sched' ? ' class="on"' : '') + '>🗓 ' + L('Programada', 'Programada') + '</button>' +
-      '</div><div class="cm-hint">' + L('«Mai» el treu de l\'itinerari per sempre. «Programada» el treu i només l\'avisa dins les dates.', '«Nunca» lo saca del itinerario para siempre. «Programada» lo saca y solo lo avisa dentro de las fechas.') + '</div></div>';
-  } else {
-    h += '<label class="cm-fld"><span>' + L('Títol del document', 'Título del documento') + '</span><input id="pubT" value="' + esc(p.t || '') + '"></label>' +
-      '<label class="cm-fld"><span>' + L('Descripció', 'Descripción') + '</span><textarea id="pubD">' + esc(p.d || '') + '</textarea></label>' +
-      '<label class="cm-fld"><span>' + L('Enllaç de Google Drive (ID o URL)', 'Enlace de Google Drive (ID o URL)') + '</span><input id="pubL" value="' + esc(p.l || '') + '" placeholder="1B0keL0UC…"></label>';
-  }
-  if (!isV || c.mode === 'sched') {
-    h += '<label class="cm-fld"><span>' + L('Etiqueta destacada', 'Etiqueta destacada') + '</span><input id="pubLab" value="' + esc(p.label || '') + '" placeholder="' + L('🎄 Nadales', '🎄 Villancicos') + '"></label>' +
-      '<div class="cm-two">' +
-      '<label class="cm-fld"><span>' + L('Des del dia', 'Desde el día') + '</span><input id="pubFrom" type="date" value="' + esc(p.from || '') + '"></label>' +
-      '<label class="cm-fld"><span>' + L('Fins al dia', 'Hasta el día') + '</span><input id="pubTo" type="date" value="' + esc(p.to || '') + '"></label>' +
-      '</div><div class="cm-hint">' + L('Deixa «Des del dia» buit per activar-la ja. Deixa «Fins al dia» buit perquè no caduqui.', 'Deja «Desde el día» vacío para activarla ya. Deja «Hasta el día» vacío para que no caduque.') + '</div>' +
-      '<div class="cm-fld" style="margin-top:12px"><span>' + L('Abast', 'Alcance') + '</span><div class="cm-seg" id="pubScope">' +
-      '<button data-s="one"' + (p.lvl !== -1 ? ' class="on"' : '') + '>' + L('Aquest nivell', 'Este nivel') + '</button>' +
-      '<button data-s="all"' + (p.lvl === -1 ? ' class="on"' : '') + '>' + L('Tots els nivells', 'Todos los niveles') + '</button>' +
-      '</div></div>' +
-      '<button class="cm-sw" id="pubAct" aria-pressed="' + (p.active === false ? 'false' : 'true') + '" style="margin-top:4px"><span class="cm-swt"></span>' + L('Activa', 'Activa') + '</button>';
-  }
-  h += '</div><div class="cm-foot">' +
-    (p.id ? '<button class="cm-btn" id="pubDel" style="border-color:var(--danger);color:var(--danger)">' + L('Elimina', 'Eliminar') + '</button>' : '') +
-    '<button class="cm-btn" id="pubCancel">' + L('Cancel·la', 'Cancelar') + '</button>' +
-    '<button class="cm-btn pri" id="pubSave">' + L('Desa', 'Guardar') + '</button></div></div>';
-  m.innerHTML = h;
-
-  var close = function () { m.classList.remove('on'); };
-  $('pubX').onclick = close; $('pubCancel').onclick = close;
-  var kd = $('pubKind');
-  if (kd) kd.querySelectorAll('[data-k]').forEach(function (b) {
-    b.onclick = function () { ctx.kind = b.dataset.k; if (ctx.kind === 'doc') ctx.mode = 'sched'; paintForm(); };
-  });
-  var md = $('pubMode');
-  if (md) md.querySelectorAll('[data-m]').forEach(function (b) {
-    b.onclick = function () { ctx.mode = b.dataset.m; paintForm(); };
-  });
-  var sc = $('pubScope');
-  if (sc) sc.querySelectorAll('[data-s]').forEach(function (b) {
-    b.onclick = function () { ctx.pub = ctx.pub || {}; ctx.pub.lvl = b.dataset.s === 'all' ? -1 : ctx.lvl; paintForm(); };
-  });
-  var ac = $('pubAct');
-  if (ac) ac.onclick = function () {
-    ctx.pub = ctx.pub || {};
-    ctx.pub.active = !(ctx.pub.active !== false);
-    paintForm();
-  };
-  var vsel = $('pubVid');
-  if (vsel) vsel.onchange = function () { ctx.vid = vsel.value; };
-  var del = $('pubDel');
-  if (del) del.onclick = function () {
-    if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
-    removePub(ctx.pub.id);
-    if (ctx.vid) setRec(ctx.vid, 'auto');
-    close(); render(); decorate();
-    showToast(L('Publicació eliminada', 'Publicación eliminada'));
-  };
-  $('pubSave').onclick = function () {
-    var isVideo = ctx.kind === 'video';
-    if (isVideo) {
-      var vid = $('pubVid') ? $('pubVid').value : ctx.vid;
-      if (!vid) { showToast(L('Tria un vídeo.', 'Elige un vídeo.')); return; }
-      if (getVideoImportance(vid) === 'important' && ctx.mode !== 'auto') {
-        showToast(L('Un vídeo ⭐ important no es pot excloure de l\'itinerari.', 'Un vídeo ⭐ importante no se puede excluir del itinerario.'));
-        return;
-      }
-      var old = pubOfVid(vid);
-      if (ctx.mode !== 'sched') {
-        setRec(vid, ctx.mode);
-        if (old) removePub(old.id);
-      } else {
-        setRec(vid, 'never');
-        upsert(readFields(old && old.kind === 'video' ? old : null, 'video', vid, vLevel(vid)));
-      }
-    } else {
-      var t = $('pubT').value.trim();
-      if (!t) { $('pubT').focus(); return; }
-      upsert(readFields(ctx.pub && ctx.pub.kind === 'doc' ? ctx.pub : null, 'doc', '', ctx.lvl));
-    }
-    close(); render(); decorate();
-    showToast(L('💾 Publicació desada', '💾 Publicación guardada'));
-  };
-}
-function readFields(base, kind, vid, lvl) {
-  var g = function (id) { var e = $(id); return e ? e.value : ''; };
-  var p = base || {};
-  return {
-    id: p.id || uid(), lang: LS.lang, kind: kind, vid: vid || '',
-    t: kind === 'doc' ? g('pubT').trim() : '', d: kind === 'doc' ? g('pubD').trim() : '',
-    l: kind === 'doc' ? (parseDriveId(g('pubL')) || '') : '',
-    lvl: (p.lvl === -1 ? -1 : lvl), label: g('pubLab').trim(),
-    from: g('pubFrom'), to: g('pubTo'),
-    active: p.active !== false
-  };
-}
-
-/* ── §6 Decoració del gestor ── */
-function mgrLvl() {
-  var on = document.querySelector('#cmSide .cm-lv.on .cm-lvt');
-  if (!on) return 1;
-  var txt = on.textContent;
-  for (var l = 0; l <= 6; l++) if (lvlName(l) === txt) return l;
-  return 1;
-}
-function decorate() {
-  var m = $('cmModal');
-  if (!m || !m.classList.contains('on')) return;
-  var main = $('cmMain');
-  if (!main) return;
-  var lvl = mgrLvl();
-
-  /* Botó 🗓 a cada fila de vídeo */
-  main.querySelectorAll('.cm-vrow').forEach(function (row) {
-    if (row.querySelector('.pubrowbtn')) return;
-    var impBtn = row.querySelector('[data-imp]');
-    if (!impBtn) return;
-    var vid = impBtn.dataset.imp;
-    var b = document.createElement('button');
-    b.className = 'pubrowbtn';
-    var has = pubOfVid(vid);
-    if (has) { b.classList.add('sched'); b.textContent = '🗓'; b.title = L('Publicació programada', 'Publicación programada'); }
-    else if (recMode(vid) === 'never') { b.classList.add('never'); b.textContent = '🗓'; b.title = L('Mai recomanat', 'Nunca recomendado'); }
-    else { b.textContent = '🗓'; b.title = L('Recomanació / publicació', 'Recomendación / publicación'); }
-    b.onclick = function () { openForm({ lvl: lvl, vid: vid }); };
-    row.insertBefore(b, impBtn);
-  });
-
-  /* Targeta de publicacions del nivell */
-  if (main.querySelector('.pubcard-mgr')) return;
-  var list = pubs().filter(function (p) { return p.lang === LS.lang && (p.lvl === lvl || p.lvl === -1); });
-  var card = document.createElement('div');
-  card.className = 'cm-blk pubcard-mgr';
-  var h = '<div class="cm-bh"><div class="cm-btitle">🗓 ' + L('Publicacions programades', 'Publicaciones programadas') + '</div>' +
-    '<div class="cm-bmeta">' + list.length + '</div></div><div class="cm-vlist">';
-  if (!list.length) h += '<div class="cm-empty">' + L('Cap publicació en aquest nivell.', 'Ninguna publicación en este nivel.') + '</div>';
-  list.forEach(function (p) {
-    var st = state(p), v = p.kind === 'video' ? findVidById(p.vid) : null;
-    var title = p.kind === 'video' ? (v ? vidTitle(v.v, p.vid) : L('vídeo eliminat', 'vídeo eliminado')) : p.t;
-    var win = (p.from ? nice(p.from) : L('ara', 'ahora')) + ' → ' + (p.to ? nice(p.to) : '∞');
-    var lbl = st === 'live' ? L('En curs', 'En curso') : st === 'soon' ? L('Properament', 'Próximamente') : L('Inactiva', 'Inactiva');
-    h += '<div class="pubmrow"><span class="ic">' + (p.kind === 'video' ? '🎬' : '🎼') + '</span>' +
-      '<span class="tx"><b>' + esc(title) + '</b><span>' +
-      esc((p.label ? p.label + ' · ' : '') + win + (p.lvl === -1 ? ' · ' + L('tots els nivells', 'todos los niveles') : '')) +
-      '</span></span><span class="pubstat ' + st + '">' + lbl + '</span>' +
-      '<button class="cm-ib" data-pedit="' + p.id + '">✎</button>' +
-      '<button class="cm-ib d" data-pdel="' + p.id + '">🗑</button></div>';
-  });
-  h += '<button class="cm-add" id="pubAdd">＋ ' + L('Nova publicació', 'Nueva publicación') + '</button></div>';
-  card.innerHTML = h;
-  main.appendChild(card);
-  $('pubAdd').onclick = function () { openForm({ lvl: lvl }); };
-  card.querySelectorAll('[data-pedit]').forEach(function (b) {
-    b.onclick = function () { var p = byId(b.dataset.pedit); if (p) openForm({ lvl: lvl, pub: p }); };
-  });
-  card.querySelectorAll('[data-pdel]').forEach(function (b) {
-    b.onclick = function () {
-      if (!confirm(L('Eliminar aquesta publicació?', '¿Eliminar esta publicación?'))) return;
-      var p = byId(b.dataset.pdel);
-      if (p && p.kind === 'video' && p.vid) setRec(p.vid, 'auto');
-      removePub(b.dataset.pdel);
-      render(); decorate();
-      showToast(L('Publicació eliminada', 'Publicación eliminada'));
-    };
-  });
-}
-var queued = false;
-new MutationObserver(function () {
-  if (queued) return;
-  var m = $('cmModal');
-  if (!m || !m.classList.contains('on')) return;
-  queued = true;
-  requestAnimationFrame(function () { queued = false; decorate(); });
-}).observe(document.body, { childList: true, subtree: true });
-
-document.addEventListener('keydown', function (e) {
-  if (e.key !== 'Escape') return;
-  var m = $('pubModal');
-  if (m && m.classList.contains('on')) { m.classList.remove('on'); e.stopPropagation(); }
-}, true);
-
 window.GJPSPub = {
   list: pubs, live: liveFor, rec: recMode, setRec: setRec,
-  open: openForm, decorate: decorate,
-  reset: function () { hidden = {}; render(); }
+  open: openPubForm, reset: function () { pubHidden = {}; render(); }
 };
-render();
-console.log('🗓 GJPS · publicacions programades actives ·', pubs().length, 'registrades');
-})();
-</script>
-
-<script>
-/* ═══ GJPS · RÈCORDS D'APPS v2 · lectura tolerant + inspector ═══ */
-(function () {
-'use strict';
-var KEYS = ['C','Db','D','Eb','E','F','F# / Gb','G','Ab','A','Bb','B'];
-var inspOpen = false;
-function ca() { return LS.lang === 'ca'; }
-function L(a, b) { return ca() ? a : b; }
-function u() { return LS.user || ''; }
-function canon() { return 'gjps_tonal_stats_' + u(); }
-function pad(n) { return (n < 10 ? '0' : '') + n; }
-function dstr(v) {
-  var d = new Date(v); if (isNaN(d.getTime())) return '—';
-  return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
-}
-function allKeys() {
-  var out = [];
-  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k) out.push(k); } } catch (e) {}
-  return out;
-}
-function looksTonal(k) { return /tonal|ear|test|score|record|result/i.test(k); }
-
-/* Normalitza qualsevol forma plausible a {best,last,sessions,history} */
-function norm(raw) {
-  if (!raw) return null;
-  if (typeof raw === 'number') raw = { p: raw, date: Date.now() };
-  if (Array.isArray(raw)) {
-    if (!raw.length) return null;
-    var pts = raw.filter(function (x) { return x && typeof x.p === 'number'; });
-    if (!pts.length) return null;
-    var best = pts.reduce(function (a, b) { return b.p > a.p ? b : a; });
-    return { best: best, last: pts[pts.length - 1], sessions: pts.length, history: pts.slice(-12) };
-  }
-  if (raw.stats) return norm(raw.stats);
-  if (raw.best && typeof raw.best === 'object') {
-    return { best: raw.best, last: raw.last || raw.best, sessions: raw.sessions || 1,
-             history: Array.isArray(raw.history) ? raw.history.slice(-12) : null };
-  }
-  if (typeof raw.p === 'number') return { best: raw, last: raw, sessions: raw.sessions || 1, history: null };
-  if (typeof raw.bestScore === 'number') {
-    var b = { p: raw.bestScore, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
-    return { best: b, last: b, sessions: raw.sessions || 1, history: null };
-  }
-  if (typeof raw.percent === 'number') {
-    var b2 = { p: raw.percent, key: raw.key, notes: raw.notes, diff: raw.diff, date: raw.date || Date.now() };
-    return { best: b2, last: b2, sessions: raw.sessions || 1, history: null };
-  }
-  return null;
-}
-function candidates() {
-  var n = u(), lg = LS.lang;
-  return [canon(), canon() + '_' + lg, 'gjps_tonal_stats', 'gjps_tonal_stats_' + lg,
-          'gjps_tonal_last_' + n, 'gjps_tonal_last', 'gjps_tonal_' + n,
-          'tonal_stats_' + n, 'tonal_stats', 'te_stats_' + n, 'gjps_tonal_history_' + n];
-}
-function findStats(adopt) {
-  var list = candidates(), i, s;
-  for (i = 0; i < list.length; i++) {
-    s = norm(lsJSON(list[i], null));
-    if (s) { if (adopt && list[i] !== canon()) lsSet(canon(), JSON.stringify(s)); return s; }
-  }
-  var ks = allKeys().filter(looksTonal);
-  for (i = 0; i < ks.length; i++) {
-    s = norm(lsJSON(ks[i], null));
-    if (s) { if (adopt) lsSet(canon(), JSON.stringify(s)); return s; }
-  }
-  return null;
-}
-function label(v, kind) {
-  if (kind === 'notes') return v === 'diatonic' ? L('Diatòniques','Diatónicas')
-    : v === 'non-diatonic' ? L('No diatòniques','No diatónicas') : L('Totes','Todas');
-  if (kind === 'diff') return v === 'hard' ? L('Difícil','Difícil') : L('Fàcil','Fácil');
-  if (kind === 'key') return (KEYS[v] || 'C') + ' ' + L('Major','Mayor');
-  return v == null ? '—' : String(v);
-}
-
-function statsCard() {
-  if (!LS.user || LS.user === 'guest') return '';
-  var s = findStats(true);
-  if (!s || typeof s.best.p !== 'number') {
-    return '<div class="recnone">🏆 <b>' + L('Encara no hi ha cap rècord registrat.', 'Aún no hay ningún récord registrado.') + '</b><br>' +
-      L('Obre TONAL EMOTIONS, completa un TEST i torna aquí. El resultat es desa automàticament.',
-        'Abre TONAL EMOTIONS, completa un TEST y vuelve aquí. El resultado se guarda automáticamente.') + '</div>';
-  }
-  var b = s.best, h = '';
-  h += '<div class="rec"><div class="lb">🏆 ' + L('Rècord personal', 'Récord personal') + '</div>';
-  h += '<div class="big">' + Math.round(b.p) + '<small>%</small></div>';
-  h += '<div class="mt">TEST · ' + esc(label(b.notes,'notes')) + ' · ' + esc(label(b.diff,'diff')) +
-       ' · ' + esc(label(b.key,'key')) + '<br>' + dstr(b.date) + '</div>';
-  if (s.history && s.history.length > 1) {
-    h += '<div class="bars">';
-    s.history.forEach(function (x) {
-      var pc = Math.max(4, Math.min(100, x.p));
-      h += '<i class="' + (x.p >= b.p ? 'hi' : '') + '" style="height:' + (pc * 0.26) + 'px" title="' + Math.round(x.p) + '%"></i>';
-    });
-    h += '</div>';
-  }
-  h += '<div class="ss">🎯 ' + (s.sessions || 1) + ' ' + L('sessions', 'sesiones') +
-       (s.last && s.last !== b ? ' · ' + L('últim', 'último') + ' ' + Math.round(s.last.p) + '%' : '') + '</div></div>';
-  return h;
-}
-
-function inspector() {
-  var ks = allKeys().filter(looksTonal);
-  var h = '<div class="insp"><div class="ih"><b>' + L('Inspector d\'emmagatzematge', 'Inspector de almacenamiento') + '</b>' +
-    '<span class="sp"></span><button class="labbtn" id="labScan">🔍 ' + L('Cerca i adopta', 'Buscar y adoptar') + '</button>' +
-    '<button class="labbtn" id="labCopy">⧉ ' + L('Copia', 'Copiar') + '</button></div><div class="ib">';
-  h += '<div class="empty" style="margin-bottom:10px">' + L('Clau canònica:', 'Clave canónica:') +
-       ' <b style="font-family:ui-monospace,Menlo,monospace">' + esc(canon()) + '</b></div>';
-  if (!ks.length) {
-    h += '<div class="empty">' + L('No hi ha cap clau relacionada amb TONAL EMOTIONS en aquest navegador. Completa un TEST a l\'app i torna aquí.',
-      'No hay ninguna clave relacionada con TONAL EMOTIONS en este navegador. Completa un TEST en la app y vuelve aquí.') + '</div>';
-  } else {
-    ks.forEach(function (k) {
-      var raw = lsJSON(k, null), n = norm(raw), txt = '';
-      try { txt = JSON.stringify(raw); } catch (e) { txt = ''; }
-      if (txt && txt.length > 90) txt = txt.slice(0, 90) + '…';
-      h += '<div class="row"><span class="k"><b>' + esc(k) + '</b><span>' + esc(txt || '—') + '</span></span>' +
-        '<span class="tag' + (n ? ' ok' : '') + '">' + (n ? Math.round(n.best.p) + '%' : L('no llegible', 'no legible')) + '</span>' +
-        (n ? '<button class="cm-ib" data-adopt="' + esc(k) + '" title="' + L('Adopta com a rècord', 'Adoptar como récord') + '">✓</button>' : '') +
-        '<button class="cm-ib d" data-drop="' + esc(k) + '" title="' + L('Esborra', 'Borrar') + '">🗑</button></div>';
-    });
-  }
-  return h + '</div></div>';
-}
-
-window.readTonalStats = function () { return findStats(true); };
-window.tonalStatsHtml = statsCard;
-
-window.renderApps = function () {
-  var av = $('appsView'); if (!av) return;
-  av.innerHTML = '';
-  var head = document.createElement('div');
-  head.className = 'labhead';
-  head.innerHTML = '<span class="t">' + L('Laboratori d\'entrenament', 'Laboratorio de entrenamiento') + '</span><span class="sp"></span>';
-  var b1 = document.createElement('button');
-  b1.className = 'labbtn';
-  b1.innerHTML = '↻ ' + L('Actualitza', 'Actualizar');
-  b1.onclick = function () { findStats(true); render(); showToast(L('Rècords actualitzats', 'Récords actualizados')); };
-  head.appendChild(b1);
-  if (currentUserRole() === 'admin') {
-    var b2 = document.createElement('button');
-    b2.className = 'labbtn' + (inspOpen ? ' on' : '');
-    b2.innerHTML = '🔬 ' + L('Inspector', 'Inspector');
-    b2.onclick = function () { inspOpen = !inspOpen; render(); };
-    head.appendChild(b2);
-  }
-  av.appendChild(head);
-  if (inspOpen && currentUserRole() === 'admin') {
-    var wrap = document.createElement('div');
-    wrap.innerHTML = inspector();
-    av.appendChild(wrap);
-    var sc = $('labScan');
-    if (sc) sc.onclick = function () {
-      var s = findStats(true);
-      render();
-      showToast(s ? L('Rècord adoptat: ', 'Récord adoptado: ') + Math.round(s.best.p) + '%'
-                  : L('No s\'ha trobat cap resultat llegible.', 'No se ha encontrado ningún resultado legible.'));
-    };
-    var cp = $('labCopy');
-    if (cp) cp.onclick = function () {
-      var dump = allKeys().filter(looksTonal).map(function (k) { return k + ' = ' + lsGet(k); }).join('\n');
-      var done = function () { showToast(L('Copiat al porta-retalls', 'Copiado al portapapeles')); };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(dump).then(done, done);
-      else done();
-    };
-    wrap.querySelectorAll('[data-adopt]').forEach(function (b) {
-      b.onclick = function () {
-        var n = norm(lsJSON(b.dataset.adopt, null));
-        if (!n) return;
-        lsSet(canon(), JSON.stringify(n)); render();
-        showToast(L('Rècord adoptat: ', 'Récord adoptado: ') + Math.round(n.best.p) + '%');
-      };
-    });
-    wrap.querySelectorAll('[data-drop]').forEach(function (b) {
-      b.onclick = function () {
-        if (!confirm(L('Esborrar aquesta clau?', '¿Borrar esta clave?'))) return;
-        try { localStorage.removeItem(b.dataset.drop); } catch (e) {}
-        render();
-      };
-    });
-  }
-  var g = document.createElement('div');
-  g.className = 'appgrid';
-  APPS.forEach(function (a, i) {
-    var c = document.createElement('div');
-    c.className = 'appcard';
-    var icon = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
-    var st = (a.url && /TONAL/i.test(a.url)) ? statsCard() : '';
-    c.innerHTML = '<div class="ae">' + icon + '</div>' +
-      '<h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3>' +
-      '<p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' + st +
-      '<button class="labopen">' + t().appsOpen + '</button>';
-    c.querySelector('.labopen').onclick = function () { openApp(a.url); };
-    g.appendChild(c);
-  });
-  av.appendChild(g);
-  applyEditState();
-};
-
-window.refreshTonal = function () {
-  if (!LS.user || LS.mode !== 'apps') return;
-  var m = $('modal');
-  if (m && m.classList.contains('on')) return;
-  findStats(true);
-  render();
-};
-
-try { if (window.tonalPoll) { clearInterval(window.tonalPoll); window.tonalPoll = null; } } catch (e) {}
-var snap = null, tick = null;
-function poll() {
-  if (tick) clearInterval(tick);
-  snap = lsGet(canon());
-  tick = setInterval(function () {
-    if (document.hidden || LS.mode !== 'apps') return;
-    var cur = lsGet(canon());
-    if (cur !== snap) { snap = cur; window.refreshTonal(); }
-  }, 1200);
-  window.tonalPoll = tick;
-}
-window.addEventListener('storage', function (e) { if (!e.key || looksTonal(e.key)) window.refreshTonal(); });
-window.addEventListener('message', function (e) {
-  var d = e.data; if (!d || typeof d !== 'object') return;
-  if (!/tonal/i.test(String(d.type || ''))) return;
-  var n = norm(d.stats || d.payload || d);
-  if (!n) return;
-  lsSet(canon(), JSON.stringify(n));
-  window.refreshTonal();
-});
-document.addEventListener('visibilitychange', function () { if (!document.hidden) window.refreshTonal(); });
-window.addEventListener('pageshow', function () { window.refreshTonal(); });
-window.addEventListener('focus', function () { window.refreshTonal(); });
-
-poll();
-if (LS.mode === 'apps') render();
-console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', !!findStats(false));
-})();
-</script>
-
-
-<div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button>
-
-<script>
-/* ═══ GJPS · AVÍS iOS v18 · mínim i definitiu ═══
-   iOS: el vídeo es carrega de seguida; un avís breu (que no bloqueja els tocs)
-   indica que cal tocar la imatge per iniciar-lo. La ✕ sempre visible.
-   PC i Android: es delega al comportament original del nucli, sense canvis.
-   ═══ */
-(function () {
-'use strict';
-
-var _origOpen  = window.openFullscreenVideo;
-var _origClose = window.closeVideoPlayer;
-
-['gjCinema','gjPlayer','gjSrc','npV8','npV8Src','gjpsNative','iosStart','iosClean','iosHint','npSrcModal','npSrcBtn']
-  .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
-['gjCinemaV11','gjCinemaV12','gjCinemaV13','gjCinemaV14','gjCinemaV15','gjCinemaV16','gjCinemaV17',
- 'gjPlayV9','gjpsPlayV8','gjpsNatV7','gjpsNatV6','gjpsIosNative','gjpsIosPlayV4','gjpsIosPlayV3',
- 'gjpsIosPlayCSS','gjCinemaCSS','gjIosNoteCSS']
-  .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
-try { window.__gjCinemaLoaded = false; } catch (e) {}
-
-var CSS = `
-.gjnote{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999998;
-  display:none;pointer-events:none;text-align:center;padding:26px 30px;border-radius:22px;
-  background:radial-gradient(60% 60% at 50% 40%,rgba(12,16,23,.86),rgba(5,7,10,.72));
-  border:1px solid rgba(232,176,75,.34);box-shadow:0 18px 50px rgba(0,0,0,.6);
-  font-family:'Inter',system-ui,sans-serif;color:#f4f1ea;
-  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
-.gjnote.on{display:block;animation:gjnIn .45s cubic-bezier(.16,1,.3,1) both}
-.gjnote.out{animation:gjnOut .5s ease forwards}
-@keyframes gjnIn{from{opacity:0;transform:translate(-50%,-46%) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes gjnOut{to{opacity:0;transform:translate(-50%,-54%) scale(.97)}}
-.gjnote .pb{width:86px;height:86px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;
-  font-size:32px;line-height:1;padding-left:6px;color:#0a0c10;
-  background:linear-gradient(148deg,#fbe6b4,#e8b04b 54%,#a9762a);
-  box-shadow:0 14px 36px rgba(232,176,75,.42),0 0 0 10px rgba(232,176,75,.1);
-  animation:gjnBeat 2.2s ease-in-out infinite}
-@keyframes gjnBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.gjnote .tx{font-size:15px;font-weight:800;letter-spacing:.01em}
-.gjnote .sb{margin-top:7px;font-size:12px;font-weight:500;line-height:1.6;color:#a8b0be}
-.modal.gj-iosnote .close{display:flex!important;opacity:1!important;pointer-events:auto!important;
-  background:rgba(0,0,0,.85)!important;border:2px solid var(--gold)!important;color:var(--gold)!important;
-  box-shadow:0 4px 14px rgba(0,0,0,.55)!important}
-html.fx-calm .gjnote .pb{animation:none}
-@media (prefers-reduced-motion:reduce){.gjnote,.gjnote .pb{animation-duration:1ms!important}}
-`;
-
-var note = null, hideT = null;
-
-function ca() { return !(window.LS && LS.lang === 'es'); }
-function toast(m, d) { if (typeof showToast === 'function') showToast(m, d || 1800); }
-function isIOSdev() { try { return (typeof isIOS === 'function') ? isIOS() : false; } catch (e) { return false; } }
-function inject() {
-  if (document.getElementById('gjIosNoteCSS')) return;
-  var st = document.createElement('style'); st.id = 'gjIosNoteCSS'; st.textContent = CSS;
-  document.head.appendChild(st);
-}
-function build() {
-  if (note && document.body.contains(note)) return;
-  inject();
-  var wrap = document.querySelector('.wrap'); if (!wrap) return;
-  note = document.createElement('div');
-  note.id = 'gjIosNote'; note.className = 'gjnote';
-  note.innerHTML = '<div class="pb">▶</div><div class="tx"></div><div class="sb"></div>';
-  wrap.appendChild(note);
-}
-function showNote() {
-  build(); if (!note) return;
-  note.querySelector('.tx').textContent = ca() ? 'Toca el vídeo per iniciar-lo' : 'Toca el vídeo para iniciarlo';
-  note.querySelector('.sb').textContent = ca()
-    ? 'Si els controls no marxen sols, pausa i torna a reproduir.'
-    : 'Si los controles no se van solos, pausa y vuelve a reproducir.';
-  note.classList.remove('out'); note.classList.add('on');
-  clearTimeout(hideT); hideT = setTimeout(hideNote, 3600);
-}
-function hideNote() {
-  clearTimeout(hideT);
-  if (!note) return;
-  if (note.classList.contains('on')) { note.classList.add('out'); setTimeout(function () { note.classList.remove('on', 'out'); }, 520); }
-  else note.classList.remove('on', 'out');
-}
-document.addEventListener('touchstart', function () {
-  var m = document.getElementById('modal');
-  if (m && m.classList.contains('gj-iosnote')) hideNote();
-}, { passive: true, capture: true });
-
-window.openFullscreenVideo = function (u) {
-  if (!u) { toast(t().soon); return; }
-  window.currentVideoSrc = u;
-  if (!isIOSdev()) { if (typeof _origOpen === 'function') return _origOpen(u); return; }
-
-  var m = document.getElementById('modal'), p = document.getElementById('player'), ov = document.getElementById('videoOverlay');
-  if (!m || !p) return;
-  if (typeof pushVideoState === 'function') pushVideoState();
-  document.documentElement.style.zoom = '1';
-  m.classList.add('on', 'show-controls', 'ios-device', 'gj-iosnote');
-  if (ov) ov.style.display = 'none';
-  p.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
-  p.setAttribute('allowfullscreen', 'true');
-  var sep = u.indexOf('?') >= 0 ? '&' : '?';
-  p.src = u + sep + 'autoplay=1&authuser=0';
-  p.classList.add('active');
-  showNote();
-  if (typeof showCloseBtn === 'function') showCloseBtn();
-};
-
-window.closeVideoPlayer = function (a) {
-  var m = document.getElementById('modal'), ov = document.getElementById('videoOverlay');
-  if (m) m.classList.remove('gj-iosnote');
-  if (ov) ov.style.display = '';
-  hideNote();
-  if (typeof _origClose === 'function') return _origClose(a);
-};
-
-window.GJPSIosNote = { show: showNote, hide: hideNote };
-})();
-</script>
-
-<script>
-/* ═══ GJPS · NOTA D'AJUDA: REPRODUCCIÓ DE VÍDEOS PER PLATAFORMA ═══ */
-(function () {
-'use strict';
-if (!window.HELP || !Array.isArray(HELP)) return;
-for (var i = 0; i < HELP.length; i++) if (HELP[i] && HELP[i].gjios) return;
-
-HELP.push({
-  gjios: true,
-  ico: '📱',
-  t: {
-    ca: 'Com es reprodueixen els vídeos (iPhone, iPad, Android i ordinador)',
-    es: 'Cómo se reproducen los vídeos (iPhone, iPad, Android y ordenador)'
-  },
-  p: {
-    ca: '🍎 IPHONE I IPAD\n' +
-       'En prémer ▶ sobre un vídeo, aquest s\'obre dins de la pròpia aula. Veureu un avís breu amb un botó de reproducció: és normal, desapareix sol en pocs segons.\n' +
-       '1. Toqueu la imatge del vídeo una vegada per iniciar-lo. Apple no permet que un vídeo arrenqui sol sense un toc de l\'usuari.\n' +
-       '2. Els controls del reproductor (barra inferior) poden quedar visibles uns instants. Si no marxen sols, feu una pausa i torneu a reproduir: desapareixeran i podreu veure el vídeo a pantalla neta.\n' +
-       '3. Per tancar el vídeo i tornar a l\'aula, premeu la ✕ de dalt a la dreta.\n' +
-       'Si en algun moment el vídeo no respon, tanqueu-lo amb la ✕ i torneu-lo a obrir: es resol sempre sense perdre el vostre progrés.\n\n' +
-       '🤖 ANDROID\n' +
-       'El vídeo s\'obre en una pestanya nova del navegador, a pantalla completa. Per tornar a l\'aula, premeu el botó ENRERE del mòbil o tablet una sola vegada.\n\n' +
-       '💻 ORDINADOR\n' +
-       'El vídeo s\'obre a pantalla completa dins de l\'aula. Feu un clic sobre la imatge per iniciar-lo. Per sortir, premeu la tecla Esc o la ✕ de dalt a la dreta.\n\n' +
-       'En tots els casos el progrés (vídeos completats, notes i repàs) es conserva exactament com estava abans d\'obrir el vídeo.',
-    es: '🍎 IPHONE Y IPAD\n' +
-       'Al pulsar ▶ sobre un vídeo, este se abre dentro de la propia aula. Veréis un aviso breve con un botón de reproducción: es normal, desaparece solo en pocos segundos.\n' +
-       '1. Tocad la imagen del vídeo una vez para iniciarlo. Apple no permite que un vídeo arranque solo sin un toque del usuario.\n' +
-       '2. Los controles del reproductor (barra inferior) pueden quedar visibles unos instantes. Si no se van solos, haced una pausa y volved a reproducir: desaparecerán y podréis ver el vídeo a pantalla limpia.\n' +
-       '3. Para cerrar el vídeo y volver al aula, pulsad la ✕ de arriba a la derecha.\n' +
-       'Si en algún momento el vídeo no responde, cerradlo con la ✕ y volved a abrirlo: se resuelve siempre sin perder vuestro progreso.\n\n' +
-       '🤖 ANDROID\n' +
-       'El vídeo se abre en una pestaña nueva del navegador, a pantalla completa. Para volver al aula, pulsad el botón ATRÁS del móvil o tablet una sola vez.\n\n' +
-       '💻 ORDENADOR\n' +
-       'El vídeo se abre a pantalla completa dentro del aula. Haced un clic sobre la imagen para iniciarlo. Para salir, pulsad la tecla Esc o la ✕ de arriba a la derecha.\n\n' +
-       'En todos los casos el progreso (vídeos completados, notas y repaso) se conserva exactamente como estaba antes de abrir el vídeo.'
-  }
-});
-
-try { if (typeof render === 'function' && LS.mode === 'help') render(); } catch (e) {}
 })();
 </script>
 
