@@ -6867,5 +6867,176 @@ window.GJPSPub = {
 })();
 </script>
 
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   42. RELLEU DEL LOGO + SUPERFÍCIE DE TARGETES I DESPLEGABLES
+   Fons sempre opac; el degradat són capes translúcides al damunt.
+   Vores il·luminades a dalt i al costat d'on ve la llum; mai a baix.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── A. REQUADRES DE VÍDEO ─────────────────────────────────────────────── */
+
+/* FOSC — llum càlida a la cantonada superior esquerra, ombra al peu */
+html[data-theme="dark"] .vid{
+  background-color:#151a23 !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,238,205,.18) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(90deg,  rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(270deg, rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
+    radial-gradient(125% 93% at 0% 0%, rgba(232,176,75,.14) 0%, rgba(232,176,75,0) 59%),
+    linear-gradient(158deg, rgba(255,255,255,.052) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,.285) 100%) !important;
+}
+
+/* BLAU — llum des de l'esquerra, molt continguda */
+html[data-theme="blue"] .vid{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(158deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.05) 100%) !important;
+}
+
+/* SÈPIA — suavitzat al mateix nivell que el blau */
+html[data-theme="sepia"] .vid{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.44) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(158deg, rgba(255,255,255,.11) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.055) 100%) !important;
+}
+
+/* Els vídeos sense enllaç continuen apagats i plans */
+html[data-theme] .vid.nolink{ background-image:none !important; }
+
+/* ── B. DESPLEGABLES DE FAQ I DE L'INTERROGANT ───────────────────────────
+   FOSC : ombra a l'esquerra → llum ambre a la dreta  (atenuada)
+   CLARS: blanc a l'esquerra → ombra a la dreta       (invertit i atenuat)  */
+html[data-theme="dark"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(270deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
+    radial-gradient(120% 130% at 100% 50%, rgba(232,176,75,.075) 0%, rgba(232,176,75,0) 62%),
+    linear-gradient(90deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.035) 44%, rgba(255,255,255,.03) 100%) !important;
+}
+html[data-theme="blue"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.60) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(90deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.04) 46%, rgba(26,32,48,.055) 100%) !important;
+}
+html[data-theme="sepia"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.78) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.66) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.38) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(90deg, rgba(255,255,255,.40) 0%, rgba(255,255,255,.05) 46%, rgba(58,44,28,.065) 100%) !important;
+}
+
+/* ── C. LOGO EN RELLEU ───────────────────────────────────────────────────
+   --wm-op2 : presència del logo (més baix = més transparent)
+   --wm-tint: color del logo. brightness(0) = fosc · +invert(1) = blanc
+   --wm-hi  : llum del bisell (dalt-esquerra)
+   --wm-sh  : ombra del bisell (baix-dreta)
+   --wm-amb : ombra projectada que el separa de la paret                    */
+html[data-theme="dark"]{
+  --wm-op2:.15;
+  --wm-tint:brightness(1.06) contrast(1.03);
+  --wm-hi:rgba(255,255,255,.95);
+  --wm-sh:rgba(0,0,0,1);
+  --wm-amb:rgba(0,0,0,.92);
+  --wm-vig-op:.18;
+}
+html[data-theme="blue"]{
+  --wm-op2:.09;
+  --wm-tint:brightness(0);
+  --wm-hi:rgba(255,255,255,.90);
+  --wm-sh:rgba(26,32,48,.90);
+  --wm-amb:rgba(26,32,48,.72);
+  --wm-vig-op:0;
+}
+html[data-theme="sepia"]{
+  --wm-op2:.13;
+  --wm-tint:brightness(0) invert(1);
+  --wm-hi:rgba(255,255,255,1);
+  --wm-sh:rgba(58,44,28,.90);
+  --wm-amb:rgba(58,44,28,.72);
+  --wm-vig-op:0;
+}
+@media (max-width:767px) and (orientation:portrait){
+  html[data-theme="dark"]{ --wm-op2:.12 }
+  html[data-theme="blue"]{ --wm-op2:.07 }
+  html[data-theme="sepia"]{ --wm-op2:.10 }
+}
+
+html[data-theme] #wm{
+  opacity:var(--wm-op2) !important;
+  transform:translate3d(0,var(--wm-par,0px),0);
+  filter:
+    var(--wm-tint)
+    drop-shadow(-1px -1px 0 var(--wm-hi))
+    drop-shadow(2px 3px 1.5px var(--wm-sh))
+    drop-shadow(9px 16px 30px var(--wm-amb)) !important;
+}
+html[data-theme] #wm::after{ display:none !important; }
+.wm-vig{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:var(--wm-vig-op,0);
+  background:radial-gradient(ellipse at center, rgba(10,12,16,.10) 0%, rgba(10,12,16,.85) 78%);
+}
+
+@media (prefers-reduced-motion:reduce){
+  html[data-theme] #wm{ transform:none !important }
+}
+html.fx-calm #wm{ transform:none !important }
+</style>
+
+<script>
+/* Vinyeta equivalent a l'original + paral·laxi mínima del relleu. */
+(function () {
+'use strict';
+if (window.__gjRelief11) return;
+window.__gjRelief11 = true;
+
+function vig() {
+  if (document.querySelector('.wm-vig')) return;
+  var wm = document.getElementById('wm');
+  if (!wm || !wm.parentNode) return;
+  var v = document.createElement('div');
+  v.className = 'wm-vig';
+  v.setAttribute('aria-hidden', 'true');
+  wm.parentNode.insertBefore(v, wm.nextSibling);
+}
+
+var calm = false;
+try { calm = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+var raf = 0;
+function onScroll() {
+  if (calm || raf) return;
+  raf = requestAnimationFrame(function () {
+    raf = 0;
+    var d = document.documentElement;
+    var max = Math.max(1, d.scrollHeight - window.innerHeight);
+    var p = Math.max(0, Math.min(1, (window.scrollY || d.scrollTop || 0) / max));
+    d.style.setProperty('--wm-par', (p * -14).toFixed(2) + 'px');
+  });
+}
+
+function boot() {
+  vig(); onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+})();
+</script>
+
 </body>
 </html>
