@@ -7288,5 +7288,49 @@ window.GJPSIosNote = { show: showNote, hide: hideNote };
 })();
 </script>
 
+<script>
+/* ═══ GJPS · NOTA D'AJUDA: REPRODUCCIÓ DE VÍDEOS PER PLATAFORMA ═══ */
+(function () {
+'use strict';
+if (!window.HELP || !Array.isArray(HELP)) return;
+for (var i = 0; i < HELP.length; i++) if (HELP[i] && HELP[i].gjios) return;
+
+HELP.push({
+  gjios: true,
+  ico: '📱',
+  t: {
+    ca: 'Com es reprodueixen els vídeos (iPhone, iPad, Android i ordinador)',
+    es: 'Cómo se reproducen los vídeos (iPhone, iPad, Android y ordenador)'
+  },
+  p: {
+    ca: '🍎 IPHONE I IPAD\n' +
+       'En prémer ▶ sobre un vídeo, aquest s\'obre dins de la pròpia aula. Veureu un avís breu amb un botó de reproducció: és normal, desapareix sol en pocs segons.\n' +
+       '1. Toqueu la imatge del vídeo una vegada per iniciar-lo. Apple no permet que un vídeo arrenqui sol sense un toc de l\'usuari.\n' +
+       '2. Els controls del reproductor (barra inferior) poden quedar visibles uns instants. Si no marxen sols, feu una pausa i torneu a reproduir: desapareixeran i podreu veure el vídeo a pantalla neta.\n' +
+       '3. Per tancar el vídeo i tornar a l\'aula, premeu la ✕ de dalt a la dreta.\n' +
+       'Si en algun moment el vídeo no respon, tanqueu-lo amb la ✕ i torneu-lo a obrir: es resol sempre sense perdre el vostre progrés.\n\n' +
+       '🤖 ANDROID\n' +
+       'El vídeo s\'obre en una pestanya nova del navegador, a pantalla completa. Per tornar a l\'aula, premeu el botó ENRERE del mòbil o tablet una sola vegada.\n\n' +
+       '💻 ORDINADOR\n' +
+       'El vídeo s\'obre a pantalla completa dins de l\'aula. Feu un clic sobre la imatge per iniciar-lo. Per sortir, premeu la tecla Esc o la ✕ de dalt a la dreta.\n\n' +
+       'En tots els casos el progrés (vídeos completats, notes i repàs) es conserva exactament com estava abans d\'obrir el vídeo.',
+    es: '🍎 IPHONE Y IPAD\n' +
+       'Al pulsar ▶ sobre un vídeo, este se abre dentro de la propia aula. Veréis un aviso breve con un botón de reproducción: es normal, desaparece solo en pocos segundos.\n' +
+       '1. Tocad la imagen del vídeo una vez para iniciarlo. Apple no permite que un vídeo arranque solo sin un toque del usuario.\n' +
+       '2. Los controles del reproductor (barra inferior) pueden quedar visibles unos instantes. Si no se van solos, haced una pausa y volved a reproducir: desaparecerán y podréis ver el vídeo a pantalla limpia.\n' +
+       '3. Para cerrar el vídeo y volver al aula, pulsad la ✕ de arriba a la derecha.\n' +
+       'Si en algún momento el vídeo no responde, cerradlo con la ✕ y volved a abrirlo: se resuelve siempre sin perder vuestro progreso.\n\n' +
+       '🤖 ANDROID\n' +
+       'El vídeo se abre en una pestaña nueva del navegador, a pantalla completa. Para volver al aula, pulsad el botón ATRÁS del móvil o tablet una sola vez.\n\n' +
+       '💻 ORDENADOR\n' +
+       'El vídeo se abre a pantalla completa dentro del aula. Haced un clic sobre la imagen para iniciarlo. Para salir, pulsad la tecla Esc o la ✕ de arriba a la derecha.\n\n' +
+       'En todos los casos el progreso (vídeos completados, notas y repaso) se conserva exactamente como estaba antes de abrir el vídeo.'
+  }
+});
+
+try { if (typeof render === 'function' && LS.mode === 'help') render(); } catch (e) {}
+})();
+</script>
+
 </body>
 </html>
