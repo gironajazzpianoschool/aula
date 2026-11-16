@@ -2157,6 +2157,24 @@ html[data-theme="dark"]{ --wm-op2:.20; }
   html[data-theme="dark"]{ --wm-op2:.09; }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   48. LOGO ALS MODES CLARS · mòbil i tablet
+   El blau porta el logo fosc i en té prou amb poca presència; el sèpia el
+   porta blanc sobre crema i necessita més opacitat per separar-se del fons.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (min-width:768px) and (max-width:1366px) and (pointer:coarse){
+  html[data-theme="blue"]{  --wm-op2:.14; --wm-sh:rgba(26,32,48,.95); }
+  html[data-theme="sepia"]{ --wm-op2:.30; --wm-sh:rgba(58,44,28,.95); }
+}
+@media (max-width:767px) and (orientation:portrait){
+  html[data-theme="blue"]{  --wm-op2:.16; --wm-sh:rgba(26,32,48,.95); }
+  html[data-theme="sepia"]{ --wm-op2:.34; --wm-sh:rgba(58,44,28,.95); }
+}
+@media (max-width:926px) and (orientation:landscape) and (pointer:coarse){
+  html[data-theme="blue"]{  --wm-op2:.16; --wm-sh:rgba(26,32,48,.95); }
+  html[data-theme="sepia"]{ --wm-op2:.34; --wm-sh:rgba(58,44,28,.95); }
+}
+
 </style>
 </head>
 <body>
