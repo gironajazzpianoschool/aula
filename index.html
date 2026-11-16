@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ca" data-theme="dark" class="can-hover" style=""><head>
+<html lang="ca" data-theme="dark" class="can-hover">
+<head>
 <script>
 /* ═══ GJPS · GUARDIÀ D'ARRENCADA v2 · amb analitzador de balanç de claus ═══ */
 (function () {
@@ -2231,68 +2232,6 @@ html.no-hover .pubitem:hover,html.no-hover .pubacts button:hover{transform:none!
 html.fx-calm .pubcard{animation:none!important}
 
 /* ============================================================
-   40. LABORATORI D'APPS · rècords i inspector
-   ============================================================ */
-.labhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.labhead .t{font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
-.labhead .sp{flex:1}
-.labbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm,10px);
-  border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);
-  font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .18s}
-.labbtn:hover{transform:translateY(-1px);border-color:var(--gold);color:var(--gold)}
-.labbtn.on{background:var(--gold);border-color:var(--gold);color:#fff}
-html[data-theme="dark"] .labbtn.on{color:#14161c}
-.rec{margin:0 0 14px;padding:14px;border-radius:var(--r-md,12px);text-align:center;
-  background:linear-gradient(150deg,rgba(232,176,75,.13),rgba(57,217,138,.07));
-  border:1px solid rgba(232,176,75,.42);position:relative;overflow:hidden}
-.rec::after{content:'';position:absolute;inset:-40% -10% auto;height:120%;pointer-events:none;opacity:.5;
-  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,.16) 24deg,transparent 60deg,transparent 200deg,rgba(255,255,255,.12) 224deg,transparent 260deg);
-  animation:recSheen 14s linear infinite}
-@keyframes recSheen{to{transform:rotate(360deg)}}
-.rec .lb{position:relative;font-size:9.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.rec .big{position:relative;font-size:34px;font-weight:800;line-height:1.1;margin:4px 0 2px;
-  font-variant-numeric:tabular-nums;color:var(--ink)}
-.rec .big small{font-size:16px;font-weight:700;opacity:.7}
-.rec .mt{position:relative;font-size:11px;line-height:1.6;color:var(--mut);font-weight:600}
-.rec .ss{position:relative;font-size:10.5px;color:var(--mut);margin-top:5px}
-.rec .bars{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:26px;margin-top:9px}
-.rec .bars i{width:7px;border-radius:2px 2px 0 0;background:linear-gradient(180deg,var(--gold),rgba(232,176,75,.35));
-  min-height:3px;transition:height .4s cubic-bezier(.16,1,.3,1)}
-.rec .bars i.hi{background:linear-gradient(180deg,#39d98a,rgba(57,217,138,.4))}
-.recnone{margin:0 0 14px;padding:13px;border-radius:var(--r-md,12px);font-size:12px;line-height:1.65;
-  color:var(--mut);border:1px dashed var(--hair-2,var(--line));background:var(--tap,transparent)}
-.recnone b{color:var(--ink)}
-.insp{margin-bottom:20px;border-radius:var(--r-lg,16px);overflow:hidden;
-  border:1px solid rgba(76,201,240,.36);background:linear-gradient(180deg,rgba(76,201,240,.07),transparent)}
-.insp .ih{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--hair,var(--line))}
-.insp .ih b{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#4cc9f0}
-.insp .ih .sp{flex:1}
-.insp .ib{max-height:300px;overflow-y:auto;padding:12px 15px}
-.insp .row{display:flex;align-items:center;gap:9px;padding:9px 11px;margin-bottom:6px;border-radius:9px;
-  background:var(--card);border:1px solid var(--hair,var(--line))}
-.insp .row .k{flex:1;min-width:0}
-.insp .row .k b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
-.insp .row .k span{display:block;font-size:10.5px;color:var(--mut);margin-top:2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.insp .row .tag{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  padding:3px 8px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
-.insp .row .tag.ok{border-color:var(--ok);color:var(--ok);background:rgba(57,217,138,.1)}
-.insp .empty{font-size:12px;color:var(--mut);line-height:1.7}
-.insp .ib::-webkit-scrollbar{width:10px}
-.insp .ib::-webkit-scrollbar-track{background:rgba(76,201,240,.07);border-radius:99px}
-.insp .ib::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#4cc9f0,#1f8fb5);border-radius:99px;
-  border:2px solid transparent;background-clip:content-box}
-.insp .ib::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#9fe3f8,#4cc9f0);background-clip:content-box}
-.insp .ib{scrollbar-width:thin;scrollbar-color:rgba(76,201,240,.6) rgba(76,201,240,.07)}
-html.fx-calm .rec::after{animation:none!important}
-html.no-hover .labbtn:hover{transform:none!important}
-@media(max-width:767px){
-  .labhead{gap:7px}.labbtn{flex:1;justify-content:center;min-height:38px}
-  .insp .row{flex-wrap:wrap}
-}
-
-/* ============================================================
    41. AVÍS iOS BREU (gjnote)
    ============================================================ */
 .gjnote{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999998;
@@ -2318,78 +2257,188 @@ html.no-hover .labbtn:hover{transform:none!important}
   box-shadow:0 4px 14px rgba(0,0,0,.55)!important}
 html.fx-calm .gjnote .pb{animation:none}
 @media (prefers-reduced-motion:reduce){.gjnote,.gjnote .pb{animation-duration:1ms!important}}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   42. RELLEU DEL LOGO + SUPERFÍCIE DE TARGETES I DESPLEGABLES
+   Fons sempre opac; el degradat són capes translúcides al damunt.
+   Vores il·luminades a dalt i al costat d'on ve la llum; mai a baix.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── A. REQUADRES DE VÍDEO ─────────────────────────────────────────────── */
+
+/* FOSC — llum càlida a la cantonada superior esquerra, ombra al peu */
+html[data-theme="dark"] .vid{
+  background-color:#151a23 !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,238,205,.18) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(90deg,  rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(270deg, rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
+    radial-gradient(125% 93% at 0% 0%, rgba(232,176,75,.14) 0%, rgba(232,176,75,0) 59%),
+    linear-gradient(158deg, rgba(255,255,255,.052) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,.285) 100%) !important;
+}
+
+/* BLAU — llum des de l'esquerra, molt continguda */
+html[data-theme="blue"] .vid{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(158deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.05) 100%) !important;
+}
+
+/* SÈPIA — suavitzat al mateix nivell que el blau */
+html[data-theme="sepia"] .vid{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.44) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(158deg, rgba(255,255,255,.11) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.055) 100%) !important;
+}
+
+/* Els vídeos sense enllaç continuen apagats i plans */
+html[data-theme] .vid.nolink{ background-image:none !important; }
+
+/* ── B. DESPLEGABLES DE FAQ I DE L'INTERROGANT ───────────────────────────
+   FOSC : ombra a l'esquerra → llum ambre a la dreta  (atenuada)
+   CLARS: blanc a l'esquerra → ombra a la dreta       (invertit i atenuat)  */
+html[data-theme="dark"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
+    linear-gradient(270deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
+    radial-gradient(120% 130% at 100% 50%, rgba(232,176,75,.075) 0%, rgba(232,176,75,0) 62%),
+    linear-gradient(90deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.035) 44%, rgba(255,255,255,.03) 100%) !important;
+}
+html[data-theme="blue"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.60) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(90deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.04) 46%, rgba(26,32,48,.055) 100%) !important;
+}
+html[data-theme="sepia"] .faq-item{
+  background-color:var(--card) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.78) 0 1px, rgba(255,255,255,0) 1px),
+    linear-gradient(90deg,  rgba(255,255,255,.66) 0 1px, rgba(255,255,255,0) 1px),
+    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.38) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(90deg, rgba(255,255,255,.40) 0%, rgba(255,255,255,.05) 46%, rgba(58,44,28,.065) 100%) !important;
+}
+
+/* ── C. LOGO EN RELLEU ───────────────────────────────────────────────────
+   --wm-op2 : presència del logo (més baix = més transparent)
+   --wm-tint: color del logo. brightness(0) = fosc · +invert(1) = blanc
+   --wm-hi  : llum del bisell (dalt-esquerra)
+   --wm-sh  : ombra del bisell (baix-dreta)
+   --wm-amb : ombra projectada que el separa de la paret                    */
+html[data-theme="dark"]{
+  --wm-op2:.15;
+  --wm-tint:brightness(1.06) contrast(1.03);
+  --wm-hi:rgba(255,255,255,.95);
+  --wm-sh:rgba(0,0,0,1);
+  --wm-amb:rgba(0,0,0,.92);
+  --wm-vig-op:.18;
+}
+html[data-theme="blue"]{
+  --wm-op2:.09;
+  --wm-tint:brightness(0);
+  --wm-hi:rgba(255,255,255,.90);
+  --wm-sh:rgba(26,32,48,.90);
+  --wm-amb:rgba(26,32,48,.72);
+  --wm-vig-op:0;
+}
+html[data-theme="sepia"]{
+  --wm-op2:.13;
+  --wm-tint:brightness(0) invert(1);
+  --wm-hi:rgba(255,255,255,1);
+  --wm-sh:rgba(58,44,28,.90);
+  --wm-amb:rgba(58,44,28,.72);
+  --wm-vig-op:0;
+}
+@media (max-width:767px) and (orientation:portrait){
+  html[data-theme="dark"]{ --wm-op2:.12 }
+  html[data-theme="blue"]{ --wm-op2:.07 }
+  html[data-theme="sepia"]{ --wm-op2:.10 }
+}
+
+html[data-theme] #wm{
+  opacity:var(--wm-op2) !important;
+  transform:translate3d(0,var(--wm-par,0px),0);
+  filter:
+    var(--wm-tint)
+    drop-shadow(-1px -1px 0 var(--wm-hi))
+    drop-shadow(2px 3px 1.5px var(--wm-sh))
+    drop-shadow(9px 16px 30px var(--wm-amb)) !important;
+}
+html[data-theme] #wm::after{ display:none !important; }
+.wm-vig{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:var(--wm-vig-op,0);
+  background:radial-gradient(ellipse at center, rgba(10,12,16,.10) 0%, rgba(10,12,16,.85) 78%);
+}
+
+@media (prefers-reduced-motion:reduce){
+  html[data-theme] #wm{ transform:none !important }
+}
+html.fx-calm #wm{ transform:none !important }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   43. AVÍS D'ADJUNTS I DOCUMENTS DE L'ITINERARI
+   ══════════════════════════════════════════════════════════════════════════ */
+.adj-notice{margin-top:11px}
+.adj-notice>button{
+  display:flex;align-items:center;gap:9px;width:100%;padding:9px 12px;cursor:pointer;
+  border-radius:10px;border:1px solid color-mix(in srgb,var(--gold) 46%,transparent);
+  background:linear-gradient(100deg, color-mix(in srgb,var(--gold) 16%,transparent), color-mix(in srgb,var(--gold) 5%,transparent));
+  color:var(--ink);font-family:inherit;font-size:12px;font-weight:700;text-align:left;
+  transition:border-color .2s,background .2s,transform .16s}
+.adj-notice>button:hover{border-color:var(--gold);transform:translateY(-1px)}
+.adj-notice>button .an-ico{flex:none;font-size:15px;line-height:1}
+.adj-notice>button .an-tx{flex:1;min-width:0}
+.adj-notice>button .an-n{flex:none;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;background:var(--gold);color:#14161c}
+.adj-notice>button .an-ch{flex:none;color:var(--gold);transition:transform .22s}
+.adj-notice.open>button .an-ch{transform:rotate(180deg)}
+.vid-now .adj-notice>button{padding:11px 13px;font-size:12.5px;
+  box-shadow:0 0 0 0 rgba(232,176,75,.5);animation:adjPulse 3.4s ease-in-out infinite}
+@keyframes adjPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,176,75,.34)}50%{box-shadow:0 0 0 7px rgba(232,176,75,0)}}
+html.fx-calm .vid-now .adj-notice>button{animation:none}
+@media (prefers-reduced-motion:reduce){.vid-now .adj-notice>button{animation:none}}
+.adj-list{display:none;margin-top:8px;flex-direction:column;gap:6px}
+.adj-notice.open .adj-list{display:flex}
+.adj-list a{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;
+  border:1px solid var(--hair-2,var(--line));background:var(--tap,rgba(255,255,255,.04));
+  color:var(--ink);text-decoration:none;font-size:12px;font-weight:600;transition:all .18s}
+.adj-list a:hover{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent);transform:translateX(2px)}
+.adj-list a .al-ico{flex:none;font-size:14px}
+.adj-list a .al-tx{flex:1;min-width:0}
+.adj-list a .al-dl{flex:none;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+
+.doc-step{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid color-mix(in srgb,var(--blk-r,#4cc9f0) 50%,transparent);
+  color:var(--blk-r,#4cc9f0);background:color-mix(in srgb,var(--blk-r,#4cc9f0) 12%,transparent)}
+.docrow-m{display:flex;align-items:center;gap:9px;padding:9px 11px;margin-bottom:6px;border-radius:9px;
+  background:var(--card);border:1px solid var(--hair,var(--line))}
+.docrow-m .ic{flex:none;font-size:15px}
+.docrow-m .tx{flex:1;min-width:0}
+.docrow-m .tx b{display:block;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.docrow-m .tx span{display:block;font-size:10.5px;color:var(--mut);margin-top:2px}
+.docstat{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
+.docstat.live{border-color:var(--ok);color:var(--ok);background:rgba(57,217,138,.1)}
+.docstat.soon{border-color:#4cc9f0;color:#4cc9f0}
+.docstat.off{opacity:.6}
+
 </style>
-<style>#gjpsGuard{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;padding:18px;
-background:radial-gradient(70% 60% at 50% 0%,rgba(255,85,119,.14),transparent 60%),rgba(6,8,12,.88);
-backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:Inter,system-ui,sans-serif;color:#f2f2f2}
-#gjpsGuard.on{display:grid}#gjpsGuard *{box-sizing:border-box}
-.gg-box{width:min(980px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
-background:linear-gradient(180deg,#1b202b,#12161e);border:1px solid rgba(255,255,255,.14);border-radius:18px;
-box-shadow:0 30px 80px rgba(0,0,0,.65)}
-.gg-head{display:flex;align-items:flex-start;gap:14px;padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.1);
-background:linear-gradient(135deg,rgba(255,85,119,.14),rgba(232,176,75,.06))}
-.gg-badge{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
-background:rgba(255,85,119,.18);border:1px solid rgba(255,85,119,.45);color:#ff8fa6}
-.gg-ht{flex:1;min-width:0}.gg-ht h2{margin:0;font-size:17px;font-weight:800;color:#ffd884}
-.gg-ht p{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:#a8b0be}
-.gg-count{flex:none;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;
-border-radius:99px;background:rgba(255,85,119,.16);border:1px solid rgba(255,85,119,.4);color:#ff9fb2}
-.gg-body{flex:1;min-height:0;overflow-y:auto;padding:16px 20px}
-.gg-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
-.gg-tab{padding:7px 12px;border-radius:9px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:700;
-background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#a8b0be}
-.gg-tab.on{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}
-.gg-msg{padding:12px 14px;border-radius:12px;margin-bottom:11px;font-size:12.5px;line-height:1.6;
-background:rgba(255,85,119,.1);border:1px solid rgba(255,85,119,.32);color:#ffc2ce;
-font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-word}
-.gg-loc{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
-.gg-chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(76,201,240,.12);
-border:1px solid rgba(76,201,240,.35);color:#9fe3f8;font-family:ui-monospace,Menlo,Consolas,monospace}
-.gg-hint{padding:11px 13px;border-radius:12px;margin-bottom:13px;font-size:12.5px;line-height:1.6;
-background:rgba(232,176,75,.09);border:1px solid rgba(232,176,75,.3);color:#f0d9a8}
-.gg-sec{margin:16px 0 9px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#e8b04b}
-.gg-card{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px;margin-bottom:11px;background:rgba(0,0,0,.25)}
-.gg-card h4{margin:0 0 8px;font-size:12.5px;font-weight:800;color:#f2f2f2}
-.gg-find{font-size:11px;color:#8d95a3;margin-bottom:9px;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
-.gg-code{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#080a0e;margin-top:8px}
-.gg-code pre{margin:0;padding:10px 0;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7}
-.gg-ln{display:block;white-space:pre;padding:0 12px 0 0;color:#cfd6e2}
-.gg-ln .n{display:inline-block;width:60px;padding-right:12px;text-align:right;color:#5c6675;user-select:none;
-border-right:1px solid rgba(255,255,255,.08);margin-right:12px}
-.gg-ln.hit{background:rgba(255,85,119,.16);color:#fff;box-shadow:inset 3px 0 0 #ff5577}
-.gg-ln.hit .n{color:#ff9fb2;font-weight:700}
-.gg-caret{display:block;white-space:pre;color:#ff5577;font-weight:700;padding:0 12px 0 0}
-.gg-caret .n{display:inline-block;width:60px;padding-right:12px;margin-right:12px;border-right:1px solid transparent}
-.gg-ok{padding:11px 13px;border-radius:10px;font-size:12px;background:rgba(57,217,138,.1);
-border:1px solid rgba(57,217,138,.32);color:#9be8c4}
-.gg-sus{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.gg-sus span{font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;padding:4px 9px;border-radius:99px;
-background:rgba(140,82,255,.14);border:1px solid rgba(140,82,255,.4);color:#c9b3ff}
-.gg-foot{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap;padding:13px 20px;
-border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.25)}
-.gg-btn{padding:10px 15px;border-radius:10px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:700;
-background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#f2f2f2;transition:all .18s}
-.gg-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.3)}
-.gg-btn.pri{background:linear-gradient(135deg,#e8b04b,#a9762a);border-color:transparent;color:#1a1206}
-.gg-btn.cy{background:linear-gradient(135deg,#4cc9f0,#1f8fb5);border-color:transparent;color:#04222c}
-.gg-stat{margin-right:auto;font-size:11.5px;color:#6d7686}
-#gjpsGuardPill{position:fixed;left:14px;bottom:14px;z-index:2147482999;display:none;align-items:center;gap:8px;
-padding:9px 14px;border-radius:99px;cursor:pointer;font:inherit;font-size:11.5px;font-weight:800;
-background:linear-gradient(135deg,#ff5577,#b32b48);border:0;color:#fff;box-shadow:0 8px 24px rgba(255,85,119,.4)}
-#gjpsGuardPill.on{display:inline-flex}
-#gjpsGuard *{scrollbar-width:thin;scrollbar-color:rgba(232,176,75,.55) rgba(255,255,255,.05)}
-#gjpsGuard ::-webkit-scrollbar{width:10px;height:10px}
-#gjpsGuard ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);border-radius:99px}
-#gjpsGuard ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8b04b,#a9762a);border-radius:99px;
-border:2px solid transparent;background-clip:content-box}
-@media(max-width:760px){#gjpsGuard{padding:10px;align-items:end}.gg-box{max-height:94vh}
-.gg-head,.gg-body,.gg-foot{padding:13px}.gg-btn{flex:1;text-align:center}.gg-stat{width:100%;margin:0 0 4px}
-.gg-ln .n,.gg-caret .n{width:44px;padding-right:9px;margin-right:9px}}</style></head>
+</head>
 
 <body class="">
-<div id="wm"></div><div class="wm-vig" aria-hidden="true"></div>
+<div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
-<div id="toast" style="opacity: 0;">Tema: Fosc</div>
+<div id="toast" style="opacity: 0;">💾 Desat</div>
 
 <header>
   <div class="hbrand">
@@ -2432,8 +2481,8 @@ border:2px solid transparent;background-clip:content-box}
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
     <div class="frame">
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class="active"></iframe>
-      <div class="video-overlay hidden" id="videoOverlay">
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
+      <div class="video-overlay" id="videoOverlay">
         <div class="icon">▶</div>
         <div class="text" id="overlayText">Haz clic para reproducir</div>
       </div>
@@ -2443,12 +2492,12 @@ border:2px solid transparent;background-clip:content-box}
 
 <div class="lgin" id="login">
   <div class="lbox">
-    <h2 id="lgTitle"><div style="font-size:22px;font-weight:800;background:linear-gradient(90deg,#f7dc9a 0%,var(--gold) 45%,#c98f3a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;margin-bottom:4px;">GIRONA JAZZ PIANO SCHOOL®</div><div style="font-size:14px;color:var(--mut);font-weight:400;">Inicia sessió a l'aula virtual</div></h2>
-    <input id="lgName" autocomplete="username" list="userlist" placeholder="Usuari">
-    <datalist id="userlist"><option value="Student-01"></option><option value="Student-02"></option><option value="Student-03"></option><option value="Student-04"></option><option value="Student-05"></option><option value="Student-06"></option><option value="Student-07"></option><option value="Student-08"></option><option value="Student-09"></option><option value="Student-10"></option><option value="Student-11"></option><option value="Student-12"></option><option value="Student-13"></option><option value="Student-14"></option><option value="Student-15"></option><option value="Student-16"></option><option value="Student-17"></option><option value="Student-18"></option><option value="Student-19"></option><option value="Student-20"></option><option value="Student-21"></option><option value="Student-22"></option><option value="Student-23"></option><option value="Student-24"></option><option value="Student-25"></option><option value="Student-26"></option><option value="Student-27"></option><option value="Student-28"></option><option value="Student-29"></option><option value="Student-30"></option><option value="guest"></option></datalist>
-    <input id="lgPin" type="password" autocomplete="current-password" maxlength="32" placeholder="Contrasenya">
-    <button class="go" id="lgBtn">Entrar</button>
-    <button id="lgFaqBtn" class="go secondary" style="margin-top: 18px; background: transparent; border: 1px solid var(--line); color: var(--mut); font-size: var(--fs-btn); width: 100%;"> Preguntes Freqüents (FAQ)</button><div class="login-lang" id="loginLangSwitcher"><span class="login-lang-lbl">Idioma</span><button type="button" aria-pressed="true" class="on">Català</button><button type="button" aria-pressed="false">Español</button></div>
+    <h2 id="lgTitle">Login</h2>
+    <input id="lgName" autocomplete="username" list="userlist" placeholder="">
+    <datalist id="userlist"></datalist>
+    <input id="lgPin" type="password" autocomplete="current-password" maxlength="32" placeholder="">
+    <button class="go" id="lgBtn"></button>
+    <div class="login-lang" id="loginLangSwitcher"></div>
     <div class="lerr" id="lgErr"></div>
   </div>
 </div>
@@ -2477,7 +2526,7 @@ border:2px solid transparent;background-clip:content-box}
   </div>
 </div>
 
-<div id="appVer">GJPS v4.0 (2026-11-16)</div>
+<div id="appVer"></div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2819,7 +2868,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ============================================================ */
-var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Aquí tengo que introducir una descripción del video.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom.","es":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat","es":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.","es":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard","es":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.","es":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure","es":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.","es":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals","es":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.","es":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs","es":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.","es":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor","es":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.","es":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament","es":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.","es":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…","es":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉","es":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés","es":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.","es":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?","es":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.","es":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar","es":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.","es":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents","es":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.","es":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori","es":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova.","es":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{},"pub":[]};/*OV-END*/
+var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom.","es":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat","es":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.","es":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard","es":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.","es":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure","es":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.","es":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals","es":"Vídeos importantes y opcionales"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.","es":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs","es":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.","es":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor","es":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.","es":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament","es":"Aplicaciones de entrenamiento"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.","es":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…","es":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉","es":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés","es":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.","es":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?","es":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.","es":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar","es":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.","es":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents","es":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.","es":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori","es":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova.","es":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{},"pub":[]};/*OV-END*/
 
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
@@ -6931,135 +6980,6 @@ window.GJPSPub = {
 })();
 </script>
 
-<style>
-/* ══════════════════════════════════════════════════════════════════════════
-   42. RELLEU DEL LOGO + SUPERFÍCIE DE TARGETES I DESPLEGABLES
-   Fons sempre opac; el degradat són capes translúcides al damunt.
-   Vores il·luminades a dalt i al costat d'on ve la llum; mai a baix.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── A. REQUADRES DE VÍDEO ─────────────────────────────────────────────── */
-
-/* FOSC — llum càlida a la cantonada superior esquerra, ombra al peu */
-html[data-theme="dark"] .vid{
-  background-color:#151a23 !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,238,205,.18) 0 1px, rgba(255,238,205,0) 1px),
-    linear-gradient(90deg,  rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
-    linear-gradient(270deg, rgba(255,238,205,.10) 0 1px, rgba(255,238,205,0) 1px),
-    radial-gradient(125% 93% at 0% 0%, rgba(232,176,75,.14) 0%, rgba(232,176,75,0) 59%),
-    linear-gradient(158deg, rgba(255,255,255,.052) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,.285) 100%) !important;
-}
-
-/* BLAU — llum des de l'esquerra, molt continguda */
-html[data-theme="blue"] .vid{
-  background-color:var(--card) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
-    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
-    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 62%),
-    linear-gradient(158deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.05) 100%) !important;
-}
-
-/* SÈPIA — suavitzat al mateix nivell que el blau */
-html[data-theme="sepia"] .vid{
-  background-color:var(--card) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
-    linear-gradient(90deg,  rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px),
-    radial-gradient(122% 90% at 0% 0%, rgba(255,255,255,.44) 0%, rgba(255,255,255,0) 62%),
-    linear-gradient(158deg, rgba(255,255,255,.11) 0%, rgba(255,255,255,0) 48%, rgba(0,0,0,.055) 100%) !important;
-}
-
-/* Els vídeos sense enllaç continuen apagats i plans */
-html[data-theme] .vid.nolink{ background-image:none !important; }
-
-/* ── B. DESPLEGABLES DE FAQ I DE L'INTERROGANT ───────────────────────────
-   FOSC : ombra a l'esquerra → llum ambre a la dreta  (atenuada)
-   CLARS: blanc a l'esquerra → ombra a la dreta       (invertit i atenuat)  */
-html[data-theme="dark"] .faq-item{
-  background-color:var(--card) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
-    linear-gradient(270deg, rgba(255,238,205,.09) 0 1px, rgba(255,238,205,0) 1px),
-    radial-gradient(120% 130% at 100% 50%, rgba(232,176,75,.075) 0%, rgba(232,176,75,0) 62%),
-    linear-gradient(90deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.035) 44%, rgba(255,255,255,.03) 100%) !important;
-}
-html[data-theme="blue"] .faq-item{
-  background-color:var(--card) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,.70) 0 1px, rgba(255,255,255,0) 1px),
-    linear-gradient(90deg,  rgba(255,255,255,.60) 0 1px, rgba(255,255,255,0) 1px),
-    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 62%),
-    linear-gradient(90deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.04) 46%, rgba(26,32,48,.055) 100%) !important;
-}
-html[data-theme="sepia"] .faq-item{
-  background-color:var(--card) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,.78) 0 1px, rgba(255,255,255,0) 1px),
-    linear-gradient(90deg,  rgba(255,255,255,.66) 0 1px, rgba(255,255,255,0) 1px),
-    radial-gradient(120% 130% at 0% 50%, rgba(255,255,255,.38) 0%, rgba(255,255,255,0) 62%),
-    linear-gradient(90deg, rgba(255,255,255,.40) 0%, rgba(255,255,255,.05) 46%, rgba(58,44,28,.065) 100%) !important;
-}
-
-/* ── C. LOGO EN RELLEU ───────────────────────────────────────────────────
-   --wm-op2 : presència del logo (més baix = més transparent)
-   --wm-tint: color del logo. brightness(0) = fosc · +invert(1) = blanc
-   --wm-hi  : llum del bisell (dalt-esquerra)
-   --wm-sh  : ombra del bisell (baix-dreta)
-   --wm-amb : ombra projectada que el separa de la paret                    */
-html[data-theme="dark"]{
-  --wm-op2:.15;
-  --wm-tint:brightness(1.06) contrast(1.03);
-  --wm-hi:rgba(255,255,255,.95);
-  --wm-sh:rgba(0,0,0,1);
-  --wm-amb:rgba(0,0,0,.92);
-  --wm-vig-op:.18;
-}
-html[data-theme="blue"]{
-  --wm-op2:.09;
-  --wm-tint:brightness(0);
-  --wm-hi:rgba(255,255,255,.90);
-  --wm-sh:rgba(26,32,48,.90);
-  --wm-amb:rgba(26,32,48,.72);
-  --wm-vig-op:0;
-}
-html[data-theme="sepia"]{
-  --wm-op2:.13;
-  --wm-tint:brightness(0) invert(1);
-  --wm-hi:rgba(255,255,255,1);
-  --wm-sh:rgba(58,44,28,.90);
-  --wm-amb:rgba(58,44,28,.72);
-  --wm-vig-op:0;
-}
-@media (max-width:767px) and (orientation:portrait){
-  html[data-theme="dark"]{ --wm-op2:.12 }
-  html[data-theme="blue"]{ --wm-op2:.07 }
-  html[data-theme="sepia"]{ --wm-op2:.10 }
-}
-
-html[data-theme] #wm{
-  opacity:var(--wm-op2) !important;
-  transform:translate3d(0,var(--wm-par,0px),0);
-  filter:
-    var(--wm-tint)
-    drop-shadow(-1px -1px 0 var(--wm-hi))
-    drop-shadow(2px 3px 1.5px var(--wm-sh))
-    drop-shadow(9px 16px 30px var(--wm-amb)) !important;
-}
-html[data-theme] #wm::after{ display:none !important; }
-.wm-vig{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  opacity:var(--wm-vig-op,0);
-  background:radial-gradient(ellipse at center, rgba(10,12,16,.10) 0%, rgba(10,12,16,.85) 78%);
-}
-
-@media (prefers-reduced-motion:reduce){
-  html[data-theme] #wm{ transform:none !important }
-}
-html.fx-calm #wm{ transform:none !important }
-</style>
-
 <script>
 /* Vinyeta equivalent a l'original + paral·laxi mínima del relleu. */
 (function () {
@@ -7102,5 +7022,598 @@ else boot();
 })();
 </script>
 
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   44. GESTOR · ORDRE DE L'ITINERARI (per defecte) + PER BLOCS + UN SOL IDIOMA
+   ══════════════════════════════════════════════════════════════════════════ */
+.cm-views{flex:none;display:flex;gap:8px;padding:12px 20px;align-items:center;
+  border-bottom:1px solid var(--hair,var(--line));background:var(--tap,rgba(255,255,255,.03))}
+.cm-views .vs{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.cm-views button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 14px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:800;
+  border:1px solid var(--hair,var(--line));background:var(--card);color:var(--mut);transition:all .18s}
+.cm-views button:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.cm-views button.on{background:linear-gradient(135deg,var(--gold),color-mix(in srgb,var(--gold) 62%,#000));
+  border-color:transparent;color:#14161c;box-shadow:0 6px 20px rgba(232,176,75,.28)}
 
-<div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button type="button" id="mTheme" style="position: fixed; top: 10px; right: 12px; z-index: 9990; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--card); border-color: var(--line); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; color: var(--mut); cursor: pointer; opacity: 0.7; transition: opacity 0.2s, color 0.2s, border-color 0.2s; padding: 0px;" title="Tema: Fosc · Clica per passar a Blau nit" aria-label="Tema: Fosc · Clica per passar a Blau nit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button></body></html>
+@media(min-width:861px){ #cmModal #cmMain,#cmModal #cmOrd{grid-column:2;grid-row:1} }
+@media(max-width:860px){ #cmModal #cmMain,#cmModal #cmOrd{grid-column:1;grid-row:2} }
+#cmOrd{display:none;min-height:0;overflow-y:auto;padding:20px}
+#cmOrd.on{display:block}
+#cmModal #cmMain.hide{display:none !important}
+#cmModal .cm-two.solo{grid-template-columns:1fr}
+
+.ord-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:11px}
+.ord-toolbar select,.ord-toolbar input[type=search]{padding:8px 11px;border-radius:9px;
+  border:1px solid var(--hair,var(--line));background:var(--bg);color:var(--ink);
+  font-family:inherit;font-size:12px;font-weight:600}
+.ord-toolbar select:focus,.ord-toolbar input:focus{outline:none;border-color:var(--gold)}
+.ord-toolbar input[type=search]{flex:1;min-width:140px}
+.ord-tb{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--hair,var(--line));background:var(--card);color:var(--ink);
+  font-family:inherit;font-size:11.5px;font-weight:700;transition:all .16s;white-space:nowrap}
+.ord-tb:hover:not(:disabled){border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.ord-tb:disabled{opacity:.32;cursor:not-allowed}
+.ord-tb.on{background:var(--gold);border-color:transparent;color:#14161c}
+.ord-count{margin-left:auto;font-size:11px;font-weight:800;color:var(--mut);font-variant-numeric:tabular-nums}
+
+.ord-hint{padding:9px 12px;border-radius:10px;margin-bottom:12px;font-size:11px;line-height:1.6;
+  color:var(--mut);border:1px solid var(--hair,var(--line));background:var(--tap,transparent)}
+.ord-hint b{color:var(--gold)}
+.ord-hint.warn{color:#ffd79a;background:rgba(255,176,32,.09);border-color:rgba(255,176,32,.32)}
+
+.ord-row{display:flex;align-items:center;gap:9px;padding:10px 12px;margin-bottom:6px;border-radius:11px;
+  background:var(--card);border:1px solid var(--hair,var(--line));position:relative;
+  transition:border-color .16s,box-shadow .16s,opacity .16s}
+#cmOrd.compact .ord-row{padding:6px 10px;margin-bottom:4px}
+.ord-row:hover{border-color:var(--hair-2,var(--line))}
+.ord-row.dragging{opacity:.3;border-style:dashed}
+.ord-row.drop-before{box-shadow:0 -3px 0 -1px var(--gold)}
+.ord-row.drop-after{box-shadow:0 3px 0 -1px var(--gold)}
+.ord-row.flash{animation:ordFlash .8s ease}
+@keyframes ordFlash{0%{background:color-mix(in srgb,var(--gold) 28%,var(--card))}100%{background:var(--card)}}
+.ord-grip{flex:none;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;cursor:grab;
+  color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);
+  font-size:15px;line-height:1;touch-action:none;user-select:none;transition:all .16s}
+.ord-grip:hover{background:color-mix(in srgb,var(--gold) 22%,transparent);border-color:var(--gold)}
+.ord-grip:active{cursor:grabbing}
+.ord-row.locked .ord-grip{opacity:.28;cursor:not-allowed;color:var(--mut);background:var(--tap,transparent);border-color:var(--hair,var(--line))}
+.ord-n{flex:none;min-width:38px;height:28px;padding:0 6px;display:grid;place-items:center;border-radius:8px;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--gold) 92%,#fff),var(--gold));
+  color:#14161c;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;cursor:pointer;
+  box-shadow:0 2px 8px rgba(232,176,75,.28)}
+.ord-blk{flex:none;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 9px;border-radius:99px;color:var(--c);min-width:80px;text-align:center;
+  border:1px solid color-mix(in srgb,var(--c) 55%,transparent);
+  background:color-mix(in srgb,var(--c) 14%,transparent)}
+.ord-t{flex:1;min-width:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cmOrd.compact .ord-t{font-size:12px}
+.ord-imp{flex:none;font-size:15px;cursor:pointer;line-height:1}
+.ord-lk{flex:none;font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid var(--hair-2,var(--line));color:var(--mut)}
+.ord-lk.ok{border-color:var(--ok);color:var(--ok)}
+.ord-mv{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--hair,var(--line));
+  background:var(--tap,transparent);color:var(--ink);cursor:pointer;font-size:12px;display:grid;place-items:center}
+.ord-mv:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.ord-mv:disabled{opacity:.26;cursor:not-allowed}
+.ord-empty{text-align:center;padding:44px 20px;color:var(--mut);font-size:12.5px;line-height:1.8}
+#ordGhost{position:fixed;z-index:2147483200;pointer-events:none;padding:9px 14px;border-radius:10px;
+  background:var(--card);border:2px solid var(--gold);color:var(--gold);font-family:'Inter',system-ui,sans-serif;
+  font-size:12px;font-weight:800;box-shadow:0 14px 36px rgba(0,0,0,.6);max-width:320px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cmOrd::-webkit-scrollbar{width:11px}
+#cmOrd::-webkit-scrollbar-track{background:color-mix(in srgb,var(--gold) 7%,transparent);border-radius:99px}
+#cmOrd::-webkit-scrollbar-thumb{border-radius:99px;border:3px solid transparent;background-clip:content-box;
+  background:linear-gradient(180deg,#fbe6b4,var(--gold) 55%,#a9762a)}
+#cmOrd::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff2d4,var(--gold));background-clip:content-box}
+#cmOrd{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--gold) 62%,transparent) color-mix(in srgb,var(--gold) 7%,transparent)}
+@media(max-width:860px){
+  .cm-views{padding:10px 14px;gap:6px}
+  .cm-views button{padding:10px 8px;font-size:11.5px}
+  .cm-views .vs{display:none}
+  #cmOrd{padding:14px}
+  .ord-toolbar input[type=search]{flex:1 1 100%;order:-1}
+  .ord-blk{min-width:0;font-size:8.5px;padding:3px 7px}
+  .ord-count{width:100%;margin-left:0;text-align:right}
+}
+html.no-hover .ord-tb:hover,html.no-hover .ord-row:hover,html.no-hover .cm-views button:hover{transform:none!important}
+html.fx-calm .ord-row.flash{animation:none}
+
+@media (max-width:767px) and (orientation:portrait){ html[data-theme="dark"]{ --wm-op2:.06 } }
+@media (max-width:926px) and (orientation:landscape) and (pointer:coarse){ html[data-theme="dark"]{ --wm-op2:.06 } }
+</style>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · 17. GESTOR: ORDRE DE L'ITINERARI + UN SOL IDIOMA + APPS NETES
+   Vigilància per sondeig lleuger: no depèn de l'ordre dels scripts ni de
+   com s'obri el gestor. El panell d'ordre és un node que el gestor no toca.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+window.__gjOrder4 = true;
+
+var BCOL = { w:'#f7dc9a', t:'#e8b04b', g:'#39d98a', r:'#4cc9f0', a:'#8c52ff', p:'#ff2bd6' };
+function ca(){ return LS.lang === 'ca'; }
+function L(c,e){ return ca() ? c : e; }
+function isDocId(id){ return String(id).indexOf('doc.') === 0; }
+function docRec(id){
+  var a = OV.idocs || [];
+  for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i];
+  return null;
+}
+function lvlOf(id){
+  if (isDocId(id)) { var d = docRec(id); return d ? d.lvl : 1; }
+  var si = parseInt(String(id).split('.')[0], 10);
+  if (isNaN(si)) return 1;
+  if (si === 0) return 0;
+  if (si <= 6) return 1;
+  return si - 6;
+}
+function blkOf(id){ return vidBlockById(id); }
+function blkName(b){ try { return UI[LS.lang].blocks[b] || b; } catch(e){ return b; } }
+function lvlName(l){
+  var o = OV.lnm && OV.lnm[String(l)] && OV.lnm[String(l)][LS.lang];
+  if (o) return o;
+  var r = null; LEVELS.forEach(function(x){ if (x.id === l) r = x; });
+  return r ? r.n[LS.lang] : (L('Nivell ','Nivel ') + l);
+}
+
+/* ── Numeració única per nivell i idioma ───────────────────────────────── */
+function levelIds(l){
+  initializeOrder();
+  return orderList().filter(function(id){
+    return !isGiftId(id) && lvlOf(id) === l && !!findVidById(id);
+  });
+}
+function applyLevelIds(l, ids){
+  var list = orderList(), slots = [];
+  list.forEach(function(id, i){ if (!isGiftId(id) && lvlOf(id) === l) slots.push(i); });
+  ids.forEach(function(id, k){ if (k < slots.length) list[slots[k]] = id; });
+}
+window.getVideoOrder = function(id){
+  if (isGiftId(id)) return 9998;
+  var i = levelIds(lvlOf(id)).indexOf(id);
+  return i < 0 ? 9999 : i + 1;
+};
+window.reorderVideo = function(id, newNum){
+  if (editModeOn) collectAll();
+  var l = lvlOf(id), ids = levelIds(l);
+  var from = ids.indexOf(id), to = newNum - 1;
+  if (from < 0 || to < 0 || to >= ids.length || to === from) return;
+  ids.splice(from, 1); ids.splice(to, 0, id);
+  applyLevelIds(l, ids);
+  render(); repaint();
+};
+
+/* ── Estat ─────────────────────────────────────────────────────────────── */
+var MV = 'order', wasOpen = false, lastSig = '', editing = false;
+var P = { lvl:1, q:'', blk:'', compact:false, snap:null, undo:[], redo:[] };
+var drag = null, ghost = null, raf = 0, sv = 0;
+
+function activeLevel(){
+  var all = Array.prototype.slice.call(document.querySelectorAll('#cmSide .cm-lv'));
+  var on = document.querySelector('#cmSide .cm-lv.on');
+  if (!on) return P.lvl;
+  var i = all.indexOf(on);
+  return i >= 0 ? i : P.lvl;
+}
+function filtered(){ return !!(P.q || P.blk); }
+function visible(ids){
+  var q = P.q.toLowerCase();
+  return ids.filter(function(id){
+    if (P.blk && blkOf(id) !== P.blk) return false;
+    if (!q) return true;
+    var v = findVidById(id);
+    return String(v ? vidTitle(v.v, id) : id).toLowerCase().indexOf(q) >= 0;
+  });
+}
+function pushUndo(){
+  P.undo.push(levelIds(P.lvl).slice());
+  if (P.undo.length > 80) P.undo.shift();
+  P.redo.length = 0;
+}
+function afterChange(flash){ render(); lastSig = ''; repaint(flash); }
+
+/* ── Interfície ────────────────────────────────────────────────────────── */
+function ensureUI(){
+  var box = document.querySelector('#cmModal .cm-box');
+  var body = document.querySelector('#cmModal .cm-body');
+  var main = document.getElementById('cmMain');
+  if (!box || !body || !main) return false;
+
+  var legacy = document.getElementById('ordModal'); if (legacy) legacy.remove();
+  var lb = document.getElementById('ordBtn'); if (lb) lb.remove();
+
+  var bar = document.getElementById('cmViews');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.className = 'cm-views'; bar.id = 'cmViews';
+    bar.innerHTML =
+      '<span class="vs">' + L('Visualitza','Visualiza') + '</span>' +
+      '<button type="button" data-v="order">⇅ ' + L('Ordre de l\'itinerari','Orden del itinerario') + '</button>' +
+      '<button type="button" data-v="blocks">▦ ' + L('Per blocs','Por bloques') + '</button>';
+    box.insertBefore(bar, body);
+  }
+  if (bar.dataset.mine !== '4') {
+    bar.dataset.mine = '4';
+    bar.querySelectorAll('button').forEach(function(b){
+      b.onclick = function(){ MV = b.dataset.v; applyView(true); };
+    });
+  }
+  if (!document.getElementById('cmOrd')) {
+    var p = document.createElement('section');
+    p.id = 'cmOrd';
+    body.appendChild(p);
+  }
+  return true;
+}
+function applyView(force){
+  var main = document.getElementById('cmMain');
+  var ord = document.getElementById('cmOrd');
+  if (!main || !ord) return;
+  document.querySelectorAll('#cmViews button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.v === MV);
+  });
+  if (MV === 'order') {
+    main.classList.add('hide');
+    ord.classList.add('on');
+    if (force) { P.lvl = activeLevel(); P.snap = levelIds(P.lvl).slice(); P.undo.length = 0; P.redo.length = 0; }
+    lastSig = ''; repaint();
+  } else {
+    ord.classList.remove('on');
+    main.classList.remove('hide');
+    sanitizeBlocks(); renumberBlocks();
+  }
+}
+function repaint(flash){
+  if (MV !== 'order' || editing) return;
+  var ord = document.getElementById('cmOrd');
+  if (!ord || !ord.classList.contains('on')) return;
+  paintOrder(ord, flash);
+}
+
+/* Un sol idioma: amaga els camps de l'altre i treu el sufix (CA)/(ES) */
+function sanitizeBlocks(){
+  var main = document.getElementById('cmMain');
+  if (!main) return;
+  var lg = LS.lang;
+  main.querySelectorAll('[data-lvnm]').forEach(function(inp){
+    var lab = inp.closest('.cm-fld'); if (!lab) return;
+    var on = inp.dataset.lvnm === lg;
+    lab.style.display = on ? '' : 'none';
+    if (on) {
+      var s = lab.querySelector('span');
+      if (s) s.textContent = s.textContent.replace(/\s*\((CA|ES)\)\s*$/, '');
+    }
+  });
+  main.querySelectorAll('[data-bn]').forEach(function(inp){
+    var lang = String(inp.dataset.bn).split('|')[1];
+    var lab = inp.closest('.cm-fld'); if (!lab) return;
+    var on = lang === lg;
+    lab.style.display = on ? '' : 'none';
+    if (on) {
+      var s = lab.querySelector('span');
+      if (s) s.textContent = s.textContent.replace(/\s*\((CA|ES)\)\s*$/, '');
+    }
+  });
+  main.querySelectorAll('.cm-two').forEach(function(t){
+    var n = 0;
+    Array.prototype.forEach.call(t.children, function(c){ if (c.style.display !== 'none') n++; });
+    t.classList.toggle('solo', n <= 1);
+  });
+}
+function renumberBlocks(){
+  var main = document.getElementById('cmMain');
+  if (!main) return;
+  main.querySelectorAll('.cm-vrow').forEach(function(row){
+    var b = row.querySelector('[data-imp]'), n = row.querySelector('.cm-vn');
+    if (!b || !n) return;
+    var txt = String(getVideoOrder(b.dataset.imp));
+    if (n.textContent !== txt) n.textContent = txt;
+    n.title = L('Posició a l\'itinerari del nivell','Posición en el itinerario del nivel');
+  });
+}
+
+function paintOrder(host, flash){
+  var ids = levelIds(P.lvl), vis = visible(ids);
+  lastSig = P.lvl + '|' + LS.lang + '|' + ids.join(',');
+  var h = '<div class="ord-toolbar">' +
+    '<input type="search" id="ordQ" placeholder="' + L('Cerca un vídeo…','Busca un vídeo…') + '" value="' + esc(P.q) + '">' +
+    '<select id="ordBlk"><option value="">' + L('Tots els blocs','Todos los bloques') + '</option>';
+  ['w','t','g','r','a','p'].forEach(function(b){
+    h += '<option value="' + b + '"' + (P.blk === b ? ' selected' : '') + '>' + esc(blkName(b)) + '</option>';
+  });
+  h += '</select>' +
+    '<button class="ord-tb' + (P.compact ? ' on' : '') + '" id="ordDens">▤ ' + L('Compacte','Compacto') + '</button>' +
+    '<button class="ord-tb" id="ordUndo"' + (P.undo.length ? '' : ' disabled') + '>↶ ' + L('Desfés','Deshacer') + '</button>' +
+    '<button class="ord-tb" id="ordRedo"' + (P.redo.length ? '' : ' disabled') + '>↷ ' + L('Refés','Rehacer') + '</button>' +
+    '<button class="ord-tb" id="ordReset">↺ ' + L('Restableix','Restablecer') + '</button>' +
+    '<button class="ord-tb" id="ordCopy">⧉ ' + L('Exporta','Exportar') + '</button>' +
+    '<span class="ord-count">' + vis.length + ' / ' + ids.length + ' ' + L('vídeos','vídeos') + '</span></div>';
+
+  h += '<div class="ord-hint' + (filtered() ? ' warn' : '') + '">' + (filtered()
+    ? L('Filtre actiu: <b>buida la cerca i el bloc</b> per poder arrossegar. Les fletxes ↑ ↓ sí que mouen el vídeo dins l\'itinerari complet.',
+        'Filtro activo: <b>vacía la búsqueda y el bloque</b> para poder arrastrar. Las flechas ↑ ↓ sí mueven el vídeo dentro del itinerario completo.')
+    : L('Arrossega la maneta <b>⠿</b> per col·locar el vídeo on vulguis, o clica el <b>número</b> per enviar-lo a una posició exacta. Aquest és l\'ordre real del Seguiment Continuat i el de la Navegació Lliure en mode edició, per a <b>' + esc(lvlName(P.lvl)) + '</b> en <b>' + LS.lang.toUpperCase() + '</b>.',
+        'Arrastra la maneta <b>⠿</b> para colocar el vídeo donde quieras, o pulsa el <b>número</b> para enviarlo a una posición exacta. Este es el orden real del Seguimiento Continuo y el de la Navegación Libre en modo edición, para <b>' + esc(lvlName(P.lvl)) + '</b> en <b>' + LS.lang.toUpperCase() + '</b>.')) + '</div>';
+
+  if (!vis.length) {
+    h += '<div class="ord-empty">' + (ids.length
+      ? L('Cap vídeo coincideix amb el filtre.','Ningún vídeo coincide con el filtro.')
+      : L('Aquest nivell encara no té vídeos en aquest idioma.<br>Afegeix-ne des de la vista «Per blocs».','Este nivel aún no tiene vídeos en este idioma.<br>Añade desde la vista «Por bloques».')) + '</div>';
+  } else {
+    vis.forEach(function(id){
+      var v = findVidById(id); if (!v) return;
+      var pos = ids.indexOf(id), b = blkOf(id);
+      var imp = getVideoImportance(id) === 'important';
+      var link = !!driveSrc(v.v, id);
+      h += '<div class="ord-row' + (filtered() ? ' locked' : '') + (id === flash ? ' flash' : '') + '" data-id="' + id + '">' +
+        '<span class="ord-grip" title="' + L('Arrossega per reordenar','Arrastra para reordenar') + '">⠿</span>' +
+        '<span class="ord-n" data-pos="' + id + '" title="' + L('Canvia la posició','Cambia la posición') + '">' + (pos + 1) + '</span>' +
+        '<span class="ord-blk" style="--c:' + (BCOL[b] || '#e8b04b') + '">' + esc(blkName(b)) + '</span>' +
+        '<span class="ord-t">' + esc(vidTitle(v.v, id)) + '</span>' +
+        (isDocId(id) ? '<span class="ord-lk">📄</span>' : '') +
+        '<span class="ord-imp" data-imp2="' + id + '" title="' + L('Important / opcional','Importante / opcional') + '">' + (imp ? '⭐' : '☆') + '</span>' +
+        '<span class="ord-lk' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
+        '<button class="ord-mv" data-edit2="' + id + '" title="' + L('Edita','Edita') + '">✎</button>' +
+        '<button class="ord-mv" data-up2="' + id + '"' + (pos === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button class="ord-mv" data-dn2="' + id + '"' + (pos === ids.length - 1 ? ' disabled' : '') + '>↓</button>' +
+        '</div>';
+    });
+  }
+  host.innerHTML = h;
+  host.classList.toggle('compact', P.compact);
+  wire(host, ids);
+}
+
+function wire(host, ids){
+  var q = host.querySelector('#ordQ');
+  q.oninput = function(){
+    var pos = this.selectionStart;
+    P.q = this.value.trim();
+    repaint();
+    var n = document.getElementById('ordQ');
+    if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch(e){} }
+  };
+  host.querySelector('#ordBlk').onchange = function(){ P.blk = this.value; repaint(); };
+  host.querySelector('#ordDens').onclick = function(){ P.compact = !P.compact; repaint(); };
+  host.querySelector('#ordUndo').onclick = function(){
+    if (!P.undo.length) return;
+    P.redo.push(levelIds(P.lvl).slice());
+    applyLevelIds(P.lvl, P.undo.pop()); afterChange();
+  };
+  host.querySelector('#ordRedo').onclick = function(){
+    if (!P.redo.length) return;
+    P.undo.push(levelIds(P.lvl).slice());
+    applyLevelIds(P.lvl, P.redo.pop()); afterChange();
+  };
+  host.querySelector('#ordReset').onclick = function(){
+    if (!P.snap) return;
+    pushUndo(); applyLevelIds(P.lvl, P.snap.slice()); afterChange();
+    showToast(L('↺ Ordre restablert','↺ Orden restaurado'));
+  };
+  host.querySelector('#ordCopy').onclick = function(){
+    var all = levelIds(P.lvl);
+    var txt = lvlName(P.lvl) + ' · ' + LS.lang.toUpperCase() + '\n' + all.map(function(id, i){
+      var v = findVidById(id);
+      return (i + 1) + '\t' + blkName(blkOf(id)) + '\t' + (v ? vidTitle(v.v, id) : id) + '\t' + id;
+    }).join('\n');
+    var ok = function(){ showToast(L('⧉ Ordre copiat','⧉ Orden copiado')); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, ok); else ok();
+  };
+  host.querySelectorAll('[data-pos]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.dataset.pos, from = ids.indexOf(id);
+      var a = prompt(L('Nova posició (1–' + ids.length + '):','Nueva posición (1–' + ids.length + '):'), from + 1);
+      if (a === null) return;
+      var n = parseInt(a, 10);
+      if (isNaN(n) || n < 1 || n > ids.length || n - 1 === from) return;
+      pushUndo();
+      var arr = levelIds(P.lvl);
+      arr.splice(from, 1); arr.splice(n - 1, 0, id);
+      applyLevelIds(P.lvl, arr); afterChange(id);
+    };
+  });
+  host.querySelectorAll('[data-imp2]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.dataset.imp2, imp = getVideoImportance(id) === 'important';
+      if (isDocId(id)) { var d = docRec(id); if (d) d.imp = imp ? 'optional' : 'important'; }
+      else { OV.imp = OV.imp || {}; OV.imp[id + ':' + LS.lang] = imp ? 'optional' : 'important'; }
+      afterChange(id);
+    };
+  });
+  host.querySelectorAll('[data-up2]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.dataset.up2, arr = levelIds(P.lvl), i = arr.indexOf(id);
+      if (i <= 0) return;
+      pushUndo(); arr.splice(i, 1); arr.splice(i - 1, 0, id);
+      applyLevelIds(P.lvl, arr); afterChange(id);
+    };
+  });
+  host.querySelectorAll('[data-dn2]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.dataset.dn2, arr = levelIds(P.lvl), i = arr.indexOf(id);
+      if (i < 0 || i >= arr.length - 1) return;
+      pushUndo(); arr.splice(i, 1); arr.splice(i + 1, 0, id);
+      applyLevelIds(P.lvl, arr); afterChange(id);
+    };
+  });
+  host.querySelectorAll('[data-edit2]').forEach(function(el){
+    el.onclick = function(){ editVia(el.dataset.edit2); };
+  });
+}
+
+function editVia(id){
+  editing = true;
+  var main = document.getElementById('cmMain'), ord = document.getElementById('cmOrd');
+  if (main) main.classList.remove('hide');
+  if (ord) ord.classList.remove('on');
+  setTimeout(function(){
+    var b = document.querySelector('#cmMain [data-edit="' + id + '"]');
+    if (b) b.click();
+    var n = 0;
+    var iv = setInterval(function(){
+      var vf = document.getElementById('vfModal');
+      var open = vf && vf.classList.contains('on');
+      if (!open || ++n > 400) {
+        clearInterval(iv);
+        editing = false;
+        applyView(false);
+        repaint(id);
+      }
+    }, 200);
+  }, 60);
+}
+
+/* ── Arrossegament ─────────────────────────────────────────────────────── */
+function marks(){
+  document.querySelectorAll('#cmOrd .ord-row').forEach(function(r){
+    r.classList.remove('drop-before','drop-after');
+  });
+}
+function tick(){
+  if (!drag) { raf = 0; return; }
+  var host = document.getElementById('cmOrd');
+  if (host && sv) host.scrollTop += sv;
+  raf = requestAnimationFrame(tick);
+}
+function place(e){
+  if (!ghost) return;
+  ghost.style.left = (e.clientX + 16) + 'px';
+  ghost.style.top = (e.clientY - 14) + 'px';
+}
+function onDown(e){
+  if (MV !== 'order' || editing || filtered()) return;
+  var g = e.target.closest ? e.target.closest('.ord-grip') : null;
+  if (!g) return;
+  var host = document.getElementById('cmOrd');
+  if (!host || !host.contains(g)) return;
+  var row = g.closest('.ord-row'); if (!row) return;
+  e.preventDefault();
+  var ids = levelIds(P.lvl);
+  drag = { id: row.dataset.id, from: ids.indexOf(row.dataset.id), to: null, row: row };
+  row.classList.add('dragging');
+  ghost = document.createElement('div');
+  ghost.id = 'ordGhost';
+  var v = findVidById(drag.id);
+  ghost.textContent = '⠿ ' + (v ? vidTitle(v.v, drag.id) : drag.id);
+  document.body.appendChild(ghost);
+  place(e);
+  try { g.setPointerCapture(e.pointerId); } catch(err){}
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function onMove(e){
+  if (!drag) return;
+  e.preventDefault();
+  place(e);
+  var host = document.getElementById('cmOrd');
+  var r = host.getBoundingClientRect();
+  sv = e.clientY < r.top + 60 ? -11 : (e.clientY > r.bottom - 60 ? 11 : 0);
+  marks();
+  var rows = Array.prototype.slice.call(host.querySelectorAll('.ord-row'));
+  var to = rows.length;
+  for (var i = 0; i < rows.length; i++) {
+    var b = rows[i].getBoundingClientRect();
+    if (e.clientY < b.top + b.height / 2) { to = i; break; }
+  }
+  drag.to = to;
+  if (to < rows.length) rows[to].classList.add('drop-before');
+  else if (rows.length) rows[rows.length - 1].classList.add('drop-after');
+}
+function onUp(){
+  if (!drag) return;
+  var d = drag; drag = null; sv = 0;
+  if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  if (ghost) { ghost.remove(); ghost = null; }
+  if (d.row) d.row.classList.remove('dragging');
+  marks();
+  if (d.to === null) return;
+  var idx = d.to > d.from ? d.to - 1 : d.to;
+  if (idx === d.from) return;
+  pushUndo();
+  var ids = levelIds(P.lvl);
+  ids.splice(d.from, 1); ids.splice(idx, 0, d.id);
+  applyLevelIds(P.lvl, ids);
+  afterChange(d.id);
+}
+document.addEventListener('pointerdown', onDown, true);
+document.addEventListener('pointermove', onMove, { passive:false });
+document.addEventListener('pointerup', onUp);
+document.addEventListener('pointercancel', onUp);
+
+/* ── Vigilància per sondeig: sempre funciona ───────────────────────────── */
+setInterval(function(){
+  var m = document.getElementById('cmModal');
+  var open = m && m.classList.contains('on');
+  if (!open) { wasOpen = false; return; }
+  if (!ensureUI()) return;
+  if (editing) return;
+
+  if (!wasOpen) {
+    wasOpen = true;
+    MV = 'order';
+    P.q = ''; P.blk = '';
+    applyView(true);
+    return;
+  }
+  var lvl = activeLevel();
+  if (lvl !== P.lvl) {
+    P.lvl = lvl;
+    P.snap = levelIds(lvl).slice();
+    P.undo.length = 0; P.redo.length = 0;
+    lastSig = '';
+  }
+  if (MV === 'order') {
+    var main = document.getElementById('cmMain'), ord = document.getElementById('cmOrd');
+    if (main && !main.classList.contains('hide')) main.classList.add('hide');
+    if (ord && !ord.classList.contains('on')) { ord.classList.add('on'); lastSig = ''; }
+    var sig = P.lvl + '|' + LS.lang + '|' + levelIds(P.lvl).join(',');
+    if (sig !== lastSig) repaint();
+  } else {
+    sanitizeBlocks();
+    renumberBlocks();
+  }
+}, 300);
+
+/* ── Apps netes ────────────────────────────────────────────────────────── */
+window.renderApps = function(){
+  var av = $('appsView'); if (!av) return;
+  av.innerHTML = '';
+  var head = document.createElement('div');
+  head.className = 'blkhead';
+  head.innerHTML = '<span class="blkt">' + L('Aplicacions d\'entrenament','Aplicaciones de entrenamiento') + '</span>';
+  av.appendChild(head);
+  var grid = document.createElement('div');
+  grid.className = 'appgrid';
+  APPS.forEach(function(a, i){
+    var card = document.createElement('div');
+    card.className = 'appcard';
+    var icon = (a.e === 'logo') ? '<img src="img/LOGO.png" alt="">' : esc(a.e);
+    card.innerHTML = '<div class="ae">' + icon + '</div>' +
+      '<h3 data-ovaid="' + i + '" data-ovak="n">' + appName(a, i) + '</h3>' +
+      '<p data-ovaid="' + i + '" data-ovak="d">' + appDesc(a, i) + '</p>' +
+      '<button type="button">' + t().appsOpen + '</button>';
+    card.querySelector('button').onclick = function(){ openApp(a.url); };
+    grid.appendChild(card);
+  });
+  av.appendChild(grid);
+  applyEditState();
+};
+window.readTonalStats = function(){ return null; };
+window.tonalStatsHtml = function(){ return ''; };
+window.refreshTonal   = function(){};
+window.startTonalPoll = function(){};
+
+try { initializeOrder(); render(); } catch(e){}
+
+window.GJSOrder = {
+  view: function(v){ MV = v || 'order'; applyView(true); },
+  levelIds: levelIds, apply: applyLevelIds,
+  repaint: function(){ lastSig = ''; repaint(); }
+};
+})();
+</script>
+
+</body>
+</html>
