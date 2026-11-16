@@ -7172,25 +7172,21 @@ console.log('🔬 GJPS · rècords d\'apps v2 · clau:', canon(), '· trobat:', 
 <div id="gjpsGuard"><div class="gg-box"><div class="gg-head"><div class="gg-badge">⚠</div><div class="gg-ht"><h2>Diagnòstic d'arrencada</h2><p>El JavaScript no s'ha executat: per això els botons no responen.</p></div><div class="gg-count" id="ggCount"></div></div><div class="gg-body" id="ggBody"></div><div class="gg-foot"><span class="gg-stat" id="ggStat"></span><button class="gg-btn" id="ggHide">Amaga</button><button class="gg-btn" id="ggAn">Analitza el codi</button><button class="gg-btn cy" id="ggRe">Recarrega</button><button class="gg-btn pri" id="ggCo">Copia el diagnòstic</button></div></div></div><button id="gjpsGuardPill" type="button">⚠ Veure el diagnòstic</button><button id="mCourse" type="button" title="Gestor del curs" style="display: none;">📋</button>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · CINEMA  v14
-   El doble tret solapat —el que passa quan prems ✦ mentre està verd— s'executa
-   sol en arrencar el vídeo i es repeteix només si tornes a tocar la pantalla.
-   Cap bucle permanent. Cap botó d'ajustos sobre la imatge.
-   ✦ toc curt = retira controls · ✦ mantenir premut = ajustos · tecla H = ajustos
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══ GJPS · CINEMA v15 · bloc únic del reproductor ═══ */
 (function () {
 'use strict';
+if (window.__gjCinemaLoaded) return;
+window.__gjCinemaLoaded = true;
 
 ['gjpsIosPlayCSS','gjpsIosPlayV3','gjpsIosPlayV4','gjpsIosNative','gjpsNatV6','gjpsNatV7','gjpsPlayV8','gjpsPlayV9',
- 'gjCinemaCSS','gjCinemaV11','gjCinemaV12','gjCinemaV13','gjCinemaV14']
+ 'gjCinemaCSS','gjCinemaV11','gjCinemaV12','gjCinemaV13','gjCinemaV14','gjCinemaV15']
   .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
 ['iosStart','iosClean','iosHint','gjpsNative','npSrcModal','npSrcBtn','npV8','npV8Src','gjPlayer','gjSrc','gjCinema']
   .forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
 
 var CSS = `
 :root{
-  --j-ink:#05070a; --j-surf:#0f131b; --j-over:#171d28; --j-panel:#131822; --j-scrim:rgba(4,6,9,.96);
+  --j-ink:#05070a; --j-surf:#0f131b; --j-over:#171d28; --j-panel:#131822;
   --j-brass:#e8b04b; --j-hi:#fbe6b4; --j-lo:#a9762a;
   --j-felt:#39d98a; --j-cyan:#4cc9f0; --j-violet:#8c52ff; --j-magenta:#ff2bd6;
   --j-amber:#ffb020; --j-red:#ff5577;
@@ -7227,7 +7223,6 @@ var CSS = `
 #gjCinema .guide .lb{position:absolute;left:12px;transform:translateY(-50%);padding:3px 8px;border-radius:6px;
   font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
   background:rgba(76,201,240,.16);border:1px solid rgba(76,201,240,.5);color:#9fe3f8}
-
 #gjCinema .gate{position:absolute;inset:0;z-index:6;display:grid;place-items:center;cursor:pointer;
   background:radial-gradient(58% 48% at 50% 42%,rgba(20,26,36,.92),rgba(4,6,9,.99))}
 #gjCinema .gate::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
@@ -7246,9 +7241,8 @@ var CSS = `
 #gjCinema .gate .pb::after{content:'';position:absolute;inset:-25px;border-radius:50%;pointer-events:none;
   border:1px solid rgba(232,176,75,.26);animation:jRing 3.2s ease-out infinite}
 @keyframes jRing{0%{transform:scale(.86);opacity:.85}100%{transform:scale(1.2);opacity:0}}
-#gjCinema .gate h4{margin:28px 0 0;font-size:20px;font-weight:800;letter-spacing:.005em}
+#gjCinema .gate h4{margin:28px 0 0;font-size:20px;font-weight:800}
 #gjCinema .gate p{margin:10px 0 0;font-size:13.5px;line-height:1.7;color:var(--j-cool);max-width:min(420px,84vw)}
-
 #gjCinema .tools{position:absolute;top:12px;right:14px;z-index:9;display:flex;gap:9px}
 #gjCinema .ib{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
   border:1.5px solid var(--j-brass);background:rgba(8,11,16,.84);color:var(--j-brass);font-size:17px;line-height:1;
@@ -7261,7 +7255,6 @@ var CSS = `
   color:var(--j-warm);text-shadow:0 1px 6px rgba(0,0,0,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;transition:opacity .4s}
 #gjCinema.quiet .ttl{opacity:0}
-
 #gjCinema .rail{flex:none;width:0;display:none;flex-direction:column;min-height:0;position:relative;
   background:linear-gradient(180deg,var(--j-over),var(--j-panel) 60%,var(--j-surf));border-left:1px solid var(--j-l1)}
 #gjCinema.studio .rail{display:flex;width:336px}
@@ -7342,12 +7335,9 @@ html.fx-calm #gjCinema .gate .pb,html.fx-calm #gjCinema .gate .pb::after{animati
 `;
 
 var DEF = {
-  tablet:  { z:1, dx:0, dy:0, mt:0, mb:12, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false,
-             strikes:4, hold:150, spacing:1200, retap:true },
-  phone:   { z:1, dx:0, dy:0, mt:0, mb:14, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false,
-             strikes:5, hold:160, spacing:1100, retap:true },
-  desktop: { z:1, dx:0, dy:0, mt:0, mb:9,  rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false,
-             strikes:3, hold:130, spacing:1300, retap:true }
+  tablet:  { z:1, dx:0, dy:0, mt:0, mb:12, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:4, hold:150, spacing:1200, retap:true },
+  phone:   { z:1, dx:0, dy:0, mt:0, mb:14, rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:5, hold:160, spacing:1100, retap:true },
+  desktop: { z:1, dx:0, dy:0, mt:0, mb:9,  rad:0, br:1, ct:1, sa:1, ar:'auto', masks:false, guides:false, strikes:3, hold:130, spacing:1300, retap:true }
 };
 var AR = { auto:0, '16:9':16/9, '4:3':4/3, '21:9':21/9, '1:1':1 };
 
@@ -7367,8 +7357,8 @@ function devClass(){
 function store(){ if(!OV.vframe||typeof OV.vframe!=='object') OV.vframe={}; return OV.vframe; }
 function conf(){ var d=devClass(),s=store(); if(!s[d]) s[d]=Object.assign({},DEF[d]); return Object.assign({},DEF[d],s[d]); }
 function save(){ store()[devClass()]=Object.assign({},cur); }
-function inject(){ if(document.getElementById('gjCinemaV14')) return;
-  var st=document.createElement('style'); st.id='gjCinemaV14'; st.textContent=CSS; document.head.appendChild(st); }
+function inject(){ if(document.getElementById('gjCinemaV15')) return;
+  var st=document.createElement('style'); st.id='gjCinemaV15'; st.textContent=CSS; document.head.appendChild(st); }
 function sl(k,l,mn,mx,st){ return '<div class="ctl"><div class="lb"><b>'+l+'</b><i id="v_'+k+'"></i></div>'+
   '<input type="range" id="s_'+k+'" min="'+mn+'" max="'+mx+'" step="'+st+'" data-k="'+k+'"></div>'; }
 
@@ -7436,7 +7426,6 @@ function build(){
   cur=conf(); wire(); apply();
 }
 
-/* ── Doble tret solapat: exactament el que fa ✦ premut mentre està verd ── */
 function phase(){
   if(!root||!started) return;
   runs++;
@@ -7629,23 +7618,18 @@ function wire(){
   S.wDrive.onclick=function(){ close(); legacy(); };
   S.wHide.onclick=function(){ studio(false); };
   S.wClose.onclick=function(e){ e.stopPropagation(); e.preventDefault(); closeAll(); };
-
-  /* ✦ : toc curt = doble tret · mantenir premut = ajustos */
   S.wRel.addEventListener('pointerdown',function(e){
     e.stopPropagation(); longFired=false;
     clearTimeout(pressT);
     pressT=setTimeout(function(){ longFired=true; studio(true); },560);
   });
-  var relUp=function(e){
-    if(e) e.stopPropagation();
-    clearTimeout(pressT);
+  S.wRel.addEventListener('pointerup',function(e){
+    e.stopPropagation(); clearTimeout(pressT);
     if(!longFired) strike();
     longFired=false;
-  };
-  S.wRel.addEventListener('pointerup',relUp);
+  });
   S.wRel.addEventListener('pointercancel',function(){ clearTimeout(pressT); longFired=false; });
   S.wRel.addEventListener('pointerleave',function(){ clearTimeout(pressT); });
-
   S.wGate.addEventListener('click',start);
   S.wPlay.addEventListener('click',function(e){ e.stopPropagation(); start(); });
   S.wStage.addEventListener('pointerdown',function(e){
