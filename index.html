@@ -2194,6 +2194,63 @@ html[data-theme="dark"] .blkcol button:not(.on):hover {
 }
 .lvlmenu { scrollbar-width: none; -ms-overflow-style: none; }
 .lvlmenu::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* ═══ TABLET: botons de navegació en una segona fila, sota l'usuari ═══ */
+@media (min-width: 768px) and (max-width: 1366px) and (pointer: coarse) {
+  header { flex-wrap: wrap; }
+  .hdr {
+    flex-basis: 100%;
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 2px;
+  }
+}
+/* ═══ Reconstruccions "silencioses": sense animació d'entrada ═══ */
+body.quiet .vgrid .vid,
+body.quiet .donuts .donut,
+body.quiet .appgrid .appcard,
+body.quiet .now,
+body.quiet .reviewbox,
+body.quiet .ritem { animation: none !important; }
+/* ═══ Targetes sense enllaç: títol i estrella també atenuats ═══ */
+.vid.nolink .vt {
+  opacity: .5;
+  color: var(--mut);
+}
+.vid.nolink .stagetag { opacity: .45; }
+.vid.nolink .vid-importance,
+.vid.nolink .vid-number {
+  opacity: .45;
+  filter: grayscale(.4);
+}
+/* ═══ Check de bloc complet: més gran i adaptat al tema ═══ */
+.blkcol button .bmini .bdone {
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1;
+  min-width: 22px;
+  text-align: right;
+  color: var(--ok);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--ok) 50%, transparent);
+}
+html[data-theme="blue"] .blkcol button .bmini .bdone {
+  color: var(--gold);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+.blkcol button.on .bmini .bdone { color: inherit; text-shadow: none; opacity: .95; }
+/* ═══ Targetes sense enllaç: botó de reproducció també atenuat ═══ */
+.vid.nolink .vr .play {
+  opacity: .45;
+  border-color: var(--mut);
+  color: var(--mut);
+  box-shadow: none;
+  animation: none !important;
+}
+.vid.nolink .vr .play:hover {
+  transform: none;
+  background: none;
+  border-color: var(--mut);
+  color: var(--mut);
+}
 </style>
 </head>
 
@@ -4149,9 +4206,9 @@ function makeVid(v, id, track, tag) {
   var ntClass = 'nt' + (hasNotes ? ' has-notes' : '');
   var isCa = LS.lang === 'ca';
   var skipFull = isCa ? 'Aplaçar aquest vídeo i passar al següent' : 'Aplazar este vídeo y pasar al siguiente';
-  var skipBtnHtml = (track && !LS.done[id])
+  var skipBtnHtml = (track && hasLink && !LS.done[id])
     ? '<button class="skip" title="' + skipFull + '" aria-label="' + skipFull + '"><span class="ai">⏭</span><span class="al">' + (isCa ? 'Aplaçar' : 'Aplazar') + '</span></button>' : '';
-  var done = !!LS.done[id];
+  var done = hasLink && !!LS.done[id];
   var ckIcon = done ? '↺' : '✔';
   var ckShort = done ? (isCa ? 'Desfer' : 'Deshacer') : (track ? (isCa ? 'Fet' : 'Hecho') : (isCa ? 'Fet' : 'Hecho'));
   var ckExtra = (!done && track) ? (isCa ? ' i continuar' : ' y continuar') : '';
@@ -4202,12 +4259,12 @@ function makeVid(v, id, track, tag) {
   if (mx) mx.onclick = function () { var src = driveSrc(v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
   var cl = row.querySelector('.cl');
   if (cl) cl.onclick = function () { row.querySelector('.inl').classList.remove('on'); row.querySelector('.inl iframe').src = ''; };
-  if (!hasLink) row.querySelectorAll('.acts .ck, .acts .bk, .acts .nt').forEach(function (bb) { bb.disabled = true; });
+  if (!hasLink) row.querySelectorAll('.acts .ck, .acts .bk, .acts .nt, .acts .skip').forEach(function (bb) { bb.disabled = true; });
 
   row.querySelector('.ck').onclick = function () {
     if (editModeOn) return;
     var btn = this;
-    if (LS.done[id]) { delete LS.done[id]; saveDone(); render(); return; }
+    if (LS.done[id]) { delete LS.done[id]; saveDone(); setQuiet(true); render(); return; }
     LS.done[id] = 1; saveDone();
     if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); }
     if (LS.skipAfter) delete LS.skipAfter[id];
@@ -4215,9 +4272,9 @@ function makeVid(v, id, track, tag) {
     btn.classList.add('done');
     btn.style.borderColor = 'var(--ok)'; btn.style.color = 'var(--ok)';
     btn.style.background = 'rgba(57,217,138,0.12)'; btn.style.opacity = '1'; btn.disabled = true;
-    setTimeout(function () { render(); }, 250);
+    setTimeout(function () { setQuiet(true); render(); }, 250);
   };
-  row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); render(); };
+  row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); setQuiet(true); render(); };
 
   var skipBtn = row.querySelector('.skip');
   if (skipBtn) {
@@ -4517,11 +4574,11 @@ function renderReviewBox(container) {
     var bD = document.createElement('button');
     bD.innerHTML = isDone ? '↺ ' + lbl.u : '✔ ' + lbl.d;
     if (isDone) bD.classList.add('done');
-    bD.onclick = function () { if (LS.done[id]) delete LS.done[id]; else LS.done[id] = 1; saveDone(); render(); };
+    bD.onclick = function () { if (LS.done[id]) delete LS.done[id]; else LS.done[id] = 1; saveDone(); setQuiet(true); render(); };
     var bO = document.createElement('button'); bO.innerHTML = '▶ ' + lbl.o; bO.title = tt().open;
     bO.onclick = function () { var src = driveSrc(v.v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
     var bX = document.createElement('button'); bX.innerHTML = '✕ ' + lbl.r; bX.title = tt().remove;
-    bX.onclick = function () { toggleBookmark(id); render(); };
+    bX.onclick = function () { toggleBookmark(id); setQuiet(true); render(); };
     item.appendChild(ti); item.appendChild(blk); item.appendChild(bD); item.appendChild(bO); item.appendChild(bX);
     list.appendChild(item);
   });
@@ -4816,7 +4873,7 @@ function renderFree() {
         btn.title = isCa ? 'Percentatge de tot el material d\'aquest bloc completat' : 'Porcentaje de todo el material de este bloque completado';
         var mini = '<svg width="22" height="22" viewBox="0 0 24 24" style="flex:none"><circle cx="12" cy="12" r="11" fill="#242424"/>' + pieSlice(12, 12, 11, p, (p === 100 ? '#39d98a' : BC[b])) + '</svg>';
         btn.innerHTML = '<span class="bname">' + esc(names[b]) + '</span><span class="bmini">' +
-          (p < 100 ? mini + '<span class="bpct">' + p + '%</span>' : '<span class="bpct" style="color:#39d98a">✔</span>') + '</span>';
+          (p < 100 ? mini + '<span class="bpct">' + p + '%</span>' : '<span class="bdone">✔</span>') + '</span>';
       }
       col.appendChild(btn);
     });
@@ -5063,7 +5120,7 @@ function startSession(n) {
   LS.mode = 'track'; lsSet('gjps_mode', 'track');
   loadDone(); loadSkip();
   $('login').classList.remove('on');
-  render();
+  setQuiet(false); render();
 }
 $('lgBtn').onclick = function () {
   var err = $('lgErr'); err.textContent = '';
@@ -5110,6 +5167,8 @@ function setLabels() {
   if (window.GJPSTheme) GJPSTheme.refresh();
 }
 
+function setQuiet(v){ document.body.classList.toggle('quiet', !!v); }
+
 function render() {
   $('modal').classList.remove('on');
   $('player').src = '';
@@ -5148,6 +5207,7 @@ function render() {
   applyEditState();
 }
 function setMode(m) {
+  setQuiet(false);
   LS.mode = m; lsSet('gjps_mode', m);
   if (m === 'free') autoLevelPending = true;
   else { freeQuery = ''; document.body.classList.remove('search-on'); $('mSearch').classList.remove('on'); }
@@ -5177,7 +5237,7 @@ $('langToggle').onclick = function () {
   lsSet('gjps_lang', LS.lang);
   loadDone(); loadSkip(); setLabels();
   if (!LS.user) showLogin();
-  render();
+  setQuiet(false); render();
   if (window.GJPSCourse && document.getElementById('cmModal') && document.getElementById('cmModal').classList.contains('on')) {
     GJPSCourse.open();
   }
