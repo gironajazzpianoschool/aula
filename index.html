@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca" data-theme="dark" class="can-hover">
-<head>
+<html lang="ca" data-theme="dark" class="can-hover"><head>
 <script>
 /* ═══ GJPS · GUARDIÀ D'ARRENCADA v2 · amb analitzador de balanç de claus ═══ */
 (function () {
@@ -455,15 +454,15 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a1d27">
+<meta name="theme-color" content="#e8e4d9">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Girona Jazz Piano School®</title>
 <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
 <link rel="apple-touch-icon" sizes="192x192" href="img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
 
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2175,12 +2174,101 @@ html[data-theme="dark"]{ --wm-op2:.20; }
   html[data-theme="sepia"]{ --wm-op2:.34; --wm-sh:rgba(58,44,28,.95); }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   49. LOGO SÈPIA A MÒBIL I TABLET · punt mitjà de presència
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (min-width:768px) and (max-width:1366px) and (pointer:coarse){
+  html[data-theme="sepia"]{ --wm-op2:.18; }
+}
+@media (max-width:767px) and (orientation:portrait){
+  html[data-theme="sepia"]{ --wm-op2:.20; }
+}
+@media (max-width:926px) and (orientation:landscape) and (pointer:coarse){
+  html[data-theme="sepia"]{ --wm-op2:.20; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   50. MODES CLARS · text llegible als botons actius del gestor
+   En blau i sèpia l'accent és fosc, així que el text actiu ha de ser blanc.
+   El mode fosc no es toca.
+   ══════════════════════════════════════════════════════════════════════════ */
+html:not([data-theme="dark"]) .cm-views button.on,
+html:not([data-theme="dark"]) .ord-tb.on,
+html:not([data-theme="dark"]) .ord-n,
+html:not([data-theme="dark"]) .adj-notice>button .an-n{
+  color:#fff !important;
+}
+html:not([data-theme="dark"]) .ord-n{
+  background:linear-gradient(150deg, color-mix(in srgb,var(--gold) 86%, #fff), var(--gold));
+  box-shadow:0 2px 8px color-mix(in srgb,var(--gold) 34%, transparent);
+}
+html:not([data-theme="dark"]) .cm-views button.on{
+  background:linear-gradient(135deg, var(--gold), color-mix(in srgb,var(--gold) 74%, #000));
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   51. BOTÓ DEL GESTOR · icona vectorial de carpeta amb índex
+   Idèntica a Windows, iOS i Android: no depèn de la font d'emoji.
+   ══════════════════════════════════════════════════════════════════════════ */
+#mCourse svg{width:22px;height:22px;display:block;pointer-events:none;overflow:visible}
+#mCourse svg path:first-child{transition:fill-opacity .2s var(--ease,ease)}
+#mCourse:hover svg path:first-child{fill-opacity:.30}
+#mCourse:hover svg path:last-child{opacity:1}
+#mCourse:active svg{transform:scale(.94)}
+#mCourse svg{transition:transform .14s var(--ease,ease)}
+html.no-hover #mCourse:hover svg path:first-child{fill-opacity:.16}
+html.no-hover #mCourse:active svg{transform:none}
+@media (max-width:767px){
+  #mCourse svg{width:21px;height:21px}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   52. APPS · targetes grans amb badge de tipus i gestió en mode edició
+   ══════════════════════════════════════════════════════════════════════════ */
+.appcard{position:relative}
+.appkind{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:5px;
+  font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 9px;border-radius:99px;color:var(--gold);
+  border:1px solid color-mix(in srgb,var(--gold) 46%,transparent);
+  background:color-mix(in srgb,var(--gold) 13%,transparent)}
+html:not([data-theme="dark"]) .appkind{color:#fff;background:var(--gold);border-color:transparent}
+.appcard .ae{margin-top:6px}
+.appcard .appgo[disabled]{opacity:.5;cursor:not-allowed;filter:grayscale(.4)}
+.appcard .appgo[disabled]:hover{transform:none;box-shadow:var(--elev-1);filter:grayscale(.4)}
+.appadm{display:flex;gap:6px;justify-content:center;margin-top:12px;padding-top:11px;
+  border-top:1px solid var(--hair,var(--line))}
+.appadm button{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;cursor:pointer;
+  border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);
+  font-family:inherit;font-size:12px;transition:all .16s}
+.appadm button:hover:not(:disabled){border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.appadm button.d:hover:not(:disabled){border-color:var(--danger);color:var(--danger)}
+.appadm button:disabled{opacity:.28;cursor:not-allowed}
+.appadd{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:8px 14px;border-radius:10px;
+  cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:800;letter-spacing:.04em;
+  border:1px dashed var(--gold);color:var(--gold);background:color-mix(in srgb,var(--gold) 7%,transparent);
+  transition:all .18s}
+.appadd:hover{background:color-mix(in srgb,var(--gold) 16%,transparent);transform:translateY(-1px)}
+.apphint{margin:0 0 16px;padding:11px 14px;border-radius:12px;font-size:11.5px;line-height:1.65;
+  color:var(--mut);border:1px solid var(--hair,var(--line));background:var(--tap,transparent)}
+.apphint b{color:var(--gold)}
+#appForm .cm-seg button{font-size:11.5px}
+#appForm .appemo{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#appForm .appemo button{width:34px;height:34px;border-radius:9px;font-size:17px;cursor:pointer;
+  border:1px solid var(--hair,var(--line));background:var(--tap,transparent);transition:all .15s}
+#appForm .appemo button:hover{border-color:var(--gold);transform:translateY(-1px)}
+#appForm .appemo button.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 18%,transparent)}
+html.no-hover .appadd:hover,html.no-hover .appadm button:hover{transform:none!important}
+@media(max-width:767px){
+  .appkind{top:10px;left:10px;font-size:8px;padding:3px 8px}
+  .appadd{margin-left:0;width:100%;justify-content:center}
+}
+
 </style>
 </head>
-<body>
+<body class="">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
-<div id="toast"></div>
+<div id="toast" style="opacity:0"></div>
 
 <header>
   <div class="hbrand">
@@ -2192,33 +2280,33 @@ html[data-theme="dark"]{ --wm-op2:.20; }
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack"></button>
-      <button id="mFree"></button>
-      <button id="mApps"></button>
-      <button id="mInfo" title="Preguntes freqüents">FAQ</button>
+      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
+      <button id="mFree" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
+      <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
+      <button id="mInfo" title="Preguntas frecuentes" class="on">FAQ</button>
     </span>
-    <button id="mHelp" title="Com funciona / Cómo funciona"></button>
-    <button id="mSearch" title="Cercar vídeos"></button>
-    <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
+    <button id="mHelp" title="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
+    <button id="mSearch" title="Buscar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button id="langToggle" class="langbtn" title="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">ESP</span></button>
   </div>
 </header>
 
 <main>
-  <div id="trackView"></div>
-  <div id="freeView"></div>
-  <div id="appsView" style="display:none"></div>
-  <div id="infoView" style="display:none"></div>
-  <div id="helpView" style="display:none"></div>
+  <div id="trackView" style="display: none;"></div>
+  <div id="freeView" style="display: none;"></div>
+  <div id="appsView" style="display: none;"></div>
+  <div id="infoView" style="display: block;"></div>
+  <div id="helpView" style="display: none;"></div>
 </main>
 
 <div class="modal" id="modal">
   <div class="wrap">
     <button class="close" id="xPlayer" title="Tancar">✕</button>
     <div class="frame">
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no"></iframe>
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class=""></iframe>
       <div class="video-overlay" id="videoOverlay">
         <div class="icon">▶</div>
-        <div class="text" id="overlayText"></div>
+        <div class="text" id="overlayText">Haz clic para reproducir</div>
       </div>
     </div>
   </div>
@@ -2257,9 +2345,9 @@ html[data-theme="dark"]{ --wm-op2:.20; }
   </div>
 </div>
 
-<button id="mEdit" title="Mode edició">⚙️</button>
-<button id="mSave" title="Guardar">💾</button>
-<div id="appVer"></div>
+<button id="mEdit" title="Mode edició" class="">⚙️</button>
+<button id="mSave" title="Guardar" class="">💾</button>
+<div id="appVer">GJPS v5.0 (2026-11-17)</div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2616,7 +2704,7 @@ var HELP = [
 /* ================================================================
    4. DADES EDITABLES PERSISTIDES (OV)
    ================================================================ */
-var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1"},"3.0.p.0":{"ca":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC"},"5.3.p.0":{"ca":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time"},"6.3.p.0":{"ca":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"}},"d":{"1.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.g.1":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"2.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"3.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"4.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"5.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.0.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"6.2.g.0":{"es":"Puedes dedicarle una sesión entera o solo un trozo: cada uno avanza a su ritmo.","ca":"Pots dedicar-li una sessió sencera o només un tros: cadascú avança al seu ritme."},"1.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"2.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"3.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom.","es":"Practica primer sense piano i després amb metrònom."},"4.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"4.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.0.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"5.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"6.2.r.0":{"ca":"Practica primer sense piano i després amb metrònom."},"1.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"2.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.0.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"3.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"4.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.2.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"5.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.0.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.1.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.0":{"ca":"Amb el backing track i les tríades en posició fonamental."},"6.3.p.1":{"ca":"Amb el backing track i les tríades en posició fonamental."},"1.3.a.0":{"ca":"Fes-ho amb calma i, quan toca, amb TONAL EMOTIONS oberta."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{},"a":{"0":{"n":{"es":"TONAL EMOTIONS"},"d":{"es":"Laboratorio auditivo y ear training: reconocimiento emocional de notas en contexto tonal. Modos Escucha, Práctica, Test y Batalla."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat","es":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme.","es":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard","es":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut.","es":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure","es":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències.","es":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals","es":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat.","es":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs","es":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista.","es":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor","es":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com.","es":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament","es":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant.","es":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…","es":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉","es":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés","es":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant.","es":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?","es":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol.","es":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar","es":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc.","es":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents","es":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre.","es":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori","es":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova.","es":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}}},"c":{},"n":{"1":{"es":"FUNDAMENTOS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓN","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCUBRIMIENTO DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESARROLLO ARMÓNICO","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINIO DEL NIVEL FUNDAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{},"pub":[],"idocs":[]};/*OV-END*/
+var OV = /*OV-START*/{"t":{"1.0.g.0":{"es":"Notas en el piano: Introducción Esencial","ca":"Notes al piano: Introducció Essencial"},"1.0.g.1":{"es":"Claves musicales: Cómo Leer y Colocar las Manos","ca":"Claus musicals: Com Llegir i Col·locar Mans"},"2.0.g.0":{"es":"Introducción a las Tríadas","ca":"Introducció a les Tríades"},"3.0.g.0":{"es":"Escala Mayor: Patrón Universal","ca":"Escala Major: Patró Universal"},"3.2.g.0":{"es":"Introducción al Sistema Tonal","ca":"Introducció al Sistema Tonal"},"4.0.g.0":{"es":"Inversión de Tríadas Mayores y Menores","ca":"Inversió de Tríades Majors i Menors"},"4.2.g.0":{"es":"Tríadas Mayores y Menores en Posición Abierta","ca":"Tríades Majors i Menors en Posició Oberta"},"5.0.g.0":{"es":"Voicings Triádicos a Dos Manos","ca":"Voicings Triàdics a Dues Mans"},"5.2.g.0":{"es":"Introducción al Solfeo","ca":"Introducció al Solfeig"},"6.0.g.0":{"es":"Funciones Tonales Básicas","ca":"Funcions Tonals Bàsiques"},"6.2.g.0":{"es":"Introducción a la Conexión de Tríades","ca":"Introducció a la Connexió de Tríades"},"1.0.r.0":{"ca":"Pols i Tempo: Figures bàsiques"},"1.2.r.0":{"ca":"Puntet, Lligadura de prolongació i Contratemps"},"2.0.r.0":{"ca":"Síncopa Musical"},"2.2.r.0":{"ca":"Semicorxeres (I)"},"3.0.r.0":{"ca":"Semicorxeres (II)"},"3.2.r.0":{"ca":"Valors Irregulars: El Treset (I)","es":"Valors Irregulars: El Treset (I)"},"4.0.r.0":{"ca":"Valors Irregulars: El Treset (II)","es":"Valors Irregulars: El Treset (II)"},"4.2.r.0":{"ca":"Mètrica Simple i Composta"},"5.0.r.0":{"ca":"Entrenament Rítmic"},"5.2.r.0":{"ca":"Introducció a la Mètrica Irregular"},"6.2.r.0":{"ca":"Repàs de Ritme del Nivell Fonamental"},"1.1.p.0":{"ca":"La Xocolatera (tema)","es":"La Chocolatera (tema)"},"1.2.p.0":{"ca":"Himne Alegria (I)","es":"Himno Alegría (I)"},"1.3.p.0":{"ca":"Perestroika (SAU)","es":"Perestroika (SAU)"},"2.0.p.0":{"ca":"Aunque Tú No Lo Sepas","es":"Aunque Tú No Lo Sepas"},"2.1.p.0":{"ca":"Tríades Majors: CT1","es":"Tríadas Mayores: CT1"},"3.0.p.0":{"ca":"Let it Be","es":"Let it Be"},"3.0.p.1":{"ca":"Tríades Majors: CT2","es":"Tríadas Mayores: CT2"},"3.2.p.0":{"ca":"Himne Alegria (II)","es":"Himno Alegría (II)"},"3.3.p.0":{"ca":"Tríades Majors: CC","es":"Tríadas Mayores: CC"},"4.1.p.0":{"ca":"Tríades Menors: CT1","es":"Tríadas Menores: CT1"},"5.0.p.0":{"ca":"Tríades Menors: CT2","es":"Tríadas Menores: CT2"},"5.2.p.0":{"ca":"Tríades Menors: CC","es":"Tríadas Menores: CC"},"5.3.p.0":{"ca":"Interstellar","es":"Interstellar"},"6.0.p.0":{"ca":"Heaven (Bryan Adams)","es":"Heaven (Bryan Adams)"},"6.1.p.0":{"ca":"Time","es":"Time"},"6.3.p.0":{"ca":"Someone Like You","es":"Someone Like You"},"6.3.p.1":{"ca":"Introducció als FNG","es":"Introducción a los FNG"},"1.3.a.0":{"ca":"Evita Memoritzar Intervals"},"1.1.a.0":{"ca":"Fonaments de l'Oïda Musical"},"2.0.a.0":{"ca":"Emocions: Notes Diatòniques"},"2.3.a.0":{"ca":"Instruccions i Correcció del Test"},"3.0.a.0":{"ca":"Test de Notes Diatòniques"},"3.1.a.0":{"ca":"Emocions: Notes No Diatòniques"},"4.2.a.0":{"ca":"Test de Notes No Diatòniques"},"4.3.a.0":{"ca":"Emocions: Notes Diatòniques + No Diatòniques"},"6.1.a.0":{"ca":"Test de Notes Diatòniques + No Diatòniques"},"6.2.a.0":{"ca":"La Tònica com a Única Referència"},"6.3.a.0":{"ca":"TONAL EMOTIONS: El teu Laboratori Auditiu"},"6.3.g.0":{"ca":"Extra Funcions Tonals Bàsiques"},"6.3.g.1":{"es":"Extra Funciones Tonales Básicas"},"1.1.t.0":{"ca":"Funcionament de les Rutines","es":"Funcionament de les Rutines"},"1.2.t.0":{"ca":"Postura al Piano: Posició Corporal Correcta","es":"Postura al Piano: Posició Corporal Correcta"},"1.2.t.1":{"ca":"Rutines 01-10","es":"Rutines 01-10"},"1.3.t.0":{"ca":"Rutines 11-20","es":"Rutines 11-20"},"2.0.t.0":{"ca":"Rutines 21-30","es":"Rutines 21-30"},"2.1.t.0":{"ca":"Rutines 31-40","es":"Rutines 31-40"},"2.2.t.0":{"ca":"Rutines 41-50","es":"Rutines 41-50"},"2.3.t.0":{"ca":"Rutines 51-60","es":"Rutines 51-60"},"3.0.t.0":{"ca":"Rutines 61-70","es":"Rutines 61-70"},"3.1.t.0":{"ca":"Rutines 71-80","es":"Rutines 71-80"},"3.2.t.0":{"ca":"Rutines 81-90","es":"Rutines 81-90"},"3.3.t.0":{"ca":"Rutines 91-100","es":"Rutines 91-100"},"4.0.t.0":{"ca":"Rutines 101-110","es":"Rutines 101-110"},"4.1.t.0":{"ca":"Rutines 111-120","es":"Rutines 111-120"},"4.2.t.0":{"ca":"Rutines 121-130","es":"Rutines 121-130"},"4.3.t.0":{"ca":"Rutines 131-140","es":"Rutines 131-140"},"5.0.t.0":{"ca":"Rutines 141-150","es":"Rutines 141-150"},"5.1.t.0":{"ca":"Rutines 151-160","es":"Rutines 151-160"},"5.2.t.0":{"ca":"Rutines 161-170","es":"Rutines 161-170"},"5.3.t.0":{"ca":"Rutines 171-180","es":"Rutines 171-180"}},"d":{"4.0.r.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"1.1.a.0":{"ca":"Pendent de descripció."},"1.3.a.0":{"ca":"Pendent de descripció."},"2.0.a.0":{"ca":"Pendent de descripció."},"2.3.a.0":{"ca":"Pendent de descripció."},"3.0.a.0":{"ca":"Pendent de descripció."},"3.1.a.0":{"ca":"Pendent de descripció."},"4.2.a.0":{"ca":"Pendent de descripció."},"4.3.a.0":{"ca":"Pendent de descripció."},"6.1.a.0":{"ca":"Pendent de descripció."},"6.2.a.0":{"ca":"Pendent de descripció."},"6.3.a.0":{"ca":"Pendent de descripció."},"1.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"1.0.g.1":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"2.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"3.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"3.2.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"4.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"4.2.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"5.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"5.2.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"6.0.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"6.2.g.0":{"ca":"Pendent de descripció.","es":"Pendiente de descripción."},"6.3.g.0":{"ca":"Pendent de descripció."},"6.3.g.1":{"es":"Pendiente de descripción."},"1.1.p.0":{"es":"Pendiente de descripción."},"1.2.p.0":{"es":"Pendiente de descripción."},"1.3.p.0":{"es":"Pendiente de descripción."},"2.0.p.0":{"es":"Pendiente de descripción."},"2.1.p.0":{"es":"Pendiente de descripción."},"3.0.p.0":{"es":"Pendiente de descripción."},"3.0.p.1":{"es":"Pendiente de descripción."},"3.2.p.0":{"es":"Pendiente de descripción."},"3.3.p.0":{"es":"Pendiente de descripción."},"4.1.p.0":{"es":"Pendiente de descripción."},"5.0.p.0":{"es":"Pendiente de descripción."},"5.2.p.0":{"es":"Pendiente de descripción."},"5.3.p.0":{"es":"Pendiente de descripción."},"6.0.p.0":{"es":"Pendiente de descripción."},"6.1.p.0":{"es":"Pendiente de descripción."},"6.3.p.0":{"es":"Pendiente de descripción."},"6.3.p.1":{"es":"Pendiente de descripción."},"1.1.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"1.2.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"1.2.t.1":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"1.3.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"2.0.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"2.1.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"2.2.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"2.3.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"3.0.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"3.1.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"3.2.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"3.3.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"4.0.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"4.1.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"4.2.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"4.3.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"5.0.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"5.1.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"5.2.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."},"5.3.t.0":{"ca":"Pendent de descripció.","es":"Pendent de descripció."}},"l":{"5.2.g.0":{"es":"1ZsuaoFT29Payw131PjUNOvCkjslETplD","ca":"1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ"},"6.0.g.0":{"ca":"1jlJ69oNq5JoQIn21-gTKp7AikhAm743A","es":"1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv"}},"f":{"0":{"q":{"ca":"Què és Girona Jazz Piano School?","es":"¿Qué es Girona Jazz Piano School?"},"a":{"ca":"És una escola de piano online amb un mètode propi que combina tècniques d'aprenentatge de la música moderna i de la clàssica. L'alumnat gaudeix d'un seguiment continuat i d'accés 24/7 a tot el contingut.","es":"Es una escuela de piano online con método propio que combina técnicas de aprendizaje de la música moderna y de la clásica. El alumnado disfruta de un seguimiento continuado y de acceso 24/7 a todo el contenido."}},"1":{"q":{"ca":"Qui hi ha darrere de GJPS? La meva biografia","es":"¿Quién hay detrás de GJPS? Mi biografía"},"a":{"ca":"Em dic X i soc pianista, professor i el creador de Girona Jazz Piano School. Aquest és un projecte personal, nascut de X anys d'experiència ensenyant piano modern i jazz.\n\n🎹 LA MEVA FORMACIÓ\nVaig començar a estudiar música als X anys i em vaig formar a X, on vaig obtenir X. La base clàssica em va donar rigor, lectura i tècnica; el jazz i el llenguatge modern em van ensenyar a entendre l'harmonia des de dins i a crear sense partitura. Aquesta doble mirada és exactament la que vertebra el mètode.\n\n🎓 LA MEVA TRAJECTÒRIA\nPorto X anys dedicant-me a l'ensenyament i he acompanyat més de X alumnes de perfils molt diferents: des de persones que no havien tocat mai una tecla fins a músics amb conservatori que buscaven autonomia real al teclat. Com a intèrpret he treballat X anys en directe amb X, i aquesta experiència d'escenari és la que m'ha ensenyat què és realment útil quan has de tocar davant d'algú.\n\n💡 PER QUÈ EXISTEIX AQUEST MÈTODE\nMassa sovint vaig trobar alumnes que llegien notes correctament però no sabien què estaven tocant ni per què allò funcionava. Aquest mètode neix exactament d'aquí: primer entendre, després tocar amb sentit i finalment crear. No és un recull de vídeos solts, és un itinerari pensat pas a pas perquè ningú es quedi enrere ni s'avorreixi.\n\n📍 AVUI\nCompagino les classes presencials a Girona amb aquesta aula virtual, que em permet arribar a alumnes d'arreu mantenint el seguiment personalitzat: les notes que em fas arribar des de cada vídeo les llegeixo jo mateix.","es":"Me llamo X y soy pianista, profesor y el creador de Girona Jazz Piano School. Este es un proyecto personal, nacido de X años de experiencia enseñando piano moderno y jazz.\n\n🎹 MI FORMACIÓN\nEmpecé a estudiar música a los X años y me formé en X, donde obtuve X. La base clásica me dio rigor, lectura y técnica; el jazz y el lenguaje moderno me enseñaron a entender la armonía desde dentro y a crear sin partitura. Esa doble mirada es exactamente la que vertebra el método.\n\n🎓 MI TRAYECTORIA\nLlevo X años dedicándome a la enseñanza y he acompañado a más de X alumnos de perfiles muy distintos: desde personas que nunca habían tocado una tecla hasta músicos con conservatorio que buscaban autonomía real en el teclado. Como intérprete he trabajado X años en directo con X, y esa experiencia de escenario es la que me ha enseñado qué es realmente útil cuando tienes que tocar delante de alguien.\n\n💡 POR QUÉ EXISTE ESTE MÉTODO\nDemasiado a menudo encontré alumnos que leían notas correctamente pero no sabían qué estaban tocando ni por qué aquello funcionaba. Este método nace exactamente de ahí: primero entender, después tocar con sentido y finalmente crear. No es una colección de vídeos sueltos, es un itinerario pensado paso a paso para que nadie se quede atrás ni se aburra.\n\n📍 HOY\nCompagino las clases presenciales en Girona con esta aula virtual, que me permite llegar a alumnos de cualquier lugar manteniendo el seguimiento personalizado: las notas que me envías desde cada vídeo las leo yo mismo."}},"2":{"q":{"ca":"Vinc del conservatori, em servirà aquest mètode?","es":"Vengo del conservatorio, ¿me servirá este método?"},"a":{"ca":"I tant! El mètode està pensat per a qualsevol perfil, tant si comences de zero com si ja tens una base. Si véns del conservatori (de piano o de qualsevol altre instrument), trobaràs que aquí s'aprèn a entendre la música des de dins, adquirint habilitats tant per tocar repertori clàssic com modern (pop, rock, bandes sonores...). El mètode t'ajudarà a guanyar autonomia al teclat, a improvisar, a acompanyar i a entendre l'harmonia d'una manera pràctica que sovint al conservatori tradicional queda en segon pla.","es":"¡Por supuesto! El método está pensado para cualquier perfil, tanto si empiezas de cero como si ya tienes una base. Si vienes del conservatorio (de piano o de cualquier otro instrumento), encontrarás que aquí se aprende a entender la música desde dentro, adquiriendo habilidades tanto para tocar repertorio clásico como moderno (pop, rock, bandas sonoras...). El método te ayudará a ganar autonomía en el teclado, a improvisar, a acompañar y a entender la armonía de una manera práctica que a menudo en el conservatorio tradicional queda en segundo plano."}},"3":{"q":{"ca":"És presencial o 100% online?","es":"¿Es presencial o 100% online?"},"a":{"ca":"És un curs 100% online amb un itinerari ordenat i de seguiment continuat. A través de vídeos didàctics, partitures i un sistema propi de rutines tècniques, està pensat per formar músics autònoms a llarg termini.","es":"Es un curso 100% online con un itinerario ordenado y de seguimiento continuado que combina vídeos didácticos, partituras y un sistema propio de rutinas técnicas, está pensado para formar músicos autónomos a largo plazo."}},"4":{"q":{"ca":"Com es desenvolupen els cursos?","es":"¿Cómo se desarrollan los cursos?"},"a":{"ca":"Cada nivell s'estructura en blocs que es combinen dins del seguiment continuat per formar el músic des de zero. Al primer nivell, per exemple, trobaràs 5 blocs: Tècnica, Teoria, Ritme, Auditiu i Pràctica funcional.\nSeguint els vídeos en ordre, aniràs adquirint pas a pas tot el que necessites per posar-ho en pràctica al piano.","es":"Cada nivel se estructura en bloques que se combinan dentro del seguimiento continuado para formar al músico desde cero. En el primer nivel, por ejemplo, encontrarás 5 bloques: Técnica, Teoría, Ritmo, Audición y Práctica funcional. Siguiendo los vídeos en orden, irás adquiriendo paso a paso todo lo que necesitas para ponerlo en práctica en el piano."}},"5":{"q":{"ca":"Quan començaré a tocar estàndards de jazz?","es":"¿Cuándo empezaré a tocar estándares de jazz?"},"a":{"ca":"Els estàndards de jazz arriben al Nivell 2, un cop hagis consolidat el Nivell Fonamental. Això és intencionat: abans de submergir-te en el blues i el jazz, necessites una base sòlida de tècnica, ritme, oïda i harmonia bàsica que et permeti afrontar aquests llenguatges amb garanties.\nAl Nivell 2 hi haurà dues línies de treball paral·leles que podràs anar completant al teu ritme: una línia de repertori clàssic i una altra de moderna/jazz, de manera que cada bloc tindrà contingut per a totes dues vessants. Així podràs especialitzar-te en el que més t'interessi, o bé formar-te com a músic complet.","es":"Los estándares de jazz llegan en el Nivel 2, una vez hayas consolidado el Nivel Fundamental. Esto es intencionado: antes de sumergirte en el blues y el jazz, necesitas una base sólida de técnica, ritmo, oído y armonía básica que te permita abordar estos lenguajes con garantías.\nEn el Nivel 2 habrá dos líneas de trabajo paralelas que podrás ir completando a tu ritmo: una línea de repertorio clásico y otra de moderna/jazz, de modo que cada bloque tendrá contenido para ambas vertientes. Así podrás especializarte en lo que más te interese, o bien formarte como músico completo."}},"6":{"q":{"ca":"Com veig el meu progrés i com em corregiu?","es":"¿Cómo veo mi progreso y cómo me corregís?"},"a":{"ca":"El mode de Seguiment Continuat 🎯 t'indica exactament quin és el següent pas i mesura el teu percentatge de progrés. A més, cada vídeo disposa d'un espai de notes personals on pots apuntar dubtes o observacions, i el mètode es complementa amb aplicacions interactives d'entrenament exclusives d'aquesta escola.","es":"El modo de Seguimiento Continuo te indica exactamente cuál es el siguiente paso y mide tu porcentaje de progreso. Además, cada vídeo dispone de un espacio de notas personales donde puedes apuntar dudas u observaciones, y el método se complementa con aplicaciones interactivas de entrenamiento exclusivas de esta escuela."}},"7":{"q":{"ca":"\"Jo només vull tocar acords\"","es":"\"Yo solo quiero tocar acordes\""},"a":{"ca":"Perfecte! Aprendràs a acompanyar amb acords des del primer dia. No obstant això, compta que és només una petita part de l'ensenyament: el mètode es construeix amb una combinació de disciplines per entendre la música de veritat.","es":"¡Perfecto! Aprenderás a acompañar con acordes desde el primer día. No obstante, ten en cuenta que es solo una pequeña parte de la enseñanza: el método se construye con una combinación de disciplinas para entender la música de verdad."}},"8":{"q":{"ca":"Puc aprendre sense saber música?","es":"¿Puedo aprender sin saber música?"},"a":{"ca":"I tant! El mètode està dissenyat per començar des de zero. Aprendràs a tocar acords i melodies sense necessitat de saber solfeig inicialment, tot i que el mètode t'ensenyarà gradualment els conceptes teòrics necessaris.","es":"¡Por supuesto! El método está diseñado para empezar desde cero. Aprenderás a tocar acordes y melodías sin necesidad de saber solfeo inicialmente, aunque el método te enseñará gradualmente los conceptos teóricos necesarios."}},"9":{"q":{"ca":"Et puc trucar per dubtes?","es":"¿Te puedo llamar por dudas?"},"a":{"ca":"No, no em pots trucar. Quan tinguis dubtes, pots utilitzar l'espai de notes personals de cada vídeo i enviar-les per em@il al professor si ho necessites.","es":"No, no me puedes llamar. Cuando tengas dudas, puedes utilizar el espacio de notas personales de cada vídeo y enviarlas por em@il al profesor si lo necesitas."}},"10":{"q":{"ca":"Me'n puc donar de baixa quan vulgui?","es":"¿Me puedo dar de baja cuando quiera?"},"a":{"ca":"I tant. No hi ha permanència. Pots cancel·lar la teva subscripció en qualsevol moment amb un parell de clics.\nA més, si en inscriure't no estàs content amb el contingut, t'oferim una garantia de devolució de 7 dies.","es":"Por supuesto. No hay permanencia. Puedes cancelar tu suscripción en cualquier momento con un par de clics. Además, si al inscribirte no estás contento con el contenido, te ofrecemos una garantía de devolución de 7 días."}},"11":{"q":{"ca":"Hi haurà un segon instrument? Per què guitarra?","es":"¿Habrá un segundo instrumento? ¿Por qué guitarra?"},"a":{"ca":"Sí. A partir del Nivell 3 s'obre un bloc nou i totalment opcional dedicat a la guitarra com a segon instrument de reforç.\n\n🎓 LA IDEA VE DEL CONSERVATORI\nAls conservatoris és obligatori cursar un segon instrument, i no és per formar dos intèrprets: és perquè cada instrument t'obliga a entendre la música des d'un angle diferent. Aquí fem el mateix, però amb un objectiu molt concret: que la guitarra reforci la teva improvisació al piano.\n\n🎸 PER QUÈ LA GUITARRA\nEl piano és lineal i visual: les notes estan totes en fila. La guitarra és vertical i geomètrica: els acords es converteixen en formes que es mouen pel màstil. Quan trasllades un mateix concepte d'un teclat a l'altre, deixa de ser un concepte memoritzat i es converteix en comprensió real.\n\n⚙️ COM FUNCIONA DINS DEL CURS\n• És un bloc OPCIONAL: cap dels seus vídeos és ⭐ important, de manera que MAI bloqueja el teu avanç al piano ni el desbloqueig dels blocs següents.\n• No cal tenir cap experiència prèvia, però es recomana una guitarra clàssica o una d'elèctrica.\n• Si decideixes fer-lo, tindràs la seva pròpia numeració i el seu progrés, com qualsevol altre bloc.\n• El pots deixar, reprendre o ignorar sense cap penalització.","es":"Sí. A partir del Nivel 3 se abre un bloque nuevo y totalmente opcional dedicado a la guitarra como segundo instrumento de refuerzo.\n\n🎓 LA IDEA VIENE DEL CONSERVATORIO\nEn los conservatorios es obligatorio cursar un segundo instrumento, y no es para formar dos intérpretes: es porque cada instrumento te obliga a entender la música desde un ángulo distinto. Aquí hacemos lo mismo, pero con un objetivo concreto: que la guitarra refuerce tu improvisación.\n\n🎸 POR QUÉ LA GUITARRA\nEl piano es lineal y visual: las notas están todas en fila. La guitarra es vertical y geométrica: los acordes se convierten en formas que se mueven por el mástil. Cuando trasladas un mismo concepto de un instrumento al otro, deja de ser un concepto memorizado y se convierte en comprensión real.\n\n⚙️ CÓMO FUNCIONA DENTRO DEL CURSO\n• Es un bloque OPCIONAL: ninguno de sus vídeos es ⭐ importante, así que NUNCA bloquea tu avance en el piano ni el desbloqueo de los bloques siguientes.\n• No hace falta tener experiencia previa, pero se recomienda tener guitarra clásica o eléctrica.\n• Si decides hacerlo, tendrá su propia numeración y su progreso, como cualquier otro bloque.\n• Puedes dejarlo, retomarlo o ignorarlo sin ninguna penalización."}},"12":{"q":{"ca":"Quant ha costat construir tot això? Què inclou la subscripció?","es":"¿Cuánto ha costado construir todo esto? ¿Qué incluye la suscripción?"},"a":{"ca":"Aquest primer nivell no és un curs muntat en un cap de setmana. Hi ha X hores de feina al darrere, i vull que les vegis perquè entenguis què estàs rebent.\n\n🛠️ DESGLOSSAT DE LA FEINA\n• Disseny pedagògic i itinerari pas a pas: X hores\n• Gravació i edició de X vídeos: X hores\n• Composició, arranjament i gravació de X play-alongs: X hores\n• Edició i digitació de X partitures: X hores\n• Disseny i gravació de les X rutines tècniques: X hores\n• Desenvolupament del web, del seguiment continuat i de les apps d'entrenament: X hores\n• Proves en ordinador, mòbil i tablet, correccions i versions: X hores\n\n➡️ TOTAL: X hores de treball.\n\n🎁 QUÈ REPS TU\nTot aquest material, disponible 24 hores al dia durant tot el mes, per menys del que costa UNA sola hora de classe presencial d'instrument.\n\nI no és només vídeo:\n• Un itinerari que et diu sempre quin és el següent pas, sense haver de decidir què estudiar.\n• Tots els vídeos que vulguis repetir, tantes vegades com calgui, al teu ritme.\n• Partitures i play-alongs descarregables per estudiar amb acompanyament real.\n• Entrenament auditiu amb apps pròpies que no trobaràs enlloc més.\n• Notes personals a cada vídeo que arriben directament al professor.\n• Nous continguts i millores que s'hi van afegint sense cost extra.\n\n💬 LA COMPARACIÓ HONESTA\nUna classe presencial és valuosa, però són 60 minuts i s'acaben. Aquí tens el mètode sencer, cada dia del mes, per menys diners. No substitueix el contacte humà: el complementa, i per això les notes i el seguiment hi són sempre.","es":"Este primer nivel no es un curso montado en un fin de semana. Hay X horas de trabajo detrás, y quiero que las veas para que entiendas qué estás recibiendo.\n\n🛠️ DESGLOSE DEL TRABAJO\n• Diseño pedagógico e itinerario paso a paso: X horas\n• Grabación y edición de X vídeos: X horas\n• Composición, arreglo y grabación de X play-alongs: X horas\n• Edición y digitación de X partituras: X horas\n• Diseño y grabación de las X rutinas técnicas: X horas\n• Desarrollo de la web, del seguimiento continuo y de las apps de entrenamiento: X horas\n• Pruebas en ordenador, móvil y tablet, correcciones y versiones: X horas\n\n➡️ TOTAL: X horas de trabajo.\n\n🎁 QUÉ RECIBES TÚ\nTodo este material, disponible 24 horas al día durante todo el mes, por menos de lo que cuesta UNA sola hora de clase presencial de instrumento.\n\nY no es solo vídeo:\n• Un itinerario que te dice siempre cuál es el siguiente paso, sin tener que decidir qué estudiar.\n• Todos los vídeos que quieras repetir, tantas veces como haga falta, a tu ritmo.\n• Partituras y play-alongs descargables para estudiar con acompañamiento real.\n• Entrenamiento auditivo con apps propias que no encontrarás en ningún otro sitio.\n• Notas personales en cada vídeo que llegan directamente al profesor.\n• Nuevos contenidos y mejoras que se van añadiendo sin coste extra.\n\n💬 LA COMPARACIÓN HONESTA\nUna clase presencial es valiosa, pero son 60 minutos y se acaban. Aquí tienes el método entero, cada día del mes, por menos dinero. No sustituye el contacto humano: lo complementa, y por eso las notas y el seguimiento están siempre presentes."}}},"a":{"0":{"n":{"es":"TONAL EMOTIONS","ca":"TONAL EMOTIONS"},"d":{"es":"App d'entrenament auditiu basada en el mètode del bloc auditiu del Nivell Fonamental. Password d'accés: \"musica\"","ca":"App d'entrenament auditiu basada en el mètode del bloc auditiu del Nivell Fonamental. Password d'accés: \"musica\""}},"1":{"n":{"ca":"TRANSPOSE","es":"TRANSPOSE"},"d":{"ca":"Vídeo on s'explica el funcionament d'una de les millors extensions de Chrome. Permet fer Loops, baixar la velocitat i modificar l'afinació\na vídeos de YouTube.","es":"Vídeo on s'explica el funcionament d'una de les millors extensions de Chrome. Permet fer Loops, baixar la velocitat i modificar l'afinació\na vídeos de YouTube."}}},"adj":{},"va":{},"order":{"ca":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.3.g.0","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"],"es":["0.0.w.0","0.0.w.1","0.0.w.2","1.0.g.0","1.0.g.1","1.0.r.0","1.1.t.0","1.1.a.0","1.1.p.0","1.2.t.0","1.2.t.1","1.2.r.0","1.2.p.0","1.3.t.0","1.3.a.0","1.3.p.0","2.0.t.0","2.0.g.0","2.0.r.0","2.0.a.0","2.0.p.0","2.1.t.0","2.1.p.0","2.2.t.0","2.2.r.0","2.3.t.0","2.3.a.0","3.0.t.0","3.0.g.0","3.0.r.0","3.0.a.0","3.0.p.0","3.0.p.1","3.1.t.0","3.1.a.0","3.2.t.0","3.2.g.0","3.2.r.0","3.2.p.0","3.3.t.0","3.3.p.0","4.0.t.0","4.0.g.0","4.0.r.0","4.1.t.0","4.1.p.0","4.2.t.0","4.2.g.0","4.2.r.0","4.2.a.0","4.3.t.0","4.3.a.0","5.0.t.0","5.0.g.0","5.0.r.0","5.0.p.0","5.1.t.0","5.2.t.0","5.2.g.0","5.2.r.0","5.2.p.0","5.3.t.0","5.3.p.0","6.0.g.0","6.0.p.0","6.1.a.0","6.1.p.0","6.3.g.1","6.2.g.0","6.2.r.0","6.2.a.0","6.3.a.0","6.3.p.0","6.3.p.1"]},"imp":{"1.1.p.0:ca":"optional","6.0.g.0:ca":"important"},"h":{"0":{"t":{"ca":"Seguiment Continuat"},"p":{"ca":"És el teu itinerari guiat. La targeta «Ara et toca» t'indica el següent vídeo que has de mirar. Quan l'hagis vist i practicat, prem «Marcar fet» i l'aula et proposarà automàticament el següent pas. I si un dia no et ve de gust el vídeo que toca, prem «⏭ Més tard» per ajornar-lo sense trencar el ritme."}},"1":{"t":{"ca":"Deixar un vídeo per a més tard"},"p":{"ca":"Quan prems «⏭ Més tard» a la targeta «Ara et toca», el Seguiment Continuat et proposarà immediatament el vídeo següent de l'itinerari, com si res. El vídeo ajornat no es perd ni es marca com a fet: quan validis el vídeo que l'ha substituït, el tornaràs a trobar al davant com a recordatori, perquè el puguis fer quan et vagi millor. Ajornar un vídeo no afecta el teu percentatge de progrés, la llista de repàs ni les notes personals: simplement reordena el dia a dia del teu recorregut."}},"2":{"t":{"ca":"Navegació Lliure"},"p":{"ca":"Per explorar al teu aire: tria el nivell al desplegable i el bloc (Tècnica, Teoria, Ritme, Auditiu o Pràctica) per veure'n tots els vídeos i materials.\n\n🔍 Cerca ràpida: a la dreta del selector de nivell (al PC) o al botó lupa de la capçalera (al mòbil) trobaràs el cercador. Escriu almenys dues lletres i filtrarà automàticament tots els vídeos del nivell, independentment del bloc que tinguis seleccionat. Els blocs amb resultats s'il·luminaran per indicar-te on hi ha coincidències."}},"3":{"t":{"ca":"Vídeos importants i opcionals"},"p":{"ca":"Cada vídeo porta una icona: ⭐ important (no te'l saltis) o ☆ opcional (pots deixar-lo per més endavant si tens pressa). Passa-hi el ratolí per sobre per veure'n el significat."}},"4":{"t":{"ca":"La teva llista de repàs"},"p":{"ca":"Amb el botó «Repassar» marques un vídeo per tenir-lo sempre a mà. Els trobaràs tots reunits a la llista de repàs, a sota de cada vista."}},"5":{"t":{"ca":"Notes personals i enviar-les al professor"},"p":{"ca":"Cada vídeo té un espai de notes personals per apuntar dubtes o observacions mentre estudies. Quan tinguis notes acumulades, apareixerà el botó «Enviar al professor» dins del panell: en clicar-lo, s'obrirà automàticament el teu correu amb totes les notes pre-emplenades, llestes per enviar a gironajazz@gmail.com."}},"6":{"t":{"ca":"Aplicacions d'entrenament"},"p":{"ca":"A la pestanya Apps trobaràs laboratoris exclusius com TONAL EMOTIONS, per entrenar l'oïda jugant."}},"7":{"t":{"ca":"I en acabar el nivell…"},"p":{"ca":"Quan completis tots els vídeos del nivell rebràs un regal de graduació molt especial. Però això… millor descobreix-ho tu mateix! 😉"}},"8":{"t":{"ca":"Els percentatges de progrés"},"p":{"ca":"Al Seguiment Continuat, els donuts de progrés només tenen en compte els vídeos importants (⭐): quan els completis tots, veuràs el 100% i rebràs el regal de graduació, encara que quedin vídeos opcionals (☆) pendents. A la Navegació Lliure, en canvi, el percentatge de cada bloc reflecteix tot el material del bloc (importants i opcionals). I si passes el ratolí per sobre de qualsevol donut o botó de bloc, t'explicarà exactament què està mesurant."}},"9":{"t":{"ca":"Prova pilot: on es guarda el teu progrés?"},"p":{"ca":"Aquest web és encara una prova pilot amb un màxim de 30 usuaris. Per això, el teu progrés (vídeos completats, notes personals i llista de repàs) queda guardat únicament al navegador del dispositiu que estiguis utilitzant. Si entres amb el teu usuari des d'un altre dispositiu, no hi veuràs el progrés actualitzat: no s'ha perdut, simplement viu a l'altre navegador. Aquesta limitació desapareixerà d'aquí a uns mesos, quan el web es publiqui oficialment i el progrés es guardi al núvol."}},"10":{"t":{"ca":"Canviar entre mode fosc i mode clar"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó amb una icona de sol o de lluna. En clicar-lo, commutaràs entre el mode fosc i el mode clar (blau nit). La teva preferència es guarda automàticament: la propera vegada que obrís el web, es mostrarà amb l'últim tema que vas triar. Per defecte, la primera visita sempre s'obre en mode fosc."}},"11":{"t":{"ca":"Tres temes: fosc, blau nit i sèpia"},"p":{"ca":"A la cantonada superior dreta trobaràs un botó rodó que commuta entre tres temes:\n\n🌙 FOSC — el més còmode per estudiar de nit.\n💧 BLAU NIT — clar i fresc, ideal al mòbil.\n☕ SÈPIA — clar i càlid (crema i marró suau), pensat per a pantalles grans d'ordinador, on el blau pot resultar fred.\n\nCada clic passa al tema següent (també pots prémer la tecla T). La teva preferència es guarda automàticament i es recupera la propera vegada que obris el web. Per defecte, la primera visita sempre s'obre en mode fosc."}},"12":{"t":{"ca":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera: el teu progrés de cada idioma es conserva sempre."}},"13":{"t":{"ca":"Instal·la l'aula al mòbil o crea un accés directe a l'escriptori"},"p":{"ca":"Tens dues opcions per tenir l'aula sempre a mà:\n\n📱 AL MÒBIL O TABLET: obre en aquell dispositiu la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre allà el panell d'ajuda (?) i segueix l'apartat «📲 Instal·la l'aula al teu mòbil o tablet»: a Android (Chrome), menú ⋮ → «Instal·la l'aplicació»; a iPad (Safari), botó Compartir → «Afegeix a la pantalla d'inici». La drecera es mostrarà amb el logo de l'escola i s'obrirà a pantalla completa, sense barres del navegador.\n\n💻 A L'ESCRITORI DEL TEU ORDINADOR:\n• Chrome: obre el menú ⋮ (dalt a la dreta) → «Instal·la Girona Jazz Piano School» (o bé «Més eines» → «Crea un accés directe…»). Es crearà una icona a l'escriptori que, en obrir-la, mostrarà l'aula en una finestra pròpia, sense barres del navegador.\n• Safari (macOS): arrossega la URL de la barra d'adreces directament a l'escriptori o al Dock. Es crearà una drecera que obrirà l'aula en una pestanya nova."}},"14":{"t":{"ca":"Català i castellà: dos cursos independents"},"p":{"ca":"Tot i que el material dels dos idiomes és molt semblant, cada idioma funciona com un curs independent: els vídeos completats, els percentatges, la llista de repàs, les notes i l'ordre dels vídeos es gestionen per separat. Així, si completes un bloc en català, el teu progrés en català serà del 100% mentre que en castellà seguirà el seu propi ritme. La celebració 🏆 i el regal de graduació també es desbloquegen per separat en cada idioma. Pots canviar d'idioma quan vulguis amb el botó 🌐 de la capçalera."}},"15":{"t":{"ca":"Instal·la l'aula al teu mòbil o tablet"},"p":{"ca":"Per tenir l'aula com una aplicació al teu mòbil o tablet:\n\n📱 ANDROID (Chrome): obre en el teu mòbil o tablet la mateixa adreça que veus a la barra d'adreces d'aquest navegador i inicia sessió. Després, obre el menú de tres puntets (⋮ o ⋯) i tria «Instal·la i crea una drecera» → «Instal·la».\n\n🍎 iOS (iPhone i iPad, amb Safari): obre en el teu dispositiu la mateixa adreça i inicia sessió. Després, prem el botó Compartir i tria «Afegeix a la pantalla d'inici»."}}},"c":{},"n":{"1":{"es":"FONAMENTS","ca":"FONAMENTS"},"2":{"es":"CONSOLIDACIÓ","ca":"CONSOLIDACIÓ"},"3":{"es":"DESCOBRIMENT DEL SISTEMA TONAL","ca":"DESCOBRIMENT DEL SISTEMA TONAL"},"4":{"es":"DESENVOLUPAMENT HARMÒNIC","ca":"DESENVOLUPAMENT HARMÒNIC"},"5":{"es":"DOMINI DEL NIVELL FONAMENTAL","ca":"DOMINI DEL NIVELL FONAMENTAL"},"6":{"es":"INTEGRACIÓN Y CONEXIÓN DE TRÍADAS","ca":"INTEGRACIÓ I CONNEXIÓ DE TRÍADES"}},"nv":{"1":{"g":["ca","es"]}},"pub":[],"idocs":[],"bl":{"6.3.g.0":"g","6.3.g.1":"g"},"apps":[],"am":{}};/*OV-END*/
 
 /* ── Documents d'itinerari: un PDF pot ser un pas numerat ─────────────── */
 function isDocId(id) { return String(id).indexOf('doc.') === 0; }
@@ -6149,14 +6237,22 @@ setInterval(function () {
 }, 300);
 
 /* ── 16.12 Botó del gestor ────────────────────────────────────────────── */
+var ICON_COURSE = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">' +
+  '<path d="M3 8a2 2 0 0 1 2-2h4l2.2 2.6H19a2 2 0 0 1 2 2v8.4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" ' +
+  'fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>' +
+  '<path d="M7.6 13.2h8.8M7.6 16.4h5.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".85"/>' +
+  '</svg>';
+
 function ensureCourseBtn() {
   var b = document.getElementById('mCourse');
   if (!b) {
-    b = el('button', '', '🗂');
+    b = document.createElement('button');
     b.id = 'mCourse'; b.type = 'button';
     document.body.appendChild(b);
   }
+  b.innerHTML = ICON_COURSE;
   b.title = L('Gestor del curs', 'Gestor del curso');
+  b.setAttribute('aria-label', b.title);
   b.onclick = function (e) { e.stopPropagation(); openManager(); };
   return b;
 }
@@ -6218,5 +6314,843 @@ window.addEventListener('resize', onScroll, { passive: true });
 })();
 </script>
 
-</body>
-</html>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · DESCRIPCIONS CURTES
+   Substitueix els textos genèrics actuals per un text curt i professional.
+   Canvia aquí les dues línies TXT si en vols un altre.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjShortDesc) return;
+window.__gjShortDesc = true;
+
+var TXT = {
+  ca: 'Pendent de descripció.',
+  es: 'Pendiente de descripción.'
+};
+
+if (typeof OV === 'undefined' || typeof UI === 'undefined') return;
+
+/* 1. Recull els textos genèrics antics abans de substituir-los */
+var generic = {};
+['ca', 'es'].forEach(function (lg) {
+  var d = (UI[lg] && UI[lg].desc) || {};
+  Object.keys(d).forEach(function (b) { if (d[b]) generic[d[b]] = 1; });
+});
+
+/* 2. Esborra d'OV.d només les entrades que són còpies d'aquells textos */
+OV.d = OV.d || {};
+var removed = 0;
+Object.keys(OV.d).forEach(function (id) {
+  var rec = OV.d[id];
+  if (!rec || typeof rec !== 'object') { delete OV.d[id]; removed++; return; }
+  ['ca', 'es'].forEach(function (lg) {
+    if (rec[lg] && generic[rec[lg]]) { delete rec[lg]; removed++; }
+  });
+  if (!Object.keys(rec).length) delete OV.d[id];
+});
+
+/* 3. Text curt com a fallback per a tots els blocs i per als vídeos nous */
+['ca', 'es'].forEach(function (lg) {
+  UI[lg].desc = { w: TXT[lg], t: TXT[lg], g: TXT[lg], r: TXT[lg], a: TXT[lg], p: TXT[lg], b: TXT[lg] };
+});
+
+/* 4. Repinta amb els textos nous */
+try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
+console.log('📝 GJPS · descripcions curtes aplicades · entrades genèriques retirades: ' + removed);
+})();
+</script>
+
+
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · GUARDAT NET + REPARACIÓ DE NODES DUPLICATS
+   El guardat serialitza un clon del document sense els elements que crea el
+   JavaScript, de manera que el fitxer desat és estructuralment idèntic al
+   original i en reobrir cada mòdul crea els seus nodes una sola vegada.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjSaveClean) return;
+window.__gjSaveClean = true;
+
+/* Nodes que el JS crea en runtime: mai han d'anar al fitxer desat */
+var RUNTIME_IDS = ['gjpsGuard','gjpsGuardPill','mTheme','mCourse','cmModal','cmViews','cmOrd',
+  'vfModal','pubModal','pubPanel','idocModal','idocForm','ordGhost','langGate',
+  'drag-blockbar','drag-ghost','docsModal','gjIosNote','lgFaqBtn'];
+/* El guardià es munta a DOMContentLoaded: el node bo és l'últim */
+var LAST_WINS = { gjpsGuard: 1, gjpsGuardPill: 1 };
+/* Contenidors que es repinten sols en arrencar */
+var REPAINT = ['trackView','freeView','appsView','infoView','helpView',
+  'faqGuestContent','adjSelList','userlist','loginLangSwitcher','who','lgErr','toast','fatal'];
+
+/* ── 1. Repara el DOM actual: elimina duplicats i retorna el control ───── */
+function dedupe() {
+  RUNTIME_IDS.forEach(function (id) {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('[id="' + id + '"]'));
+    if (nodes.length < 2) return;
+    var keep = LAST_WINS[id] ? nodes[nodes.length - 1] : nodes[0];
+    nodes.forEach(function (n) { if (n !== keep) n.remove(); });
+  });
+  var vig = Array.prototype.slice.call(document.querySelectorAll('.wm-vig'));
+  if (vig.length > 1) vig.slice(0, -1).forEach(function (n) { n.remove(); });
+}
+function dropManagerNodes() {
+  ['cmModal','cmViews','cmOrd','vfModal','pubModal','pubPanel','idocModal','idocForm','langGate']
+    .forEach(function (id) {
+      Array.prototype.slice.call(document.querySelectorAll('[id="' + id + '"]'))
+        .forEach(function (n) { n.remove(); });
+    });
+}
+function wireTheme() {
+  var b = document.getElementById('mTheme');
+  if (!b) return;
+  var THEMES = ['dark', 'blue', 'sepia'];
+  var NAMES = { dark: { ca: 'Fosc', es: 'Oscuro' }, blue: { ca: 'Blau nit', es: 'Azul noche' }, sepia: { ca: 'Sèpia', es: 'Sepia' } };
+  var COLORS = { dark: '#0d0d0d', blue: '#d8dde4', sepia: '#e8e4d9' };
+  var ICONS = {
+    dark: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+    blue: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6 6.1 6 10.1a6 6 0 0 1-12 0c0-4 6-10.1 6-10.1z"/></svg>',
+    sepia: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+  };
+  function lang() { return (window.LS && LS.lang === 'es') ? 'es' : 'ca'; }
+  function cur() { return document.documentElement.getAttribute('data-theme') || 'dark'; }
+  function apply(th) {
+    document.documentElement.setAttribute('data-theme', th);
+    var mt = document.querySelector('meta[name="theme-color"]');
+    if (mt) mt.setAttribute('content', COLORS[th] || COLORS.dark);
+  }
+  function paint() {
+    var c = cur(), nx = THEMES[(THEMES.indexOf(c) + 1) % THEMES.length];
+    b.innerHTML = ICONS[c] || ICONS.dark;
+    b.style.color = c === 'dark' ? 'var(--mut)' : 'var(--gold)';
+    b.style.borderColor = c === 'dark' ? 'var(--line)' : 'var(--gold)';
+    b.title = 'Tema: ' + NAMES[c][lang()] + (lang() === 'ca' ? ' · Clica per passar a ' : ' · Clic para pasar a ') + NAMES[nx][lang()];
+    b.setAttribute('aria-label', b.title);
+  }
+  b.type = 'button';
+  b.style.pointerEvents = 'auto';
+  b.onmouseenter = function () { b.style.opacity = '1'; };
+  b.onmouseleave = function () { b.style.opacity = '.7'; };
+  b.onclick = function (e) {
+    e.stopPropagation();
+    var nx = THEMES[(THEMES.indexOf(cur()) + 1) % THEMES.length];
+    apply(nx);
+    try { localStorage.setItem('gjps_theme', nx); } catch (err) {}
+    paint();
+    if (window.showToast) showToast('Tema: ' + NAMES[nx][lang()], 1400);
+  };
+  var saved = null;
+  try { saved = localStorage.getItem('gjps_theme'); } catch (err) {}
+  apply(THEMES.indexOf(saved) >= 0 ? saved : cur());
+  paint();
+  window.GJPSTheme = {
+    set: function (v) { if (THEMES.indexOf(v) < 0) return; apply(v); try { localStorage.setItem('gjps_theme', v); } catch (err) {} paint(); },
+    get: cur, refresh: paint
+  };
+}
+function wireCourse() {
+  var b = document.getElementById('mCourse');
+  if (!b || !window.GJPSCourse || !GJPSCourse.open) return;
+  b.type = 'button';
+  b.onclick = function (e) { e.stopPropagation(); GJPSCourse.open(); };
+}
+
+/* ── 2. Guardat sobre un clon net ─────────────────────────────────────── */
+function cleanClone() {
+  var root = document.documentElement.cloneNode(true);
+
+  RUNTIME_IDS.forEach(function (id) {
+    Array.prototype.slice.call(root.querySelectorAll('[id="' + id + '"]')).forEach(function (n) { n.remove(); });
+  });
+  Array.prototype.slice.call(root.querySelectorAll('.wm-vig')).forEach(function (n) { n.remove(); });
+  Array.prototype.slice.call(root.querySelectorAll('style')).forEach(function (st) {
+    if ((st.textContent || '').indexOf('#gjpsGuard{') >= 0) st.remove();
+  });
+  Array.prototype.slice.call(root.querySelectorAll('link[rel="manifest"]')).forEach(function (n) { n.remove(); });
+  Array.prototype.slice.call(root.querySelectorAll('#ordGhost,#drag-ghost,.gjnote')).forEach(function (n) { n.remove(); });
+
+  REPAINT.forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (!n) return;
+    n.innerHTML = '';
+    if (id === 'toast') n.setAttribute('style', 'opacity:0');
+    if (id === 'fatal') n.setAttribute('style', 'display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;');
+  });
+
+  ['modal','login','adjSelModal','faqModal'].forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (n) n.className = n.className.replace(/\bon\b/g, '').replace(/\s+/g, ' ').trim();
+  });
+
+  var pl = root.querySelector('#player');
+  if (pl) { pl.setAttribute('src', ''); pl.className = ''; }
+  var ov = root.querySelector('#videoOverlay');
+  if (ov) { ov.className = 'video-overlay'; ov.removeAttribute('style'); }
+  ['lgName','lgPin','freeSearch'].forEach(function (id) {
+    var n = root.querySelector('#' + id); if (n) n.removeAttribute('value');
+  });
+  ['mEdit','mSave'].forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (n) { n.removeAttribute('style'); n.className = ''; }
+  });
+
+  Array.prototype.slice.call(root.querySelectorAll('[contenteditable]')).forEach(function (n) { n.removeAttribute('contenteditable'); });
+  Array.prototype.slice.call(root.querySelectorAll('.editing')).forEach(function (n) { n.classList.remove('editing'); });
+
+  var body = root.querySelector('body');
+  if (body) { body.className = ''; body.removeAttribute('style'); }
+  root.setAttribute('data-theme', 'dark');
+  root.setAttribute('class', 'can-hover');
+  root.removeAttribute('style');
+  return root;
+}
+
+window.saveAsFile = function () {
+  collectAll();
+  var root = cleanClone();
+  var html = '<!DOCTYPE html>\n' + root.outerHTML;
+  html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END\*\//, '/*OV-START*/' + JSON.stringify(OV) + ';/*OV-END*/');
+
+  if (isMobileDevice() && navigator.share && navigator.canShare) {
+    var f = new File([html], 'index.html', { type: 'text/html' });
+    if (navigator.canShare({ files: [f] })) {
+      navigator.share({ files: [f], title: 'index.html' })
+        .then(function () { showToast(LS.lang === 'ca' ? '📧 Fitxer preparat! Tria Mail per enviar-lo adjunt.' : '📧 ¡Fichero listo! Elige Mail para enviarlo adjunto.'); })
+        .catch(function (e) { if (e && e.name !== 'AbortError') fallbackDownload(html); });
+      return;
+    }
+  }
+  if (window.showSaveFilePicker) {
+    showSaveFilePicker({ suggestedName: 'index.html', types: [{ description: 'Pàgina HTML', accept: { 'text/html': ['.html'] } }] })
+      .then(function (h) { return h.createWritable(); })
+      .then(function (w) { return w.write(html).then(function () { return w.close(); }); })
+      .then(function () { alert(t().savedOk); })
+      .catch(function (e) {
+        if (e && (e.name === 'AbortError' || String(e).toLowerCase().includes('cancel'))) console.log('Guardat cancel·lat');
+        else fallbackDownload(html);
+      });
+  } else fallbackDownload(html);
+};
+
+/* ── 3. Aplica la reparació ara ───────────────────────────────────────── */
+dedupe();
+dropManagerNodes();
+wireTheme();
+wireCourse();
+var mo = new MutationObserver(function () {
+  if (document.querySelectorAll('[id="mTheme"]').length > 1) { dedupe(); wireTheme(); }
+  if (document.querySelectorAll('[id="mCourse"]').length > 1) { dedupe(); wireCourse(); }
+});
+mo.observe(document.body, { childList: true });
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 't' && e.key !== 'T') return;
+  var el = e.target;
+  if (el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable)) return;
+  var b = document.getElementById('mTheme'); if (b) b.click();
+});
+console.log('🧹 GJPS · guardat net actiu · selector de temes reparat');
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · GUARDAT NET + REPARACIÓ DE NODES DUPLICATS
+   El guardat serialitza un clon del document sense els elements que crea el
+   JavaScript, de manera que el fitxer desat és estructuralment idèntic al
+   original i en reobrir cada mòdul crea els seus nodes una sola vegada.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjSaveClean) return;
+window.__gjSaveClean = true;
+
+/* Nodes que el JS crea en runtime: mai han d'anar al fitxer desat */
+var RUNTIME_IDS = ['gjpsGuard','gjpsGuardPill','mTheme','mCourse','cmModal','cmViews','cmOrd',
+  'vfModal','pubModal','pubPanel','idocModal','idocForm','ordGhost','langGate',
+  'drag-blockbar','drag-ghost','docsModal','gjIosNote','lgFaqBtn'];
+/* El guardià es munta a DOMContentLoaded: el node bo és l'últim */
+var LAST_WINS = { gjpsGuard: 1, gjpsGuardPill: 1 };
+/* Contenidors que es repinten sols en arrencar */
+var REPAINT = ['trackView','freeView','appsView','infoView','helpView',
+  'faqGuestContent','adjSelList','userlist','loginLangSwitcher','who','lgErr','toast','fatal'];
+
+/* ── 1. Repara el DOM actual: elimina duplicats i retorna el control ───── */
+function dedupe() {
+  RUNTIME_IDS.forEach(function (id) {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('[id="' + id + '"]'));
+    if (nodes.length < 2) return;
+    var keep = LAST_WINS[id] ? nodes[nodes.length - 1] : nodes[0];
+    nodes.forEach(function (n) { if (n !== keep) n.remove(); });
+  });
+  var vig = Array.prototype.slice.call(document.querySelectorAll('.wm-vig'));
+  if (vig.length > 1) vig.slice(0, -1).forEach(function (n) { n.remove(); });
+}
+function dropManagerNodes() {
+  ['cmModal','cmViews','cmOrd','vfModal','pubModal','pubPanel','idocModal','idocForm','langGate']
+    .forEach(function (id) {
+      Array.prototype.slice.call(document.querySelectorAll('[id="' + id + '"]'))
+        .forEach(function (n) { n.remove(); });
+    });
+}
+function wireTheme() {
+  var b = document.getElementById('mTheme');
+  if (!b) return;
+  var THEMES = ['dark', 'blue', 'sepia'];
+  var NAMES = { dark: { ca: 'Fosc', es: 'Oscuro' }, blue: { ca: 'Blau nit', es: 'Azul noche' }, sepia: { ca: 'Sèpia', es: 'Sepia' } };
+  var COLORS = { dark: '#0d0d0d', blue: '#d8dde4', sepia: '#e8e4d9' };
+  var ICONS = {
+    dark: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+    blue: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6 6.1 6 10.1a6 6 0 0 1-12 0c0-4 6-10.1 6-10.1z"/></svg>',
+    sepia: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+  };
+  function lang() { return (window.LS && LS.lang === 'es') ? 'es' : 'ca'; }
+  function cur() { return document.documentElement.getAttribute('data-theme') || 'dark'; }
+  function apply(th) {
+    document.documentElement.setAttribute('data-theme', th);
+    var mt = document.querySelector('meta[name="theme-color"]');
+    if (mt) mt.setAttribute('content', COLORS[th] || COLORS.dark);
+  }
+  function paint() {
+    var c = cur(), nx = THEMES[(THEMES.indexOf(c) + 1) % THEMES.length];
+    b.innerHTML = ICONS[c] || ICONS.dark;
+    b.style.color = c === 'dark' ? 'var(--mut)' : 'var(--gold)';
+    b.style.borderColor = c === 'dark' ? 'var(--line)' : 'var(--gold)';
+    b.title = 'Tema: ' + NAMES[c][lang()] + (lang() === 'ca' ? ' · Clica per passar a ' : ' · Clic para pasar a ') + NAMES[nx][lang()];
+    b.setAttribute('aria-label', b.title);
+  }
+  b.type = 'button';
+  b.style.pointerEvents = 'auto';
+  b.onmouseenter = function () { b.style.opacity = '1'; };
+  b.onmouseleave = function () { b.style.opacity = '.7'; };
+  b.onclick = function (e) {
+    e.stopPropagation();
+    var nx = THEMES[(THEMES.indexOf(cur()) + 1) % THEMES.length];
+    apply(nx);
+    try { localStorage.setItem('gjps_theme', nx); } catch (err) {}
+    paint();
+    if (window.showToast) showToast('Tema: ' + NAMES[nx][lang()], 1400);
+  };
+  var saved = null;
+  try { saved = localStorage.getItem('gjps_theme'); } catch (err) {}
+  apply(THEMES.indexOf(saved) >= 0 ? saved : cur());
+  paint();
+  window.GJPSTheme = {
+    set: function (v) { if (THEMES.indexOf(v) < 0) return; apply(v); try { localStorage.setItem('gjps_theme', v); } catch (err) {} paint(); },
+    get: cur, refresh: paint
+  };
+}
+function wireCourse() {
+  var b = document.getElementById('mCourse');
+  if (!b || !window.GJPSCourse || !GJPSCourse.open) return;
+  b.type = 'button';
+  b.onclick = function (e) { e.stopPropagation(); GJPSCourse.open(); };
+}
+
+/* ── 2. Guardat sobre un clon net ─────────────────────────────────────── */
+function cleanClone() {
+  var root = document.documentElement.cloneNode(true);
+
+  RUNTIME_IDS.forEach(function (id) {
+    Array.prototype.slice.call(root.querySelectorAll('[id="' + id + '"]')).forEach(function (n) { n.remove(); });
+  });
+  Array.prototype.slice.call(root.querySelectorAll('.wm-vig')).forEach(function (n) { n.remove(); });
+  Array.prototype.slice.call(root.querySelectorAll('style')).forEach(function (st) {
+    if ((st.textContent || '').indexOf('#gjpsGuard{') >= 0) st.remove();
+  });
+  Array.prototype.slice.call(root.querySelectorAll('link[rel="manifest"]')).forEach(function (n) { n.remove(); });
+  Array.prototype.slice.call(root.querySelectorAll('#ordGhost,#drag-ghost,.gjnote')).forEach(function (n) { n.remove(); });
+
+  REPAINT.forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (!n) return;
+    n.innerHTML = '';
+    if (id === 'toast') n.setAttribute('style', 'opacity:0');
+    if (id === 'fatal') n.setAttribute('style', 'display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;');
+  });
+
+  ['modal','login','adjSelModal','faqModal'].forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (n) n.className = n.className.replace(/\bon\b/g, '').replace(/\s+/g, ' ').trim();
+  });
+
+  var pl = root.querySelector('#player');
+  if (pl) { pl.setAttribute('src', ''); pl.className = ''; }
+  var ov = root.querySelector('#videoOverlay');
+  if (ov) { ov.className = 'video-overlay'; ov.removeAttribute('style'); }
+  ['lgName','lgPin','freeSearch'].forEach(function (id) {
+    var n = root.querySelector('#' + id); if (n) n.removeAttribute('value');
+  });
+  ['mEdit','mSave'].forEach(function (id) {
+    var n = root.querySelector('#' + id);
+    if (n) { n.removeAttribute('style'); n.className = ''; }
+  });
+
+  Array.prototype.slice.call(root.querySelectorAll('[contenteditable]')).forEach(function (n) { n.removeAttribute('contenteditable'); });
+  Array.prototype.slice.call(root.querySelectorAll('.editing')).forEach(function (n) { n.classList.remove('editing'); });
+
+  var body = root.querySelector('body');
+  if (body) { body.className = ''; body.removeAttribute('style'); }
+  root.setAttribute('data-theme', 'dark');
+  root.setAttribute('class', 'can-hover');
+  root.removeAttribute('style');
+  return root;
+}
+
+window.saveAsFile = function () {
+  collectAll();
+  var root = cleanClone();
+  var html = '<!DOCTYPE html>\n' + root.outerHTML;
+  html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END\*\//, '/*OV-START*/' + JSON.stringify(OV) + ';/*OV-END*/');
+
+  if (isMobileDevice() && navigator.share && navigator.canShare) {
+    var f = new File([html], 'index.html', { type: 'text/html' });
+    if (navigator.canShare({ files: [f] })) {
+      navigator.share({ files: [f], title: 'index.html' })
+        .then(function () { showToast(LS.lang === 'ca' ? '📧 Fitxer preparat! Tria Mail per enviar-lo adjunt.' : '📧 ¡Fichero listo! Elige Mail para enviarlo adjunto.'); })
+        .catch(function (e) { if (e && e.name !== 'AbortError') fallbackDownload(html); });
+      return;
+    }
+  }
+  if (window.showSaveFilePicker) {
+    showSaveFilePicker({ suggestedName: 'index.html', types: [{ description: 'Pàgina HTML', accept: { 'text/html': ['.html'] } }] })
+      .then(function (h) { return h.createWritable(); })
+      .then(function (w) { return w.write(html).then(function () { return w.close(); }); })
+      .then(function () { alert(t().savedOk); })
+      .catch(function (e) {
+        if (e && (e.name === 'AbortError' || String(e).toLowerCase().includes('cancel'))) console.log('Guardat cancel·lat');
+        else fallbackDownload(html);
+      });
+  } else fallbackDownload(html);
+};
+
+/* ── 3. Aplica la reparació ara ───────────────────────────────────────── */
+dedupe();
+dropManagerNodes();
+wireTheme();
+wireCourse();
+var mo = new MutationObserver(function () {
+  if (document.querySelectorAll('[id="mTheme"]').length > 1) { dedupe(); wireTheme(); }
+  if (document.querySelectorAll('[id="mCourse"]').length > 1) { dedupe(); wireCourse(); }
+});
+mo.observe(document.body, { childList: true });
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 't' && e.key !== 'T') return;
+  var el = e.target;
+  if (el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable)) return;
+  var b = document.getElementById('mTheme'); if (b) b.click();
+});
+console.log('🧹 GJPS · guardat net actiu · selector de temes reparat');
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · 18. APPS AMB VÍDEOS
+   La vista Apps accepta aplicacions i vídeos, tots amb el format de targeta
+   gran. Els vídeos dels blocs no es toquen. Gestió completa en mode edició:
+   afegir, editar, reordenar i eliminar; font de Drive o de YouTube.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjAppsMedia) return;
+window.__gjAppsMedia = true;
+
+function ca() { return LS.lang === 'ca'; }
+function L(c, e) { return ca() ? c : e; }
+
+/* ── 18.1 Llavor del vídeo d'eines ────────────────────────────────────── */
+var SEED_TOOL = {
+  kind: 'video', e: '🔁', src: '',
+  n: { ca: 'Loops i pitch bend amb una extensió de Chrome',
+       es: 'Loops y pitch bend con una extensión de Chrome' },
+  d: { ca: 'Com instal·lar l\'extensió i fer-la servir sobre vídeos de YouTube: marcar un fragment A–B, repetir-lo en bucle i baixar la velocitat o l\'afinació per treure solos i transcriure sense sortir del navegador.',
+       es: 'Cómo instalar la extensión y usarla sobre vídeos de YouTube: marcar un fragmento A–B, repetirlo en bucle y bajar la velocidad o la afinación para sacar solos y transcribir sin salir del navegador.' }
+};
+if (!APPS.some(function (a) { return a && a.n && a.n.ca === SEED_TOOL.n.ca; })) APPS.push(SEED_TOOL);
+
+OV.apps = Array.isArray(OV.apps) ? OV.apps : [];
+OV.am = OV.am && typeof OV.am === 'object' ? OV.am : {};
+
+/* ── 18.2 Resolució d'entrades ────────────────────────────────────────── */
+function entries() {
+  var out = [];
+  APPS.forEach(function (a, i) { out.push({ base: a, key: String(i), seed: true, i: i }); });
+  OV.apps.forEach(function (a, j) { out.push({ base: a, key: 'u' + j, seed: false, j: j }); });
+  return out;
+}
+function meta(en) {
+  var o = OV.am[en.key] || {};
+  return {
+    kind: o.kind || en.base.kind || 'app',
+    e: o.e || en.base.e || '🧩',
+    src: o.src != null ? o.src : (en.base.src || ''),
+    url: o.url != null ? o.url : (en.base.url || '')
+  };
+}
+function titleOf(en) {
+  var o = OV.a && OV.a[en.key];
+  if (o && o.n && o.n[LS.lang]) return esc(o.n[LS.lang]);
+  var n = en.base.n || {};
+  return esc(n[LS.lang] || n.ca || n.es || '');
+}
+function descOf(en) {
+  var o = OV.a && OV.a[en.key];
+  if (o && o.d && o.d[LS.lang]) return esc(o.d[LS.lang]);
+  var d = en.base.d || {};
+  return esc(d[LS.lang] || d.ca || d.es || '');
+}
+function ytId(u) {
+  if (!u) return null;
+  var s = String(u).trim();
+  var m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+  return null;
+}
+function mediaSrc(m) {
+  if (m.kind !== 'video') return null;
+  var y = ytId(m.src);
+  if (y) return 'https://www.youtube-nocookie.com/embed/' + y + '?rel=0&modestbranding=1&playsinline=1';
+  var pid = parseDriveId(m.src);
+  if (pid) return 'https://drive.google.com/file/d/' + pid + '/preview';
+  return null;
+}
+
+/* ── 18.3 Vista ───────────────────────────────────────────────────────── */
+window.renderApps = function () {
+  var av = $('appsView');
+  if (!av) return;
+  av.innerHTML = '';
+
+  var head = document.createElement('div');
+  head.className = 'blkhead';
+  head.innerHTML = '<span class="blkt">' + L('Aplicacions i eines', 'Aplicaciones y herramientas') + '</span>';
+  if (editModeOn) {
+    var add = document.createElement('button');
+    add.type = 'button'; add.className = 'appadd';
+    add.innerHTML = '＋ ' + L('Afegir app o vídeo', 'Añadir app o vídeo');
+    add.onclick = function () { openAppForm(null); };
+    head.appendChild(add);
+  }
+  av.appendChild(head);
+
+  if (editModeOn) {
+    var hint = document.createElement('div');
+    hint.className = 'apphint';
+    hint.innerHTML = L(
+      'Aquí pots afegir <b>aplicacions</b> (enllaç a una eina pròpia) i <b>vídeos</b> (enllaç de Google Drive o de YouTube). Tots es mostren amb el format de targeta gran, diferent dels vídeos dels blocs. Un vídeo sense enllaç es mostra com a <b>properament</b> a l\'alumne i com a <b>configura l\'enllaç</b> per a tu.',
+      'Aquí puedes añadir <b>aplicaciones</b> (enlace a una herramienta propia) y <b>vídeos</b> (enlace de Google Drive o de YouTube). Todos se muestran con el formato de tarjeta grande, distinto de los vídeos de los bloques. Un vídeo sin enlace se muestra como <b>próximamente</b> al alumno y como <b>configura el enlace</b> para ti.');
+    av.appendChild(hint);
+  }
+
+  var grid = document.createElement('div');
+  grid.className = 'appgrid';
+  var list = entries();
+  list.forEach(function (en, pos) {
+    var m = meta(en);
+    var isVid = m.kind === 'video';
+    var src = isVid ? mediaSrc(m) : null;
+    var card = document.createElement('div');
+    card.className = 'appcard';
+    card.dataset.appkey = en.key;
+
+    var icon = m.e === 'logo' ? '<img src="img/LOGO.png" alt="">' : esc(m.e);
+    var tAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="n"' : ' data-appj="' + en.j + '" data-appk="n"';
+    var dAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="d"' : ' data-appj="' + en.j + '" data-appk="d"';
+
+    var btnLabel, btnDisabled = false;
+    if (isVid) {
+      if (src) btnLabel = '▶ ' + L('Reprodueix', 'Reproducir');
+      else if (editModeOn) btnLabel = '🔗 ' + L('Configura l\'enllaç', 'Configura el enlace');
+      else { btnLabel = L('Properament', 'Próximamente'); btnDisabled = true; }
+    } else btnLabel = t().appsOpen;
+
+    card.innerHTML =
+      '<span class="appkind">' + (isVid ? '🎬 ' + L('Vídeo', 'Vídeo') : '🧩 App') + '</span>' +
+      '<div class="ae">' + icon + '</div>' +
+      '<h3' + tAttr + '>' + titleOf(en) + '</h3>' +
+      '<p' + dAttr + '>' + descOf(en) + '</p>' +
+      '<button type="button" class="appgo"' + (btnDisabled ? ' disabled' : '') + '>' + btnLabel + '</button>';
+
+    card.querySelector('.appgo').onclick = function () {
+      if (isVid) {
+        var s = mediaSrc(meta(en));
+        if (s) openFullscreenVideo(s);
+        else if (editModeOn) openAppForm(en);
+        else showToast(L('Aquest vídeo encara no està disponible.', 'Este vídeo aún no está disponible.'));
+      } else openApp(meta(en).url);
+    };
+
+    if (editModeOn) {
+      var adm = document.createElement('div');
+      adm.className = 'appadm';
+      adm.innerHTML =
+        '<button type="button" data-a="edit" title="' + L('Edita', 'Edita') + '">✎</button>' +
+        '<button type="button" data-a="up" title="' + L('Amunt', 'Arriba') + '"' + (en.seed || pos <= APPS.length ? ' disabled' : '') + '>↑</button>' +
+        '<button type="button" data-a="dn" title="' + L('Avall', 'Abajo') + '"' + (en.seed || en.j >= OV.apps.length - 1 ? ' disabled' : '') + '>↓</button>' +
+        (en.seed ? '' : '<button type="button" class="d" data-a="del" title="' + L('Elimina', 'Elimina') + '">🗑</button>');
+      adm.querySelector('[data-a="edit"]').onclick = function () { openAppForm(en); };
+      var up = adm.querySelector('[data-a="up"]');
+      if (up) up.onclick = function () {
+        if (en.j <= 0) return;
+        var a = OV.apps.splice(en.j, 1)[0];
+        OV.apps.splice(en.j - 1, 0, a);
+        render();
+      };
+      var dn = adm.querySelector('[data-a="dn"]');
+      if (dn) dn.onclick = function () {
+        if (en.j >= OV.apps.length - 1) return;
+        var a = OV.apps.splice(en.j, 1)[0];
+        OV.apps.splice(en.j + 1, 0, a);
+        render();
+      };
+      var del = adm.querySelector('[data-a="del"]');
+      if (del) del.onclick = function () {
+        if (!confirm(L('Eliminar aquesta targeta d\'Apps?', '¿Eliminar esta tarjeta de Apps?') + '\n\n' + titleOf(en))) return;
+        OV.apps.splice(en.j, 1);
+        delete OV.am[en.key];
+        render();
+        showToast(L('🗑 Targeta eliminada', '🗑 Tarjeta eliminada'));
+      };
+      card.appendChild(adm);
+      if (!en.seed) {
+        card.querySelectorAll('[data-appj]').forEach(function (n) {
+          n.contentEditable = 'true';
+          n.classList.add('editing');
+        });
+      }
+    }
+    grid.appendChild(card);
+  });
+  av.appendChild(grid);
+  applyEditState();
+};
+
+/* ── 18.4 Desa els textos de les targetes noves ───────────────────────── */
+var _collectAll = window.collectAll;
+window.collectAll = function () {
+  _collectAll();
+  document.querySelectorAll('[data-appj]').forEach(function (n) {
+    var j = parseInt(n.dataset.appj, 10), k = n.dataset.appk;
+    var a = OV.apps[j]; if (!a) return;
+    a[k] = a[k] || {};
+    a[k][LS.lang] = n.innerText.trim();
+  });
+};
+
+/* ── 18.5 Formulari ───────────────────────────────────────────────────── */
+var EMO = ['🔁', '🎬', '🧩', '🎹', '🎧', '🎼', '🥁', '🎸', '🎷', '⏱', '🔊', '🧠', 'logo'];
+var fCtx = null;
+function openAppForm(en) {
+  var m = en ? meta(en) : { kind: 'video', e: '🎬', src: '', url: '' };
+  fCtx = {
+    en: en, kind: m.kind, e: m.e,
+    tit: en ? titleOf(en) : '', des: en ? descOf(en) : '',
+    src: m.src || '', url: m.url || ''
+  };
+  var mo = document.getElementById('appForm');
+  if (!mo) {
+    mo = document.createElement('div');
+    mo.className = 'cm-scrim'; mo.id = 'appForm';
+    document.body.appendChild(mo);
+    mo.addEventListener('click', function (e) { if (e.target === mo) mo.classList.remove('on'); });
+  }
+  paintAppForm();
+  mo.classList.add('on');
+}
+function paintAppForm() {
+  var mo = document.getElementById('appForm'), c = fCtx;
+  var isVid = c.kind === 'video';
+  var h = '<div class="cm-box sm"><div class="cm-head"><h3>' +
+    (c.en ? L('Edita la targeta', 'Edita la tarjeta') : L('Nova targeta d\'Apps', 'Nueva tarjeta de Apps')) +
+    ' · ' + LS.lang.toUpperCase() + '</h3><button class="cm-x" id="afX">✕</button></div><div class="cm-scroll">' +
+    '<div class="cm-fld"><span>' + L('Tipus de contingut', 'Tipo de contenido') + '</span><div class="cm-seg" id="afKind">' +
+    '<button data-k="video"' + (isVid ? ' class="on"' : '') + '>🎬 ' + L('Vídeo', 'Vídeo') + '</button>' +
+    '<button data-k="app"' + (!isVid ? ' class="on"' : '') + '>🧩 ' + L('Aplicació', 'Aplicación') + '</button></div></div>' +
+    '<div class="cm-fld"><span>' + L('Icona', 'Icono') + '</span><input id="afE" value="' + esc(c.e) + '" maxlength="8">' +
+    '<div class="appemo" id="afEmo">' + EMO.map(function (x) {
+      return '<button type="button" data-e="' + x + '"' + (c.e === x ? ' class="on"' : '') + '>' + (x === 'logo' ? '🏫' : x) + '</button>';
+    }).join('') + '</div><div class="cm-hint">' + L('Tria «🏫» per fer servir el logo de l\'escola.', 'Elige «🏫» para usar el logo de la escuela.') + '</div></div>' +
+    '<label class="cm-fld"><span>' + L('Títol', 'Título') + '</span><input id="afT" value="' + esc(c.tit) + '"></label>' +
+    '<label class="cm-fld"><span>' + L('Descripció', 'Descripción') + '</span><textarea id="afD">' + esc(c.des) + '</textarea></label>';
+  if (isVid) {
+    h += '<label class="cm-fld"><span>' + L('Enllaç del vídeo (Drive o YouTube)', 'Enlace del vídeo (Drive o YouTube)') + '</span>' +
+      '<input id="afS" value="' + esc(c.src) + '" placeholder="https://youtu.be/… · https://drive.google.com/file/d/… · ID"></label>' +
+      '<div class="cm-hint">' + L('S\'accepta un enllaç de YouTube, un enllaç de Google Drive o l\'ID del fitxer. Si el deixes buit, l\'alumne veurà «Properament».',
+        'Se acepta un enlace de YouTube, un enlace de Google Drive o el ID del archivo. Si lo dejas vacío, el alumno verá «Próximamente».') + '</div>';
+  } else {
+    h += '<label class="cm-fld"><span>' + L('Enllaç de l\'aplicació', 'Enlace de la aplicación') + '</span>' +
+      '<input id="afU" value="' + esc(c.url) + '" placeholder="apps/TONAL-EMOTIONS.html · https://…"></label>' +
+      '<div class="cm-hint">' + L('Ruta relativa dins del web o URL completa. S\'hi afegeixen l\'idioma i l\'usuari automàticament.',
+        'Ruta relativa dentro de la web o URL completa. Se añaden el idioma y el usuario automáticamente.') + '</div>';
+  }
+  h += '</div><div class="cm-foot"><button class="cm-btn" id="afC">' + L('Cancel·la', 'Cancelar') + '</button>' +
+    '<button class="cm-btn pri" id="afSv">' + L('Desa', 'Guardar') + '</button></div></div>';
+  mo.innerHTML = h;
+
+  document.getElementById('afX').onclick = function () { mo.classList.remove('on'); };
+  document.getElementById('afC').onclick = function () { mo.classList.remove('on'); };
+  mo.querySelectorAll('#afKind button').forEach(function (b) {
+    b.onclick = function () {
+      fCtx.kind = b.dataset.k;
+      fCtx.tit = document.getElementById('afT').value;
+      fCtx.des = document.getElementById('afD').value;
+      var s = document.getElementById('afS'), u = document.getElementById('afU');
+      if (s) fCtx.src = s.value;
+      if (u) fCtx.url = u.value;
+      fCtx.e = document.getElementById('afE').value;
+      paintAppForm();
+    };
+  });
+  mo.querySelectorAll('#afEmo button').forEach(function (b) {
+    b.onclick = function () {
+      fCtx.e = b.dataset.e;
+      document.getElementById('afE').value = fCtx.e;
+      mo.querySelectorAll('#afEmo button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    };
+  });
+  document.getElementById('afSv').onclick = function () {
+    var tit = document.getElementById('afT').value.trim();
+    if (!tit) { document.getElementById('afT').focus(); return; }
+    var des = document.getElementById('afD').value.trim();
+    var e = document.getElementById('afE').value.trim() || (fCtx.kind === 'video' ? '🎬' : '🧩');
+    var sEl = document.getElementById('afS'), uEl = document.getElementById('afU');
+    var src = sEl ? sEl.value.trim() : '';
+    var url = uEl ? uEl.value.trim() : '';
+    if (fCtx.kind === 'app' && !url) { showToast(L('Cal un enllaç per a l\'aplicació.', 'Hace falta un enlace para la aplicación.')); return; }
+
+    if (fCtx.en && fCtx.en.seed) {
+      var key = fCtx.en.key;
+      OV.a = OV.a || {}; OV.a[key] = OV.a[key] || { n: {}, d: {} };
+      OV.a[key].n = OV.a[key].n || {}; OV.a[key].n[LS.lang] = tit;
+      OV.a[key].d = OV.a[key].d || {}; OV.a[key].d[LS.lang] = des;
+      OV.am[key] = { kind: fCtx.kind, e: e, src: src, url: url };
+    } else if (fCtx.en) {
+      var a = OV.apps[fCtx.en.j];
+      a.kind = fCtx.kind; a.e = e; a.src = src; a.url = url;
+      a.n = a.n || {}; a.n[LS.lang] = tit;
+      a.d = a.d || {}; a.d[LS.lang] = des;
+    } else {
+      var rec = { kind: fCtx.kind, e: e, src: src, url: url, n: {}, d: {} };
+      rec.n[LS.lang] = tit; rec.d[LS.lang] = des;
+      OV.apps.push(rec);
+    }
+    mo.classList.remove('on');
+    render();
+    showToast(L('💾 Targeta desada', '💾 Tarjeta guardada'));
+  };
+  setTimeout(function () { document.getElementById('afT').focus(); }, 50);
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  var mo = document.getElementById('appForm');
+  if (mo && mo.classList.contains('on')) { mo.classList.remove('on'); e.stopPropagation(); }
+}, true);
+
+try { if (LS.user) render(); } catch (e) {}
+window.GJSApps = { entries: entries, meta: meta, form: openAppForm, data: function () { return { apps: OV.apps, am: OV.am }; } };
+console.log('🧩 GJPS · Apps amb vídeos actiu · targetes: ' + entries().length);
+})();
+</script>
+
+<div class="cm-scrim" id="appForm"><div class="cm-box sm"><div class="cm-head"><h3>Edita la targeta · CA</h3><button class="cm-x" id="afX">✕</button></div><div class="cm-scroll"><div class="cm-fld"><span>Tipus de contingut</span><div class="cm-seg" id="afKind"><button data-k="video" class="on">🎬 Vídeo</button><button data-k="app">🧩 Aplicació</button></div></div><div class="cm-fld"><span>Icona</span><input id="afE" value="🔁" maxlength="8"><div class="appemo" id="afEmo"><button type="button" data-e="🔁" class="on">🔁</button><button type="button" data-e="🎬">🎬</button><button type="button" data-e="🧩">🧩</button><button type="button" data-e="🎹">🎹</button><button type="button" data-e="🎧">🎧</button><button type="button" data-e="🎼">🎼</button><button type="button" data-e="🥁">🥁</button><button type="button" data-e="🎸">🎸</button><button type="button" data-e="🎷">🎷</button><button type="button" data-e="⏱">⏱</button><button type="button" data-e="🔊">🔊</button><button type="button" data-e="🧠">🧠</button><button type="button" data-e="logo">🏫</button></div><div class="cm-hint">Tria «🏫» per fer servir el logo de l'escola.</div></div><label class="cm-fld"><span>Títol</span><input id="afT" value="Loops i pitch bend amb una extensió de Chrome"></label><label class="cm-fld"><span>Descripció</span><textarea id="afD">Com instal·lar l'extensió i fer-la servir sobre vídeos de YouTube: marcar un fragment A–B, repetir-lo en bucle i baixar la velocitat o l'afinació per treure solos i transcriure sense sortir del navegador.</textarea></label><label class="cm-fld"><span>Enllaç del vídeo (Drive o YouTube)</span><input id="afS" value="" placeholder="https://youtu.be/… · https://drive.google.com/file/d/… · ID"></label><div class="cm-hint">S'accepta un enllaç de YouTube, un enllaç de Google Drive o l'ID del fitxer. Si el deixes buit, l'alumne veurà «Properament».</div></div><div class="cm-foot"><button class="cm-btn" id="afC">Cancel·la</button><button class="cm-btn pri" id="afSv">Desa</button></div></div></div>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · 19. FAQ I AJUDA · traduccions correctes
+   Alguns desats antics van escriure el text català també a la clau «es», i
+   com que el text desat mana sobre el de l'array, el castellà no apareixia.
+   Aquí es retiren només aquestes còpies i es blindar el recollit d'edició.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjI18nFix) return;
+window.__gjI18nFix = true;
+
+/* ── 19.1 Retira les còpies catalanes desades com a castellà ──────────── */
+function sanitize(store, source, keys) {
+  var removed = 0;
+  if (!store || typeof store !== 'object') return 0;
+  Object.keys(store).forEach(function (i) {
+    var rec = store[i];
+    if (!rec || typeof rec !== 'object') return;
+    var base = source[i];
+    if (!base) return;
+    keys.forEach(function (k) {
+      var o = rec[k];
+      if (!o || typeof o !== 'object') return;
+      var b = base[k];
+      if (!b || !b.es) return;
+      if (o.es && o.es !== b.es && ((o.ca && o.es === o.ca) || o.es === b.ca)) {
+        delete o.es;
+        removed++;
+      }
+      if (!Object.keys(o).length) delete rec[k];
+    });
+    if (!Object.keys(rec).length) delete store[i];
+  });
+  return removed;
+}
+
+var n = 0;
+if (typeof OV !== 'undefined') {
+  OV.f = OV.f || {};
+  OV.h = OV.h || {};
+  n += sanitize(OV.f, FAQS, ['q', 'a']);
+  n += sanitize(OV.h, HELP, ['t', 'p']);
+}
+
+/* ── 19.2 Blinda el recollit: només escriu l'idioma que s'ha pintat ────── */
+var faqLang = null, helpLang = null;
+
+var _renderInfo = window.renderInfo;
+if (typeof _renderInfo === 'function') {
+  window.renderInfo = function () { _renderInfo(); faqLang = LS.lang; };
+}
+var _renderHelp = window.renderHelp;
+if (typeof _renderHelp === 'function') {
+  window.renderHelp = function () { _renderHelp(); helpLang = LS.lang; };
+}
+
+function strip(sel, a, b) {
+  var stash = [];
+  document.querySelectorAll(sel).forEach(function (el) {
+    stash.push({ el: el, a: el.getAttribute(a), b: el.getAttribute(b) });
+    el.removeAttribute(a);
+    el.removeAttribute(b);
+  });
+  return stash;
+}
+function restore(stash, a, b) {
+  stash.forEach(function (s) {
+    if (s.a !== null) s.el.setAttribute(a, s.a);
+    if (s.b !== null) s.el.setAttribute(b, s.b);
+  });
+}
+
+var _collectAll = window.collectAll;
+if (typeof _collectAll === 'function') {
+  window.collectAll = function () {
+    var offF = [], offH = [];
+    if (faqLang !== LS.lang) offF = strip('[data-fqi]', 'data-fqi', 'data-fqk');
+    if (helpLang !== LS.lang) offH = strip('[data-hi][data-hk]', 'data-hi', 'data-hk');
+    try { _collectAll(); }
+    finally {
+      restore(offF, 'data-fqi', 'data-fqk');
+      restore(offH, 'data-hi', 'data-hk');
+    }
+  };
+}
+
+/* ── 19.3 Repinta amb l'idioma actiu ──────────────────────────────────── */
+try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
+if (n > 0 && typeof showToast === 'function') {
+  showToast(LS.lang === 'ca'
+    ? '🌐 Traduccions de FAQ i ajuda restaurades (' + n + ')'
+    : '🌐 Traducciones de FAQ y ayuda restauradas (' + n + ')', 3200);
+}
+console.log('🌐 GJPS · FAQ i ajuda · còpies retirades: ' + n);
+})();
+</script>
+</body></html>
