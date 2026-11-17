@@ -2300,6 +2300,73 @@ html.no-hover .appadd:hover,html.no-hover .appadm button:hover{transform:none!im
   body:not(.editmode) .vgrid .vid .acts .ai{width:12px}
 }
 html.no-hover body:not(.editmode) .vgrid .vid .acts button:hover{transform:none !important}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   54. FITXA DE SESSIÓ (📋) I OVERLAY DE PREPARACIÓ
+   ══════════════════════════════════════════════════════════════════════════ */
+.prep-notice{margin-top:11px}
+.prep-toggle{display:flex;align-items:center;gap:9px;width:100%;padding:8px 12px;cursor:pointer;
+  border-radius:10px;border:1px solid var(--hair-2,var(--line));background:var(--tap,transparent);
+  color:var(--ink);font-family:inherit;font-size:11.5px;font-weight:700;text-align:left;
+  transition:border-color .2s,background .2s,transform .16s}
+.prep-toggle:hover{border-color:var(--gold);transform:translateY(-1px)}
+.prep-toggle .pn-ico{flex:none;font-size:14px;line-height:1}
+.prep-toggle .pn-tx{flex:1;min-width:0}
+.prep-toggle .pn-ch{flex:none;color:var(--gold);transition:transform .22s}
+.prep-notice.open .pn-ch{transform:rotate(180deg)}
+.prep-body{display:none;margin-top:9px;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--hair,var(--line));background:var(--card);
+  font-size:12px;line-height:1.65;color:var(--ink)}
+.prep-notice.open .prep-body{display:block}
+.prep-body h5{margin:0 0 6px;font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.prep-body h5:not(:first-child){margin-top:12px}
+.prep-body ul{margin:0 0 4px;padding-left:18px}
+.prep-body li{margin-bottom:4px}
+.prep-body p{margin:0 0 6px}
+.prep-body p:last-child,.prep-body ul:last-child{margin-bottom:0}
+
+.prep-scrim{position:fixed;inset:0;z-index:2147483100;display:none;align-items:center;justify-content:center;
+  background:rgba(5,5,5,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:20px}
+.prep-scrim.on{display:flex}
+.prep-box{width:min(560px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+  border-radius:20px;overflow:hidden;background:var(--card);border:1px solid var(--hair-2,var(--line));
+  box-shadow:0 30px 80px rgba(0,0,0,.6);animation:prepIn .28s cubic-bezier(.16,1,.3,1) both}
+@keyframes prepIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+html.fx-calm .prep-box{animation:none}
+@media (prefers-reduced-motion:reduce){.prep-box{animation:none}}
+.prep-head{position:relative;flex:none;padding:20px 52px 14px 22px;border-bottom:1px solid var(--hair,var(--line))}
+.prep-head .prep-kicker{display:block;font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.prep-head h3{margin:0;font-size:17px;font-weight:800;line-height:1.35}
+.prep-head .cm-x{position:absolute;top:14px;right:14px}
+.prep-scroll{flex:1;min-height:0;overflow-y:auto;padding:18px 22px}
+.prep-scroll .prep-body{display:block;margin-top:0;border:0;background:transparent;padding:0;font-size:13px}
+.prep-foot{flex:none;display:flex;gap:10px;padding:16px 22px;border-top:1px solid var(--hair,var(--line));
+  background:var(--tap,transparent)}
+.prep-foot button{flex:1;padding:13px 16px;border-radius:12px;cursor:pointer;font-family:inherit;
+  font-size:13.5px;font-weight:800;transition:transform .16s,box-shadow .2s,filter .2s}
+.prep-later{border:1px solid var(--hair-2,var(--line));background:var(--card);color:var(--mut)}
+.prep-later:hover{color:var(--ink);border-color:var(--gold)}
+.prep-play{border:0;background:linear-gradient(135deg,var(--gold),color-mix(in srgb,var(--gold) 62%,#000));color:#fff;
+  box-shadow:0 8px 24px color-mix(in srgb,var(--gold) 34%,transparent)}
+html[data-theme="dark"] .prep-play{color:#14161c}
+.prep-play:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.prep-scroll::-webkit-scrollbar{width:10px}
+.prep-scroll::-webkit-scrollbar-track{background:color-mix(in srgb,var(--gold) 7%,transparent);border-radius:99px}
+.prep-scroll::-webkit-scrollbar-thumb{border-radius:99px;border:2px solid transparent;background-clip:content-box;
+  background:linear-gradient(180deg,#fbe6b4,var(--gold) 55%,#a9762a)}
+.prep-scroll{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--gold) 62%,transparent) color-mix(in srgb,var(--gold) 7%,transparent)}
+
+/* Formulari d'edició: fitxa i programació */
+#vfModal .cm-fld textarea{min-height:96px;resize:vertical;font-family:inherit;font-size:12.5px;line-height:1.6}
+#vfModal .vf-prephint{margin-top:6px;font-size:10.5px;line-height:1.6;color:var(--mut)}
+#vfModal .vf-prephint b{color:var(--gold)}
+@media(max-width:767px){
+  .prep-head{padding:16px 46px 12px 16px}
+  .prep-scroll{padding:14px 16px}
+  .prep-foot{padding:12px 16px;flex-direction:column-reverse}
+}
+html.no-hover .prep-toggle:hover,html.no-hover .prep-play:hover{transform:none !important}
+
 </style>
 </head>
 <body class="">
@@ -7250,4 +7317,336 @@ window.makeVid = function (v, id, track, tag) {
 try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
 })();
 </script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · 21. FITXA DE SESSIÓ + PREPARACIÓ + EDICIÓ AMB DATES
+   · Capa 2: botó 📋 que desplega la fitxa dins la targeta (tot arreu).
+   · Capa 3: overlay de preparació al Seguiment Continuat, una sola vegada
+     per vídeo i idioma, sempre saltable, i només si la fitxa existeix.
+   · El botó ✎ d'edició (Navegació Lliure i gestor) obre el formulari complet
+     amb la fitxa i la programació per data incloses.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjPrep) return;
+window.__gjPrep = true;
+
+function ca() { return LS.lang === 'ca'; }
+function L(c, e) { return ca() ? c : e; }
+function el(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
+
+/* ── 21.1 Fitxa de sessió ─────────────────────────────────────────────── */
+OV.dx = OV.dx && typeof OV.dx === 'object' ? OV.dx : {};
+function prepText(id) { var o = OV.dx[id]; return o && o[LS.lang] ? o[LS.lang] : ''; }
+function hasPrep(id) { return !!prepText(id).trim(); }
+function prepHTML(txt) {
+  var lines = String(txt || '').split(/\r?\n/), out = '', inList = false;
+  function closeList() { if (inList) { out += '</ul>'; inList = false; } }
+  lines.forEach(function (raw) {
+    var s = raw.trim();
+    if (!s) { closeList(); return; }
+    if (/^[-•*]\s*/.test(s)) {
+      if (!inList) { out += '<ul>'; inList = true; }
+      out += '<li>' + esc(s.replace(/^[-•*]\s*/, '')) + '</li>';
+      return;
+    }
+    closeList();
+    if (/^(objectius|objectivos|material|després|despres|después|abans|antes|recursos)\b/i.test(s) || /:$/.test(s)) {
+      out += '<h5>' + esc(s.replace(/:$/, '')) + '</h5>';
+      return;
+    }
+    out += '<p>' + esc(s) + '</p>';
+  });
+  closeList();
+  return out;
+}
+
+/* ── 21.2 Programació per data (dades, sense dependre d'internals) ────── */
+function pubsArr() { OV.pub = Array.isArray(OV.pub) ? OV.pub : []; return OV.pub; }
+function pubOfVidLocal(vid) { var a = pubsArr(); for (var i = 0; i < a.length; i++) if (a[i].kind === 'video' && a[i].vid === vid && a[i].lang === LS.lang) return a[i]; return null; }
+function pubUpsertLocal(p) { var a = pubsArr(); for (var i = 0; i < a.length; i++) if (a[i].id === p.id) { a[i] = p; return; } a.push(p); }
+function pubRemoveLocal(id) { OV.pub = pubsArr().filter(function (p) { return p.id !== id; }); }
+function setRecLocal(id, mode) {
+  OV.rec = OV.rec || {};
+  if (mode === 'never') OV.rec[id + ':' + LS.lang] = 'never';
+  else delete OV.rec[id + ':' + LS.lang];
+}
+function uidP() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+/* ── 21.3 Overlay de preparació ───────────────────────────────────────── */
+var prepSeenKey = function () { return 'gjps_prep_v1_' + (LS.user || '') + '_' + LS.lang; };
+function prepSeen() { return lsJSON(prepSeenKey(), {}); }
+function markPrepSeen(id) { var s = prepSeen(); s[id] = 1; lsSet(prepSeenKey(), JSON.stringify(s)); }
+function prepNeeded(id) { return hasPrep(id) && !prepSeen()[id]; }
+
+var prepModal = null, prepSrc = '', prepId = '';
+function ensurePrepModal() {
+  if (prepModal && document.body.contains(prepModal)) return prepModal;
+  prepModal = el('div', 'prep-scrim'); prepModal.id = 'prepModal';
+  prepModal.innerHTML =
+    '<div class="prep-box" role="dialog" aria-modal="true" aria-labelledby="prepTitle">' +
+      '<div class="prep-head"><span class="prep-kicker">' + L('Prepara\'t per al vídeo', 'Prepárate para el vídeo') + '</span>' +
+      '<h3 id="prepTitle"></h3><button class="cm-x" id="prepX" type="button">✕</button></div>' +
+      '<div class="prep-scroll"><div class="prep-body" id="prepBody"></div></div>' +
+      '<div class="prep-foot"><button class="prep-later" id="prepLater" type="button">' + L('Ara no', 'Ahora no') + '</button>' +
+      '<button class="prep-play" id="prepPlay" type="button">▶ ' + L('Reprodueix', 'Reproducir') + '</button></div>' +
+    '</div>';
+  document.body.appendChild(prepModal);
+  prepModal.addEventListener('click', function (e) { if (e.target === prepModal) closePrep(false); });
+  document.getElementById('prepX').onclick = function () { closePrep(false); };
+  document.getElementById('prepLater').onclick = function () { closePrep(false); };
+  document.getElementById('prepPlay').onclick = function () { closePrep(true); };
+  return prepModal;
+}
+function openPrep(id, src) {
+  var v = findVidById(id);
+  var m = ensurePrepModal();
+  prepId = id; prepSrc = src;
+  document.getElementById('prepTitle').textContent = v ? vidTitle(v.v, id) : id;
+  document.getElementById('prepBody').innerHTML = prepHTML(prepText(id));
+  document.getElementById('prepPlay').innerHTML = '▶ ' + L('Reprodueix', 'Reproducir');
+  document.getElementById('prepLater').textContent = L('Ara no', 'Ahora no');
+  m.classList.add('on');
+  setTimeout(function () { document.getElementById('prepPlay').focus(); }, 60);
+}
+function closePrep(play) {
+  if (prepModal) prepModal.classList.remove('on');
+  if (prepId) markPrepSeen(prepId);
+  var src = prepSrc;
+  prepId = ''; prepSrc = '';
+  if (play && src) openFullscreenVideo(src);
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && prepModal && prepModal.classList.contains('on')) { e.stopPropagation(); closePrep(false); }
+}, true);
+
+/* ── 21.4 Targetes: botó 📋 i ▶ amb preparació al seguiment ───────────── */
+var _makeVid = window.makeVid;
+window.makeVid = function (v, id, track, tag) {
+  var row = _makeVid(v, id, track, tag);
+
+  if (hasPrep(id)) {
+    var box = el('div', 'prep-notice');
+    box.innerHTML = '<button type="button" class="prep-toggle"><span class="pn-ico">📋</span>' +
+      '<span class="pn-tx">' + L('Què hi trobaràs', 'Qué encontrarás') + '</span>' +
+      '<span class="pn-ch">' + ICON_CHEVRON + '</span></button>' +
+      '<div class="prep-body">' + prepHTML(prepText(id)) + '</div>';
+    box.querySelector('.prep-toggle').onclick = function (e) { e.stopPropagation(); box.classList.toggle('open'); };
+    var vd = row.querySelector('.vd');
+    if (vd) row.insertBefore(box, vd); else row.appendChild(box);
+  }
+
+  if (track) {
+    var play = row.querySelector('.play');
+    if (play) {
+      var orig = play.onclick;
+      play.onclick = function (e) {
+        var src = driveSrc(v, id);
+        if (!src) { showToast(t().soon); return; }
+        if (prepNeeded(id)) { openPrep(id, src); return; }
+        openFullscreenVideo(src);
+      };
+    }
+  }
+  return row;
+};
+
+/* ── 21.5 Formulari d'edició complet (fitxa + programació) ────────────── */
+var vfCtx2 = null;
+window.openVideoForm = function (id, l, b) {
+  var lang = LS.lang;
+  var v = id ? findVidById(id) : null;
+  var tVal = id ? ((OV.t[id] && OV.t[id][lang]) || (v ? v.v[li()] : '')) : '';
+  var dVal = id ? ((OV.d[id] && OV.d[id][lang]) || '') : '';
+  var xVal = id ? prepText(id) : '';
+  var lVal = id ? currentLinkId(v.v, id) : '';
+  var iVal = id ? getVideoImportance(id) : 'important';
+  var pub = id ? pubOfVidLocal(id) : null;
+  var mode = pub ? 'sched' : (id ? recMode(id) : 'auto');
+  vfCtx2 = { id: id, level: l, block: b, imp: iVal, mode: mode, pub: pub };
+
+  var m = document.getElementById('vfModal');
+  if (!m) {
+    m = el('div', 'cm-scrim'); m.id = 'vfModal';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) { if (e.target === m) m.classList.remove('on'); });
+  }
+  var names = blockNames(l, lang);
+  var isImpV = iVal === 'important';
+
+  m.innerHTML = '<div class="cm-box sm"><div class="cm-head"><h3>' +
+    (id ? L('Edita el vídeo', 'Edita el vídeo') : L('Nou vídeo', 'Nuevo vídeo')) + ' · ' + lang.toUpperCase() +
+    '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">' +
+    '<div class="cm-note"><b>' + esc(levelName(l)) + '</b> → <b>' + esc(names[b]) + '</b></div>' +
+    '<label class="cm-fld"><span>' + L('Títol', 'Título') + '</span><input id="vfT" value="' + esc(tVal) + '"></label>' +
+    '<label class="cm-fld"><span>' + L('Descripció curta (1 línia)', 'Descripción corta (1 línea)') + '</span><textarea id="vfD" style="min-height:52px">' + esc(dVal) + '</textarea></label>' +
+    '<label class="cm-fld"><span>📋 ' + L('Fitxa de sessió (opcional)', 'Ficha de sesión (opcional)') + '</span><textarea id="vfX2">' + esc(xVal) + '</textarea>' +
+    '<div class="vf-prephint">' + L('Escriu una línia per idea. Les línies que comencen per <b>•</b> es mostren com a llista, i les que comencen per <b>Objectius</b>, <b>Material</b> o <b>Després</b> com a encapçalament. Si la deixes buida, no es mostra el botó 📋 ni la preparació.',
+      'Escribe una línea por idea. Las líneas que empiezan por <b>•</b> se muestran como lista, y las que empiezan por <b>Objectius</b>, <b>Material</b> o <b>Después</b> como encabezado. Si la dejas vacía, no se muestra el botón 📋 ni la preparación.') + '</div></label>' +
+    '<label class="cm-fld"><span>' + L('Enllaç de Google Drive (ID o URL)', 'Enlace de Google Drive (ID o URL)') + '</span><input id="vfL" value="' + esc(lVal) + '" placeholder="1B0keL0UC…"></label>' +
+    '<div class="cm-fld"><span>' + L('Pes dins del bloc', 'Peso dentro del bloque') + '</span><div class="cm-seg" id="vfImp">' +
+    '<button data-i="important"' + (isImpV ? ' class="on"' : '') + '>⭐ ' + L('Important', 'Importante') + '</button>' +
+    '<button data-i="optional"' + (!isImpV ? ' class="on"' : '') + '>☆ ' + L('Opcional', 'Opcional') + '</button></div></div>' +
+    '<div class="cm-fld"><span>🗓 ' + L('Recomanació i publicació per data', 'Recomendación y publicación por fecha') + '</span>' +
+    '<div class="cm-seg" id="vfMode"' + (isImpV ? ' style="opacity:.45;pointer-events:none"' : '') + '>' +
+    '<button data-m="auto"' + (mode === 'auto' ? ' class="on"' : '') + '>' + L('Automàtica', 'Automática') + '</button>' +
+    '<button data-m="never"' + (mode === 'never' ? ' class="on"' : '') + '>' + L('Mai', 'Nunca') + '</button>' +
+    '<button data-m="sched"' + (mode === 'sched' ? ' class="on"' : '') + '>🗓 ' + L('Programada', 'Programada') + '</button></div>' +
+    '<div class="vf-prephint">' + L('«Mai» el treu de l\'itinerari per sempre. «Programada» el treu i només l\'avisa dins les dates que triïs.',
+      '«Nunca» lo saca del itinerario para siempre. «Programada» lo saca y solo lo avisa dentro de las fechas que elijas.') + '</div></div>' +
+    '<div id="vfSched" style="display:' + (mode === 'sched' ? 'block' : 'none') + '">' +
+    '<label class="cm-fld"><span>' + L('Etiqueta destacada', 'Etiqueta destacada') + '</span><input id="vfLab" value="' + esc(pub && pub.label || '') + '" placeholder="' + L('🎄 Nadales', '🎄 Villancicos') + '"></label>' +
+    '<div class="cm-two"><label class="cm-fld"><span>' + L('Des del dia', 'Desde el día') + '</span><input id="vfFrom" type="date" value="' + esc(pub && pub.from || '') + '"></label>' +
+    '<label class="cm-fld"><span>' + L('Fins al dia', 'Hasta el día') + '</span><input id="vfTo" type="date" value="' + esc(pub && pub.to || '') + '"></label></div>' +
+    '<button class="cm-sw" id="vfAct" aria-pressed="' + (pub && pub.active === false ? 'false' : 'true') + '"><span class="cm-swt"></span>' + L('Activa', 'Activa') + '</button>' +
+    '</div>' +
+    '</div><div class="cm-foot"><button class="cm-btn" id="vfCancel">' + L('Cancel·la', 'Cancelar') + '</button>' +
+    '<button class="cm-btn pri" id="vfSave">' + L('Desa', 'Guardar') + '</button></div></div>';
+  m.classList.add('on');
+
+  document.getElementById('vfX').onclick = function () { m.classList.remove('on'); };
+  document.getElementById('vfCancel').onclick = function () { m.classList.remove('on'); };
+  m.querySelectorAll('#vfImp button').forEach(function (btn) {
+    btn.onclick = function () {
+      vfCtx2.imp = btn.dataset.i;
+      m.querySelectorAll('#vfImp button').forEach(function (x) { x.classList.toggle('on', x === btn); });
+      var seg = document.getElementById('vfMode');
+      seg.style.opacity = vfCtx2.imp === 'important' ? '.45' : '';
+      seg.style.pointerEvents = vfCtx2.imp === 'important' ? 'none' : '';
+      if (vfCtx2.imp === 'important' && vfCtx2.mode !== 'auto') { vfCtx2.mode = 'auto'; syncMode(); }
+    };
+  });
+  function syncMode() {
+    m.querySelectorAll('#vfMode button').forEach(function (x) { x.classList.toggle('on', x.dataset.m === vfCtx2.mode); });
+    document.getElementById('vfSched').style.display = vfCtx2.mode === 'sched' ? 'block' : 'none';
+  }
+  m.querySelectorAll('#vfMode button').forEach(function (btn) {
+    btn.onclick = function () { vfCtx2.mode = btn.dataset.m; syncMode(); };
+  });
+  var act = document.getElementById('vfAct');
+  act.onclick = function () {
+    var on = this.getAttribute('aria-pressed') !== 'true';
+    this.setAttribute('aria-pressed', on ? 'true' : 'false');
+  };
+  document.getElementById('vfSave').onclick = function () {
+    var title = document.getElementById('vfT').value.trim();
+    if (!title) { document.getElementById('vfT').focus(); return; }
+    var id2 = vfCtx2.id;
+    if (!id2) {
+      var c = slotCoords(vfCtx2.level, vfCtx2.block);
+      var arr = nvBucket(vfCtx2.level, vfCtx2.block, true);
+      id2 = c.si + '.' + c.ui + '.' + vfCtx2.block + '.' + (legacyCount(c.si, c.ui, vfCtx2.block) + arr.length);
+      arr.push(lang);
+    }
+    OV.t = OV.t || {}; OV.t[id2] = OV.t[id2] || {}; OV.t[id2][lang] = title;
+    OV.d = OV.d || {}; OV.d[id2] = OV.d[id2] || {}; OV.d[id2][lang] = document.getElementById('vfD').value.trim();
+    OV.dx = OV.dx || {}; OV.dx[id2] = OV.dx[id2] || {}; OV.dx[id2][lang] = document.getElementById('vfX2').value;
+    var pid = parseDriveId(document.getElementById('vfL').value);
+    OV.l = OV.l || {}; OV.l[id2] = OV.l[id2] || {};
+    if (pid) OV.l[id2][lang] = pid; else delete OV.l[id2][lang];
+    OV.imp = OV.imp || {}; OV.imp[id2 + ':' + lang] = vfCtx2.imp;
+    unmarkDeleted(id2);
+
+    var old = pubOfVidLocal(id2);
+    if (vfCtx2.mode !== 'sched') {
+      setRecLocal(id2, vfCtx2.mode);
+      if (old) pubRemoveLocal(old.id);
+    } else {
+      if (vfCtx2.imp === 'important') { showToast(L('Un ⭐ important no es pot excloure de l\'itinerari.', 'Un ⭐ importante no se puede excluir del itinerario.')); return; }
+      setRecLocal(id2, 'never');
+      pubUpsertLocal({
+        id: (old && old.id) || uidP(), lang: lang, kind: 'video', vid: id2, t: '', d: '', l: '',
+        lvl: vidLevel(id2),
+        label: document.getElementById('vfLab').value.trim(),
+        from: document.getElementById('vfFrom').value,
+        to: document.getElementById('vfTo').value,
+        active: document.getElementById('vfAct').getAttribute('aria-pressed') === 'true'
+      });
+    }
+
+    m.classList.remove('on');
+    hydrateCourse(); render();
+    if (window.GJSOrder) GJSOrder.repaint();
+    if (window.GJPSCourse) GJPSCourse.rebuild();
+    showToast(vfCtx2.id ? L('💾 Desat', '💾 Guardado') : '＋ ' + L('Vídeo afegit a ', 'Vídeo añadido a ') + lang.toUpperCase());
+  };
+  setTimeout(function () { document.getElementById('vfT').focus(); }, 50);
+};
+
+/* ── 21.6 Botó ✎ a la Navegació Lliure (mode edició) ──────────────────── */
+var _applyEditState = window.applyEditState;
+window.applyEditState = function () {
+  _applyEditState();
+  if (!editModeOn) return;
+  document.querySelectorAll('.vid').forEach(function (row) {
+    if (row.querySelector('.editbtn')) return;
+    var id = row.dataset.vid;
+    if (!id || isGiftId(id)) return;
+    var acts = row.querySelector('.acts');
+    if (!acts) return;
+    var b = el('button', 'editbtn', '✎');
+    b.type = 'button';
+    b.title = L('Edita el vídeo: títol, descripció, fitxa, link, pes i dates', 'Edita el vídeo: título, descripción, ficha, link, peso y fechas');
+    b.onclick = function (e) { e.stopPropagation(); openVideoForm(id, vidLevel(id), vidBlockById(id)); };
+    acts.appendChild(b);
+  });
+};
+
+/* ── 21.7 Botó 🗓 ràpid a la vista Ordre del gestor ───────────────────── */
+var ordObs = null;
+function injectPubButtons() {
+  var host = document.getElementById('cmOrd');
+  if (!host || !host.classList.contains('on')) return;
+  if (ordObs) ordObs.disconnect();
+  host.querySelectorAll('.ord-row').forEach(function (row) {
+    var id = row.dataset.id;
+    if (!id || isDocId(id) || row.querySelector('[data-pub2]')) return;
+    var has = !!pubOfVidLocal(id);
+    var never = recMode(id) === 'never';
+    var b = el('button', 'ord-mv pubq' + (has ? ' sched' : never ? ' never' : ''), '🗓');
+    b.type = 'button';
+    b.dataset.pub2 = id;
+    b.title = has ? L('Publicació programada', 'Publicación programada')
+              : never ? L('Mai recomanat', 'Nunca recomendado')
+              : L('Recomanació i publicació per data', 'Recomendación y publicación por fecha');
+    b.onclick = function (e) { e.stopPropagation(); GJPSPub.form({ lvl: vidLevel(id), vid: id }); };
+    var up = row.querySelector('[data-up2]');
+    if (up) row.insertBefore(b, up); else row.appendChild(b);
+  });
+  if (ordObs) ordObs.observe(host, { childList: true, subtree: true });
+}
+function watchOrd() {
+  var host = document.getElementById('cmOrd');
+  if (!host || ordObs) return;
+  ordObs = new MutationObserver(function () { injectPubButtons(); });
+  ordObs.observe(host, { childList: true, subtree: true });
+}
+var _repaint = window.GJSOrder && GJSOrder.repaint;
+if (_repaint) {
+  GJSOrder.repaint = function () { _repaint(); injectPubButtons(); };
+}
+setInterval(function () {
+  var cm = document.getElementById('cmModal');
+  if (cm && cm.classList.contains('on')) { watchOrd(); injectPubButtons(); }
+}, 400);
+
+/* Estil dels botons nous */
+var st = document.createElement('style');
+st.textContent =
+  '.editbtn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;cursor:pointer;' +
+  'border:1px solid var(--hair,var(--line));background:var(--tap,transparent);color:var(--ink);font-size:12px;transition:all .16s}' +
+  '.editbtn:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}' +
+  '.ord-mv.pubq{font-size:12px}' +
+  '.ord-mv.pubq.sched{border-color:#8c52ff;color:#fff;background:linear-gradient(135deg,#8c52ff,#6b3fd4)}' +
+  '.ord-mv.pubq.never{border-color:var(--mut);color:var(--mut);opacity:.7}' +
+  'html.no-hover .editbtn:hover{transform:none!important}';
+document.head.appendChild(st);
+
+try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
+window.GJSPrep = { text: prepText, set: function (id, txt) { OV.dx[id] = OV.dx[id] || {}; OV.dx[id][LS.lang] = txt; render(); }, reset: function (id) { var s = prepSeen(); delete s[id]; lsSet(prepSeenKey(), JSON.stringify(s)); }, open: openPrep };
+console.log('📋 GJPS · fitxa de sessió i preparació actives');
+})();
+</script>
+
 </body></html>
