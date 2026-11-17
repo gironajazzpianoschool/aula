@@ -2262,7 +2262,44 @@ html.no-hover .appadd:hover,html.no-hover .appadm button:hover{transform:none!im
   .appkind{top:10px;left:10px;font-size:8px;padding:3px 8px}
   .appadd{margin-left:0;width:100%;justify-content:center}
 }
+/* ══════════════════════════════════════════════════════════════════════════
+   53. ACCIONS EN UNA SOLA FILA · PC i tablet, català i castellà
+   Tres columnes iguals amb text curt, icona normalitzada i el·lipsi.
+   El mode edició conserva la fila flexible amb tots els botons extres.
+   ══════════════════════════════════════════════════════════════════════════ */
+.acts button{display:inline-flex;align-items:center;justify-content:center;gap:5px;letter-spacing:0}
+.acts .ai{flex:none;width:14px;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.acts .ai svg{margin-right:0 !important;vertical-align:0 !important}
+.acts .al{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+@media (min-width:768px){
+  body:not(.editmode) .vgrid .vid .acts{
+    display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);
+    gap:6px;margin-top:12px;flex-wrap:nowrap}
+  body:not(.editmode) .vgrid .vid .acts button{
+    width:100%;min-width:0;min-height:32px;padding:7px 6px;
+    font-size:10.5px;font-weight:700;border-radius:8px;gap:4px}
+  body:not(.editmode) .vgrid .vid .acts .ai{width:13px;font-size:12px}
+  body:not(.editmode) .vgrid .vid .acts .ai svg{width:12px !important;height:12px !important}
+  body:not(.editmode) .vgrid .vid .acts .ax{display:none}
+  body:not(.editmode) .vgrid .vid .acts button:hover{transform:translateY(-1px)}
+  body:not(.editmode) .vgrid .vid .acts button:active{transform:scale(.97)}
+
+  /* El seguiment manté la seva fila completa, amb l'espaiat corregit */
+  .now .acts{flex-wrap:nowrap}
+  .now .acts button{min-width:0}
+  .now .acts .al{overflow:hidden;text-overflow:ellipsis}
+
+  /* Mode edició: tots els botons visibles, en fila flexible i endreçada */
+  body.editmode .vgrid .vid .acts{display:flex;flex-wrap:wrap;gap:6px}
+  body.editmode .vgrid .vid .acts button{padding:6px 9px;font-size:11px}
+}
+
+@media (min-width:768px) and (max-width:900px){
+  body:not(.editmode) .vgrid .vid .acts button{font-size:10px;padding:7px 4px;gap:3px}
+  body:not(.editmode) .vgrid .vid .acts .ai{width:12px}
+}
+html.no-hover body:not(.editmode) .vgrid .vid .acts button:hover{transform:none !important}
 </style>
 </head>
 <body class="">
@@ -7151,6 +7188,66 @@ if (n > 0 && typeof showToast === 'function') {
     : '🌐 Traducciones de FAQ y ayuda restauradas (' + n + ')', 3200);
 }
 console.log('🌐 GJPS · FAQ i ajuda · còpies retirades: ' + n);
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GJPS · 20. ETIQUETES CURTES A LA NAVEGACIÓ LLIURE
+   «Marcar fet / Marcar hecho» passa a «Fet / Hecho» amb la mateixa acció i
+   el text complet al tooltip, de manera que les tres accions caben sempre
+   en una fila en català i en castellà. El seguiment no es toca.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+if (window.__gjActsFit) return;
+window.__gjActsFit = true;
+
+var _makeVid = window.makeVid;
+if (typeof _makeVid !== 'function') return;
+
+window.makeVid = function (v, id, track, tag) {
+  var row = _makeVid(v, id, track, tag);
+  if (track) return row;
+
+  var ca = LS.lang === 'ca';
+  var ck = row.querySelector('.acts .ck');
+  if (ck) {
+    var done = !!LS.done[id];
+    var short = done ? (ca ? 'Desfer' : 'Deshacer') : (ca ? 'Fet' : 'Hecho');
+    var full = done ? (ca ? 'Desfer aquest vídeo' : 'Deshacer este vídeo')
+                    : (ca ? 'Marcar com a fet' : 'Marcar como hecho');
+    ck.innerHTML = '<span class="ai">' + (done ? '↺' : '✔') + '</span><span class="al">' + short + '</span>';
+    ck.title = full;
+    ck.setAttribute('aria-label', full);
+  }
+
+  var bk = row.querySelector('.acts .bk');
+  if (bk) {
+    var marked = bk.classList.contains('bookmarked');
+    var bShort = marked ? (ca ? 'Marcat' : 'Marcado') : (ca ? 'Repàs' : 'Repaso');
+    var bFull = marked ? (ca ? 'Ja és a la llista de repàs · clica per treure\'l' : 'Ya está en la lista de repaso · clic para quitarlo')
+                       : (ca ? 'Marcar per repassar més endavant' : 'Marcar para repasar más adelante');
+    bk.innerHTML = '<span class="ai">🔖</span><span class="al">' + bShort + '</span>';
+    bk.title = bFull;
+    bk.setAttribute('aria-label', bFull);
+  }
+
+  var nt = row.querySelector('.acts .nt');
+  if (nt) {
+    var has = nt.classList.contains('has-notes');
+    var nShort = ca ? 'Notes' : 'Notas';
+    var nFull = has ? (ca ? 'Tens notes en aquest vídeo' : 'Tienes notas en este vídeo')
+                    : (ca ? 'Afegir notes personals' : 'Añadir notas personales');
+    var ico = nt.querySelector('.ai');
+    var svg = ico ? ico.innerHTML : '';
+    nt.innerHTML = '<span class="ai">' + svg + '</span><span class="al">' + nShort + '</span>';
+    nt.title = nFull;
+    nt.setAttribute('aria-label', nFull);
+  }
+  return row;
+};
+
+try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
 })();
 </script>
 </body></html>
