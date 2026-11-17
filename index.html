@@ -2115,6 +2115,165 @@ html[data-theme="sepia"] .faq-item {
     radial-gradient(120% 130% at 0% 50%, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, 0) 62%),
     linear-gradient(90deg, rgba(255, 255, 255, .40) 0%, rgba(255, 255, 255, .05) 46%, rgba(58, 44, 28, .065) 100%) !important;
 }
+/* ══════════════════════════════════════════════════════════════════════════
+   INFO DE SESSIÓ (Icona ℹ️ i Modal)
+   ══════════════════════════════════════════════════════════════════════════ */
+.vid-info-btn {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  border: 1px solid var(--hair); background: var(--tap);
+  color: var(--mut); cursor: pointer; font-size: 14px; font-style: normal;
+  display: grid; place-items: center; transition: all .2s; margin-left: 6px;
+}
+.vid-info-btn:hover { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.vid-info-modal {
+  position: fixed; inset: 0; z-index: 2147483050;
+  display: none; place-items: center; padding: 20px;
+  background: rgba(5,5,5,.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.vid-info-modal.on { display: grid; }
+.vid-info-box {
+  width: min(500px, 100%); max-height: 80vh; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--hair-2);
+  border-radius: var(--r-lg); padding: 24px; box-shadow: var(--elev-3);
+  position: relative; animation: prepIn .28s cubic-bezier(.16,1,.3,1) both;
+}
+.vid-info-box h4 { color: var(--gold); font-size: 16px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+.vid-info-box .close-info {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--mut);
+  font-size: 20px; cursor: pointer; transition: color .2s;
+}
+.vid-info-box .close-info:hover { color: var(--ink); }
+.vid-info-content { font-size: 13px; line-height: 1.6; color: var(--ink); }
+.vid-info-content h5 { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 6px; font-weight: 800; }
+.vid-info-content ul { padding-left: 18px; margin: 0 0 8px; }
+.vid-info-content li { margin-bottom: 4px; }
+.vid-info-content .prep-sum { font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hair); display: block; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ESTRELLA I NÚMERO DINS DEL .vr (mode track)
+   ══════════════════════════════════════════════════════════════════════════ */
+.vr .vid-importance, .vr .vid-number {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  flex: none;
+}
+.vr .vid-number { order: 3; width: 28px; height: 28px; font-size: 12px; }
+.vr .vid-importance { order: 4; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ICONA ℹ️ I MODAL DE FITXA DE SESSIÓ
+   ══════════════════════════════════════════════════════════════════════════ */
+.vid-info-btn {
+  flex: none; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid var(--hair); background: var(--tap);
+  color: var(--mut); cursor: pointer; font-size: 12px;
+  display: grid; place-items: center; transition: all .2s;
+  margin-left: 6px; padding: 0; line-height: 1;
+}
+.vid-info-btn:hover { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.vid-info-modal {
+  position: fixed; inset: 0; z-index: 2147483050;
+  display: none; place-items: center; padding: 20px;
+  background: rgba(5,5,5,.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.vid-info-modal.on { display: grid; }
+.vid-info-box {
+  width: min(500px, 100%); max-height: 80vh; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--hair-2);
+  border-radius: var(--r-lg); padding: 24px; box-shadow: var(--elev-3);
+  position: relative; animation: prepIn .28s cubic-bezier(.16,1,.3,1) both;
+}
+.vid-info-box h4 { color: var(--gold); font-size: 15px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+.vid-info-box .close-info {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--mut);
+  font-size: 20px; cursor: pointer; transition: color .2s;
+}
+.vid-info-box .close-info:hover { color: var(--ink); }
+.vid-info-content { font-size: 13px; line-height: 1.6; color: var(--ink); }
+.vid-info-content h5 { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: .14em; margin: 16px 0 6px; font-weight: 800; }
+.vid-info-content ul { padding-left: 18px; margin: 0 0 8px; }
+.vid-info-content li { margin-bottom: 4px; }
+.vid-info-content .prep-sum { font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hair); display: block; }
+/* ═══ BLOC ÚNIC: Estrella + icona info + modal ═══ */
+
+/* 1. Amaga el botó gran 📋 residual */
+.prep-notice { display: none !important; }
+
+/* 2. Estrella i número dins del .vr (Navegació Lliure) */
+.vr .vid-importance, 
+.vr .vid-number {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  float: none !important;
+  flex: none !important;
+}
+.vr .vid-number { order: 3; width: 28px; height: 28px; font-size: 12px; }
+.vr .vid-importance { order: 4; }
+
+/* 3. Estrella HERO a la cantonada del Seguiment Continuat */
+.now { position: relative !important; }
+.now > .vid-importance.imp-hero {
+  position: absolute !important;
+  top: 16px; right: 16px;
+  z-index: 6;
+}
+
+/* 4. Icona d'informació: daurada i visible en tots els temes */
+.vid-info-btn {
+  flex: none !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent) !important;
+  background: color-mix(in srgb, var(--gold) 12%, transparent) !important;
+  color: var(--gold) !important;
+  cursor: pointer !important;
+  display: grid !important;
+  place-items: center !important;
+  transition: all .2s !important;
+  margin-left: 6px !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+}
+.vid-info-btn svg { display: block !important; }
+.vid-info-btn:hover {
+  background: var(--gold) !important;
+  color: var(--bg) !important;
+  border-color: var(--gold) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 5. Modal de fitxa de sessió */
+.vid-info-modal {
+  position: fixed; inset: 0; z-index: 2147483050;
+  display: none; place-items: center; padding: 20px;
+  background: rgba(5,5,5,.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.vid-info-modal.on { display: grid; }
+.vid-info-box {
+  width: min(500px, 100%); max-height: 80vh; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--hair-2);
+  border-radius: var(--r-lg); padding: 24px; box-shadow: var(--elev-3);
+  position: relative; animation: prepIn .28s cubic-bezier(.16,1,.3,1) both;
+}
+.vid-info-box h4 { color: var(--gold); font-size: 15px; margin: 0 0 12px; }
+.vid-info-box .close-info {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--mut);
+  font-size: 20px; cursor: pointer; transition: color .2s;
+}
+.vid-info-box .close-info:hover { color: var(--ink); }
+.vid-info-content { font-size: 13px; line-height: 1.6; color: var(--ink); }
+.vid-info-content h5 { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: .14em; margin: 16px 0 6px; font-weight: 800; }
+.vid-info-content ul { padding-left: 18px; margin: 0 0 8px; }
+.vid-info-content li { margin-bottom: 4px; }
+.vid-info-content .prep-sum { font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hair); display: block; }
 </style>
 </head>
 
@@ -3438,10 +3597,11 @@ function makeVid(v, id, track, tag) {
   var docChip = isDoc ? '<span class="doc-step">' + (isCa ? 'Document' : 'Documento') + '</span>' : '';
   var playGlyph = isDoc ? '📄' : '▶';
   var descTxt = isDoc ? (doc && doc.to ? (isCa ? 'Disponible fins al ' : 'Disponible hasta el ') + niceDate(doc.to) : (isCa ? 'Material de l\'itinerari' : 'Material del itinerario')) : '';
+  var infoBtn = (hasPrep(id) || editModeOn) ? '<button class="vid-info-btn" data-info-id="' + id + '" title="' + L('Descripció del contingut del vídeo', 'Descripción del contenido del vídeo') + '"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>' : '';
 
   row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + (isNaN(si) ? 1 : si) + '" data-ovsk="n">' + esc(tag) + '</div>' : '') + dragHtml + impOnCard +
     '<div style="position:relative" class="vr"><button class="play" title="' + (isDoc ? (isCa ? 'Obre el document' : 'Abre el documento') : (isCa ? 'Reprodueix' : 'Reproducir')) + '">' + playGlyph + '</button>' +
-    '<div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div>' + docChip + impInRow + '</div>' +
+    '<div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div>' + infoBtn + docChip + impInRow + '</div>' +
     '<div class="acts">' +
       '<button class="ck' + (done ? ' done' : '') + '" title="' + ckFull + '" aria-label="' + ckFull + '"><span class="ai">' + ckIcon + '</span><span class="al">' + ckShort + '</span><span class="ax">' + ckExtra + '</span></button>' +
       skipBtnHtml +
@@ -3457,47 +3617,7 @@ function makeVid(v, id, track, tag) {
     '<button class="send-notes-btn" style="display:none;margin-top:0;padding:6px 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;">' + ICON_MAIL + ' ' + (isCa ? 'Enviar al professor' : 'Enviar al profesor') + '</button>' +
     '</div></div>';
 
-  /* 📋 Fitxa de sessió: contingut, o buit en mode edició, o resum */
   var vd = row.querySelector('.vd');
-  var realDesc = (!isDoc && OV.d[id] && OV.d[id][LS.lang]) ? String(OV.d[id][LS.lang]).trim() : '';
-  if (!isDoc) {
-    var box;
-    if (hasPrep(id)) {
-      box = document.createElement('div');
-      box.className = 'prep-notice';
-      box.innerHTML = '<button type="button" class="prep-toggle"><span class="pn-ico">📋</span>' +
-        '<span class="pn-tx">' + L('Què hi trobaràs', 'Qué encontrarás') + '</span>' +
-        '<span class="pn-ch">' + ICON_CHEVRON + '</span></button>' +
-        '<div class="prep-body">' + (realDesc ? '<p class="prep-sum">' + esc(realDesc) + '</p>' : '') + prepHTML(prepText(id)) + '</div>';
-      box.querySelector('.prep-toggle').onclick = function (e) { e.stopPropagation(); box.classList.toggle('open'); };
-      if (vd) row.insertBefore(box, vd); else row.appendChild(box);
-    } else if (editModeOn) {
-      box = document.createElement('div');
-      box.className = 'prep-notice empty';
-      box.innerHTML = '<button type="button" class="prep-toggle"><span class="pn-ico">📋</span>' +
-        '<span class="pn-tx">' + L('Afegeix la fitxa de sessió', 'Añade la ficha de sesión') + '</span>' +
-        '<span class="pn-ch">＋</span></button>' +
-        (realDesc ? '<div class="prep-body"><p class="prep-sum">' + esc(realDesc) + '</p></div>' : '');
-      box.querySelector('.prep-toggle').onclick = function (e) {
-        e.stopPropagation();
-        openVideoForm(id, vidLevel(id), vidBlockById(id));
-        setTimeout(function () {
-          var f = document.getElementById('vfX2');
-          if (f) { f.focus(); try { f.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (err) {} }
-        }, 90);
-      };
-      if (vd) row.insertBefore(box, vd); else row.appendChild(box);
-    } else if (realDesc) {
-      box = document.createElement('div');
-      box.className = 'prep-notice';
-      box.innerHTML = '<button type="button" class="prep-toggle"><span class="pn-ico">📋</span>' +
-        '<span class="pn-tx">' + L('Què hi trobaràs', 'Qué encontrarás') + '</span>' +
-        '<span class="pn-ch">' + ICON_CHEVRON + '</span></button>' +
-        '<div class="prep-body"><p class="prep-sum">' + esc(realDesc) + '</p></div>';
-      box.querySelector('.prep-toggle').onclick = function (e) { e.stopPropagation(); box.classList.toggle('open'); };
-      if (vd) row.insertBefore(box, vd); else row.appendChild(box);
-    }
-  }
 
   row.querySelector('.play').onclick = function () {
     var src = driveSrc(v, id);
@@ -3623,7 +3743,6 @@ function makeVid(v, id, track, tag) {
     updateNoteButton();
   }
 
-  /* Avís visible de material per descarregar */
   var files = adjListOf(id, track);
   if (files.length) {
     var abox = document.createElement('div');
@@ -3645,8 +3764,7 @@ function makeVid(v, id, track, tag) {
     });
     abtn.onclick = function (e) { e.stopPropagation(); abox.classList.toggle('open'); };
     abox.appendChild(abtn); abox.appendChild(alist);
-    var anchor = row.querySelector('.prep-notice') || vd;
-    if (anchor) row.insertBefore(abox, anchor); else row.appendChild(abox);
+    if (vd) row.insertBefore(abox, vd); else row.appendChild(abox);
   }
   return row;
 }
@@ -3950,6 +4068,8 @@ function renderTrack() {
     now.innerHTML = '<div class="ctx">' + esc(secTxt) + ' · ' + levelName(lvl) + '</div>' +
       '<div class="nowlbl">' + t().now + ' ' + (blockNames(lvl, LS.lang)[vidBlockById(next.id)] || '') + '</div>';
     now.appendChild(makeVid(next.v, next.id, true, ''));
+    var med = now.querySelector('.imp-hero');
+    if (med) now.appendChild(med);
     var med = now.querySelector('.imp-hero');
     if (med) now.appendChild(med);
     var playBtn = now.querySelector('.play');
@@ -5602,7 +5722,6 @@ function openVideoForm(id, l, b) {
   var lang = LS.lang;
   var v = id ? findVidById(id) : null;
   var tVal = id ? ((OV.t[id] && OV.t[id][lang]) || (v ? v.v[li()] : '')) : '';
-  var dVal = id ? ((OV.d[id] && OV.d[id][lang]) || '') : '';
   var xVal = id ? prepText(id) : '';
   var lVal = id ? currentLinkId(v.v, id) : '';
   var iVal = id ? getVideoImportance(id) : 'important';
@@ -5618,7 +5737,6 @@ function openVideoForm(id, l, b) {
     '</h3><button class="cm-x" id="vfX">✕</button></div><div class="cm-scroll">' +
     '<div class="cm-note"><b>' + esc(levelName(l)) + '</b> → <b>' + esc(names[b]) + '</b></div>' +
     '<label class="cm-fld"><span>' + L('Títol', 'Título') + '</span><input id="vfT" value="' + esc(tVal) + '"></label>' +
-    '<label class="cm-fld"><span>' + L('Descripció curta (es mostra dins del 📋)', 'Descripción corta (se muestra dentro del 📋)') + '</span><textarea id="vfD" style="min-height:52px">' + esc(dVal) + '</textarea></label>' +
     '<label class="cm-fld"><span>📋 ' + L('Fitxa de sessió (opcional)', 'Ficha de sesión (opcional)') + '</span><textarea id="vfX2">' + esc(xVal) + '</textarea>' +
     '<div class="vf-prephint">' + L('Escriu una línia per idea. Les línies que comencen per <b>•</b> es mostren com a llista, i les que comencen per <b>Objectius</b>, <b>Material</b> o <b>Després</b> com a encapçalament. Si la deixes buida, no es mostra el botó 📋 ni la preparació.',
       'Escribe una línea por idea. Las líneas que empiezan por <b>•</b> se muestran como lista, y las que empiezan por <b>Objectius</b>, <b>Material</b> o <b>Después</b> como encabezado. Si la dejas vacía, no se muestra el botón 📋 ni la preparación.') + '</div></label>' +
@@ -5677,7 +5795,6 @@ function openVideoForm(id, l, b) {
       arr.push(lang);
     }
     OV.t = OV.t || {}; OV.t[id2] = OV.t[id2] || {}; OV.t[id2][lang] = title;
-    OV.d = OV.d || {}; OV.d[id2] = OV.d[id2] || {}; OV.d[id2][lang] = document.getElementById('vfD').value.trim();
     OV.dx = OV.dx || {}; OV.dx[id2] = OV.dx[id2] || {}; OV.dx[id2][lang] = document.getElementById('vfX2').value;
     var pid = parseDriveId(document.getElementById('vfL').value);
     OV.l = OV.l || {}; OV.l[id2] = OV.l[id2] || {};
@@ -6658,6 +6775,50 @@ function fix() {
 setInterval(fix, 600);
 try { fix(); } catch (e) {}
 })();
+/* ═══ MODAL D'INFORMACIÓ DE SESSIÓ (ℹ️) ═══ */
+function showInfoModal(id) {
+  var txt = prepText(id);
+  var realDesc = (OV.d[id] && OV.d[id][LS.lang]) ? String(OV.d[id][LS.lang]).trim() : '';
+  if (!txt && !realDesc) return;
+
+  var modal = document.getElementById('vidInfoModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'vid-info-modal';
+    modal.id = 'vidInfoModal';
+    modal.innerHTML = '<div class="vid-info-box">' +
+      '<button class="close-info" id="closeVidInfo">✕</button>' +
+      '<h4>📋 ' + L('Fitxa de sessió', 'Ficha de sesión') + '</h4>' +
+      '<div class="vid-info-content" id="vidInfoContent"></div>' +
+      '</div>';
+    document.body.appendChild(modal);
+    document.getElementById('closeVidInfo').onclick = function() { modal.classList.remove('on'); };
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('on'); });
+  }
+
+  var content = document.getElementById('vidInfoContent');
+  var html = '';
+  if (realDesc) {
+    html += '<span class="prep-sum">' + esc(realDesc) + '</span>';
+  }
+  html += prepHTML(txt);
+  content.innerHTML = html;
+  modal.classList.add('on');
+}
+
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.vid-info-btn');
+  if (btn) {
+    e.stopPropagation();
+    showInfoModal(btn.dataset.infoId);
+  }
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    var m = document.getElementById('vidInfoModal');
+    if (m && m.classList.contains('on')) m.classList.remove('on');
+  }
+});
 </script>
 </body>
 </html>
