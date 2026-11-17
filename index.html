@@ -7648,5 +7648,44 @@ window.GJSPrep = { text: prepText, set: function (id, txt) { OV.dx[id] = OV.dx[i
 console.log('📋 GJPS · fitxa de sessió i preparació actives');
 })();
 </script>
+<script>
+/* ═══ GJPS · 22. 📋 VISIBLE EN MODE EDICIÓ ENCARA QUE LA FITXA SIGUI BUIDA ═══ */
+(function () {
+'use strict';
+if (window.__gjPrepEdit) return;
+window.__gjPrepEdit = true;
 
+var _makeVid = window.makeVid;
+window.makeVid = function (v, id, track, tag) {
+  var row = _makeVid(v, id, track, tag);
+  if (!editModeOn || isGiftId(id) || row.querySelector('.prep-notice')) return row;
+
+  var box = document.createElement('div');
+  box.className = 'prep-notice empty';
+  box.innerHTML = '<button type="button" class="prep-toggle"><span class="pn-ico">📋</span>' +
+    '<span class="pn-tx">' + (LS.lang === 'ca' ? 'Afegeix la fitxa de sessió' : 'Añade la ficha de sesión') +
+    '</span><span class="pn-ch">＋</span></button>';
+  box.querySelector('.prep-toggle').onclick = function (e) {
+    e.stopPropagation();
+    openVideoForm(id, vidLevel(id), vidBlockById(id));
+    setTimeout(function () {
+      var f = document.getElementById('vfX2');
+      if (f) { f.focus(); try { f.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (err) {} }
+    }, 90);
+  };
+  var vd = row.querySelector('.vd');
+  if (vd) row.insertBefore(box, vd); else row.appendChild(box);
+  return row;
+};
+
+var st = document.createElement('style');
+st.textContent =
+  '.prep-notice.empty .prep-toggle{border-style:dashed;opacity:.75;color:var(--mut)}' +
+  '.prep-notice.empty .prep-toggle:hover{opacity:1;color:var(--ink)}' +
+  '.prep-notice.empty .pn-ch{color:var(--mut)}';
+document.head.appendChild(st);
+
+try { if (typeof render === 'function' && LS.user) render(); } catch (e) {}
+})();
+</script>
 </body></html>
