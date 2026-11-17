@@ -2170,9 +2170,9 @@ html[data-theme="sepia"] .faq-item {
 }
 
 /* Logo més transparent en mòbil/tablet (mode fosc) */
-@media (min-width:768px) and (max-width:1366px) and (pointer:coarse){ html[data-theme="dark"]{ --wm-op2:.06 !important; } }
-@media (max-width:767px) and (orientation:portrait){ html[data-theme="dark"]{ --wm-op2:.04 !important; } }
-@media (max-width:926px) and (orientation:landscape) and (pointer:coarse){ html[data-theme="dark"]{ --wm-op2:.04 !important; } }
+@media (min-width:768px) and (max-width:1366px) and (pointer:coarse){ html[data-theme="dark"]{ --wm-op2:.04 !important; } }
+@media (max-width:767px) and (orientation:portrait){ html[data-theme="dark"]{ --wm-op2:.02 !important; } }
+@media (max-width:926px) and (orientation:landscape) and (pointer:coarse){ html[data-theme="dark"]{ --wm-op2:.02 !important; } }
 
 /* Botons de bloc amb cos real */
 .blkcol button:not(.on) { background: var(--card) !important; border-color: var(--hair-2) !important; color: var(--ink) !important; box-shadow: var(--elev-1) !important; }
@@ -6853,7 +6853,15 @@ function mediaSrc(m) {
   if (pid) return 'https://drive.google.com/file/d/' + pid + '/preview';
   return null;
 }
-
+function openApp(url) {
+  if (!url) { showToast(t().appsSoon); return; }
+  if (isSmartphone()) {
+    showToast(L('Aquesta app necessita pantalla gran (ordinador o tablet).', 'Esta app necesita pantalla grande (ordenador o tablet).'));
+    return;
+  }
+  var sep = url.indexOf('?') >= 0 ? '&' : '?';
+  window.open(url + sep + 'lang=' + LS.lang + '&user=' + encodeURIComponent(LS.user || 'guest'), '_blank');
+}
 window.renderApps = function () {
   var av = $('appsView');
   if (!av) return;
