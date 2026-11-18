@@ -2321,11 +2321,7 @@ html[data-theme="dark"] .now .play {
   50%  { box-shadow: 0 0 0 7px rgba(57,217,138,0), 0 0 18px 4px rgba(57,217,138,.30); background: rgba(57,217,138,.12); scale: 1.05; }
   100% { box-shadow: 0 0 0 0 rgba(57,217,138,0), 0 0 10px 1px rgba(57,217,138,.14); background: rgba(57,217,138,.06); scale: 1; }
 }
-/* ═══ Smartphone: la barra de cerca queda per sobre del selector de nivell ═══ */
-@media (max-width: 767px) {
-  .lvls { position: relative; z-index: 2; }
-  .searchbox { position: relative; z-index: 80; }
-}
+
 </style>
 </head>
 
@@ -7617,7 +7613,7 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 <script>
-/* ═══ TOOLTIP v7 · amaga a l'instant, retard per botó ═══ */
+/* ═══ TOOLTIP v8 · sense duplicats (vigila title re-escrits) ═══ */
 (function () {
   'use strict';
   if (window.__gjTipFinal) return;
@@ -7640,10 +7636,12 @@ document.addEventListener('keydown', function(e) {
     return false;
   }
   function convert(el) {
-    if (el.hasAttribute('title') && !el.hasAttribute('data-tip')) {
-      var t = el.getAttribute('title');
-      el.setAttribute('data-tip', t); el.setAttribute('aria-label', t); el.removeAttribute('title');
-    }
+    if (!el || el.nodeType !== 1 || !el.hasAttribute('title')) return;
+    var t = el.getAttribute('title');
+    el.setAttribute('data-tip', t);
+    el.setAttribute('aria-label', t);
+    el.removeAttribute('title');
+    if (currentEl === el && tip.classList.contains('on')) tip.textContent = pickLang(t);
   }
   function hideNow() {
     clearTimeout(showTimer); showTimer = null;
@@ -7655,7 +7653,6 @@ document.addEventListener('keydown', function(e) {
     convert(el);
     var raw = el.getAttribute('data-tip');
     if (!raw) { hideNow(); return; }
-    // Si ja n'hi ha un de visible d'un ALTRE botó, l'amaguem JA
     if (currentEl && currentEl !== el) tip.classList.remove('on');
     currentEl = el;
     clearTimeout(showTimer);
@@ -7690,20 +7687,20 @@ document.addEventListener('keydown', function(e) {
     if (el && !el.contains(e.relatedTarget)) hideNow();
   }, true);
   document.addEventListener('mousemove', function (e) { if (tip.classList.contains('on')) move(e); }, { passive: true });
-
   document.addEventListener('click', hideNow, true);
-  window.addEventListener('scroll', hideNow, { passive: true, capture: true });  
+  window.addEventListener('scroll', hideNow, { passive: true, capture: true });
 
-var mo = new MutationObserver(function (muts) {
+  var mo = new MutationObserver(function (muts) {
     muts.forEach(function (m) {
+      if (m.type === 'attributes') { convert(m.target); return; }
       m.addedNodes.forEach(function (n) {
         if (n.nodeType !== 1) return;
-        if (n.hasAttribute && n.hasAttribute('title')) convert(n);
+        convert(n);
         if (n.querySelectorAll) n.querySelectorAll('[title]').forEach(convert);
       });
     });
   });
-  mo.observe(document.body, { childList: true, subtree: true });
+  mo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['title'] });
 })();
 </script>
 
