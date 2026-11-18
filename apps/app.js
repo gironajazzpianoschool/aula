@@ -2070,12 +2070,11 @@ syncEmotionText();
 
 console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
 
-/* ══ 24. FIX v68 · iPad-safe · mantenir tecla = pedal sustain (decaïment natural) ══ */
+/* ══ 24. FIX v69 · iPad-safe · mantenir tecla = pedal sustain (decaïment natural) ══ */
 (function(){
   'use strict';
-  function safe(fn){ try{ fn(); }catch(e){ if(window.console) console.warn('[TE v68]', e); } }
+  function safe(fn){ try{ fn(); }catch(e){ if(window.console) console.warn('[TE v69]', e); } }
 
-  /* La nota manual mantinguda utilitza la durada de pedal (+3 s), amb envolupament natural */
   safe(function(){
     function manualHeldMidi(midiNote){
       var held=false;
@@ -2127,7 +2126,6 @@ console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
     };
   });
 
-  /* Elimina el tall automàtic d'1,5 s: la nota viu fins al keyup / touchend */
   safe(function(){
     var origActivate=activateManualNote;
     activateManualNote=function(d, exclusive, octUp){
@@ -2137,47 +2135,12 @@ console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
     };
   });
 
-  /* Allibera notes mantingudes si la pestanya perd el focus */
   safe(function(){
     function rel(){ try{ releaseAllManualNotes(); numHeld={}; }catch(e){} }
     window.addEventListener('blur', rel);
     document.addEventListener('visibilitychange', function(){ if(document.hidden) rel(); });
   });
 
-  /* Tablet: amaga rètols de teclat físic (INTRO / pedal) */
-  safe(function(){
-    if(!IS_TABLET) return;
-    var st=document.createElement('style');
-    st.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
-    document.head.appendChild(st);
-    var RX=/prem\s+(intro|enter)|pulsa\s+(intro|enter)|press\s+(enter|intro)|intro per continuar|enter to continue/i;
-    function hide(root){
-      if(!root||!root.querySelectorAll) return;
-      var list=[root]; var all=root.querySelectorAll('*');
-      for(var i=0;i<all.length;i++) list.push(all[i]);
-      for(var j=0;j<list.length;j++){
-        var n=list[j];
-        if(n.nodeType!==1||n.children.length) continue;
-        if(RX.test(n.textContent||'')) n.style.display='none';
-      }
-    }
-    hide(document.body);
-    if(window.MutationObserver){
-      new MutationObserver(function(muts){
-        for(var i=0;i<muts.length;i++){
-          var m=muts[i];
-          if(m.type==='characterData'){
-            var p=m.target.parentElement;
-            if(p&&RX.test(p.textContent||'')) p.style.display='none';
-            continue;
-          }
-          for(var k=0;k<m.addedNodes.length;k++){ if(m.addedNodes[k].nodeType===1) hide(m.addedNodes[k]); }
-        }
-      }).observe(document.body,{childList:true,subtree:true,characterData:true});
-    }
-  });
-
-  /* Corregeix el crash en desar la disposició (vw indefinit) */
   safe(function(){
     applyPositionsFrom=function(data){
       var vw=virtualWidth(); var src=data||noteData;
@@ -2189,5 +2152,5 @@ console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
     };
   });
 
-  if(window.console) console.log('🎹 TONAL EMOTIONS v68 · iPad-safe · mantenir=pedal.');
+  if(window.console) console.log('🎹 TONAL EMOTIONS v69 · iPad-safe · mantenir=pedal.');
 })();

@@ -926,34 +926,32 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
 })();
 </script>
 <script>
-/* ═══ TONAL EMOTIONS · capa tàctil: amaga rètols de teclat físic ═══ */
-(function () {
+/* ═══ TE · capa tàctil v2 · només elements coneguts + arrencada segura iPad ═══ */
+(function(){
   'use strict';
-  var touch = false;
-  try { touch = matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window); } catch (e) {}
-  if (!touch) return;
-  var RX = /prem[^.!?]{0,24}(intro|enter|tecla)|press[^.!?]{0,24}(enter|intro)|pulsa[^.!?]{0,24}(intro|enter)|intro per continuar|enter to continue/i;
-  var st = document.createElement('style');
-  st.textContent = '.te-nokey{display:none !important;}';
-  document.head.appendChild(st);
-  function scan(root) {
-    if (!root || !root.querySelectorAll) return;
-    var all = [root].concat(Array.prototype.slice.call(root.querySelectorAll('*')));
-    all.forEach(function (n) {
-      if (n.nodeType !== 1 || n.children.length) return;
-      if (RX.test(n.textContent || '')) n.classList.add('te-nokey');
-    });
-  }
-  function run() { scan(document.body); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
-  var mo = new MutationObserver(function (muts) {
-    muts.forEach(function (m) {
-      if (m.type === 'characterData') { var p = m.target.parentElement; if (p && RX.test(p.textContent || '')) p.classList.add('te-nokey'); return; }
-      m.addedNodes.forEach(function (n) { if (n.nodeType === 1) scan(n); });
-    });
+  function safe(f){ try{ f(); }catch(e){} }
+  safe(function(){
+    var touch=false;
+    try{ touch=(window.matchMedia&&matchMedia('(pointer: coarse)').matches)||('ontouchstart' in window); }catch(e){}
+    var st=document.createElement('style');
+    st.textContent='.te-nokey{display:none !important;}'+
+      (touch?'html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint,[data-i18n="battle_enter_hint"]{display:none !important;}':'');
+    document.head.appendChild(st);
+    var old=document.querySelectorAll('.te-nokey');
+    for(var i=0;i<old.length;i++) old[i].classList.remove('te-nokey');
   });
-  mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+  safe(function(){
+    function boot(){
+      var ss=document.getElementById('start-screen');
+      if(ss){ ss.classList.remove('te-nokey'); ss.style.display=''; ss.style.visibility=''; ss.style.opacity=''; }
+      var pm=document.getElementById('password-modal');
+      if(pm){ pm.classList.remove('te-nokey'); pm.style.visibility=''; pm.style.opacity=''; }
+      document.body.style.visibility=''; document.body.style.opacity='';
+      document.documentElement.style.visibility=''; document.documentElement.style.opacity='';
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+    window.addEventListener('load',boot);
+  });
 })();
-</script>
-</body>
+</script></body>
 </html>
