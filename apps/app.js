@@ -2069,3 +2069,101 @@ new MutationObserver(syncEmotionText).observe(imgElement,{attributes:true,attrib
 syncEmotionText();
 
 console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
+
+/* ══ 24. FIX v66 · sustain real en mantenir + tablet sense rètols de teclat + crash save ══ */
+
+/* ── 24.1 La nota sona mentre la tecla/dit es manté premut ── */
+function manualHeldMidi(midiNote){
+  for(const d of activeManualNotes){
+    const off=manualOctUp[d]||0;
+    if(currentKeyRoot+d+60+off===midiNote) return true;
+  }
+  return false;
+}
+buildPianoVoice=function(midiNote, baseVolume, useSustain=true){
+  const ctx=getSharedCtx();
+  if(activeOscillators[midiNote]){
+    const {oscillators,masterGain}=activeOscillators[midiNote]; const now0=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now0); masterGain.gain.setValueAtTime(masterGain.gain.value,now0);
+    masterGain.gain.linearRampToValueAtTime(0.001,now0+0.05);
+    oscillators.forEach(({osc})=>{try{osc.stop(now0+0.1);}catch(e){}});
+    delete activeOscillators[midiNote];
+  }
+  const hold=manualHeldMidi(midiNote);
+  const freq=midiToFreq(midiNote); const now=ctx.currentTime;
+  const volume=Math.min(0.6, baseVolume*pianoTuning.volume);
+  const duration=(sustainPedalActive&&useSustain)?pianoTuning.duration+3:pianoTuning.duration;
+  const fadeIn=Math.max(0.0005,pianoTuning.fadeIn);
+  const peak=Math.min(0.9, volume*(1+(pianoTuning.attack/100)*0.6));
+  const inst=INSTRUMENTS[pianoTuning.instrument]||INSTRUMENTS.piano;
+  const masterGain=ctx.createGain();
+  if(inst.filter){ const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=inst.filter; f.Q.value=0.7; masterGain.connect(f); f.connect(getPianoBus()); }
+  else masterGain.connect(getPianoBus());
+  const oscillators=[]; const drift=(Math.random()*8)-4;
+  masterGain.gain.setValueAtTime(0,now);
+  masterGain.gain.linearRampToValueAtTime(peak,now+fadeIn);
+  masterGain.gain.linearRampToValueAtTime(volume*pianoTuning.sustain,now+fadeIn+pianoTuning.decay);
+  if(!hold) masterGain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+  const b=pianoTuning.brightness;
+  const harmonics=inst.harmonics.map((g,i)=>({freq:freq*(i+1),gain:g*b,type:inst.wave}));
+  harmonics.forEach(h=>{
+    const osc=ctx.createOscillator(); const gain=ctx.createGain();
+    osc.type=h.type; osc.frequency.setValueAtTime(h.freq,now); osc.detune.setValueAtTime(drift,now);
+    gain.gain.setValueAtTime(h.gain*volume,now);
+    if(!hold) gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+    osc.connect(gain); gain.connect(masterGain); osc.start(now);
+    if(!hold) osc.stop(now+duration);
+    oscillators.push({osc,gain});
+  });
+  activeOscillators[midiNote]={oscillators,masterGain};
+};
+/* Sense timeout de seguretat: la nota viu fins al keyup / touchend / blur */
+activateManualNote=function(d, exclusive, octUp){
+  if(!manualDegreeAllowed(d)) return;
+  if(exclusive) Array.from(activeManualNotes).forEach(od=>{ if(od!==d) deactivateManualNote(od); });
+  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
+  if(b){ if(b._glowTO){ clearTimeout(b._glowTO); b._glowTO=null; } b.classList.add('active'); }
+  if(activeManualNotes.has(d)) return;
+  activeManualNotes.add(d);
+  manualOctUp[d]=octUp?12:0;
+  handleMIDIMessage({data:[0x90,currentKeyRoot+d+60+(octUp?12:0),100]});
+};
+/* Allibera si la pestanya perd el focus (evita notes penjades) */
+window.addEventListener('blur',()=>{ releaseAllManualNotes(); numHeld={}; });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden){ releaseAllManualNotes(); numHeld={}; } });
+
+/* ── 24.2 Tablet: amaga rètols de teclat físic (INTRO / pedal) ── */
+if(IS_TABLET){
+  const stT=document.createElement('style');
+  stT.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
+  document.head.appendChild(stT);
+  const RXI=/prem\s+(intro|enter)|pulsa\s+(intro|enter)|press\s+(enter|intro)|intro per continuar|enter to continue/i;
+  function hideIntroNodes(root){
+    if(!root||!root.querySelectorAll) return;
+    const all=[root].concat(Array.prototype.slice.call(root.querySelectorAll('*')));
+    all.forEach(n=>{
+      if(n.nodeType!==1||n.children.length) return;
+      if(RXI.test(n.textContent||'')) n.style.display='none';
+    });
+  }
+  hideIntroNodes(document.body);
+  new MutationObserver(muts=>{
+    muts.forEach(m=>{
+      if(m.type==='characterData'){ const p=m.target.parentElement; if(p&&RXI.test(p.textContent||'')) p.style.display='none'; return; }
+      m.addedNodes.forEach(n=>{ if(n.nodeType===1) hideIntroNodes(n); });
+    });
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+
+/* ── 24.3 Corregeix el crash en desar la disposició (vw indefinit) ── */
+applyPositionsFrom=function(data){
+  const vw=virtualWidth();
+  const src=data||noteData;
+  Object.keys(wrappers).forEach(ni=>{
+    const d=src[ni]; const w=wrappers[ni]; if(!d||!w) return;
+    const im=w.querySelector('.note-img'); if(im) im.style.width=(d.size/CONFIG.DESIGN_WIDTH)*vw+'px';
+  });
+  scheduleEarHUD();
+};
+
+console.log('🎹 TONAL EMOTIONS v66 · sustain en mantenir + tablet net + save corregit.');

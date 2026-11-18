@@ -925,6 +925,35 @@ html.smartphone-mode #btn-ear-start-full { width: 120px; padding: 10px 16px; fon
 
 })();
 </script>
-
+<script>
+/* ═══ TONAL EMOTIONS · capa tàctil: amaga rètols de teclat físic ═══ */
+(function () {
+  'use strict';
+  var touch = false;
+  try { touch = matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window); } catch (e) {}
+  if (!touch) return;
+  var RX = /prem[^.!?]{0,24}(intro|enter|tecla)|press[^.!?]{0,24}(enter|intro)|pulsa[^.!?]{0,24}(intro|enter)|intro per continuar|enter to continue/i;
+  var st = document.createElement('style');
+  st.textContent = '.te-nokey{display:none !important;}';
+  document.head.appendChild(st);
+  function scan(root) {
+    if (!root || !root.querySelectorAll) return;
+    var all = [root].concat(Array.prototype.slice.call(root.querySelectorAll('*')));
+    all.forEach(function (n) {
+      if (n.nodeType !== 1 || n.children.length) return;
+      if (RX.test(n.textContent || '')) n.classList.add('te-nokey');
+    });
+  }
+  function run() { scan(document.body); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  var mo = new MutationObserver(function (muts) {
+    muts.forEach(function (m) {
+      if (m.type === 'characterData') { var p = m.target.parentElement; if (p && RX.test(p.textContent || '')) p.classList.add('te-nokey'); return; }
+      m.addedNodes.forEach(function (n) { if (n.nodeType === 1) scan(n); });
+    });
+  });
+  mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+})();
+</script>
 </body>
 </html>
