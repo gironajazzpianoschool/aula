@@ -2279,6 +2279,48 @@ html[data-theme="blue"] .blkcol button.on .bmini .bdone {
 }
 .appcard .ae img { width: 52px; height: 52px; object-fit: contain; }
 .appcard .ae svg { width: 52px; height: 52px; }
+/* ═══ Coach-tip com a xip de superfície (substitueix el barrido) ═══ */
+.now .vr[data-tip]::before {
+  content: '';
+  position: absolute; bottom: calc(100% + 5px); left: 15px;
+  border: 5px solid transparent; border-top-color: var(--card);
+  opacity: 0; transition: opacity .3s ease; pointer-events: none; z-index: 100;
+}
+.now .vr[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 13px); left: 0;
+  width: max-content; max-width: min(340px, 78vw);
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--hair-2);
+  box-shadow: var(--elev-2);
+  padding: 7px 13px; border-radius: 12px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .02em;
+  white-space: normal; text-align: left;
+  opacity: 0; transform: translateY(6px) scale(.98);
+  clip-path: none;
+  transition: opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1);
+  pointer-events: none; z-index: 100;
+}
+.now .vr.tip-on::after {
+  opacity: 1 !important; transform: none !important; clip-path: none !important;
+  transition: opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1) !important;
+}
+.now .vr.tip-on::before { opacity: 1; }
+.now .vr.tip-fade::after {
+  opacity: 0 !important; transform: translateY(-4px) !important;
+  transition: opacity .5s ease, transform .5s ease !important;
+}
+.now .vr.tip-fade::before { opacity: 0; }
+/* ═══ Puls del play reforçat per a mode fosc ═══ */
+html[data-theme="dark"] .now .play {
+  animation: playGlowDark 3.8s ease-in-out infinite !important;
+}
+@keyframes playGlowDark {
+  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,.55), 0 0 14px 2px rgba(57,217,138,.22); background: rgba(57,217,138,.08); scale: 1; }
+  50%  { box-shadow: 0 0 0 8px rgba(57,217,138,0), 0 0 22px 5px rgba(57,217,138,.45); background: rgba(57,217,138,.20); scale: 1.06; }
+  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0), 0 0 14px 2px rgba(57,217,138,.22); background: rgba(57,217,138,.08); scale: 1; }
+}
 </style>
 </head>
 
