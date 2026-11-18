@@ -2070,9 +2070,9 @@ syncEmotionText();
 
 console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
 
-/* ══ 24. FIX v66 · sustain real en mantenir + tablet sense rètols de teclat + crash save ══ */
+/* ══ 24. FIX v67 · mantenir tecla = efecte pedal sustain (decaïment natural, no infinit) ══ */
 
-/* ── 24.1 La nota sona mentre la tecla/dit es manté premut ── */
+/* Detecta si la nota correspon a una tecla/dit manual mantingut */
 function manualHeldMidi(midiNote){
   for(const d of activeManualNotes){
     const off=manualOctUp[d]||0;
@@ -2080,6 +2080,7 @@ function manualHeldMidi(midiNote){
   }
   return false;
 }
+/* Mateixa veu que l'original, però amb la durada de pedal (+3 s) mentre es manté */
 buildPianoVoice=function(midiNote, baseVolume, useSustain=true){
   const ctx=getSharedCtx();
   if(activeOscillators[midiNote]){
@@ -2092,7 +2093,7 @@ buildPianoVoice=function(midiNote, baseVolume, useSustain=true){
   const hold=manualHeldMidi(midiNote);
   const freq=midiToFreq(midiNote); const now=ctx.currentTime;
   const volume=Math.min(0.6, baseVolume*pianoTuning.volume);
-  const duration=(sustainPedalActive&&useSustain)?pianoTuning.duration+3:pianoTuning.duration;
+  const duration=(hold||(sustainPedalActive&&useSustain))?pianoTuning.duration+3:pianoTuning.duration;
   const fadeIn=Math.max(0.0005,pianoTuning.fadeIn);
   const peak=Math.min(0.9, volume*(1+(pianoTuning.attack/100)*0.6));
   const inst=INSTRUMENTS[pianoTuning.instrument]||INSTRUMENTS.piano;
@@ -2103,21 +2104,20 @@ buildPianoVoice=function(midiNote, baseVolume, useSustain=true){
   masterGain.gain.setValueAtTime(0,now);
   masterGain.gain.linearRampToValueAtTime(peak,now+fadeIn);
   masterGain.gain.linearRampToValueAtTime(volume*pianoTuning.sustain,now+fadeIn+pianoTuning.decay);
-  if(!hold) masterGain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+  masterGain.gain.exponentialRampToValueAtTime(0.001,now+duration);
   const b=pianoTuning.brightness;
   const harmonics=inst.harmonics.map((g,i)=>({freq:freq*(i+1),gain:g*b,type:inst.wave}));
   harmonics.forEach(h=>{
     const osc=ctx.createOscillator(); const gain=ctx.createGain();
     osc.type=h.type; osc.frequency.setValueAtTime(h.freq,now); osc.detune.setValueAtTime(drift,now);
     gain.gain.setValueAtTime(h.gain*volume,now);
-    if(!hold) gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
-    osc.connect(gain); gain.connect(masterGain); osc.start(now);
-    if(!hold) osc.stop(now+duration);
+    gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+    osc.connect(gain); gain.connect(masterGain); osc.start(now); osc.stop(now+duration);
     oscillators.push({osc,gain});
   });
   activeOscillators[midiNote]={oscillators,masterGain};
 };
-/* Sense timeout de seguretat: la nota viu fins al keyup / touchend / blur */
+/* Sense timeout d'1,5 s: la nota viu mentre es manté, i es deixa anar al keyup/touchend */
 activateManualNote=function(d, exclusive, octUp){
   if(!manualDegreeAllowed(d)) return;
   if(exclusive) Array.from(activeManualNotes).forEach(od=>{ if(od!==d) deactivateManualNote(od); });
@@ -2128,11 +2128,11 @@ activateManualNote=function(d, exclusive, octUp){
   manualOctUp[d]=octUp?12:0;
   handleMIDIMessage({data:[0x90,currentKeyRoot+d+60+(octUp?12:0),100]});
 };
-/* Allibera si la pestanya perd el focus (evita notes penjades) */
+/* Evita notes penjades si la pestanya perd el focus */
 window.addEventListener('blur',()=>{ releaseAllManualNotes(); numHeld={}; });
 document.addEventListener('visibilitychange',()=>{ if(document.hidden){ releaseAllManualNotes(); numHeld={}; } });
 
-/* ── 24.2 Tablet: amaga rètols de teclat físic (INTRO / pedal) ── */
+/* Tablet: amaga rètols de teclat físic (INTRO / pedal) */
 if(IS_TABLET){
   const stT=document.createElement('style');
   stT.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
@@ -2155,7 +2155,7 @@ if(IS_TABLET){
   }).observe(document.body,{childList:true,subtree:true,characterData:true});
 }
 
-/* ── 24.3 Corregeix el crash en desar la disposició (vw indefinit) ── */
+/* Corregeix el crash en desar la disposició (vw indefinit) */
 applyPositionsFrom=function(data){
   const vw=virtualWidth();
   const src=data||noteData;
@@ -2166,4 +2166,4 @@ applyPositionsFrom=function(data){
   scheduleEarHUD();
 };
 
-console.log('🎹 TONAL EMOTIONS v66 · sustain en mantenir + tablet net + save corregit.');
+console.log('🎹 TONAL EMOTIONS v67 · mantenir tecla = pedal sustain (decaïment natural).');
