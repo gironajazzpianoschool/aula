@@ -2070,100 +2070,124 @@ syncEmotionText();
 
 console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
 
-/* ══ 24. FIX v67 · mantenir tecla = efecte pedal sustain (decaïment natural, no infinit) ══ */
+/* ══ 24. FIX v68 · iPad-safe · mantenir tecla = pedal sustain (decaïment natural) ══ */
+(function(){
+  'use strict';
+  function safe(fn){ try{ fn(); }catch(e){ if(window.console) console.warn('[TE v68]', e); } }
 
-/* Detecta si la nota correspon a una tecla/dit manual mantingut */
-function manualHeldMidi(midiNote){
-  for(const d of activeManualNotes){
-    const off=manualOctUp[d]||0;
-    if(currentKeyRoot+d+60+off===midiNote) return true;
-  }
-  return false;
-}
-/* Mateixa veu que l'original, però amb la durada de pedal (+3 s) mentre es manté */
-buildPianoVoice=function(midiNote, baseVolume, useSustain=true){
-  const ctx=getSharedCtx();
-  if(activeOscillators[midiNote]){
-    const {oscillators,masterGain}=activeOscillators[midiNote]; const now0=ctx.currentTime;
-    masterGain.gain.cancelScheduledValues(now0); masterGain.gain.setValueAtTime(masterGain.gain.value,now0);
-    masterGain.gain.linearRampToValueAtTime(0.001,now0+0.05);
-    oscillators.forEach(({osc})=>{try{osc.stop(now0+0.1);}catch(e){}});
-    delete activeOscillators[midiNote];
-  }
-  const hold=manualHeldMidi(midiNote);
-  const freq=midiToFreq(midiNote); const now=ctx.currentTime;
-  const volume=Math.min(0.6, baseVolume*pianoTuning.volume);
-  const duration=(hold||(sustainPedalActive&&useSustain))?pianoTuning.duration+3:pianoTuning.duration;
-  const fadeIn=Math.max(0.0005,pianoTuning.fadeIn);
-  const peak=Math.min(0.9, volume*(1+(pianoTuning.attack/100)*0.6));
-  const inst=INSTRUMENTS[pianoTuning.instrument]||INSTRUMENTS.piano;
-  const masterGain=ctx.createGain();
-  if(inst.filter){ const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=inst.filter; f.Q.value=0.7; masterGain.connect(f); f.connect(getPianoBus()); }
-  else masterGain.connect(getPianoBus());
-  const oscillators=[]; const drift=(Math.random()*8)-4;
-  masterGain.gain.setValueAtTime(0,now);
-  masterGain.gain.linearRampToValueAtTime(peak,now+fadeIn);
-  masterGain.gain.linearRampToValueAtTime(volume*pianoTuning.sustain,now+fadeIn+pianoTuning.decay);
-  masterGain.gain.exponentialRampToValueAtTime(0.001,now+duration);
-  const b=pianoTuning.brightness;
-  const harmonics=inst.harmonics.map((g,i)=>({freq:freq*(i+1),gain:g*b,type:inst.wave}));
-  harmonics.forEach(h=>{
-    const osc=ctx.createOscillator(); const gain=ctx.createGain();
-    osc.type=h.type; osc.frequency.setValueAtTime(h.freq,now); osc.detune.setValueAtTime(drift,now);
-    gain.gain.setValueAtTime(h.gain*volume,now);
-    gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
-    osc.connect(gain); gain.connect(masterGain); osc.start(now); osc.stop(now+duration);
-    oscillators.push({osc,gain});
+  /* La nota manual mantinguda utilitza la durada de pedal (+3 s), amb envolupament natural */
+  safe(function(){
+    function manualHeldMidi(midiNote){
+      var held=false;
+      activeManualNotes.forEach(function(d){
+        var off=manualOctUp[d]||0;
+        if(currentKeyRoot+d+60+off===midiNote) held=true;
+      });
+      return held;
+    }
+    buildPianoVoice=function(midiNote, baseVolume, useSustain){
+      if(useSustain===undefined) useSustain=true;
+      var ctx=getSharedCtx();
+      if(activeOscillators[midiNote]){
+        var old=activeOscillators[midiNote]; var now0=ctx.currentTime;
+        old.masterGain.gain.cancelScheduledValues(now0);
+        old.masterGain.gain.setValueAtTime(old.masterGain.gain.value,now0);
+        old.masterGain.gain.linearRampToValueAtTime(0.001,now0+0.05);
+        old.oscillators.forEach(function(o){ try{ o.osc.stop(now0+0.1); }catch(e){} });
+        delete activeOscillators[midiNote];
+      }
+      var hold=manualHeldMidi(midiNote);
+      var freq=midiToFreq(midiNote); var now=ctx.currentTime;
+      var volume=Math.min(0.6, baseVolume*pianoTuning.volume);
+      var duration=(hold||(sustainPedalActive&&useSustain))?pianoTuning.duration+3:pianoTuning.duration;
+      var fadeIn=Math.max(0.0005,pianoTuning.fadeIn);
+      var peak=Math.min(0.9, volume*(1+(pianoTuning.attack/100)*0.6));
+      var inst=INSTRUMENTS[pianoTuning.instrument]||INSTRUMENTS.piano;
+      var masterGain=ctx.createGain();
+      if(inst.filter){
+        var f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=inst.filter; f.Q.value=0.7;
+        masterGain.connect(f); f.connect(getPianoBus());
+      } else masterGain.connect(getPianoBus());
+      var oscillators=[]; var drift=(Math.random()*8)-4;
+      masterGain.gain.setValueAtTime(0,now);
+      masterGain.gain.linearRampToValueAtTime(peak,now+fadeIn);
+      masterGain.gain.linearRampToValueAtTime(volume*pianoTuning.sustain,now+fadeIn+pianoTuning.decay);
+      masterGain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+      var b=pianoTuning.brightness;
+      inst.harmonics.forEach(function(g,i){
+        var hFreq=freq*(i+1), hGain=g*b;
+        var osc=ctx.createOscillator(); var gain=ctx.createGain();
+        osc.type=inst.wave; osc.frequency.setValueAtTime(hFreq,now); osc.detune.setValueAtTime(drift,now);
+        gain.gain.setValueAtTime(hGain*volume,now);
+        gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+        osc.connect(gain); gain.connect(masterGain); osc.start(now); osc.stop(now+duration);
+        oscillators.push({osc:osc,gain:gain});
+      });
+      activeOscillators[midiNote]={oscillators:oscillators,masterGain:masterGain};
+    };
   });
-  activeOscillators[midiNote]={oscillators,masterGain};
-};
-/* Sense timeout d'1,5 s: la nota viu mentre es manté, i es deixa anar al keyup/touchend */
-activateManualNote=function(d, exclusive, octUp){
-  if(!manualDegreeAllowed(d)) return;
-  if(exclusive) Array.from(activeManualNotes).forEach(od=>{ if(od!==d) deactivateManualNote(od); });
-  const b=document.querySelector(`.manual-btn[data-degree="${d}"]`);
-  if(b){ if(b._glowTO){ clearTimeout(b._glowTO); b._glowTO=null; } b.classList.add('active'); }
-  if(activeManualNotes.has(d)) return;
-  activeManualNotes.add(d);
-  manualOctUp[d]=octUp?12:0;
-  handleMIDIMessage({data:[0x90,currentKeyRoot+d+60+(octUp?12:0),100]});
-};
-/* Evita notes penjades si la pestanya perd el focus */
-window.addEventListener('blur',()=>{ releaseAllManualNotes(); numHeld={}; });
-document.addEventListener('visibilitychange',()=>{ if(document.hidden){ releaseAllManualNotes(); numHeld={}; } });
 
-/* Tablet: amaga rètols de teclat físic (INTRO / pedal) */
-if(IS_TABLET){
-  const stT=document.createElement('style');
-  stT.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
-  document.head.appendChild(stT);
-  const RXI=/prem\s+(intro|enter)|pulsa\s+(intro|enter)|press\s+(enter|intro)|intro per continuar|enter to continue/i;
-  function hideIntroNodes(root){
-    if(!root||!root.querySelectorAll) return;
-    const all=[root].concat(Array.prototype.slice.call(root.querySelectorAll('*')));
-    all.forEach(n=>{
-      if(n.nodeType!==1||n.children.length) return;
-      if(RXI.test(n.textContent||'')) n.style.display='none';
-    });
-  }
-  hideIntroNodes(document.body);
-  new MutationObserver(muts=>{
-    muts.forEach(m=>{
-      if(m.type==='characterData'){ const p=m.target.parentElement; if(p&&RXI.test(p.textContent||'')) p.style.display='none'; return; }
-      m.addedNodes.forEach(n=>{ if(n.nodeType===1) hideIntroNodes(n); });
-    });
-  }).observe(document.body,{childList:true,subtree:true,characterData:true});
-}
-
-/* Corregeix el crash en desar la disposició (vw indefinit) */
-applyPositionsFrom=function(data){
-  const vw=virtualWidth();
-  const src=data||noteData;
-  Object.keys(wrappers).forEach(ni=>{
-    const d=src[ni]; const w=wrappers[ni]; if(!d||!w) return;
-    const im=w.querySelector('.note-img'); if(im) im.style.width=(d.size/CONFIG.DESIGN_WIDTH)*vw+'px';
+  /* Elimina el tall automàtic d'1,5 s: la nota viu fins al keyup / touchend */
+  safe(function(){
+    var origActivate=activateManualNote;
+    activateManualNote=function(d, exclusive, octUp){
+      origActivate(d, exclusive, octUp);
+      var b=document.querySelector('.manual-btn[data-degree="'+d+'"]');
+      if(b && b._safetyTimeout){ clearTimeout(b._safetyTimeout); b._safetyTimeout=null; }
+    };
   });
-  scheduleEarHUD();
-};
 
-console.log('🎹 TONAL EMOTIONS v67 · mantenir tecla = pedal sustain (decaïment natural).');
+  /* Allibera notes mantingudes si la pestanya perd el focus */
+  safe(function(){
+    function rel(){ try{ releaseAllManualNotes(); numHeld={}; }catch(e){} }
+    window.addEventListener('blur', rel);
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) rel(); });
+  });
+
+  /* Tablet: amaga rètols de teclat físic (INTRO / pedal) */
+  safe(function(){
+    if(!IS_TABLET) return;
+    var st=document.createElement('style');
+    st.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
+    document.head.appendChild(st);
+    var RX=/prem\s+(intro|enter)|pulsa\s+(intro|enter)|press\s+(enter|intro)|intro per continuar|enter to continue/i;
+    function hide(root){
+      if(!root||!root.querySelectorAll) return;
+      var list=[root]; var all=root.querySelectorAll('*');
+      for(var i=0;i<all.length;i++) list.push(all[i]);
+      for(var j=0;j<list.length;j++){
+        var n=list[j];
+        if(n.nodeType!==1||n.children.length) continue;
+        if(RX.test(n.textContent||'')) n.style.display='none';
+      }
+    }
+    hide(document.body);
+    if(window.MutationObserver){
+      new MutationObserver(function(muts){
+        for(var i=0;i<muts.length;i++){
+          var m=muts[i];
+          if(m.type==='characterData'){
+            var p=m.target.parentElement;
+            if(p&&RX.test(p.textContent||'')) p.style.display='none';
+            continue;
+          }
+          for(var k=0;k<m.addedNodes.length;k++){ if(m.addedNodes[k].nodeType===1) hide(m.addedNodes[k]); }
+        }
+      }).observe(document.body,{childList:true,subtree:true,characterData:true});
+    }
+  });
+
+  /* Corregeix el crash en desar la disposició (vw indefinit) */
+  safe(function(){
+    applyPositionsFrom=function(data){
+      var vw=virtualWidth(); var src=data||noteData;
+      Object.keys(wrappers).forEach(function(ni){
+        var d=src[ni], w=wrappers[ni]; if(!d||!w) return;
+        var im=w.querySelector('.note-img'); if(im) im.style.width=(d.size/CONFIG.DESIGN_WIDTH)*vw+'px';
+      });
+      scheduleEarHUD();
+    };
+  });
+
+  if(window.console) console.log('🎹 TONAL EMOTIONS v68 · iPad-safe · mantenir=pedal.');
+})();
