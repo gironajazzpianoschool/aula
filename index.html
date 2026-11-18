@@ -2317,9 +2317,9 @@ html[data-theme="dark"] .now .play {
   animation: playGlowDark 3.8s ease-in-out infinite !important;
 }
 @keyframes playGlowDark {
-  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,.55), 0 0 14px 2px rgba(57,217,138,.22); background: rgba(57,217,138,.08); scale: 1; }
-  50%  { box-shadow: 0 0 0 8px rgba(57,217,138,0), 0 0 22px 5px rgba(57,217,138,.45); background: rgba(57,217,138,.20); scale: 1.06; }
-  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0), 0 0 14px 2px rgba(57,217,138,.22); background: rgba(57,217,138,.08); scale: 1; }
+  0%   { box-shadow: 0 0 0 0 rgba(57,217,138,.45), 0 0 10px 1px rgba(57,217,138,.14); background: rgba(57,217,138,.06); scale: 1; }
+  50%  { box-shadow: 0 0 0 7px rgba(57,217,138,0), 0 0 18px 4px rgba(57,217,138,.30); background: rgba(57,217,138,.12); scale: 1.05; }
+  100% { box-shadow: 0 0 0 0 rgba(57,217,138,0), 0 0 10px 1px rgba(57,217,138,.14); background: rgba(57,217,138,.06); scale: 1; }
 }
 </style>
 </head>
@@ -3817,7 +3817,7 @@ function pickFrom(ids) {
   return null;
 }
 function trackContext() {
-  var lvls = activeLevels().filter(function (l) { return levelState(l) === 'done'; });
+  var lvls = activeLevels();
   for (var i = 0; i < lvls.length; i++) {
     var l = lvls[i];
     if (l === 0) {
@@ -6494,9 +6494,11 @@ function paintManager() {
   });
   document.getElementById('cmActive').onclick = function () {
     OV.lv = OV.lv || {};
-    OV.lv[lvKey(l)] = !levelActive(l);
+    var nv = !levelActive(l);
+    OV.lv[lvKey(l)] = nv;
+    this.setAttribute('aria-pressed', nv ? 'true' : 'false');
     hydrateCourse(); paintManager(); render();
-    showToast((levelActive(l) ? '🔓 ' : '🔒 ') + levelName(l));
+    showToast((nv ? '🔓 ' : '🔒 ') + levelName(l));
   };
   document.getElementById('cmState').querySelectorAll('[data-st]').forEach(function (b) {
     b.onclick = function () {
