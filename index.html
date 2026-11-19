@@ -454,7 +454,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d0d0d">
+<meta name="theme-color" content="rgb(232, 228, 217)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Girona Jazz Piano School®</title>
@@ -2360,6 +2360,48 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
   *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; scroll-behavior: auto !important; }
 }
 .gj-foot { text-align: center; padding: 18px 16px 26px; color: var(--mut, #8a8078); font-size: 11px; line-height: 1.6; }
+/* ═══ Overlay de vídeo: bategada daurada amb anells (com el play verd) ═══ */
+.video-overlay .icon {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  background: rgba(232, 176, 75, .07);
+  transform: none !important;
+  animation: gjOverlayBeat 3.8s ease-in-out infinite !important;
+}
+@keyframes gjOverlayBeat {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(232, 176, 75, .45), 0 0 18px 2px rgba(232, 176, 75, .16);
+    background: rgba(232, 176, 75, .07);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(232, 176, 75, 0), 0 0 32px 6px rgba(232, 176, 75, .35);
+    background: rgba(232, 176, 75, .16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .video-overlay .icon {
+    animation: gjOverlayCalm 6s ease-in-out infinite !important;
+  }
+}
+@keyframes gjOverlayCalm {
+  0%, 100% { opacity: .78; box-shadow: 0 0 18px 2px rgba(232, 176, 75, .14); }
+  50%      { opacity: 1;   box-shadow: 0 0 30px 6px rgba(232, 176, 75, .30); }
+}
+html.fx-calm .video-overlay .icon,
+html.lowfx .video-overlay .icon { animation: none !important; }
+
+/* Tallafocs global: cap animació infinita pot quedar a .001s (vibració) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-iteration-count: 1 !important; }
+}
 </style>
 <!-- ═══ FINAL · social, icones, PWA ═══ -->
 <meta name="description" content="Girona Jazz Piano School® · Aula online: blocs de vídeos, seguiment continuat i entrenament auditiu.">
@@ -2386,7 +2428,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
 
 <header>
   <div class="hbrand">
-    <h1 data-text="GIRONA JAZZ PIANO SCHOOL®">GIRONA JAZZ PIANO SCHOOL®</h1>
+    <h1 data-text="GIRONA JAZZ PIANO SCHOOL®" style="cursor: pointer;">GIRONA JAZZ PIANO SCHOOL®</h1>
     <div class="userblock">
       <span id="who"></span>
       <button id="btnUser" class="ubtn logoutbtn" data-tip="Tanca sessió / Cerrar sesión" aria-label="Tanca sessió / Cerrar sesión">Logout</button>
@@ -2395,22 +2437,22 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
   <div class="hdr">
     <span class="modes">
       <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
-      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+      <button id="mFree" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
       <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
-      <button id="mInfo" data-tip="Preguntas frecuentes" aria-label="Preguntas frecuentes" class="" title="Preguntes freqüents">FAQ</button>
+      <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="" title="Preguntes freqüents">FAQ</button>
     </span>
-    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
-    <button id="mSearch" data-tip="Buscar vídeos" aria-label="Buscar vídeos" title="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
+    <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos" title="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
     <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
 
 <main>
   <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: block;"></div>
+  <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
   <div id="infoView" style="display: none;"></div>
-  <div id="helpView" style="display: none;"></div>
+  <div id="helpView" style="display: block;"></div>
 </main>
 
 <div class="modal" id="modal">
@@ -2830,7 +2872,7 @@ var OV = /*OV-START*/
       "ca": "Notes al piano: Introducció Essencial"
     },
     "1.0.g.1": {
-      "es": "Claves musicales: Cómo Leer y Colocar las Manos",
+      "es": "Claus musicals: Com Llegir i Col·locar Mans",
       "ca": "Claus musicals: Com Llegir i Col·locar Mans"
     },
     "2.0.g.0": {
@@ -2874,16 +2916,20 @@ var OV = /*OV-START*/
       "es": "Pulso y Tempo: Figuras básicas"
     },
     "1.2.r.0": {
-      "ca": "Puntet, Lligadura de prolongació i Contratemps"
+      "ca": "Puntet, Lligadura de prolongació i Contratemps",
+      "es": "Puntillo, Ligadura de prolongación y Contratiempo"
     },
     "2.0.r.0": {
-      "ca": "Síncopa Musical"
+      "ca": "Síncopa Musical",
+      "es": "Síncopa Musical"
     },
     "2.2.r.0": {
-      "ca": "Semicorxeres (I)"
+      "ca": "Semicorxeres (I)",
+      "es": "Semicorcheas (I)"
     },
     "3.0.r.0": {
-      "ca": "Semicorxeres (II)"
+      "ca": "Semicorxeres (II)",
+      "es": "Semicorcheas (II)"
     },
     "3.2.r.0": {
       "ca": "Valors Irregulars: El Treset (I)",
@@ -2894,24 +2940,28 @@ var OV = /*OV-START*/
       "es": "Valors Irregulars: El Treset (II)"
     },
     "4.2.r.0": {
-      "ca": "Mètrica Simple i Composta"
+      "ca": "Mètrica Simple i Composta",
+      "es": "Métrica Simple y Compuesta"
     },
     "5.0.r.0": {
-      "ca": "Entrenament Rítmic"
+      "ca": "Entrenament Rítmic",
+      "es": "Entrenamiento Rítmico"
     },
     "5.2.r.0": {
-      "ca": "Introducció a la Mètrica Irregular"
+      "ca": "Introducció a la Mètrica Irregular",
+      "es": "Introducción a la Métrica Irregular"
     },
     "6.2.r.0": {
-      "ca": "Repàs de Ritme del Nivell Fonamental"
+      "ca": "Repàs de Ritme del Nivell Fonamental",
+      "es": "Repaso de Ritmo del Nivel Fundamental"
     },
     "1.1.p.0": {
       "ca": "La Xocolatera (tema)",
-      "es": "La Chocolatera (tema)"
+      "es": "La Xocolatera (tema)"
     },
     "1.2.p.0": {
       "ca": "Himne Alegria (I)",
-      "es": "Himno Alegría (I)"
+      "es": "Himne Alegria (I)"
     },
     "1.3.p.0": {
       "ca": "Perestroika (SAU)",
@@ -2923,7 +2973,7 @@ var OV = /*OV-START*/
     },
     "2.1.p.0": {
       "ca": "Tríades Majors: CT1",
-      "es": "Tríadas Mayores: CT1"
+      "es": "Tríades Majors: CT1"
     },
     "3.0.p.0": {
       "ca": "Let it Be",
@@ -2931,27 +2981,27 @@ var OV = /*OV-START*/
     },
     "3.0.p.1": {
       "ca": "Tríades Majors: CT2",
-      "es": "Tríadas Mayores: CT2"
+      "es": "Tríades Majors: CT2"
     },
     "3.2.p.0": {
       "ca": "Himne Alegria (II)",
-      "es": "Himno Alegría (II)"
+      "es": "Himne Alegria (II)"
     },
     "3.3.p.0": {
       "ca": "Tríades Majors: CC",
-      "es": "Tríadas Mayores: CC"
+      "es": "Tríades Majors: CC"
     },
     "4.1.p.0": {
       "ca": "Tríades Menors: CT1",
-      "es": "Tríadas Menores: CT1"
+      "es": "Tríades Menors: CT1"
     },
     "5.0.p.0": {
       "ca": "Tríades Menors: CT2",
-      "es": "Tríadas Menores: CT2"
+      "es": "Tríades Menors: CT2"
     },
     "5.2.p.0": {
       "ca": "Tríades Menors: CC",
-      "es": "Tríadas Menores: CC"
+      "es": "Tríades Menors: CC"
     },
     "5.3.p.0": {
       "ca": "Interstellar",
@@ -2971,40 +3021,51 @@ var OV = /*OV-START*/
     },
     "6.3.p.1": {
       "ca": "Introducció als FNG",
-      "es": "Introducción a los FNG"
+      "es": "Introducció als FNG"
     },
     "1.3.a.0": {
-      "ca": "Evita Memoritzar Intervals"
+      "ca": "Evita Memoritzar Intervals",
+      "es": "Evita Memorizar Intervalos"
     },
     "1.1.a.0": {
-      "ca": "Fonaments de l'Oïda Musical"
+      "ca": "Fonaments de l'Oïda Musical",
+      "es": "Fundamentos del Oído Musical"
     },
     "2.0.a.0": {
-      "ca": "Emocions: Notes Diatòniques"
+      "ca": "Emocions: Notes Diatòniques",
+      "es": "Emociones: Notas Diatónicas"
     },
     "2.3.a.0": {
-      "ca": "Instruccions i Correcció del Test"
+      "ca": "Instruccions i Correcció del Test",
+      "es": "Instrucciones y Corrección del Test"
     },
     "3.0.a.0": {
-      "ca": "Test de Notes Diatòniques"
+      "ca": "Test de Notes Diatòniques",
+      "es": "Test de Notas Diatónicas"
     },
     "3.1.a.0": {
-      "ca": "Emocions: Notes No Diatòniques"
+      "ca": "Emocions: Notes No Diatòniques",
+      "es": "Emociones: Notas No Diatónicas"
     },
     "4.2.a.0": {
-      "ca": "Test de Notes No Diatòniques"
+      "ca": "Test de Notes No Diatòniques",
+      "es": "Test de Notas No Diatónicas"
     },
     "4.3.a.0": {
-      "ca": "Emocions: Notes Diatòniques + No Diatòniques"
+      "ca": "Emocions: Notes Diatòniques + No Diatòniques",
+      "es": "Emociones: Notas Diatónicas + No Diatónicas"
     },
     "6.1.a.0": {
-      "ca": "Test de Notes Diatòniques + No Diatòniques"
+      "ca": "Test de Notes Diatòniques + No Diatòniques",
+      "es": "Test de Notas Diatónicas + No Diatónicas"
     },
     "6.2.a.0": {
-      "ca": "La Tònica com a Única Referència"
+      "ca": "La Tònica com a Única Referència",
+      "es": "La Tónica como Única Referencia"
     },
     "6.3.a.0": {
-      "ca": "TONAL EMOTIONS: El teu Laboratori Auditiu"
+      "ca": "TONAL EMOTIONS: El teu Laboratori Auditiu",
+      "es": "TONAL EMOTIONS: Tu Laboratorio Auditivo"
     },
     "6.3.g.0": {
       "ca": "Extra Funcions Tonals Bàsiques"
@@ -3625,7 +3686,295 @@ var OV = /*OV-START*/
     "0",
     "umwmu4e7rh1ma",
     "1"
-  ]
+  ],
+  "st": {
+    "1.1.p.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "1.2.p.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "1.3.p.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "2.0.p.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "2.1.p.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "3.0.p.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.0.p.1": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.2.p.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.3.p.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "4.1.p.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "5.0.p.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "5.2.p.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "5.3.p.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "6.0.p.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "6.1.p.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "6.3.p.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "6.3.p.1": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "1.1.t.0": {
+      "es": "ETAPA 1",
+      "ca": "ETAPA 1"
+    },
+    "1.2.t.0": {
+      "es": "ETAPA 1",
+      "ca": "ETAPA 1"
+    },
+    "1.2.t.1": {
+      "es": "ETAPA 1",
+      "ca": "ETAPA 1"
+    },
+    "1.3.t.0": {
+      "es": "ETAPA 1",
+      "ca": "ETAPA 1"
+    },
+    "2.0.t.0": {
+      "es": "ETAPA 2",
+      "ca": "ETAPA 2"
+    },
+    "2.1.t.0": {
+      "es": "ETAPA 2",
+      "ca": "ETAPA 2"
+    },
+    "2.2.t.0": {
+      "es": "ETAPA 2",
+      "ca": "ETAPA 2"
+    },
+    "2.3.t.0": {
+      "es": "ETAPA 2",
+      "ca": "ETAPA 2"
+    },
+    "3.0.t.0": {
+      "es": "ETAPA 3",
+      "ca": "ETAPA 3"
+    },
+    "3.1.t.0": {
+      "es": "ETAPA 3",
+      "ca": "ETAPA 3"
+    },
+    "3.2.t.0": {
+      "es": "ETAPA 3",
+      "ca": "ETAPA 3"
+    },
+    "3.3.t.0": {
+      "es": "ETAPA 3",
+      "ca": "ETAPA 3"
+    },
+    "4.0.t.0": {
+      "es": "ETAPA 4",
+      "ca": "ETAPA 4"
+    },
+    "4.1.t.0": {
+      "es": "ETAPA 4",
+      "ca": "ETAPA 4"
+    },
+    "4.2.t.0": {
+      "es": "ETAPA 4",
+      "ca": "ETAPA 4"
+    },
+    "4.3.t.0": {
+      "es": "ETAPA 4",
+      "ca": "ETAPA 4"
+    },
+    "5.0.t.0": {
+      "es": "ETAPA 5",
+      "ca": "ETAPA 5"
+    },
+    "5.1.t.0": {
+      "es": "ETAPA 5",
+      "ca": "ETAPA 5"
+    },
+    "5.2.t.0": {
+      "es": "ETAPA 5",
+      "ca": "ETAPA 5"
+    },
+    "5.3.t.0": {
+      "es": "ETAPA 5",
+      "ca": "ETAPA 5"
+    },
+    "1.0.r.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "1.2.r.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "2.0.r.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "2.2.r.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "3.0.r.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.2.r.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "4.0.r.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "4.2.r.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "5.0.r.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "5.2.r.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "6.2.r.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "1.0.g.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "1.0.g.1": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "2.0.g.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "3.0.g.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.2.g.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "4.0.g.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "4.2.g.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "5.0.g.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "5.2.g.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "6.0.g.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 5"
+    },
+    "6.3.g.0": {
+      "ca": "ETAPA 6"
+    },
+    "6.2.g.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "1.1.a.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "1.3.a.0": {
+      "ca": "ETAPA 1",
+      "es": "ETAPA 1"
+    },
+    "2.0.a.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "2.3.a.0": {
+      "ca": "ETAPA 2",
+      "es": "ETAPA 2"
+    },
+    "3.0.a.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "3.1.a.0": {
+      "ca": "ETAPA 3",
+      "es": "ETAPA 3"
+    },
+    "4.2.a.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "4.3.a.0": {
+      "ca": "ETAPA 4",
+      "es": "ETAPA 4"
+    },
+    "6.1.a.0": {
+      "ca": "ETAPA 5",
+      "es": "ETAPA 5"
+    },
+    "6.2.a.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "6.3.a.0": {
+      "ca": "ETAPA 6",
+      "es": "ETAPA 6"
+    },
+    "6.3.g.1": {
+      "es": "ETAPA 6"
+    }
+  }
 }
 ;/*OV-END*/
 
@@ -3672,6 +4021,15 @@ function vidTitle(v, id) {
 function secName(si) {
   var o = OV.n && OV.n[si];
   if (o && o[LS.lang]) return esc(o[LS.lang]);
+  return D[si] ? D[si].n[LS.lang] : '';
+}
+function stageTagRaw(v, id) {
+  var o = OV.st && OV.st[id];
+  if (o && typeof o[LS.lang] === 'string' && o[LS.lang] !== '') return o[LS.lang];
+  if (isDocId(id)) return levelName(vidLevel(id));
+  var si = (v && v.si != null) ? v.si : parseInt(String(id).split('.')[0], 10);
+  var s = OV.n && OV.n[si];
+  if (s && s[LS.lang]) return s[LS.lang];
   return D[si] ? D[si].n[LS.lang] : '';
 }
 function vidDesc(v, id, b) {
@@ -4116,11 +4474,16 @@ function collectAll() {
       OV.h[i][k] = OV.h[i][k] || {};
       OV.h[i][k][LS.lang] = txt;
     });
-    document.querySelectorAll('[data-ovsid]').forEach(function (el) {
-      var si = el.dataset.ovsid, txt = el.innerText.trim();
-      OV.n = OV.n || {};
-      OV.n[si] = OV.n[si] || {};
-      OV.n[si][LS.lang] = txt;
+        document.querySelectorAll('[data-ovstid]').forEach(function (el) {
+      var id = el.dataset.ovstid, txt = el.innerText.trim();
+      if (!id) return;
+      OV.st = OV.st || {};
+      OV.st[id] = OV.st[id] || {};
+      if (txt) OV.st[id][LS.lang] = txt;
+      else {
+        delete OV.st[id][LS.lang];
+        if (!Object.keys(OV.st[id]).length) delete OV.st[id];
+      }
     });
   } finally {
     restoreAttrs(offF, 'data-fqi', 'data-fqk');
@@ -4134,6 +4497,12 @@ function stripAttrs(sel, a, b) {
     el.removeAttribute(a); el.removeAttribute(b);
   });
   return stash;
+}
+function restoreAttrs(stash, a, b) {
+  stash.forEach(function (s) {
+    if (s.a !== null) s.el.setAttribute(a, s.a);
+    if (s.b !== null) s.el.setAttribute(b, s.b);
+  });
 }
 function restoreAttrs(stash, a, b) {
   stash.forEach(function (s) {
@@ -4157,7 +4526,7 @@ function applyLinkLabel(row, id) {
   }
 }
 function applyEditState() {
-  document.querySelectorAll('.vt[data-ovid],.stagetag[data-ovsid],.faqtxt[data-fqi],.faq-item p[data-fqi],.appcard h3[data-ovaid],.appcard p[data-ovaid],.help-title[data-hi],.help-para[data-hi],.cel-title[data-ovaid],.cel-gift[data-ovaid],.gift-card h3[data-ovid],[data-appj]').forEach(function (el) {
+  document.querySelectorAll('.vt[data-ovid],.stagetag[data-ovstid],.faqtxt[data-fqi],.faq-item p[data-fqi],.appcard h3[data-ovaid],.appcard p[data-ovaid],.help-title[data-hi],.help-para[data-hi],.cel-title[data-ovaid],.cel-gift[data-ovaid],.gift-card h3[data-ovid],[data-appj]').forEach(function (el) {
     if (editModeOn) { el.contentEditable = 'true'; el.classList.add('editing'); }
     else { el.removeAttribute('contenteditable'); el.classList.remove('editing'); }
   });
@@ -4507,7 +4876,7 @@ function makeVid(v, id, track, tag) {
   var descTxt = isDoc ? (doc && doc.to ? (isCa ? 'Disponible fins al ' : 'Disponible hasta el ') + niceDate(doc.to) : (isCa ? 'Material de l\'itinerari' : 'Material del itinerario')) : '';
   var infoBtn = (hasPrep(id) || editModeOn) ? '<button class="vid-info-btn" data-info-id="' + id + '" title="' + L('Descripció del contingut del vídeo', 'Descripción del contenido del vídeo') + '"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>' : '';
 
-  row.innerHTML = (tag ? '<div class="stagetag" data-ovsid="' + (isNaN(si) ? 1 : si) + '" data-ovsk="n">' + esc(tag) + '</div>' : '') + dragHtml + impOnCard +
+  row.innerHTML = (tag ? '<div class="stagetag" data-ovstid="' + id + '">' + esc(tag) + '</div>' : '') + dragHtml + impOnCard +
     '<div style="position:relative" class="vr"><button class="play" title="' + (isDoc ? (isCa ? 'Obre el document' : 'Abre el documento') : (isCa ? 'Reprodueix' : 'Reproducir')) + '">' + playGlyph + '</button>' +
     '<div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div>' + infoBtn + docChip + impInRow + '</div>' +
     '<div class="acts">' +
@@ -4972,9 +5341,11 @@ function renderTrack() {
   } else if (next) {
     var now = document.createElement('div');
     now.className = 'now';
-    var secTxt = isDocId(next.id) ? levelName(vidLevel(next.id))
-      : ((OV.n && OV.n[next.si] && OV.n[next.si][LS.lang]) || (D[next.si] ? D[next.si].n[LS.lang] : levelName(vidLevel(next.id))));
+        var now = document.createElement('div');
+    now.className = 'now';
+    var secTxt = stageTagRaw(next, next.id) || levelName(vidLevel(next.id));
     now.innerHTML = '<div class="ctx">' + esc(secTxt) + ' · ' + levelName(lvl) + '</div>' +
+      '<div class="nowlbl">' + t().now + ' ' + (blockNames(lvl, LS.lang)[vidBlockById(next.id)] || '') + '</div>';
       '<div class="nowlbl">' + t().now + ' ' + (blockNames(lvl, LS.lang)[vidBlockById(next.id)] || '') + '</div>';
     now.appendChild(makeVid(next.v, next.id, true, ''));
     var med = now.querySelector('.imp-hero');
@@ -5172,9 +5543,7 @@ function renderFree() {
     } else bm.forEach(function (id) {
       var v = findVidById(id);
       if (!v) return;
-      var tg = isDocId(id) ? levelName(vidLevel(id))
-        : ((OV.n && OV.n[v.si] && OV.n[v.si][LS.lang]) || (D[v.si] ? D[v.si].n[LS.lang] : ''));
-      gb.appendChild(makeVid(v.v, id, false, tg));
+      gb.appendChild(makeVid(v.v, id, false, stageTagRaw(v, id)));
     });
     fv.appendChild(gb);
     return;
@@ -5220,8 +5589,9 @@ function renderFree() {
   ids.forEach(function (id) {
     var x = findVidById(id);
     if (!x || !x.v[li()]) return;
-    var tagTxt = isDocId(id) ? levelName(vidLevel(id)) : secName(x.si);
-    if (globalSearch) {
+    var own = OV.st && OV.st[id] && OV.st[id][LS.lang];
+    var tagTxt = stageTagRaw(x, id);
+    if (globalSearch && !own) {
       var ln = levelName(vidLevel(id));
       tagTxt = (ln && ln !== tagTxt) ? (ln + ' · ' + tagTxt) : tagTxt;
     }
@@ -7832,69 +8202,118 @@ document.addEventListener('keydown', function(e) {
 })();
 </script>
 <script>
-/* ═══ GJPS · ETAPES · mirall entre etiquetes germanes ═══ */
+/* ═══ GJPS · FINAL v3 · segell, theme-color, error guard (sense 🎒) ═══ */
 (function () {
   'use strict';
-  if (window.__gjStageMirror3) return; window.__gjStageMirror3 = true;
+  if (window.__gjFinal3) return;
+  window.__gjFinal3 = true;
+  var VER = 'vFinal · 20-11-26';
+
+  function editOn() {
+    if (window.editModeOn === true) return true;
+    var b = document.body, h = document.documentElement;
+    if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
+    if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
+    return false;
+  }
+  /* Neteja restes cosides per guardats anteriors (inclosos els 🎒 sense id) */
+  function purge() {
+    document.querySelectorAll('#gjFootLine,#gjFootBox,.gj-foot,#gjProgBtn,#gjProgScrim').forEach(function (n) { n.remove(); });
+    document.querySelectorAll('header button').forEach(function (b) {
+      if ((b.textContent || '').trim() === '🎒') b.remove();
+    });
+  }
+
+  var N = null;
+  function build() {
+    if (N) return;
+    var foot = document.createElement('div');
+    foot.id = 'gjFootBox'; foot.className = 'gj-foot';
+    var line = document.createElement('div');
+    line.id = 'gjFootLine';
+    line.textContent = VER + ' · Només emmagatzematge local al teu navegador · Solo almacenamiento local en tu navegador · Local storage only on your device.';
+    foot.appendChild(line); document.body.appendChild(foot);
+    N = { foot: foot };
+  }
+  function teardown() { if (!N) return; N.foot.remove(); N = null; }
+
+  purge();
+  var last = null;
+  setInterval(function () {
+    var on = editOn();
+    if (on === last) return;
+    last = on;
+    if (on) build(); else teardown();
+  }, 300);
+
+  if (typeof window.saveAsFile === 'function') {
+    var _save = window.saveAsFile;
+    window.saveAsFile = function () {
+      teardown();
+      try { return _save.apply(this, arguments); }
+      finally { if (editOn()) build(); }
+    };
+  }
+
+  (function () {
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+    function sync() {
+      var c = '#141210';
+      try { c = getComputedStyle(document.body).backgroundColor || c; } catch (e) {}
+      m.setAttribute('content', c);
+    }
+    sync();
+    new MutationObserver(function () { setTimeout(sync, 60); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    window.addEventListener('load', sync);
+  })();
+
+  (function () {
+    var shown = false;
+    window.addEventListener('error', function () {
+      if (shown) return; shown = true;
+      try { if (window.showToast) showToast('⚠️ Error intern detectat. Si persisteix: 5 clics al logo per reiniciar dades locals.'); } catch (e) {}
+    });
+    var logo = document.querySelector('header .wordmark, header h1, header .brand, .logo');
+    if (!logo) return;
+    var clicks = 0, t0 = 0;
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', function () {
+      var now = Date.now();
+      if (now - t0 > 2000) clicks = 0;
+      t0 = now; clicks++;
+      if (clicks >= 5) {
+        clicks = 0;
+        if (confirm('Reiniciar les dades locals d\'aquest navegador?\nEs perdrà el progrés desat en aquest dispositiu.')) {
+          try { localStorage.clear(); } catch (e) {}
+          location.reload();
+        }
+      }
+    });
+  })();
+})();
+</script>
+<script>
+/* ═══ GJPS · GUARDIÀ DE REPINTAT (recull abans de render) ═══ */
+(function () {
+  'use strict';
+  if (window.__gjRenderGuard2) return; window.__gjRenderGuard2 = true;
 
   function editing() {
     return window.editModeOn === true || document.body.classList.contains('editmode');
   }
-  function plain(el) {
-    var s = (el.innerText != null ? el.innerText : (el.textContent || ''));
-    return s.replace(/\u00a0/g, ' ').replace(/^\s+|\s+$/g, '');
-  }
-  /* Al bloc Repàs l'etiqueta mostra el nom del NIVELL, i en cerca global porta
-     el prefix «Nivell · ». En aquests contextos no s'ha de tocar OV.n. */
-  function offContext() {
-    return !!window.freeQuery || !!window.allVideosLoaded;
-  }
 
-  /* Mirall: en editar una etiqueta, totes les de la mateixa etapa s'igualen */
-  function sync(el) {
-    if (offContext()) return;
-    var si = el.getAttribute('data-ovsid');
-    if (si === null || si === '') return;
-    var txt = plain(el);
-    if (!txt) return;
-    window.OV = window.OV || {};
-    OV.n = OV.n || {};
-    OV.n[si] = OV.n[si] || {};
-    OV.n[si][LS.lang] = txt;
-    var all = document.querySelectorAll('.stagetag[data-ovsid="' + si + '"]');
-    for (var i = 0; i < all.length; i++) {
-      if (all[i] !== el && plain(all[i]) !== txt) all[i].innerText = txt;
-    }
-  }
-  document.addEventListener('input', function (e) {
-    if (!editing()) return;
-    var el = e.target && e.target.closest ? e.target.closest('.stagetag[data-ovsid]') : null;
-    if (el) sync(el);
-  }, true);
-  document.addEventListener('focusout', function (e) {
-    if (!editing()) return;
-    var el = e.target && e.target.closest ? e.target.closest('.stagetag[data-ovsid]') : null;
-    if (el) sync(el);
-  }, true);
-
-  /* Protecció extra: en Repàs o cerca global, collectAll no ha de llegir
-     les etiquetes (contenen el nom del nivell, no el de l'etapa). */
-  if (typeof window.collectAll === 'function') {
-    var _collect = window.collectAll;
-    window.collectAll = function () {
-      var stash = [];
-      if (offContext()) {
-        document.querySelectorAll('.stagetag[data-ovsid]').forEach(function (el) {
-          stash.push([el, el.getAttribute('data-ovsid')]);
-          el.removeAttribute('data-ovsid');
-        });
+  if (typeof window.render === 'function') {
+    var origRender = window.render;
+    window.render = function () {
+      if (editing() && typeof window.collectAll === 'function') {
+        try { window.collectAll(); } catch (e) {}
       }
-      try { return _collect.apply(this, arguments); }
-      finally {
-        stash.forEach(function (p) { p[0].setAttribute('data-ovsid', p[1]); });
-      }
+      return origRender.apply(this, arguments);
     };
   }
 })();
 </script>
+
+
 </body></html>
