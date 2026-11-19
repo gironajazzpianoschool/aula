@@ -1,13 +1,3 @@
-<!-- ═══════════════════════════════════════════════════════════════
-     GJPS · CHANGELOG
-     20-11-26 · vFinal (divendres, sentència) — Meta social/og, favicon + PWA
-       instal·lable, theme-color dinàmic, error guard + reinici ocult (5 clics
-       al logo), nota de privacitat, export/import progrés (🎒), focus-visible,
-       reduced-motion, segell de versió al peu (només mode edició).
-     19-11-26 · Apps v7: logos propis, reordenació ↑↓, Properament sense enllaç,
-       edició inline per idioma, alçades igualades, anti-flash de tema al mòbil.
-     (Afegeix una línia per cada canvi futur: dd-mm-aa · versió · què i per què.)
-     ═══════════════════════════════════════════════════════════════ -->
 <!DOCTYPE html>
 <html lang="ca" data-theme="dark" class="can-hover"><head>
 <script>
@@ -464,7 +454,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d0d0d">
+<meta name="theme-color" content="#e8e4d9">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Girona Jazz Piano School®</title>
@@ -2386,7 +2376,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GJPS">
-<link rel="manifest" href="manifest.webmanifest">
+
 </head>
 
 <body class="">
@@ -2399,19 +2389,19 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
     <h1 data-text="GIRONA JAZZ PIANO SCHOOL®">GIRONA JAZZ PIANO SCHOOL®</h1>
     <div class="userblock">
       <span id="who"></span>
-      <button id="btnUser" class="ubtn logoutbtn" title="Tanca sessió / Cerrar sesión">Logout</button>
+      <button id="btnUser" class="ubtn logoutbtn" data-tip="Tanca sessió / Cerrar sesión" aria-label="Tanca sessió / Cerrar sesión">Logout</button>
     </div>
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
-      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
+      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
       <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
-      <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="">FAQ</button>
+      <button id="mInfo" data-tip="Preguntas frecuentes" aria-label="Preguntas frecuentes" class="">FAQ</button>
     </span>
     <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
-    <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
+    <button id="mSearch" data-tip="Buscar vídeos" aria-label="Buscar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">ESP</span></button>
   </div>
 </header>
 
@@ -2430,7 +2420,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
       <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class=""></iframe>
       <div class="video-overlay" id="videoOverlay">
         <div class="icon">▶</div>
-        <div class="text" id="overlayText">Fes clic per reproduir</div>
+        <div class="text" id="overlayText">Haz clic para reproducir</div>
       </div>
     </div>
   </div>
@@ -2840,7 +2830,7 @@ var OV = /*OV-START*/
       "ca": "Notes al piano: Introducció Essencial"
     },
     "1.0.g.1": {
-      "es": "Claus musicals: Com Llegir i Col·locar Mans",
+      "es": "Claves musicales: Cómo Leer y Colocar las Manos",
       "ca": "Claus musicals: Com Llegir i Col·locar Mans"
     },
     "2.0.g.0": {
@@ -2880,7 +2870,8 @@ var OV = /*OV-START*/
       "ca": "Introducció a la Connexió de Tríades"
     },
     "1.0.r.0": {
-      "ca": "Pols i Tempo: Figures bàsiques"
+      "ca": "Pols i Tempo: Figures bàsiques",
+      "es": "Pulso y Tempo: Figuras básicas"
     },
     "1.2.r.0": {
       "ca": "Puntet, Lligadura de prolongació i Contratemps"
@@ -7969,4 +7960,4 @@ var VER = 'vFinal · 20-11-26';
     } catch (e) { alert('Codi no vàlid.'); }
   };
 })();
-</body></html>
+</body></html></script></body></html>
