@@ -1,3 +1,13 @@
+<!-- ═══════════════════════════════════════════════════════════════
+     GJPS · CHANGELOG
+     20-11-26 · vFinal (divendres, sentència) — Meta social/og, favicon + PWA
+       instal·lable, theme-color dinàmic, error guard + reinici ocult (5 clics
+       al logo), nota de privacitat, export/import progrés (🎒), focus-visible,
+       reduced-motion, segell de versió al peu (només mode edició).
+     19-11-26 · Apps v7: logos propis, reordenació ↑↓, Properament sense enllaç,
+       edició inline per idioma, alçades igualades, anti-flash de tema al mòbil.
+     (Afegeix una línia per cada canvi futur: dd-mm-aa · versió · què i per què.)
+     ═══════════════════════════════════════════════════════════════ -->
 <!DOCTYPE html>
 <html lang="ca" data-theme="dark" class="can-hover"><head>
 <script>
@@ -2352,7 +2362,31 @@ html[data-theme="dark"] .now .play {
 .appgrid .appcard .appgo { margin-top: auto; }
 .appgrid .appcard .appadm { margin-top: 14px; }
 
+/* ═══ FINAL · accessibilitat: focus visible i moviment reduït ═══ */
+:focus-visible { outline: 2px solid var(--gold, #e8b04b); outline-offset: 2px; border-radius: 6px; }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible,
+.vcard:focus-visible, .appcard:focus-visible { outline: 2px solid var(--gold, #e8b04b); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; scroll-behavior: auto !important; }
+}
+.gj-foot { text-align: center; padding: 18px 16px 26px; color: var(--mut, #8a8078); font-size: 11px; line-height: 1.6; }
 </style>
+<!-- ═══ FINAL · social, icones, PWA ═══ -->
+<meta name="description" content="Girona Jazz Piano School® · Aula online: blocs de vídeos, seguiment continuat i entrenament auditiu.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Girona Jazz Piano School®">
+<meta property="og:description" content="Aula online de piano jazz: vídeos per blocs, seguiment continuat i entrenament auditiu.">
+<!-- Quan el web estigui publicat, substitueix EL-TEU-DOMINI pel domini real: -->
+<meta property="og:image" content="https://EL-TEU-DOMINI/img/LOGO.png">
+<meta property="og:url" content="https://EL-TEU-DOMINI/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="img/LOGO.png">
+<link rel="apple-touch-icon" href="img/LOGO.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GJPS">
+<link rel="manifest" href="manifest.webmanifest">
 </head>
 
 <body class="">
@@ -2437,7 +2471,7 @@ html[data-theme="dark"] .now .play {
 
 <button id="mEdit" data-tip="Mode edició" aria-label="Mode edició" class="">⚙️</button>
 <button id="mSave" data-tip="Guardar" aria-label="Guardar" class="">💾</button>
-<div id="appVer">GJPS v6.0 (2026-11-17)</div>
+<div id="appVer">GJPS v6.0 (20-11-2026)</div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2471,7 +2505,7 @@ function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { r
 function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
 function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSON.parse(r); } catch (e) { return def; } }
 
-var APP_VERSION = '6.0', APP_BUILD = '2026-11-17';
+var APP_VERSION = '6.0', APP_BUILD = '20-11-2026';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 
 function loadSkip() {
@@ -7802,5 +7836,137 @@ document.addEventListener('keydown', function(e) {
   mo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['title'] });
 })();
 </script>
+<script>
+/* ═══ GJPS · FINAL v1 · segell, theme-color, error guard, progrés portable ═══ */
+(function () {
+'use strict';
+if (window.__gjFinal1) return; window.__gjFinal1 = true;
+var VER = 'vFinal · 20-11-26';
 
+/* ── Segell de versió + nota de privacitat: només visible en mode edició ── */
+(function () {
+  var created = false;
+  var foot = document.querySelector('footer') || document.querySelector('.foot') || document.querySelector('#foot');
+  if (!foot) { foot = document.createElement('div'); foot.className = 'gj-foot'; created = true; document.body.appendChild(foot); }
+  var line = document.createElement('div');
+  line.id = 'gjFootLine';
+  line.style.cssText = 'margin-top:6px;font-size:11px;opacity:.7;letter-spacing:.04em;display:none;';
+  line.textContent = VER + ' · Només emmagatzematge local al teu navegador · Solo almacenamiento local en tu navegador · Local storage only on your device.';
+  foot.appendChild(line);
+  function editOn() {
+    if (window.editModeOn === true) return true;
+    var b = document.body, h = document.documentElement;
+    if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
+    if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
+    return false;
+  }
+  var last = null;
+  setInterval(function () {
+    var on = editOn();
+    if (on !== last) {
+      last = on;
+      line.style.display = on ? '' : 'none';
+      if (created) foot.style.display = on ? '' : 'none';
+    }
+  }, 400);
+})();
+
+/* ── theme-color dinàmic (barra del navegador a joc amb el tema) ── */
+(function () {
+  var m = document.querySelector('meta[name="theme-color"]');
+  if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  function sync() {
+    var c = '#141210';
+    try { c = getComputedStyle(document.body).backgroundColor || c; } catch (e) {}
+    m.setAttribute('content', c);
+  }
+  sync();
+  new MutationObserver(function () { setTimeout(sync, 60); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  window.addEventListener('load', sync);
+})();
+
+/* ── Error guard + reinici ocult (5 clics seguits al logo) ── */
+(function () {
+  var shown = false;
+  window.addEventListener('error', function () {
+    if (shown) return; shown = true;
+    try { if (window.showToast) showToast('⚠️ Error intern detectat. Si persisteix: 5 clics al logo per reiniciar dades locals.'); } catch (e) {}
+  });
+  var logo = document.querySelector('header .wordmark, header h1, header .brand, .logo');
+  if (!logo) return;
+  var clicks = 0, t0 = 0;
+  logo.style.cursor = 'pointer';
+  logo.addEventListener('click', function () {
+    var now = Date.now();
+    if (now - t0 > 2000) clicks = 0;
+    t0 = now; clicks++;
+    if (clicks >= 5) {
+      clicks = 0;
+      if (confirm('Reiniciar les dades locals d\'aquest navegador?\nEs perdrà el progrés desat en aquest dispositiu.')) {
+        try { localStorage.clear(); } catch (e) {}
+        location.reload();
+      }
+    }
+  });
+})();
+
+/* ── Progrés portable: exportar / importar (botó 🎒 a la capçalera) ── */
+(function () {
+  var header = document.querySelector('header');
+  if (!header) return;
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.textContent = '🎒';
+  btn.title = 'El meu progrés (copia\'l o restaura\'l)';
+  btn.setAttribute('aria-label', 'El meu progrés');
+  btn.style.cssText = 'width:38px;height:38px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--card,#141210);color:var(--ink,#eee);cursor:pointer;display:none;font-size:16px;line-height:1;flex:none;';
+  header.appendChild(btn);
+  var scrim = document.createElement('div');
+  scrim.style.cssText = 'position:fixed;inset:0;z-index:9995;background:rgba(4,3,8,.8);backdrop-filter:blur(6px);display:none;place-items:center;padding:18px;';
+  scrim.innerHTML = '<div style="width:min(560px,96vw);max-height:90vh;overflow:auto;background:var(--card,#141210);border:1px solid var(--hair-2,#3a332c);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">' +
+    '<h3 style="font-size:16px;font-weight:900;">El meu progrés</h3>' +
+    '<p style="font-size:12px;opacity:.75;line-height:1.5;">Prem «Genera codi» i copia\'l per emportar-te el progrés a un altre dispositiu. O enganxa aquí un codi i prem «Restaura» per recuperar-lo en aquest.</p>' +
+    '<textarea id="gjProgCode" rows="6" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--bg,#0c0a09);color:var(--ink,#eee);font:600 11px/1.4 monospace;"></textarea>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+    '<button id="gjProgGen" class="btn">Genera codi</button>' +
+    '<button id="gjProgCopy" class="btn">Copia</button>' +
+    '<button id="gjProgLoad" class="btn" style="margin-left:auto;">Restaura</button>' +
+    '<button id="gjProgX" class="btn">Tanca</button></div></div>';
+  document.body.appendChild(scrim);
+  function editOn() {
+    if (window.editModeOn === true) return true;
+    var b = document.body, h = document.documentElement;
+    if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
+    if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
+    return false;
+  }
+  var lastV = null;
+  setInterval(function () {
+    var on = editOn();
+    if (on !== lastV) { lastV = on; btn.style.display = on ? 'block' : 'none'; }
+  }, 400);
+  btn.onclick = function () { scrim.style.display = 'grid'; };
+  scrim.onclick = function (e) { if (e.target === scrim) scrim.style.display = 'none'; };
+  scrim.querySelector('#gjProgX').onclick = function () { scrim.style.display = 'none'; };
+  scrim.querySelector('#gjProgGen').onclick = function () {
+    var data = {};
+    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); data[k] = localStorage.getItem(k); }
+    scrim.querySelector('#gjProgCode').value = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  };
+  scrim.querySelector('#gjProgCopy').onclick = function () {
+    var ta = scrim.querySelector('#gjProgCode');
+    if (!ta.value) scrim.querySelector('#gjProgGen').click();
+    ta.select(); try { document.execCommand('copy'); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(ta.value);
+  };
+  scrim.querySelector('#gjProgLoad').onclick = function () {
+    var code = scrim.querySelector('#gjProgCode').value.trim();
+    if (!code) return;
+    try {
+      var data = JSON.parse(decodeURIComponent(escape(atob(code))));
+      if (!confirm('Això substituirà el progrés d\'aquest dispositiu. Continuar?')) return;
+      Object.keys(data).forEach(function (k) { localStorage.setItem(k, data[k]); });
+      location.reload();
+    } catch (e) { alert('Codi no vàlid.'); }
+  };
+})();
 </body></html>
