@@ -7830,134 +7830,137 @@ document.addEventListener('keydown', function(e) {
 <script>
 /* ═══ GJPS · FINAL v1 · segell, theme-color, error guard, progrés portable ═══ */
 (function () {
-'use strict';
-if (window.__gjFinal1) return; window.__gjFinal1 = true;
-var VER = 'vFinal · 20-11-26';
+  'use strict';
+  if (window.__gjFinal1) return; 
+  window.__gjFinal1 = true;
+  var VER = 'vFinal · 20-11-26';
 
-/* ── Segell de versió + nota de privacitat: només visible en mode edició ── */
-(function () {
-  var created = false;
-  var foot = document.querySelector('footer') || document.querySelector('.foot') || document.querySelector('#foot');
-  if (!foot) { foot = document.createElement('div'); foot.className = 'gj-foot'; created = true; document.body.appendChild(foot); }
-  var line = document.createElement('div');
-  line.id = 'gjFootLine';
-  line.style.cssText = 'margin-top:6px;font-size:11px;opacity:.7;letter-spacing:.04em;display:none;';
-  line.textContent = VER + ' · Només emmagatzematge local al teu navegador · Solo almacenamiento local en tu navegador · Local storage only on your device.';
-  foot.appendChild(line);
-  function editOn() {
-    if (window.editModeOn === true) return true;
-    var b = document.body, h = document.documentElement;
-    if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
-    if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
-    return false;
-  }
-  var last = null;
-  setInterval(function () {
-    var on = editOn();
-    if (on !== last) {
-      last = on;
-      line.style.display = on ? '' : 'none';
-      if (created) foot.style.display = on ? '' : 'none';
+  /* ── Segell de versió + nota de privacitat: només visible en mode edició ── */
+  (function () {
+    var created = false;
+    var foot = document.querySelector('footer') || document.querySelector('.foot') || document.querySelector('#foot');
+    if (!foot) { foot = document.createElement('div'); foot.className = 'gj-foot'; created = true; document.body.appendChild(foot); }
+    var line = document.createElement('div');
+    line.id = 'gjFootLine';
+    line.style.cssText = 'margin-top:6px;font-size:11px;opacity:.7;letter-spacing:.04em;display:none;';
+    line.textContent = VER + ' · Només emmagatzematge local al teu navegador · Solo almacenamiento local en tu navegador · Local storage only on your device.';
+    foot.appendChild(line);
+    function editOn() {
+      if (window.editModeOn === true) return true;
+      var b = document.body, h = document.documentElement;
+      if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
+      if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
+      return false;
     }
-  }, 400);
-})();
-
-/* ── theme-color dinàmic (barra del navegador a joc amb el tema) ── */
-(function () {
-  var m = document.querySelector('meta[name="theme-color"]');
-  if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
-  function sync() {
-    var c = '#141210';
-    try { c = getComputedStyle(document.body).backgroundColor || c; } catch (e) {}
-    m.setAttribute('content', c);
-  }
-  sync();
-  new MutationObserver(function () { setTimeout(sync, 60); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  window.addEventListener('load', sync);
-})();
-
-/* ── Error guard + reinici ocult (5 clics seguits al logo) ── */
-(function () {
-  var shown = false;
-  window.addEventListener('error', function () {
-    if (shown) return; shown = true;
-    try { if (window.showToast) showToast('⚠️ Error intern detectat. Si persisteix: 5 clics al logo per reiniciar dades locals.'); } catch (e) {}
-  });
-  var logo = document.querySelector('header .wordmark, header h1, header .brand, .logo');
-  if (!logo) return;
-  var clicks = 0, t0 = 0;
-  logo.style.cursor = 'pointer';
-  logo.addEventListener('click', function () {
-    var now = Date.now();
-    if (now - t0 > 2000) clicks = 0;
-    t0 = now; clicks++;
-    if (clicks >= 5) {
-      clicks = 0;
-      if (confirm('Reiniciar les dades locals d\'aquest navegador?\nEs perdrà el progrés desat en aquest dispositiu.')) {
-        try { localStorage.clear(); } catch (e) {}
-        location.reload();
+    var last = null;
+    setInterval(function () {
+      var on = editOn();
+      if (on !== last) {
+        last = on;
+        line.style.display = on ? '' : 'none';
+        if (created) foot.style.display = on ? '' : 'none';
       }
-    }
-  });
-})();
+    }, 400);
+  })();
 
-/* ── Progrés portable: exportar / importar (botó 🎒 a la capçalera) ── */
-(function () {
-  var header = document.querySelector('header');
-  if (!header) return;
-  var btn = document.createElement('button');
-  btn.type = 'button'; btn.textContent = '🎒';
-  btn.title = 'El meu progrés (copia\'l o restaura\'l)';
-  btn.setAttribute('aria-label', 'El meu progrés');
-  btn.style.cssText = 'width:38px;height:38px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--card,#141210);color:var(--ink,#eee);cursor:pointer;display:none;font-size:16px;line-height:1;flex:none;';
-  header.appendChild(btn);
-  var scrim = document.createElement('div');
-  scrim.style.cssText = 'position:fixed;inset:0;z-index:9995;background:rgba(4,3,8,.8);backdrop-filter:blur(6px);display:none;place-items:center;padding:18px;';
-  scrim.innerHTML = '<div style="width:min(560px,96vw);max-height:90vh;overflow:auto;background:var(--card,#141210);border:1px solid var(--hair-2,#3a332c);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">' +
-    '<h3 style="font-size:16px;font-weight:900;">El meu progrés</h3>' +
-    '<p style="font-size:12px;opacity:.75;line-height:1.5;">Prem «Genera codi» i copia\'l per emportar-te el progrés a un altre dispositiu. O enganxa aquí un codi i prem «Restaura» per recuperar-lo en aquest.</p>' +
-    '<textarea id="gjProgCode" rows="6" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--bg,#0c0a09);color:var(--ink,#eee);font:600 11px/1.4 monospace;"></textarea>' +
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
-    '<button id="gjProgGen" class="btn">Genera codi</button>' +
-    '<button id="gjProgCopy" class="btn">Copia</button>' +
-    '<button id="gjProgLoad" class="btn" style="margin-left:auto;">Restaura</button>' +
-    '<button id="gjProgX" class="btn">Tanca</button></div></div>';
-  document.body.appendChild(scrim);
-  function editOn() {
-    if (window.editModeOn === true) return true;
-    var b = document.body, h = document.documentElement;
-    if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
-    if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
-    return false;
-  }
-  var lastV = null;
-  setInterval(function () {
-    var on = editOn();
-    if (on !== lastV) { lastV = on; btn.style.display = on ? 'block' : 'none'; }
-  }, 400);
-  btn.onclick = function () { scrim.style.display = 'grid'; };
-  scrim.onclick = function (e) { if (e.target === scrim) scrim.style.display = 'none'; };
-  scrim.querySelector('#gjProgX').onclick = function () { scrim.style.display = 'none'; };
-  scrim.querySelector('#gjProgGen').onclick = function () {
-    var data = {};
-    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); data[k] = localStorage.getItem(k); }
-    scrim.querySelector('#gjProgCode').value = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  };
-  scrim.querySelector('#gjProgCopy').onclick = function () {
-    var ta = scrim.querySelector('#gjProgCode');
-    if (!ta.value) scrim.querySelector('#gjProgGen').click();
-    ta.select(); try { document.execCommand('copy'); } catch (e) {}
-    if (navigator.clipboard) navigator.clipboard.writeText(ta.value);
-  };
-  scrim.querySelector('#gjProgLoad').onclick = function () {
-    var code = scrim.querySelector('#gjProgCode').value.trim();
-    if (!code) return;
-    try {
-      var data = JSON.parse(decodeURIComponent(escape(atob(code))));
-      if (!confirm('Això substituirà el progrés d\'aquest dispositiu. Continuar?')) return;
-      Object.keys(data).forEach(function (k) { localStorage.setItem(k, data[k]); });
-      location.reload();
-    } catch (e) { alert('Codi no vàlid.'); }
-  };
+  /* ── theme-color dinàmic (barra del navegador a joc amb el tema) ── */
+  (function () {
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+    function sync() {
+      var c = '#141210';
+      try { c = getComputedStyle(document.body).backgroundColor || c; } catch (e) {}
+      m.setAttribute('content', c);
+    }
+    sync();
+    new MutationObserver(function () { setTimeout(sync, 60); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    window.addEventListener('load', sync);
+  })();
+
+  /* ── Error guard + reinici ocult (5 clics seguits al logo) ── */
+  (function () {
+    var shown = false;
+    window.addEventListener('error', function () {
+      if (shown) return; shown = true;
+      try { if (window.showToast) showToast('⚠️ Error intern detectat. Si persisteix: 5 clics al logo per reiniciar dades locals.'); } catch (e) {}
+    });
+    var logo = document.querySelector('header .wordmark, header h1, header .brand, .logo');
+    if (!logo) return;
+    var clicks = 0, t0 = 0;
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', function () {
+      var now = Date.now();
+      if (now - t0 > 2000) clicks = 0;
+      t0 = now; clicks++;
+      if (clicks >= 5) {
+        clicks = 0;
+        if (confirm('Reiniciar les dades locals d\'aquest navegador?\nEs perdrà el progrés desat en aquest dispositiu.')) {
+          try { localStorage.clear(); } catch (e) {}
+          location.reload();
+        }
+      }
+    });
+  })();
+
+  /* ── Progrés portable: exportar / importar (botó 🎒 a la capçalera) ── */
+  (function () {
+    var header = document.querySelector('header');
+    if (!header) return;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.textContent = '🎒';
+    btn.title = 'El meu progrés (copia\'l o restaura\'l)';
+    btn.setAttribute('aria-label', 'El meu progrés');
+    btn.style.cssText = 'width:38px;height:38px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--card,#141210);color:var(--ink,#eee);cursor:pointer;display:none;font-size:16px;line-height:1;flex:none;';
+    header.appendChild(btn);
+    var scrim = document.createElement('div');
+    scrim.style.cssText = 'position:fixed;inset:0;z-index:9995;background:rgba(4,3,8,.8);backdrop-filter:blur(6px);display:none;place-items:center;padding:18px;';
+    scrim.innerHTML = '<div style="width:min(560px,96vw);max-height:90vh;overflow:auto;background:var(--card,#141210);border:1px solid var(--hair-2,#3a332c);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">' +
+      '<h3 style="font-size:16px;font-weight:900;">El meu progrés</h3>' +
+      '<p style="font-size:12px;opacity:.75;line-height:1.5;">Prem «Genera codi» i copia\'l per emportar-te el progrés a un altre dispositiu. O enganxa aquí un codi i prem «Restaura» per recuperar-lo en aquest.</p>' +
+      '<textarea id="gjProgCode" rows="6" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--hair-2,#3a332c);background:var(--bg,#0c0a09);color:var(--ink,#eee);font:600 11px/1.4 monospace;"></textarea>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+      '<button id="gjProgGen" class="btn">Genera codi</button>' +
+      '<button id="gjProgCopy" class="btn">Copia</button>' +
+      '<button id="gjProgLoad" class="btn" style="margin-left:auto;">Restaura</button>' +
+      '<button id="gjProgX" class="btn">Tanca</button></div></div>';
+    document.body.appendChild(scrim);
+    function editOn() {
+      if (window.editModeOn === true) return true;
+      var b = document.body, h = document.documentElement;
+      if (b && (b.classList.contains('edit-on') || b.classList.contains('editmode') || b.classList.contains('edit'))) return true;
+      if (h && (h.classList.contains('edit-on') || (h.dataset && h.dataset.edit === '1'))) return true;
+      return false;
+    }
+    var lastV = null;
+    setInterval(function () {
+      var on = editOn();
+      if (on !== lastV) { lastV = on; btn.style.display = on ? 'block' : 'none'; }
+    }, 400);
+    btn.onclick = function () { scrim.style.display = 'grid'; };
+    scrim.onclick = function (e) { if (e.target === scrim) scrim.style.display = 'none'; };
+    scrim.querySelector('#gjProgX').onclick = function () { scrim.style.display = 'none'; };
+    scrim.querySelector('#gjProgGen').onclick = function () {
+      var data = {};
+      for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); data[k] = localStorage.getItem(k); }
+      scrim.querySelector('#gjProgCode').value = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    };
+    scrim.querySelector('#gjProgCopy').onclick = function () {
+      var ta = scrim.querySelector('#gjProgCode');
+      if (!ta.value) scrim.querySelector('#gjProgGen').click();
+      ta.select(); try { document.execCommand('copy'); } catch (e) {}
+      if (navigator.clipboard) navigator.clipboard.writeText(ta.value);
+    };
+    scrim.querySelector('#gjProgLoad').onclick = function () {
+      var code = scrim.querySelector('#gjProgCode').value.trim();
+      if (!code) return;
+      try {
+        var data = JSON.parse(decodeURIComponent(escape(atob(code))));
+        if (!confirm('Això substituirà el progrés d\'aquest dispositiu. Continuar?')) return;
+        Object.keys(data).forEach(function (k) { localStorage.setItem(k, data[k]); });
+        location.reload();
+      } catch (e) { alert('Codi no vàlid.'); }
+    };
+  })();
 })();
-</body></html></script></body></html>
+</script>
+</body></html>
