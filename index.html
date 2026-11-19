@@ -463,6 +463,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<script>
+/* ═══ Anti-flash: aplica el tema desat abans del primer pintat ═══ */
+(function () {
+  var d = document.documentElement, t = null;
+  try {
+    t = localStorage.getItem('gjps_theme');
+    if (!t) {
+      var ls = localStorage.getItem('gjps_ls');
+      if (ls) { var o = JSON.parse(ls); t = (o && (o.theme || o.tema)) || null; }
+    }
+    if (!t) t = localStorage.getItem('theme');
+  } catch (e) {}
+  if (t) d.setAttribute('data-theme', t);
+})();
+</script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
    GJPS · GIRONA JAZZ PIANO SCHOOL® · CSS CONSOLIDAT v6.0
