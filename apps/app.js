@@ -2070,11 +2070,12 @@ syncEmotionText();
 
 console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
 
-/* ══ 24. FIX v69 · iPad-safe · mantenir tecla = pedal sustain (decaïment natural) ══ */
+/* ══ 24. FIX v70 · iPad-safe · mantenir=pedal + drone reforçat + battle net ══ */
 (function(){
   'use strict';
-  function safe(fn){ try{ fn(); }catch(e){ if(window.console) console.warn('[TE v69]', e); } }
+  function safe(fn){ try{ fn(); }catch(e){ if(window.console) console.warn('[TE v70]', e); } }
 
+  /* ── 24.1 mantenir tecla = pedal sustain ── */
   safe(function(){
     function manualHeldMidi(midiNote){
       var held=false;
@@ -2124,23 +2125,101 @@ console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
       });
       activeOscillators[midiNote]={oscillators:oscillators,masterGain:masterGain};
     };
-  });
-
-  safe(function(){
     var origActivate=activateManualNote;
     activateManualNote=function(d, exclusive, octUp){
       origActivate(d, exclusive, octUp);
       var b=document.querySelector('.manual-btn[data-degree="'+d+'"]');
       if(b && b._safetyTimeout){ clearTimeout(b._safetyTimeout); b._safetyTimeout=null; }
     };
-  });
-
-  safe(function(){
     function rel(){ try{ releaseAllManualNotes(); numHeld={}; }catch(e){} }
     window.addEventListener('blur', rel);
     document.addEventListener('visibilitychange', function(){ if(document.hidden) rel(); });
   });
 
+  /* ── 24.2 DRONE reforçat (laboratori audible davant del piano) ── */
+  var DRONE_BOOST=2.8;
+  safe(function(){
+    startTonicPedal=function(){
+      var ctx=getSharedCtx();
+      var oct=currentKeyRoot<=5?36:24;
+      var freq=midiToFreq(currentKeyRoot+oct);
+      var now=ctx.currentTime;
+      tonicPedalMasterGain=ctx.createGain();
+      tonicPedalMasterGain.gain.setValueAtTime(0,now);
+      tonicPedalMasterGain.gain.linearRampToValueAtTime(1,now+2);
+      tonicPedalMasterGain.connect(ctx.destination);
+      tonicPedalFilter=ctx.createBiquadFilter();
+      tonicPedalFilter.type='lowpass'; tonicPedalFilter.frequency.value=4000; tonicPedalFilter.Q.value=0.5;
+      var bb=ctx.createBiquadFilter(); bb.type='lowshelf'; bb.frequency.value=200; bb.gain.value=6;
+      bb.connect(tonicPedalFilter); tonicPedalFilter.connect(tonicPedalMasterGain);
+      tonicPedalOscs=[]; tonicPedalGains=[];
+      [{t:'sawtooth',d:0,g:0.4},{t:'triangle',d:0,g:0.35},{t:'sine',d:0,g:0.25}].forEach(function(cfg){
+        var o=ctx.createOscillator(); var g=ctx.createGain();
+        o.type=cfg.t; o.frequency.value=freq; o.detune.value=cfg.d;
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(pedalVolume*cfg.g*DRONE_BOOST,now+2);
+        g._cfg=cfg.g;
+        o.connect(g); g.connect(bb); o.start(now);
+        tonicPedalOscs.push(o); tonicPedalGains.push(g);
+      });
+    };
+    var origVol=updatePedalVolumeDirect;
+    updatePedalVolumeDirect=function(v){
+      origVol(v);
+      if(tonicPedalGains&&tonicPedalGains.length&&sharedCtx){
+        var now=sharedCtx.currentTime;
+        tonicPedalGains.forEach(function(g){
+          var per=pedalVolume*(g._cfg||0.33)*DRONE_BOOST;
+          g.gain.cancelScheduledValues(now);
+          g.gain.setValueAtTime(g.gain.value,now);
+          g.gain.linearRampToValueAtTime(per,now+0.1);
+        });
+      }
+    };
+  });
+
+  /* ── 24.3 BATTLE: la imatge de la resposta mai deixa residus a la caixa rival ── */
+  safe(function(){
+    var origShow=showProposedAnswer;
+    showProposedAnswer=function(pc){
+      if(battleMode){
+        var other=(battleCurrentPlayer===1)?p2AnswerImage:p1AnswerImage;
+        if(other){ other.classList.remove('visible'); }
+      }
+      origShow(pc);
+    };
+  });
+
+  /* ── 24.4 Tablet: amaga rètols de teclat físic ── */
+  safe(function(){
+    if(!IS_TABLET) return;
+    var st=document.createElement('style');
+    st.textContent='html.tablet-mode .battle-hint,html.tablet-mode #sustain-hint{display:none !important;}';
+    document.head.appendChild(st);
+    var RX=/prem\s+(intro|enter)|pulsa\s+(intro|enter)|press\s+(enter|intro)|intro per continuar|enter to continue/i;
+    function hide(root){
+      if(!root||!root.querySelectorAll) return;
+      var list=[root]; var all=root.querySelectorAll('*');
+      for(var i=0;i<all.length;i++) list.push(all[i]);
+      for(var j=0;j<list.length;j++){
+        var n=list[j];
+        if(n.nodeType!==1||n.children.length) continue;
+        if(RX.test(n.textContent||'')) n.style.display='none';
+      }
+    }
+    hide(document.body);
+    if(window.MutationObserver){
+      new MutationObserver(function(muts){
+        for(var i=0;i<muts.length;i++){
+          var m=muts[i];
+          if(m.type==='characterData'){ var p=m.target.parentElement; if(p&&RX.test(p.textContent||'')) p.style.display='none'; continue; }
+          for(var k=0;k<m.addedNodes.length;k++){ if(m.addedNodes[k].nodeType===1) hide(m.addedNodes[k]); }
+        }
+      }).observe(document.body,{childList:true,subtree:true,characterData:true});
+    }
+  });
+
+  /* ── 24.5 Crash en desar disposició ── */
   safe(function(){
     applyPositionsFrom=function(data){
       var vw=virtualWidth(); var src=data||noteData;
@@ -2152,5 +2231,5 @@ console.log('🎹 TONAL EMOTIONS v60 carregat (fitxer únic consolidat).');
     };
   });
 
-  if(window.console) console.log('🎹 TONAL EMOTIONS v69 · iPad-safe · mantenir=pedal.');
+  if(window.console) console.log('🎹 TONAL EMOTIONS v70 · drone reforçat + battle net.');
 })();
