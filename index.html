@@ -454,7 +454,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#e8e4d9">
+<meta name="theme-color" content="#0d0d0d">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Girona Jazz Piano School®</title>
@@ -2340,22 +2340,22 @@ html[data-theme="dark"] .now .play {
   </div>
   <div class="hdr">
     <span class="modes">
-      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
-      <button id="mFree" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
-      <button id="mApps" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
-      <button id="mInfo" data-tip="Preguntas frecuentes" aria-label="Preguntas frecuentes" title="Preguntas frecuentes">FAQ</button>
+      <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
+      <button id="mFree" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+      <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
+      <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="">FAQ</button>
     </span>
     <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
-    <button id="mSearch" title="Buscar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">ESP</span></button>
+    <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
 
 <main>
   <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: none;"></div>
-  <div id="appsView" style="display: block;"></div>
-  <div id="infoView" style="display:none"></div>
+  <div id="freeView" style="display: block;"></div>
+  <div id="appsView" style="display: none;"></div>
+  <div id="infoView" style="display: none;"></div>
   <div id="helpView" style="display: none;"></div>
 </main>
 
@@ -2366,7 +2366,7 @@ html[data-theme="dark"] .now .play {
       <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class=""></iframe>
       <div class="video-overlay" id="videoOverlay">
         <div class="icon">▶</div>
-        <div class="text" id="overlayText">Haz clic para reproducir</div>
+        <div class="text" id="overlayText">Fes clic per reproduir</div>
       </div>
     </div>
   </div>
@@ -2406,7 +2406,7 @@ html[data-theme="dark"] .now .play {
 </div>
 
 <button id="mEdit" data-tip="Mode edició" aria-label="Mode edició" class="">⚙️</button>
-<button id="mSave" data-tip="Guardar" aria-label="Guardar" class="" title="Guardar">💾</button>
+<button id="mSave" data-tip="Guardar" aria-label="Guardar" class="">💾</button>
 <div id="appVer">GJPS v6.0 (2026-11-17)</div>
 
 <script>
@@ -3192,8 +3192,8 @@ var OV = /*OV-START*/
         "ca": "TONAL EMOTIONS"
       },
       "d": {
-        "es": "App exclusiva desarrollada en base al método utilizado en el bloque de entrenamiento auditivo del Nivel Fundamental. Password de acceso: \"musica\"",
-        "ca": "App d'entrenament auditiu basada en el mètode del bloc auditiu del Nivell Fonamental. Password d'accés: \"musica\""
+        "es": "App exclusiva desarrollada en base al método del bloque de entrenamiento auditivo del Nivel 1. Password de acceso: \"musica\"",
+        "ca": "App exclusiva desenvolupada segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 1. Password d'accés: \"musica\""
       }
     },
     "1": {
@@ -3203,7 +3203,7 @@ var OV = /*OV-START*/
       },
       "d": {
         "ca": "S'explica el funcionament d'una  extensió de Chrome que permet fer Loops, baixar la velocitat i modificar l'afinació a vídeos de YouTube.",
-        "es": "Se explica el funcionamiento de una de una extensión de Chrome que permite hacer Loops, bajar la velocidad y modificar la afinación a videos de YouTube."
+        "es": "Se explica el funcionamiento de una extensión de Chrome que permite hacer Loops y modificar velocidad y afinación a videos de YouTube."
       }
     }
   },
@@ -3540,7 +3540,24 @@ var OV = /*OV-START*/
     "6.3.g.0": "g",
     "6.3.g.1": "g"
   },
-  "apps": [],
+  "apps": [
+    {
+      "id": "umwmu4e7rh1ma",
+      "kind": "app",
+      "e": "🎬",
+      "src": "",
+      "url": "",
+      "logo": "img/logo.png",
+      "n": {
+        "ca": "CHORD EMOTIONS",
+        "es": "CHORD EMOTIONS"
+      },
+      "d": {
+        "ca": "App exclusiva que es desenvoluparà segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 2. Actualment en construcció.",
+        "es": "App exclusiva desarrollada en base al método del bloque de entrenamiento auditivo del Nivel 2. Actualmente en construcción."
+      }
+    }
+  ],
   "am": {},
   "dx": {
     "1.0.g.0": {
@@ -3548,7 +3565,12 @@ var OV = /*OV-START*/
       "es": "Aquí es donde podré editar la descripción del video en el modo edición con las credenciales admin.\nEspero que funcione correcamente!"
     }
   },
-  "rec": {}
+  "rec": {},
+  "aorder": [
+    "0",
+    "umwmu4e7rh1ma",
+    "1"
+  ]
 }
 ;/*OV-END*/
 
@@ -7063,15 +7085,31 @@ console.log('🗂 GJPS v6.0 · gestor actiu · idioma ' + LS.lang.toUpperCase() 
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   GJPS · 17. APPS AMB VÍDEOS (targeta gran, Drive o YouTube)
+   GJPS · 17. APPS AMB VÍDEOS v7 (reordenació total, logos propis, properament)
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
 'use strict';
-if (window.__gjApps6) return;
-window.__gjApps6 = true;
+if (window.__gjApps7) return;
+window.__gjApps7 = true;
 
 OV.apps = Array.isArray(OV.apps) ? OV.apps : [];
 OV.am = OV.am && typeof OV.am === 'object' ? OV.am : {};
+OV.aorder = Array.isArray(OV.aorder) ? OV.aorder : [];
+
+/* ids estables per a targetes creades + migració de claus antigues u0,u1… */
+(function migrate() {
+  var remap = {};
+  OV.apps.forEach(function (a, j) {
+    if (!a.id) {
+      var old = 'u' + j;
+      a.id = 'u' + Date.now().toString(36) + j + Math.random().toString(36).slice(2, 6);
+      remap[old] = a.id;
+    }
+  });
+  Object.keys(remap).forEach(function (old) {
+    if (OV.am[old]) { OV.am[remap[old]] = OV.am[old]; delete OV.am[old]; }
+  });
+})();
 
 var ICON_TRANSPOSE = '<svg viewBox="0 0 48 48" aria-hidden="true">' +
   '<rect x="1.2" y="1.2" width="45.6" height="45.6" rx="11" fill="#101319" stroke="rgba(255,255,255,.16)" stroke-width="1.4"/>' +
@@ -7083,29 +7121,44 @@ var ICON_TRANSPOSE = '<svg viewBox="0 0 48 48" aria-hidden="true">' +
 function entries() {
   var out = [];
   APPS.forEach(function (a, i) { out.push({ base: a, key: String(i), seed: true, i: i }); });
-  OV.apps.forEach(function (a, j) { out.push({ base: a, key: 'u' + j, seed: false, j: j }); });
-  return out;
+  OV.apps.forEach(function (a, j) { out.push({ base: a, key: a.id, seed: false, j: j }); });
+  var order = OV.aorder.slice();
+  out.forEach(function (en) { if (order.indexOf(en.key) < 0) order.push(en.key); });
+  order = order.filter(function (k) { return out.some(function (en) { return en.key === k; }); });
+  return order.map(function (k) { return out.filter(function (en) { return en.key === k; })[0]; });
+}
+function moveKey(key, dir) {
+  var order = entries().map(function (en) { return en.key; });
+  var i = order.indexOf(key), j = i + dir;
+  if (i < 0 || j < 0 || j >= order.length) return;
+  order.splice(i, 1); order.splice(j, 0, key);
+  OV.aorder = order;
+  render();
 }
 function meta(en) {
   var o = OV.am[en.key] || {};
+  var base = en.base || {};
   return {
-    kind: o.kind || en.base.kind || 'app',
-    e: o.e || en.base.e || '🧩',
-    src: o.src != null ? o.src : (en.base.src || ''),
-    url: o.url != null ? o.url : (en.base.url || '')
+    kind: o.kind || base.kind || 'app',
+    e: o.e || base.e || '🧩',
+    src: o.src != null ? o.src : (base.src || ''),
+    url: o.url != null ? o.url : (base.url || ''),
+    logo: o.logo != null ? o.logo : (base.logo || '')
   };
 }
 function titleOf(en) {
   var o = OV.a && OV.a[en.key];
   if (o && o.n && o.n[LS.lang]) return esc(o.n[LS.lang]);
-  var n = en.base.n || {};
-  return esc(n[LS.lang] || n.ca || n.es || '');
+  if (en.seed) { var n = en.base.n || {}; return esc(n[LS.lang] || n.ca || n.es || ''); }
+  var nn = en.base.n || {};
+  return esc(nn[LS.lang] || '');
 }
 function descOf(en) {
   var o = OV.a && OV.a[en.key];
   if (o && o.d && o.d[LS.lang]) return esc(o.d[LS.lang]);
-  var d = en.base.d || {};
-  return esc(d[LS.lang] || d.ca || d.es || '');
+  if (en.seed) { var d = en.base.d || {}; return esc(d[LS.lang] || d.ca || d.es || ''); }
+  var dd = en.base.d || {};
+  return esc(dd[LS.lang] || '');
 }
 function ytId(u) {
   if (!u) return null;
@@ -7151,28 +7204,35 @@ window.renderApps = function () {
     var hint = document.createElement('div');
     hint.className = 'apphint';
     hint.innerHTML = L(
-      'Aquí pots afegir <b>aplicacions</b> (enllaç a una eina pròpia) i <b>vídeos</b> (enllaç de Google Drive o de YouTube). Tots es mostren amb el format de targeta gran, diferent dels vídeos dels blocs. Un vídeo sense enllaç es mostra com a <b>properament</b> a l\'alumne i com a <b>configura l\'enllaç</b> per a tu.',
-      'Aquí puedes añadir <b>aplicaciones</b> (enlace a una herramienta propia) y <b>vídeos</b> (enlace de Google Drive o de YouTube). Todos se muestran con el formato de tarjeta grande, distinto de los vídeos de los bloques. Un vídeo sin enlace se muestra como <b>próximamente</b> al alumno y como <b>configura el enlace</b> para ti.');
+      'Aquí pots afegir <b>aplicacions</b> i <b>vídeos</b> (Drive o YouTube). Sense enllaç, l\'alumne veu <b>Properament</b> i tu veus <b>Configura l\'enllaç</b>. Amb ↑↓ reordenes qualsevol targeta.',
+      'Aquí puedes añadir <b>aplicaciones</b> y <b>vídeos</b> (Drive o YouTube). Sin enlace, el alumno ve <b>Próximamente</b> y tú ves <b>Configura el enlace</b>. Con ↑↓ reordenas cualquier tarjeta.');
     av.appendChild(hint);
   }
   var grid = document.createElement('div');
   grid.className = 'appgrid';
-  entries().forEach(function (en, pos) {
+  var list = entries(), total = list.length;
+  list.forEach(function (en, pos) {
     var m = meta(en);
     var isVid = m.kind === 'video';
     var src = isVid ? mediaSrc(m) : null;
     var card = document.createElement('div');
     card.className = 'appcard';
     card.dataset.appkey = en.key;
-    var icon = m.e === 'logo' ? '<img src="img/LOGO.png" alt="">' : (m.e === 'transpose' ? ICON_TRANSPOSE : esc(m.e));
-    var tAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="n"' : ' data-appj="' + en.j + '" data-appk="n"';
-    var dAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="d"' : ' data-appj="' + en.j + '" data-appk="d"';
+    var icon;
+    if (m.logo) icon = '<img src="' + esc(m.logo) + '" alt="" title="' + esc(m.logo) + '" onerror="this.onerror=null;this.outerHTML=\'🧩\';">';
+    else if (m.e === 'logo') icon = '<img src="img/LOGO.png" alt="" onerror="this.onerror=function(){this.onerror=null;this.src=\'apps/img/LOGO.png\';};">';
+    else if (m.e === 'transpose') icon = ICON_TRANSPOSE;
+    else icon = esc(m.e);
+         var tAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="n"' : ' data-appj="' + en.j + '" data-appk="n"';
+         var dAttr = en.seed ? ' data-ovaid="' + en.key + '" data-ovak="d"' : ' data-appj="' + en.j + '" data-appk="d"';
     var btnLabel, btnDisabled = false;
     if (isVid) {
       if (src) btnLabel = '▶ ' + L('Reprodueix', 'Reproducir');
       else if (editModeOn) btnLabel = '🔗 ' + L('Configura l\'enllaç', 'Configura el enlace');
       else { btnLabel = L('Properament', 'Próximamente'); btnDisabled = true; }
-    } else btnLabel = t().appsOpen;
+    } else if (m.url) btnLabel = t().appsOpen;
+    else if (editModeOn) btnLabel = '🔗 ' + L('Configura l\'enllaç', 'Configura el enlace');
+    else { btnLabel = L('Properament', 'Próximamente'); btnDisabled = true; }
     card.innerHTML =
       '<span class="appkind">' + (isVid ? '🎬 ' + L('Vídeo', 'Vídeo') : '🧩 App') + '</span>' +
       '<div class="ae">' + icon + '</div>' +
@@ -7180,41 +7240,33 @@ window.renderApps = function () {
       '<p' + dAttr + '>' + descOf(en) + '</p>' +
       '<button type="button" class="appgo"' + (btnDisabled ? ' disabled' : '') + '>' + btnLabel + '</button>';
     card.querySelector('.appgo').onclick = function () {
+      var m2 = meta(en);
       if (isVid) {
-        var s = mediaSrc(meta(en));
+        var s = mediaSrc(m2);
         if (s) openFullscreenVideo(s);
         else if (editModeOn) openAppForm(en);
         else showToast(L('Aquest vídeo encara no està disponible.', 'Este vídeo aún no está disponible.'));
-      } else openApp(meta(en).url);
+      } else if (m2.url) openApp(m2.url);
+      else if (editModeOn) openAppForm(en);
+      else showToast(L('Aquesta app encara no està disponible.', 'Esta app aún no está disponible.'));
     };
     if (editModeOn) {
       var adm = document.createElement('div');
       adm.className = 'appadm';
       adm.innerHTML =
         '<button type="button" data-a="edit" title="' + L('Edita', 'Edita') + '">✎</button>' +
-        '<button type="button" data-a="up" title="' + L('Amunt', 'Arriba') + '"' + (en.seed || pos <= APPS.length ? ' disabled' : '') + '>↑</button>' +
-        '<button type="button" data-a="dn" title="' + L('Avall', 'Abajo') + '"' + (en.seed || en.j >= OV.apps.length - 1 ? ' disabled' : '') + '>↓</button>' +
+        '<button type="button" data-a="up" title="' + L('Amunt', 'Arriba') + '"' + (pos === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button type="button" data-a="dn" title="' + L('Avall', 'Abajo') + '"' + (pos === total - 1 ? ' disabled' : '') + '>↓</button>' +
         (en.seed ? '' : '<button type="button" class="d" data-a="del" title="' + L('Elimina', 'Elimina') + '">🗑</button>');
       adm.querySelector('[data-a="edit"]').onclick = function () { openAppForm(en); };
-      var up = adm.querySelector('[data-a="up"]');
-      if (up) up.onclick = function () {
-        if (en.j <= 0) return;
-        var a = OV.apps.splice(en.j, 1)[0];
-        OV.apps.splice(en.j - 1, 0, a);
-        render();
-      };
-      var dn = adm.querySelector('[data-a="dn"]');
-      if (dn) dn.onclick = function () {
-        if (en.j >= OV.apps.length - 1) return;
-        var a = OV.apps.splice(en.j, 1)[0];
-        OV.apps.splice(en.j + 1, 0, a);
-        render();
-      };
+      adm.querySelector('[data-a="up"]').onclick = function () { moveKey(en.key, -1); };
+      adm.querySelector('[data-a="dn"]').onclick = function () { moveKey(en.key, 1); };
       var del = adm.querySelector('[data-a="del"]');
       if (del) del.onclick = function () {
         if (!confirm(L('Eliminar aquesta targeta d\'Apps?', '¿Eliminar esta tarjeta de Apps?') + '\n\n' + titleOf(en))) return;
         OV.apps.splice(en.j, 1);
         delete OV.am[en.key];
+        OV.aorder = OV.aorder.filter(function (k) { return k !== en.key; });
         render();
         showToast(L('🗑 Targeta eliminada', '🗑 Tarjeta eliminada'));
       };
@@ -7226,11 +7278,11 @@ window.renderApps = function () {
   applyEditState();
 };
 
-var EMO = ['🔁', '🎬', '🧩', '🎹', '🎧', '🎼', '🥁', '🎸', '🎷', '⏱', '🔊', '🧠', 'logo','transpose'];
+var EMO = ['🔁', '🎬', '🧩', '🎹', '🎧', '🎼', '🥁', '🎸', '🎷', '⏱', '🔊', '🧠', 'logo', 'transpose'];
 var fCtx = null;
 function openAppForm(en) {
-  var m = en ? meta(en) : { kind: 'video', e: '🎬', src: '', url: '' };
-  fCtx = { en: en, kind: m.kind, e: m.e, tit: en ? titleOf(en) : '', des: en ? descOf(en) : '', src: m.src || '', url: m.url || '' };
+  var m = en ? meta(en) : { kind: 'video', e: '🎬', src: '', url: '', logo: '' };
+  fCtx = { en: en, kind: m.kind, e: m.e, tit: en ? titleOf(en) : '', des: en ? descOf(en) : '', src: m.src || '', url: m.url || '', logo: m.logo || '' };
   var mo = document.getElementById('appForm');
   if (!mo) {
     mo = document.createElement('div');
@@ -7252,42 +7304,59 @@ function paintAppForm() {
     '<button data-k="app"' + (!isVid ? ' class="on"' : '') + '>🧩 ' + L('Aplicació', 'Aplicación') + '</button></div></div>' +
     '<div class="cm-fld"><span>' + L('Icona', 'Icono') + '</span><input id="afE" value="' + esc(c.e) + '" maxlength="8">' +
     '<div class="appemo" id="afEmo">' + EMO.map(function (x) {
-      return '<button type="button" data-e="' + x + '"' + (c.e === x ? ' class="on"' : '') + '>' + (x === 'logo' ? '🏫' : (x === 'transpose' ? ICON_TRANSPOSE : x)) + '</button>';
-    }).join('') + '</div><div class="cm-hint">' + L('Tria «🏫» per fer servir el logo de l\'escola.', 'Elige «🏫» para usar el logo de la escuela.') + '</div></div>' +
+      return '<button type="button" data-e="' + x + '"' + (c.e === x && !c.logo ? ' class="on"' : '') + '>' + (x === 'logo' ? '🏫' : (x === 'transpose' ? ICON_TRANSPOSE : x)) + '</button>';
+    }).join('') + '</div>' +
+    '<input id="afLogo" value="' + esc(c.logo) + '" placeholder="' + L('Logo propi: ruta o URL (ex. img/chord.png)', 'Logo propio: ruta o URL (ej. img/chord.png)') + '">' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-top:8px;">' +
+    '<img id="afLogoPrev" alt="" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:var(--bg);border:1px solid var(--hair-2);display:none;">' +
+    '<span id="afLogoMsg" style="font-size:11px;color:var(--mut);"></span></div>' +
+    '<div class="cm-hint">' + L('Tria un emoji o escriu la ruta d\'una imatge pròpia (relativa a index.html). La previsualitzat t\'avisa si la ruta no existeix.', 'Elige un emoji o escribe la ruta de una imagen propia (relativa a index.html). La vista previa te avisa si la ruta no existe.') + '</div></div>' +
     '<label class="cm-fld"><span>' + L('Títol', 'Título') + '</span><input id="afT" value="' + esc(c.tit) + '"></label>' +
     '<label class="cm-fld"><span>' + L('Descripció', 'Descripción') + '</span><textarea id="afD">' + esc(c.des) + '</textarea></label>';
   if (isVid) {
     h += '<label class="cm-fld"><span>' + L('Enllaç del vídeo (Drive o YouTube)', 'Enlace del vídeo (Drive o YouTube)') + '</span>' +
       '<input id="afS" value="' + esc(c.src) + '" placeholder="https://youtu.be/… · https://drive.google.com/file/d/… · ID"></label>' +
-      '<div class="cm-hint">' + L('S\'accepta un enllaç de YouTube, un enllaç de Google Drive o l\'ID del fitxer. Si el deixes buit, l\'alumne veurà «Properament».',
-        'Se acepta un enlace de YouTube, un enlace de Google Drive o el ID del archivo. Si lo dejas vacío, el alumno verá «Próximamente».') + '</div>';
+      '<div class="cm-hint">' + L('Si el deixes buit, l\'alumne veurà «Properament».', 'Si lo dejas vacío, el alumno verá «Próximamente».') + '</div>';
   } else {
     h += '<label class="cm-fld"><span>' + L('Enllaç de l\'aplicació', 'Enlace de la aplicación') + '</span>' +
       '<input id="afU" value="' + esc(c.url) + '" placeholder="apps/TONAL-EMOTIONS.html · https://…"></label>' +
-      '<div class="cm-hint">' + L('Ruta relativa dins del web o URL completa. S\'hi afegeixen l\'idioma i l\'usuari automàticament.',
-        'Ruta relativa dentro de la web o URL completa. Se añaden el idioma y el usuario automáticamente.') + '</div>';
+      '<div class="cm-hint">' + L('Ruta relativa o URL completa. Si el deixes buit, l\'alumne veurà «Properament».', 'Ruta relativa o URL completa. Si lo dejas vacío, el alumno verá «Próximamente».') + '</div>';
   }
   h += '</div><div class="cm-foot"><button class="cm-btn" id="afC">' + L('Cancel·la', 'Cancelar') + '</button>' +
     '<button class="cm-btn pri" id="afSv">' + L('Desa', 'Guardar') + '</button></div></div>';
   mo.innerHTML = h;
+  var prev = document.getElementById('afLogoPrev'), msg = document.getElementById('afLogoMsg');
+  function syncPrev() {
+    var p = document.getElementById('afLogo').value.trim();
+    if (!p) { prev.style.display = 'none'; msg.textContent = ''; return; }
+    prev.style.display = 'block';
+    prev.onerror = function () { prev.style.opacity = '.35'; msg.textContent = L('⚠ No s\'ha trobat la imatge en aquesta ruta', '⚠ No se encuentra la imagen en esta ruta'); };
+    prev.onload = function () { prev.style.opacity = '1'; msg.textContent = L('✓ Imatge correcta', '✓ Imagen correcta'); };
+    prev.src = p;
+  }
+  document.getElementById('afLogo').addEventListener('input', function () { c.logo = this.value.trim(); syncPrev(); });
+  syncPrev();
   document.getElementById('afX').onclick = function () { mo.classList.remove('on'); };
   document.getElementById('afC').onclick = function () { mo.classList.remove('on'); };
   mo.querySelectorAll('#afKind button').forEach(function (b) {
     b.onclick = function () {
-      fCtx.kind = b.dataset.k;
-      fCtx.tit = document.getElementById('afT').value;
-      fCtx.des = document.getElementById('afD').value;
+      c.kind = b.dataset.k;
+      c.tit = document.getElementById('afT').value;
+      c.des = document.getElementById('afD').value;
       var s = document.getElementById('afS'), u = document.getElementById('afU');
-      if (s) fCtx.src = s.value;
-      if (u) fCtx.url = u.value;
-      fCtx.e = document.getElementById('afE').value;
+      if (s) c.src = s.value;
+      if (u) c.url = u.value;
+      c.e = document.getElementById('afE').value;
+      c.logo = document.getElementById('afLogo').value.trim();
       paintAppForm();
     };
   });
   mo.querySelectorAll('#afEmo button').forEach(function (b) {
     b.onclick = function () {
-      fCtx.e = b.dataset.e;
-      document.getElementById('afE').value = fCtx.e;
+      c.e = b.dataset.e; c.logo = '';
+      document.getElementById('afE').value = c.e;
+      document.getElementById('afLogo').value = '';
+      syncPrev();
       mo.querySelectorAll('#afEmo button').forEach(function (x) { x.classList.toggle('on', x === b); });
     };
   });
@@ -7295,24 +7364,24 @@ function paintAppForm() {
     var tit = document.getElementById('afT').value.trim();
     if (!tit) { document.getElementById('afT').focus(); return; }
     var des = document.getElementById('afD').value.trim();
-    var e = document.getElementById('afE').value.trim() || (fCtx.kind === 'video' ? '🎬' : '🧩');
+    var e = document.getElementById('afE').value.trim() || (c.kind === 'video' ? '🎬' : '🧩');
+    var logo = document.getElementById('afLogo').value.trim();
     var sEl = document.getElementById('afS'), uEl = document.getElementById('afU');
     var src = sEl ? sEl.value.trim() : '';
     var url = uEl ? uEl.value.trim() : '';
-    if (fCtx.kind === 'app' && !url) { showToast(L('Cal un enllaç per a l\'aplicació.', 'Hace falta un enlace para la aplicación.')); return; }
-    if (fCtx.en && fCtx.en.seed) {
-      var key = fCtx.en.key;
+    if (c.en && c.en.seed) {
+      var key = c.en.key;
       OV.a = OV.a || {}; OV.a[key] = OV.a[key] || { n: {}, d: {} };
       OV.a[key].n = OV.a[key].n || {}; OV.a[key].n[LS.lang] = tit;
       OV.a[key].d = OV.a[key].d || {}; OV.a[key].d[LS.lang] = des;
-      OV.am[key] = { kind: fCtx.kind, e: e, src: src, url: url };
-    } else if (fCtx.en) {
-      var a = OV.apps[fCtx.en.j];
-      a.kind = fCtx.kind; a.e = e; a.src = src; a.url = url;
+      OV.am[key] = { kind: c.kind, e: e, src: src, url: url, logo: logo };
+    } else if (c.en) {
+      var a = OV.apps[c.en.j];
+      a.kind = c.kind; a.e = e; a.src = src; a.url = url; a.logo = logo;
       a.n = a.n || {}; a.n[LS.lang] = tit;
       a.d = a.d || {}; a.d[LS.lang] = des;
     } else {
-      var rec = { kind: fCtx.kind, e: e, src: src, url: url, n: {}, d: {} };
+      var rec = { id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind: c.kind, e: e, src: src, url: url, logo: logo, n: {}, d: {} };
       rec.n[LS.lang] = tit; rec.d[LS.lang] = des;
       OV.apps.push(rec);
     }
@@ -7322,7 +7391,7 @@ function paintAppForm() {
   };
   setTimeout(function () { document.getElementById('afT').focus(); }, 50);
 }
-window.GJSApps = { entries: entries, meta: meta, form: openAppForm, data: function () { return { apps: OV.apps, am: OV.am }; } };
+window.GJSApps = { entries: entries, meta: meta, form: openAppForm, move: moveKey, data: function () { return { apps: OV.apps, am: OV.am, aorder: OV.aorder }; } };
 })();
 </script>
 
