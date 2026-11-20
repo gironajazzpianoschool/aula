@@ -1878,7 +1878,9 @@ html.fx-calm .prep-box { animation: none; }
 .prep-head h3 { margin: 0; font-size: 17px; font-weight: 800; line-height: 1.35; }
 .prep-head .cm-x { position: absolute; top: 14px; right: 14px; }
 .prep-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 22px; }
-.prep-scroll .prep-body { display: block; margin-top: 0; border: 0; background: transparent; padding: 0; font-size: 13px; }
+.prep-scroll .prep-body { display: block; margin-top: 0; border: 0; background: transparent; padding: 0; font-size: 15px; line-height: 1.7; }
+.prep-scroll .prep-body h5 { font-size: 11px; }
+.prep-scroll .prep-body .prep-sum { font-size: 15px; }
 .prep-foot { flex: none; display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--hair);
   background: var(--tap); }
 .prep-foot button { flex: 1; min-width: 0; padding: 13px 14px; border-radius: 12px; cursor: pointer; font-family: inherit;
@@ -2565,7 +2567,7 @@ function t() { return UI[LS.lang]; }
 function li() { return LS.lang === 'ca' ? 0 : 1; }
 function ca() { return LS.lang === 'ca'; }
 function L(c, e) { return ca() ? c : e; }
-function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 function showToast(msg, duration) {
   duration = duration || 2500;
   var toast = $('toast');
@@ -3959,12 +3961,12 @@ function niceDate(s) {
 function faqGet(i, k) { var o = OV.f[i]; if (o && o[k] && o[k][LS.lang]) return esc(o[k][LS.lang]); return esc(FAQS[i][k][LS.lang]); }
 function appName(a, i) { var o = OV.a && OV.a[i]; return (o && o.n && o.n[LS.lang]) ? esc(o.n[LS.lang]) : a.n[LS.lang]; }
 function appDesc(a, i) { var o = OV.a && OV.a[i]; return (o && o.d && o.d[LS.lang]) ? esc(o.d[LS.lang]) : a.d[LS.lang]; }
-function celTitle() { var o = OV.c && OV.c.title; if (o && o[LS.lang]) return o[LS.lang]; return LS.lang === 'ca' ? '🎓 FELICITATS! ' : '🎓 ¡FELICIDADES! 🎓'; }
-function celGiftTxt() { var o = OV.c && OV.c.giftTxt; if (o && o[LS.lang]) return o[LS.lang]; return t().giftTxt; }
+function celTitle() { var o = OV.c && OV.c.title; if (o && o[LS.lang]) return esc(o[LS.lang]); return LS.lang === 'ca' ? '🎓 FELICITATS! ' : '🎓 ¡FELICIDADES! 🎓'; }
+function celGiftTxt() { var o = OV.c && OV.c.giftTxt; if (o && o[LS.lang]) return esc(o[LS.lang]); return esc(t().giftTxt); }
 function celGiftTxtImp() {
   var o = OV.c && OV.c.giftTxtImp;
-  if (o && o[LS.lang]) return o[LS.lang];
-  return LS.lang === 'ca' ? 'Has completat totes les lliçons importants del nivell! Gaudeix del teu regal de graduació:' : '¡Has completado todas las lecciones importantes del nivel! Disfruta de tu regalo de graduación:';
+  if (o && o[LS.lang]) return esc(o[LS.lang]);
+  return esc(LS.lang === 'ca' ? 'Has completat totes les lliçons importantes del nivell! Gaudeix del teu regal de graduació:' : '¡Has completado todas las lecciones importantes del nivel! Disfruta de tu regalo de graduación:');
 }
 function helpText(i, k, fallback) { var o = OV.h && OV.h[i]; if (o && o[k] && o[k][LS.lang]) return o[k][LS.lang]; return fallback; }
 function vidTitle(v, id) {
@@ -4108,11 +4110,22 @@ function initializeOrder() {
     allVidsLang(lg).forEach(function (v) { if (OV.order[lg].indexOf(v.id) === -1) OV.order[lg].push(v.id); });
   });
 }
+var __lvlCache = {};
 function levelIds(l) {
-  initializeOrder();
-  return orderList().filter(function (id) {
-    return !isGiftId(id) && vidLevel(id) === l && !!findVidById(id);
+  var ol = orderList();
+  var firma = LS.lang + '|' + ol.join(',');
+  var ck = __lvlCache[firma];
+  if (!ck) {
+    var valid = {};
+    allVids().forEach(function (x) { valid[x.id] = 1; });
+    ck = __lvlCache[firma] = { _v: valid, _l: {} };
+  }
+  if (ck._l[l]) return ck._l[l];
+  var res = ol.filter(function (id) {
+    return !isGiftId(id) && vidLevel(id) === l && ck._v[id];
   });
+  ck._l[l] = res;
+  return res;
 }
 function applyLevelIds(l, ids) {
   var list = orderList(), slots = [];
@@ -4393,13 +4406,31 @@ $('faqGuestClose').onclick = function () { $('faqModal').classList.remove('on');
 /* ================================================================
    7. MODE EDICIÓ I GUARDAT NET
    ================================================================ */
+function collectText(el) {
+  if (!el) return '';
+  var out = '';
+  (function walk(node) {
+    var kids = node.childNodes, i, ch, tn, before;
+    for (i = 0; i < kids.length; i++) {
+      ch = kids[i];
+      if (ch.nodeType === 3) { out += ch.nodeValue; continue; }
+      if (ch.nodeType !== 1) continue;
+      tn = ch.tagName;
+      if (tn === 'BR') { out += '\n'; continue; }
+      before = out.length;
+      walk(ch);
+      if (/^(DIV|P|LI|UL|OL|H[1-6]|TR|TABLE|SECTION|ARTICLE)$/.test(tn) && out.length > before && out.charAt(out.length - 1) !== '\n') out += '\n';
+    }
+  })(el);
+  return out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
 function collectAll() {
   var offF = [], offH = [];
   if (faqLang !== LS.lang) offF = stripAttrs('[data-fqi]', 'data-fqi', 'data-fqk');
   if (helpLang !== LS.lang) offH = stripAttrs('[data-hi][data-hk]', 'data-hi', 'data-hk');
   try {
     document.querySelectorAll('[data-ovid]').forEach(function (el) {
-      var id = el.dataset.ovid, k = el.dataset.ovk, txt = el.innerText.trim();
+      var id = el.dataset.ovid, k = el.dataset.ovk, txt = collectText(el);
       if (isDocId(id)) { var d = docRec(id); if (d) { if (k === 't') d.t = txt; else d.d = txt; } return; }
       if (k === 't') { OV.t[id] = OV.t[id] || {}; OV.t[id][LS.lang] = txt; }
       else { OV.d[id] = OV.d[id] || {}; OV.d[id][LS.lang] = txt; }
@@ -4408,10 +4439,10 @@ function collectAll() {
       var i = el.dataset.fqi, k = el.dataset.fqk;
       OV.f[i] = OV.f[i] || { q: {}, a: {} };
       OV.f[i][k] = OV.f[i][k] || {};
-      OV.f[i][k][LS.lang] = el.innerText.trim();
+      OV.f[i][k][LS.lang] = collectText(el);
     });
     document.querySelectorAll('[data-ovaid]').forEach(function (el) {
-      var i = el.dataset.ovaid, k = el.dataset.ovak, txt = el.innerText.trim();
+      var i = el.dataset.ovaid, k = el.dataset.ovak, txt = collectText(el);
       if (i === 'cel') { OV.c = OV.c || {}; OV.c[k] = OV.c[k] || {}; OV.c[k][LS.lang] = txt; }
       else { OV.a = OV.a || {}; OV.a[i] = OV.a[i] || { n: {}, d: {} }; OV.a[i][k] = OV.a[i][k] || {}; OV.a[i][k][LS.lang] = txt; }
     });
@@ -4419,17 +4450,17 @@ function collectAll() {
       var j = parseInt(el.dataset.appj, 10), k = el.dataset.appk;
       var a = (OV.apps || [])[j]; if (!a) return;
       a[k] = a[k] || {};
-      a[k][LS.lang] = el.innerText.trim();
+      a[k][LS.lang] = collectText(el);
     });
     document.querySelectorAll('[data-hi][data-hk]').forEach(function (el) {
-      var i = el.dataset.hi, k = el.dataset.hk, txt = el.innerText.trim();
+      var i = el.dataset.hi, k = el.dataset.hk, txt = collectText(el);
       OV.h = OV.h || {};
       OV.h[i] = OV.h[i] || { t: {}, p: {} };
       OV.h[i][k] = OV.h[i][k] || {};
       OV.h[i][k][LS.lang] = txt;
     });
         document.querySelectorAll('[data-ovstid]').forEach(function (el) {
-      var id = el.dataset.ovstid, txt = el.innerText.trim();
+      var id = el.dataset.ovstid, txt = collectText(el);
       if (!id) return;
       OV.st = OV.st || {};
       OV.st[id] = OV.st[id] || {};
@@ -4584,10 +4615,11 @@ function cleanClone() {
   });
   Array.prototype.slice.call(root.querySelectorAll('.wm-vig')).forEach(function (n) { n.remove(); });
   Array.prototype.slice.call(root.querySelectorAll('style')).forEach(function (st) {
-    if ((st.textContent || '').indexOf('#gjpsGuard{') >= 0) st.remove();
+    var tx = st.textContent || '';
+    if (tx.indexOf('#gjpsGuard{') >= 0 || tx.indexOf('.video-overlay .icon{animation:none') >= 0) st.remove();
   });
   Array.prototype.slice.call(root.querySelectorAll('link[rel="manifest"]')).forEach(function (n) { n.remove(); });
-  Array.prototype.slice.call(root.querySelectorAll('#ordGhost,#drag-ghost,.gjnote')).forEach(function (n) { n.remove(); });
+  Array.prototype.slice.call(root.querySelectorAll('#ordGhost,#drag-ghost,.gjnote,#gjFootBox,#gjFootLine,.gj-foot,#gjProgBtn,#gjProgScrim')).forEach(function (n) { n.remove(); });
   REPAINT.forEach(function (id) {
     var n = root.querySelector('#' + id);
     if (!n) return;
@@ -4619,13 +4651,21 @@ function cleanClone() {
   root.removeAttribute('style');
   return root;
 }
+/* Blindatge: cap string d'OV pot tancar el <script> que l'envolta.
+   <\/script  -> vàlid en JSON (\/) i inert per al HTML.
+   <\u0021-- -> vàlid en JSON (\u0021 = !) i trenca el patró <!--. */
+function safeOVJSON() {
+  return JSON.stringify(OV, null, 2)
+    .replace(/<\/script/gi, '<\\/script')
+    .replace(/<!--/g, '<\\u0021--');
+}
 function saveAsFile() {
   collectAll();
   var wasEdit = editModeOn;
   toggleEditMode(false);
   var root = cleanClone();
   var html = '<!DOCTYPE html>\n' + root.outerHTML;
-  html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END\*\//, '/*OV-START*/\n' + JSON.stringify(OV, null, 2) + '\n;/*OV-END*/');
+  html = html.replace(/\/\*OV-START\*\/[\s\S]*?\/\*OV-END*\//, '/*OV-START*/\n' + safeOVJSON() + '\n;/*OV-END*/');
   toggleEditMode(wasEdit);
   render();
   if (isMobileDevice() && navigator.share && navigator.canShare) {
@@ -4687,7 +4727,6 @@ function prepHTML(txt) {
 }
 function prepSeenKey() { return 'gjps_prep_v1_' + (LS.user || '') + '_' + LS.lang; }
 function prepSeen() { return lsJSON(prepSeenKey(), {}); }
-function markPrepSeen(id) { var s = prepSeen(); s[id] = 1; lsSet(prepSeenKey(), JSON.stringify(s)); }
 function prepNeeded(id) { return hasPrep(id); }
 function performSkip(id) {
   LS.skipped = LS.skipped || []; LS.skipAfter = LS.skipAfter || {};
@@ -4744,7 +4783,6 @@ function openPrep(id, src) {
 }
 function closePrep(play) {
   if (prepModal) prepModal.classList.remove('on');
-  if (prepId) markPrepSeen(prepId);
   var src = prepSrc;
   prepId = ''; prepSrc = '';
   if (play && src) openFullscreenVideo(src);
@@ -5113,7 +5151,8 @@ function hydrateCourse() {
       });
       PREV_HYDR[dKey(si, ui, b)] = arr.length;
     });
-  });
+   });
+  __lvlCache = {};
   initializeOrder();
 }
 function markDeleted(id) { OV.del = OV.del || {}; OV.del[id] = OV.del[id] || {}; OV.del[id][LS.lang] = 1; }
@@ -7563,6 +7602,7 @@ function mediaSrc(m) {
 }
 function openApp(url) {
   if (!url) { showToast(t().appsSoon); return; }
+  if (/^\s*(javascript|data|vbscript):/i.test(url)) { showToast(L('Enllaç bloquejat.', 'Enlace bloquejado.')); return; }
   if (isSmartphone()) {
     showToast(L('Aquesta app necessita pantalla gran (ordinador o tablet).', 'Esta app necesita pantalla grande (ordenador o tablet).'));
     return;
@@ -7925,7 +7965,12 @@ function spin() {
     ], { duration: 2800, iterations: Infinity, easing: 'ease-in-out', pseudoElement: '::after' });
   } catch (e) {}
 }
-setInterval(spin, 600);
+function every(ms, fn, guard) {
+  function run() { if (document.hidden) return; if (guard && !guard()) return; try { fn(); } catch (e) {} }
+  setInterval(run, ms);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) run(); });
+}
+every(600, spin, function () { return !!document.querySelector('.celebration .trophy'); });
 try { spin(); } catch (e) {}
 
 /* Mode lleuger automàtic per a mòbils modestos */
@@ -7938,15 +7983,12 @@ try { low = isSmartphone() || (coarse && (cores() <= 4 || mem() <= 4)); }
 catch (e) { low = coarse && cores() <= 4; }
 document.documentElement.classList.toggle('lowfx', low);
 if (low) document.documentElement.style.setProperty('--wm-par', '0px');
-setInterval(function () {
-  if (!document.documentElement.classList.contains('lowfx')) return;
-  try {
-    document.getAnimations().forEach(function (a) {
-      var t = a.effect && a.effect.target;
-      if (t && t.closest && t.closest('.celebration')) a.cancel();
-    });
-  } catch (e) {}
-}, 2500);
+every(2500, function () {
+  document.getAnimations().forEach(function (a) {
+    var t = a.effect && a.effect.target;
+    if (t && t.closest && t.closest('.celebration')) a.cancel();
+  });
+}, function () { return document.documentElement.classList.contains('lowfx') && !!document.querySelector('.celebration'); });
 window.GJSPerf = {
   set: function (on) { document.documentElement.classList.toggle('lowfx', on !== false); },
   get: function () { return document.documentElement.classList.contains('lowfx'); }
