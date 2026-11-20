@@ -454,7 +454,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="rgb(232, 228, 217)">
+<meta name="theme-color" content="rgb(13, 13, 13)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Girona Jazz Piano School®</title>
@@ -2419,7 +2419,7 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GJPS">
 
-</head>
+<style>.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}</style><style>.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}</style><style>.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}</style><style>.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}</style><style>.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}</style></head>
 
 <body class="">
 <div id="wm"></div>
@@ -2439,10 +2439,10 @@ html.lowfx .video-overlay .icon { animation: none !important; }
       <button id="mTrack" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
       <button id="mFree" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
       <button id="mApps" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
-      <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="" title="Preguntes freqüents">FAQ</button>
+      <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="on">FAQ</button>
     </span>
-    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
-    <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos" title="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
+    <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
     <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
@@ -2451,8 +2451,8 @@ html.lowfx .video-overlay .icon { animation: none !important; }
   <div id="trackView" style="display: none;"></div>
   <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
-  <div id="infoView" style="display: none;"></div>
-  <div id="helpView" style="display: block;"></div>
+  <div id="infoView" style="display: block;"></div>
+  <div id="helpView" style="display: none;"></div>
 </main>
 
 <div class="modal" id="modal">
@@ -2461,7 +2461,7 @@ html.lowfx .video-overlay .icon { animation: none !important; }
     <div class="frame">
       <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class=""></iframe>
       <div class="video-overlay" id="videoOverlay">
-        <div class="icon">▶</div>
+        <div class="icon" style="box-shadow: rgba(232, 176, 75, 0.1) 0px 0px 0px 23px, rgba(232, 176, 75, 0.35) 0px 0px 47px 4px, rgba(232, 176, 75, 0.447) 0px 0px 60px 14px; opacity: 0.978; background: rgba(232, 176, 75, 0.192);">▶</div>
         <div class="text" id="overlayText">Fes clic per reproduir</div>
       </div>
     </div>
@@ -2869,7 +2869,7 @@ var OV = /*OV-START*/
   "t": {
     "1.0.g.0": {
       "es": "Notas en el piano: Introducción Esencial",
-      "ca": "Notes al piano: Introducció Essencial"
+      "ca": "Notas en el piano: Introducción Esencial"
     },
     "1.0.g.1": {
       "es": "Claus musicals: Com Llegir i Col·locar Mans",
@@ -2877,39 +2877,39 @@ var OV = /*OV-START*/
     },
     "2.0.g.0": {
       "es": "Introducción a las Tríadas",
-      "ca": "Introducció a les Tríades"
+      "ca": "Introducción a las Tríadas"
     },
     "3.0.g.0": {
       "es": "Escala Mayor: Patrón Universal",
-      "ca": "Escala Major: Patró Universal"
+      "ca": "Escala Mayor: Patrón Universal"
     },
     "3.2.g.0": {
       "es": "Introducción al Sistema Tonal",
-      "ca": "Introducció al Sistema Tonal"
+      "ca": "Introducción al Sistema Tonal"
     },
     "4.0.g.0": {
       "es": "Inversión de Tríadas Mayores y Menores",
-      "ca": "Inversió de Tríades Majors i Menors"
+      "ca": "Inversión de Tríadas Mayores y Menores"
     },
     "4.2.g.0": {
       "es": "Tríadas Mayores y Menores en Posición Abierta",
-      "ca": "Tríades Majors i Menors en Posició Oberta"
+      "ca": "Tríadas Mayores y Menores en Posición Abierta"
     },
     "5.0.g.0": {
       "es": "Voicings Triádicos a Dos Manos",
-      "ca": "Voicings Triàdics a Dues Mans"
+      "ca": "Voicings Triádicos a Dos Manos"
     },
     "5.2.g.0": {
       "es": "Introducción al Solfeo",
-      "ca": "Introducció al Solfeig"
+      "ca": "Introducción al Solfeo"
     },
     "6.0.g.0": {
       "es": "Funciones Tonales Básicas",
-      "ca": "Funcions Tonals Bàsiques"
+      "ca": "Funciones Tonales Básicas"
     },
     "6.2.g.0": {
       "es": "Introducción a la Conexión de Tríadas",
-      "ca": "Introducció a la Connexió de Tríades"
+      "ca": "Introducción a la Conexión de Tríadas"
     },
     "1.0.r.0": {
       "ca": "Pols i Tempo: Figures bàsiques",
@@ -3071,7 +3071,8 @@ var OV = /*OV-START*/
       "ca": "Extra Funcions Tonals Bàsiques"
     },
     "6.3.g.1": {
-      "es": "Extra Funciones Tonales Básicas"
+      "es": "Extra Funciones Tonales Básicas",
+      "ca": "Extra Funciones Tonales Básicas"
     },
     "1.1.t.0": {
       "ca": "Funcionament de les Rutines",
@@ -3186,8 +3187,8 @@ var OV = /*OV-START*/
         "es": "¿Quién hay detrás de GJPS? Mi biografía"
       },
       "a": {
-        "ca": "Em dic X i soc pianista, professor i el creador de Girona Jazz Piano School. Aquest és un projecte personal, nascut de X anys d'experiència ensenyant piano modern i jazz.\n\n🎹 LA MEVA FORMACIÓ\nVaig començar a estudiar música als X anys i em vaig formar a X, on vaig obtenir X. La base clàssica em va donar rigor, lectura i tècnica; el jazz i el llenguatge modern em van ensenyar a entendre l'harmonia des de dins i a crear sense partitura. Aquesta doble mirada és exactament la que vertebra el mètode.\n\n🎓 LA MEVA TRAJECTÒRIA\nPorto X anys dedicant-me a l'ensenyament i he acompanyat més de X alumnes de perfils molt diferents: des de persones que no havien tocat mai una tecla fins a músics amb conservatori que buscaven autonomia real al teclat. Com a intèrpret he treballat X anys en directe amb X, i aquesta experiència d'escenari és la que m'ha ensenyat què és realment útil quan has de tocar davant d'algú.\n\n💡 PER QUÈ EXISTEIX AQUEST MÈTODE\nMassa sovint vaig trobar alumnes que llegien notes correctament però no sabien què estaven tocant ni per què allò funcionava. Aquest mètode neix exactament d'aquí: primer entendre, després tocar amb sentit i finalment crear. No és un recull de vídeos solts, és un itinerari pensat pas a pas perquè ningú es quedi enrere ni s'avorreixi.\n\n📍 AVUI\nCompagino les classes presencials a Girona amb aquesta aula virtual, que em permet arribar a alumnes d'arreu mantenint el seguiment personalitzat: les notes que em fas arribar des de cada vídeo les llegeixo jo mateix.",
-        "es": "Me llamo X y soy pianista, profesor y el creador de Girona Jazz Piano School. Este es un proyecto personal, nacido de X años de experiencia enseñando piano moderno y jazz.\n\n🎹 MI FORMACIÓN\nEmpecé a estudiar música a los X años y me formé en X, donde obtuve X. La base clásica me dio rigor, lectura y técnica; el jazz y el lenguaje moderno me enseñaron a entender la armonía desde dentro y a crear sin partitura. Esa doble mirada es exactamente la que vertebra el método.\n\n🎓 MI TRAYECTORIA\nLlevo X años dedicándome a la enseñanza y he acompañado a más de X alumnos de perfiles muy distintos: desde personas que nunca habían tocado una tecla hasta músicos con conservatorio que buscaban autonomía real en el teclado. Como intérprete he trabajado X años en directo con X, y esa experiencia de escenario es la que me ha enseñado qué es realmente útil cuando tienes que tocar delante de alguien.\n\n💡 POR QUÉ EXISTE ESTE MÉTODO\nDemasiado a menudo encontré alumnos que leían notas correctamente pero no sabían qué estaban tocando ni por qué aquello funcionaba. Este método nace exactamente de ahí: primero entender, después tocar con sentido y finalmente crear. No es una colección de vídeos sueltos, es un itinerario pensado paso a paso para que nadie se quede atrás ni se aburra.\n\n📍 HOY\nCompagino las clases presenciales en Girona con esta aula virtual, que me permite llegar a alumnos de cualquier lugar manteniendo el seguimiento personalizado: las notas que me envías desde cada vídeo las leo yo mismo."
+        "ca": "Em dic Josep Manrique Salas i soc pianista, professor i creador de Girona Jazz Piano School. Aquest és un projecte personal que neix després de molts anys d'experiència, 10 dels quals he dedicat a l'ensenyament del piano clàssic i modern.\n\n🎹 LA MEVA FORMACIÓ\nVaig començar a estudiar música als 10 anys i em vaig formar al Conservatori Isaac Albéniz de Girona amb la pianista Carme Riera. La base clàssica em va donar rigor, lectura i tècnica, però més endavant vaig estudiar tècniques d'improvisació, teoria del jazz i llenguatge modern de la mà del pianista Àlex Carbonell. Aquesta doble mirada és exactament la que vertebra el mètode utilitzat a l'escola.\n\n🎓 LA MEVA TRAJECTÒRIA\nPorto més de 10 anys dedicant-me a l'ensenyament i he acompanyat alumnes de perfils molt diferents: des de nens de 8 anys fins a adults de 80, des de persones que no havien tocat mai una tecla fins a músics amb conservatori que buscaven adentrar-se en la música moderna. Com a intèrpret, formo part de projectes relacionats amb el Metal Progressiu i amb el Jazz.\n\n💡 PER QUÈ EXISTEIX AQUEST MÈTODE\nMassa sovint vaig trobar alumnes que llegien notes correctament però no sabien què estaven tocant ni per què allò funcionava. Aquest mètode neix exactament d'aquí: primer entendre, després tocar amb sentit i finalment crear. No és un recull de vídeos com els que podríem trobar a YouTube, sinó un itinerari pensat pas a pas perquè ningú es quedi enrere ni s'avorreixi.\n\n📍 AVUI\nCompagino la meva feina principal, relacionada amb el sector de l'automoció, amb classes presencials a Cassà de la Selva i amb el desenvolupament d'aquesta aula virtual, que em permet arribar a alumnes d'arreu i crear una comunitat de músics que em serveixi tant com a font d'inspiració com de suport econòmic per seguir creant material didàctic.",
+        "es": "Me llamo Josep Manrique Salas y soy pianista, profesor y creador de Girona Jazz Piano School. Este es un proyecto personal que nace tras muchos años de experiencia, 10 de los cuales he dedicado a la enseñanza del piano clásico y moderno.\n\n🎹 MI FORMACIÓN\nEmpecé a estudiar música a los 10 años y me formé en el Conservatorio Isaac Albéniz de Girona con la pianista Carme Riera. La base clásica me dio rigor, lectura y técnica, pero más adelante estudié técnicas de improvisación, teoría del jazz y lenguaje moderno de la mano del pianista Àlex Carbonell. Esta doble mirada es exactamente la que vertebra el método que se utiliza en la escuela.\n\n🎓 MI TRAYECTORIA\nLlevo más de 10 años dedicándome a la enseñanza y he acompañado a alumnos de perfiles muy distintos: desde niños de 8 años hasta adultos de 80, desde personas que nunca habían tocado una tecla hasta músicos con conservatorio que buscaban adentrarse en la música moderna. Como intérprete, formo parte de proyectos relacionados con el Metal Progresivo y con el Jazz.\n\n💡 POR QUÉ EXISTE ESTE MÉTODO\nDemasiado a menudo me encontré con alumnos que leían las notas correctamente pero no sabían qué estaban tocando ni por qué aquello funcionaba. Este método nace exactamente de ahí: primero entender, después tocar con sentido y finalmente crear. No es una colección de vídeos como los que podríamos encontrar en YouTube, sino un itinerario pensado paso a paso para que nadie se quede atrás ni se aburra.\n\n📍 HOY\nCompagino mi trabajo principal, relacionado con el sector de la automoción, con clases presenciales en Cassà de la Selva y con el desarrollo de esta aula virtual, que me permite llegar a alumnos de cualquier lugar y crear una comunidad de músicos que me sirva tanto como fuente de inspiración como de apoyo económico para seguir creando material didáctico."
       }
     },
     "2": {
@@ -3296,8 +3297,8 @@ var OV = /*OV-START*/
         "es": "¿Cuánto ha costado construir todo esto? ¿Qué incluye la suscripción?"
       },
       "a": {
-        "ca": "Aquest primer nivell no és un curs muntat en un cap de setmana. Hi ha X hores de feina al darrere, i vull que les vegis perquè entenguis què estàs rebent.\n\n🛠️ DESGLOSSAT DE LA FEINA\n• Disseny pedagògic i itinerari pas a pas: X hores\n• Gravació i edició de X vídeos: X hores\n• Composició, arranjament i gravació de X play-alongs: X hores\n• Edició i digitació de X partitures: X hores\n• Disseny i gravació de les X rutines tècniques: X hores\n• Desenvolupament del web, del seguiment continuat i de les apps d'entrenament: X hores\n• Proves en ordinador, mòbil i tablet, correccions i versions: X hores\n\n➡️ TOTAL: X hores de treball.\n\n🎁 QUÈ REPS TU\nTot aquest material, disponible 24 hores al dia durant tot el mes, per menys del que costa UNA sola hora de classe presencial d'instrument.\n\nI no és només vídeo:\n• Un itinerari que et diu sempre quin és el següent pas, sense haver de decidir què estudiar.\n• Tots els vídeos que vulguis repetir, tantes vegades com calgui, al teu ritme.\n• Partitures i play-alongs descarregables per estudiar amb acompanyament real.\n• Entrenament auditiu amb apps pròpies que no trobaràs enlloc més.\n• Notes personals a cada vídeo que arriben directament al professor.\n• Nous continguts i millores que s'hi van afegint sense cost extra.\n\n💬 LA COMPARACIÓ HONESTA\nUna classe presencial és valuosa, però són 60 minuts i s'acaben. Aquí tens el mètode sencer, cada dia del mes, per menys diners. No substitueix el contacte humà: el complementa, i per això les notes i el seguiment hi són sempre.",
-        "es": "Este primer nivel no es un curso montado en un fin de semana. Hay X horas de trabajo detrás, y quiero que las veas para que entiendas qué estás recibiendo.\n\n🛠️ DESGLOSE DEL TRABAJO\n• Diseño pedagógico e itinerario paso a paso: X horas\n• Grabación y edición de X vídeos: X horas\n• Composición, arreglo y grabación de X play-alongs: X horas\n• Edición y digitación de X partituras: X horas\n• Diseño y grabación de las X rutinas técnicas: X horas\n• Desarrollo de la web, del seguimiento continuo y de las apps de entrenamiento: X horas\n• Pruebas en ordenador, móvil y tablet, correcciones y versiones: X horas\n\n➡️ TOTAL: X horas de trabajo.\n\n🎁 QUÉ RECIBES TÚ\nTodo este material, disponible 24 horas al día durante todo el mes, por menos de lo que cuesta UNA sola hora de clase presencial de instrumento.\n\nY no es solo vídeo:\n• Un itinerario que te dice siempre cuál es el siguiente paso, sin tener que decidir qué estudiar.\n• Todos los vídeos que quieras repetir, tantas veces como haga falta, a tu ritmo.\n• Partituras y play-alongs descargables para estudiar con acompañamiento real.\n• Entrenamiento auditivo con apps propias que no encontrarás en ningún otro sitio.\n• Notas personales en cada vídeo que llegan directamente al profesor.\n• Nuevos contenidos y mejoras que se van añadiendo sin coste extra.\n\n💬 LA COMPARACIÓN HONESTA\nUna clase presencial es valiosa, pero son 60 minutos y se acaban. Aquí tienes el método entero, cada día del mes, por menos dinero. No sustituye el contacto humano: lo complementa, y por eso las notas y el seguimiento están siempre presentes."
+        "ca": "Aquest primer nivell no és un curs muntat en un cap de setmana. Hi he dedicat moltíssimes hores, i vull que les vegis perquè entenguis què estàs rebent.\n\n🛠️ DESGLOSSAT DE LA FEINA REALITZADA (Nivell Fonamental):\n• Disseny pedagògic i itinerari pas a pas: 120 hores\n• Gravació, edició de vídeo i àudio de més de 120 vídeos: 1500 hores\n• Disseny de 180 rutines tècniques: 70 hores\n• Arranjaments  pel bloc de pràctica funcional: 120 hores\n• Desenvolupament de la pàgina web autònoma i optimitzada: 290 hores\n• Desenvolupament de l'app Tonal Emotions: 140 hores\n• Proves en ordinadors, smartphones i tablets iOS i Android: 20 hores\n\n➡️ TOTAL: 2.250 hores de treball.\n\n🎁 QUÈ REPS TU\nTot aquest material, disponible 24 hores al dia durant tot el mes, per menys del que costa UNA sola hora de classe presencial d'instrument.\n\nI no és només vídeo:\n• Un itinerari que et diu sempre quin és el següent pas, sense haver de decidir què estudiar.\n• Tots els vídeos que vulguis repetir, tantes vegades com calgui, al teu ritme.\n• Partitures, rutines i xifrats d'acords per estudiar amb acompanyament real.\n• Entrenament auditiu amb apps pròpies que no trobaràs enlloc més.\n• Notes personals a cada vídeo que arriben directament al professor.\n• Nous continguts i millores que s'hi van afegint sense cost extra.\n\n💬 LA COMPARACIÓ HONESTA\nUna classe presencial és valuosa, però normalment té una durada màxima de 60 minuts. Aquí tens el mètode sencer, cada dia del mes, per menys diners del que costa una sola classe. Amb això no vull dir que pugui substituir el contacte humà, al contrari, el complementa.",
+        "es": "Este primer nivel no es un curso montado en un fin de semana. Le he dedicado muchísimas horas, y quiero que las veas para que entiendas qué estás recibiendo.\n\n🛠️ DESGLOSE DEL TRABAJO REALIZADO (Nivel Fundamental):\n• Diseño pedagógico e itinerario paso a paso: 120 horas\n• Grabación, edición de vídeo y audio de más de 120 vídeos: 1500 horas\n• Diseño de 180 rutinas técnicas: 70 horas\n• Arreglos para el bloque de práctica funcional: 120 horas\n• Desarrollo de la página web autónoma y optimizada: 290 horas\n• Desarrollo de la app Tonal Emotions: 140 horas\n• Pruebas en ordenadores, smartphones y tablets iOS y Android: 20 horas\n\n➡️ TOTAL: 2.250 horas de trabajo.\n\n🎁 QUÉ RECIBES TÚ\nTodo este material, disponible 24 horas al día durante todo el mes, por menos de lo que cuesta UNA sola hora de clase presencial de instrumento.\n\nY no es solo vídeo:\n• Un itinerario que te dice siempre cuál es el siguiente paso, sin tener que decidir qué estudiar.\n• Todos los vídeos que quieras repetir, tantas veces como haga falta, a tu ritmo.\n• Partituras, rutinas y cifrados de acordes para estudiar con acompañamiento real.\n• Entrenamiento auditivo con apps propias que no encontrarás en ningún otro sitio.\n• Notas personales en cada vídeo que llegan directamente al profesor.\n• Nuevos contenidos y mejoras que se van añadiendo sin coste extra.\n\n💬 LA COMPARACIÓN HONESTA\nUna clase presencial es valiosa, pero normalmente tiene una duración máxima de 60 minutos. Aquí tienes el método completa, cada día del mes, por menos dinero de lo que cuesta una sola clase. Con esto no quiero decir que pueda sustituir el contacto humano, al contrario, lo complementa."
       }
     }
   },
@@ -3308,7 +3309,7 @@ var OV = /*OV-START*/
         "ca": "TONAL EMOTIONS"
       },
       "d": {
-        "es": "App exclusiva desarrollada en base al método del bloque de entrenamiento auditivo del Nivel 1. Password de acceso: \"musica\"",
+        "es": "App exclusiva desenvolupada segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 1. Password d'accés: \"musica\"",
         "ca": "App exclusiva desenvolupada segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 1. Password d'accés: \"musica\""
       }
     },
@@ -3319,7 +3320,7 @@ var OV = /*OV-START*/
       },
       "d": {
         "ca": "S'explica el funcionament d'una  extensió de Chrome que permet fer Loops, baixar la velocitat i modificar l'afinació a vídeos de YouTube.",
-        "es": "Se explica el funcionamiento de una extensión de Chrome que permite hacer Loops y modificar velocidad y afinación a videos de YouTube."
+        "es": "S'explica el funcionament d'una  extensió de Chrome que permet fer Loops, baixar la velocitat i modificar l'afinació a vídeos de YouTube."
       }
     }
   },
@@ -3670,7 +3671,7 @@ var OV = /*OV-START*/
       },
       "d": {
         "ca": "App exclusiva que es desenvoluparà segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 2. Actualment en construcció.",
-        "es": "App exclusiva desarrollada en base al método del bloque de entrenamiento auditivo del Nivel 2. Actualmente en construcción."
+        "es": "App exclusiva que es desenvoluparà segons el mètode utilitzat en el bloc d'entrenament auditiu del Nivell 2. Actualment en construcció."
       }
     }
   ],
@@ -3917,7 +3918,7 @@ var OV = /*OV-START*/
       "es": "ETAPA 5"
     },
     "6.0.g.0": {
-      "ca": "ETAPA 6",
+      "ca": "ETAPA 5",
       "es": "ETAPA 5"
     },
     "6.3.g.0": {
@@ -3972,7 +3973,8 @@ var OV = /*OV-START*/
       "es": "ETAPA 6"
     },
     "6.3.g.1": {
-      "es": "ETAPA 6"
+      "es": "ETAPA 6",
+      "ca": "ETAPA 6"
     }
   }
 }
@@ -7859,12 +7861,23 @@ try {
     if (!done) {
       lsSet(FLAG, '1');
       if ('serviceWorker' in navigator) {
+        var swUrl = new URL('./sw.js', location.href).href;
         navigator.serviceWorker.getRegistrations().then(function (rs) {
-          rs.forEach(function (r) { try { r.unregister(); } catch (e) {} });
+          rs.forEach(function (r) {
+            if (r.active && r.active.scriptURL === swUrl) {
+              try { r.unregister(); } catch (e) {}
+            }
+          });
         }).catch(function () {});
       }
       if (window.caches && caches.keys) {
-        caches.keys().then(function (ks) { ks.forEach(function (k) { try { caches.delete(k); } catch (e) {} }); }).catch(function () {});
+        caches.keys().then(function (ks) {
+          ks.forEach(function (k) {
+            if (k.indexOf('gjps') >= 0 || k.indexOf('girona') >= 0) {
+              try { caches.delete(k); } catch (e) {}
+            }
+          });
+        }).catch(function () {});
       }
     }
     return;
@@ -7887,7 +7900,6 @@ try {
     }).catch(function (err) { console.log('SW:', err); });
   }
 })();
-
 (function () {
   'use strict';
   var KEY = 'gjps_lang';
@@ -8314,6 +8326,43 @@ document.addEventListener('keydown', function(e) {
   }
 })();
 </script>
+<script>
+/* ═══ Overlay ▶ · bategada amplificada (JS) ═══ */
+(function () {
+  'use strict';
+  if (window.__gjOverlayBeat) return; window.__gjOverlayBeat = true;
 
+  var st = document.createElement('style');
+  st.textContent = '.video-overlay .icon{animation:none !important; width:120px; height:120px; font-size:56px;}';
+  document.head.appendChild(st);
 
+  function staticGlow(ic) {
+    ic.style.boxShadow = '0 0 36px 6px rgba(232,176,75,.35), 0 0 60px 12px rgba(232,176,75,.18)';
+    ic.style.opacity = '1';
+  }
+
+  function frame(ts) {
+    requestAnimationFrame(frame);
+    var modal = document.getElementById('modal');
+    var ov = document.getElementById('videoOverlay');
+    var ic = ov && ov.querySelector('.icon');
+    if (!modal || !ov || !ic) return;
+    if (!modal.classList.contains('on') || ov.classList.contains('hidden')) return;
+    if (document.documentElement.classList.contains('lowfx')) { staticGlow(ic); return; }
+    var t = (ts % 3800) / 3800;
+    var s = 0.5 - 0.5 * Math.cos(t * Math.PI * 2);
+    /* Anell interior que s'expandeix */
+    var spread1 = Math.round(s * 28);
+    var blur1 = Math.round(24 + s * 28);
+    var a1 = (0.55 * (1 - s)).toFixed(3);
+    /* Halo exterior més gran */
+    var blur2 = Math.round(40 + s * 24);
+    var a2 = (0.22 + s * 0.28).toFixed(3);
+    ic.style.boxShadow = '0 0 0 ' + spread1 + 'px rgba(232,176,75,' + a1 + '), 0 0 ' + blur1 + 'px 4px rgba(232,176,75,.35), 0 0 ' + blur2 + 'px 14px rgba(232,176,75,' + a2 + ')';
+    ic.style.opacity = (0.88 + s * 0.12).toFixed(3);
+    ic.style.background = 'rgba(232,176,75,' + (0.08 + s * 0.14).toFixed(3) + ')';
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 </body></html>
