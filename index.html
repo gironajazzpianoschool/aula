@@ -2567,7 +2567,7 @@ function t() { return UI[LS.lang]; }
 function li() { return LS.lang === 'ca' ? 0 : 1; }
 function ca() { return LS.lang === 'ca'; }
 function L(c, e) { return ca() ? c : e; }
-function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function showToast(msg, duration) {
   duration = duration || 2500;
   var toast = $('toast');
@@ -3969,11 +3969,12 @@ function celGiftTxtImp() {
   return esc(LS.lang === 'ca' ? 'Has completat totes les lliçons importantes del nivell! Gaudeix del teu regal de graduació:' : '¡Has completado todas las lecciones importantes del nivel! Disfruta de tu regalo de graduación:');
 }
 function helpText(i, k, fallback) { var o = OV.h && OV.h[i]; if (o && o[k] && o[k][LS.lang]) return o[k][LS.lang]; return fallback; }
-function vidTitle(v, id) {
-  if (isDocId(id)) { var d = docRec(id); return d ? esc(d.t) : id; }
+function vidTitleRaw(v, id) {
+  if (isDocId(id)) { var d = docRec(id); return d ? String(d.t) : String(id); }
   var o = OV.t[id];
-  return (o && o[LS.lang]) ? esc(o[LS.lang]) : v[li()];
+  return (o && o[LS.lang]) ? String(o[LS.lang]) : String(v[li()] == null ? '' : v[li()]);
 }
+function vidTitle(v, id) { return esc(vidTitleRaw(v, id)); }
 function secName(si) {
   var o = OV.n && OV.n[si];
   if (o && o[LS.lang]) return esc(o[LS.lang]);
@@ -4120,12 +4121,12 @@ function levelIds(l) {
     allVids().forEach(function (x) { valid[x.id] = 1; });
     ck = __lvlCache[firma] = { _v: valid, _l: {} };
   }
-  if (ck._l[l]) return ck._l[l];
+  if (ck._l[l]) return ck._l[l].slice();
   var res = ol.filter(function (id) {
     return !isGiftId(id) && vidLevel(id) === l && ck._v[id];
   });
   ck._l[l] = res;
-  return res;
+  return res.slice();
 }
 function applyLevelIds(l, ids) {
   var list = orderList(), slots = [];
@@ -4265,7 +4266,63 @@ function smartFreeLevel() {
 /* ================================================================
    6. ADJUNTS
    ================================================================ */
-function docsOf(si, ui, b) { if (!D[si] || !D[si].u || !D[si].u[ui]) return []; var bl = D[si].u[ui][b]; return (bl && bl.d) ? bl.d : []; }
+/* ── Adjunts: base (D) + OV.nd (docs nous) + OV.dn (overrides) ──────────
+   Índexs SEMPRE estables: esborrar = marcar del=1, mai splice.
+   Així OV.adj i OV.va no es desalineen mai. Tot viu a OV -> es desa. */
+function ndKey(si, ui, b) { return si + '.' + ui + '.' + b; }
+function ndList(si, ui, b) {
+  OV.nd = OV.nd || {};
+  var k = ndKey(si, ui, b);
+  if (!Array.isArray(OV.nd[k])) OV.nd[k] = [];
+  return OV.nd[k];
+}
+function dnMap(si, ui, b) {
+  OV.dn = OV.dn || {};
+  var k = ndKey(si, ui, b);
+  if (!OV.dn[k]) OV.dn[k] = {};
+  return OV.dn[k];
+}
+function baseDocs(si, ui, b) {
+  if (!D[si] || !D[si].u || !D[si].u[ui]) return [];
+  var bl = D[si].u[ui][b];
+  return (bl && bl.d) ? bl.d : [];
+}
+function docsOf(si, ui, b) {
+  var ov = (OV.dn && OV.dn[ndKey(si, ui, b)]) || {};
+  return baseDocs(si, ui, b).concat(ndList(si, ui, b)).map(function (dc, i) {
+    var o = ov[i]; if (!o) return dc;
+    return [o.ca != null ? o.ca : dc[0], o.es != null ? o.es : dc[1], o.t || dc[2], o.del ? 1 : 0];
+  });
+}
+function adjItemsOf(si, ui, b) {
+  var out = [];
+  docsOf(si, ui, b).forEach(function (dc, i) { if (!dc[3]) out.push({ dc: dc, si: si, ui: ui, idx: i }); });
+  return out;
+}
+function adjItemsLevel(l, b) {
+  var out = [], seen = {};
+  levelSections(l).forEach(function (si) {
+    if (!D[si] || !D[si].u) return;
+    D[si].u.forEach(function (u, ui) {
+      adjItemsOf(si, ui, b).forEach(function (it) {
+        var link = getAdjLink(it.si, it.ui, b, it.idx);
+        if (!editModeOn && !link) return;
+        var sig = editModeOn ? (it.si + '.' + it.ui + '.' + it.idx) : (it.dc[li()] + '|' + link);
+        if (seen[sig]) return;
+        seen[sig] = 1; out.push(it);
+      });
+    });
+  });
+  return out;
+}
+function addDoc(si, ui, b, name, type) {
+  ndList(si, ui, b).push([name, name, type || 'd']);
+  return baseDocs(si, ui, b).length + ndList(si, ui, b).length - 1;
+}
+function renameDoc(si, ui, b, idx, name) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {}))[LS.lang] = name; }
+function retypeDoc(si, ui, b, idx, type) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {})).t = type; }
+function removeDoc(si, ui, b, idx) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {})).del = 1; }
+
 function getAdjLink(si, ui, b, docIdx) {
   var key = si + '.' + ui + '.' + b + '.' + docIdx;
   var val = OV.adj && OV.adj[key];
@@ -4291,69 +4348,29 @@ function parseDriveId(val) {
   return val;
 }
 
-function mkAdj(docs, si, ui, b) {
+/* Cada doc porta les SEVES coordenades: cap link creuat */
+function mkAdj(items, b) {
   var btn = document.createElement('button');
   btn.className = 'adjb';
-  btn.textContent = t().adj + ' (' + docs.length + ')';
+  btn.textContent = t().adj + ' (' + items.length + ')';
   var box = document.createElement('div');
   box.className = 'docs';
-  var headerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)"><span style="font-size:12px;color:var(--mut);font-weight:600">' +
-    (LS.lang === 'ca' ? 'Documents d\'aquest bloc' : 'Documentos de este bloque') + '</span>';
-  if (editModeOn && si !== null && ui !== null) headerHTML += '<button class="add-doc-btn adjb">+ ' + (LS.lang === 'ca' ? 'Nou document' : 'Nuevo documento') + '</button>';
-  headerHTML += '</div>';
   var rows = '';
-  docs.forEach(function (dc, idx) {
-    var driveId = getAdjLink(si, ui, b, idx);
+  items.forEach(function (it) {
+    var driveId = getAdjLink(it.si, it.ui, b, it.idx);
     var linkHtml = driveId ? ' <a href="https://drive.google.com/file/d/' + driveId + '/view" target="_blank" rel="noopener" style="color:var(--ok)">↗</a>' : '';
-    var editHtml = '';
-    if (editModeOn) {
-      editHtml = '<div style="display:flex;gap:5px;align-items:center;margin-top:4px">' +
-        '<input type="text" class="doc-name-edit" data-si="' + si + '" data-ui="' + ui + '" data-b="' + b + '" data-idx="' + idx + '" value="' + esc(dc[li()]) + '" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:3px 6px;font-size:11px;color:var(--ink)">' +
-        '<input type="text" class="doc-link-edit" data-si="' + si + '" data-ui="' + ui + '" data-b="' + b + '" data-idx="' + idx + '" value="' + (driveId || '') + '" placeholder="ID de Google Drive" style="flex:1.5;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:3px 6px;font-size:11px;color:var(--ink)">' +
-        '<button class="del-doc-btn" data-si="' + si + '" data-ui="' + ui + '" data-b="' + b + '" data-idx="' + idx + '" style="background:var(--danger);color:#fff;border:none;border-radius:4px;padding:3px 6px;font-size:10px;cursor:pointer">🗑️</button></div>';
-    }
-    rows += '<div class="doc" style="flex-direction:column;align-items:stretch;padding:8px 10px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">' + (DI[dc[2]] || '📄') + '</span><span style="flex:1;font-weight:600">' + esc(dc[li()]) + '</span>' + linkHtml + '</div>' + editHtml + '</div>';
+    rows += '<div class="doc"><span style="font-size:14px">' + (DI[it.dc[2]] || '📄') + '</span><span style="flex:1;font-weight:600">' + esc(it.dc[li()]) + '</span>' + linkHtml + '</div>';
   });
-  box.innerHTML = headerHTML + rows;
-  btn.onclick = function () { if (editModeOn) { openDocsEditor(si, ui, b); return; } box.classList.toggle('on'); };
-  if (editModeOn) {
-    setTimeout(function () {
-      var addBtn = box.querySelector('.add-doc-btn');
-      if (addBtn) addBtn.onclick = function () {
-        var name = prompt(LS.lang === 'ca' ? 'Nom del document:' : 'Nombre del documento:', LS.lang === 'ca' ? 'Nou document' : 'Nuevo documento');
-        if (!name) return;
-        var link = prompt('ID / URL de Google Drive:', '');
-        docs.push([name, name, 'd']);
-        if (link && link.trim()) setAdjLink(si, ui, b, docs.length - 1, parseDriveId(link));
-        render();
-      };
-      box.querySelectorAll('.doc-name-edit').forEach(function (input) {
-        input.onchange = function () {
-          var doc = docsOf(+this.dataset.si, +this.dataset.ui, this.dataset.b)[+this.dataset.idx];
-          var nm = this.value.trim(); if (!doc || !nm) return;
-          var lg = li(); doc[lg] = nm; if (!doc[lg === 0 ? 1 : 0]) doc[lg === 0 ? 1 : 0] = nm;
-        };
-        input.onblur = input.onchange;
-      });
-      box.querySelectorAll('.doc-link-edit').forEach(function (input) {
-        input.onchange = function () { setAdjLink(+this.dataset.si, +this.dataset.ui, this.dataset.b, +this.dataset.idx, parseDriveId(this.value)); };
-        input.onblur = input.onchange;
-      });
-      box.querySelectorAll('.del-doc-btn').forEach(function (bd) {
-        bd.onclick = function () {
-          if (!confirm(LS.lang === 'ca' ? 'Segur que vols eliminar aquest document?' : '¿Seguro que quieres eliminar este documento?')) return;
-          var s2 = +this.dataset.si, u2 = +this.dataset.ui, b2 = this.dataset.b, i2 = +this.dataset.idx;
-          var key = s2 + '.' + u2 + '.' + b2 + '.' + i2;
-          if (OV.adj && OV.adj[key]) delete OV.adj[key];
-          docsOf(s2, u2, b2).splice(i2, 1);
-          render();
-        };
-      });
-    }, 0);
-  }
+  box.innerHTML = '<div style="font-size:12px;color:var(--mut);font-weight:600;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)">' +
+    L('Documents d\'aquest bloc', 'Documentos de este bloque') + '</div>' + rows;
+  btn.onclick = function () { if (editModeOn) { openDocsEditor(null, null, b); return; } box.classList.toggle('on'); };
   return { btn: btn, box: box };
 }
-function adjParts(si, ui, b) { var docs = docsOf(si, ui, b); if (!docs.length) return null; return mkAdj(docs, si, ui, b); }
+function adjParts(si, ui, b) {
+  var items = adjItemsOf(si, ui, b).filter(function (it) { return !!getAdjLink(it.si, it.ui, b, it.idx); });
+  if (!items.length) return null;
+  return mkAdj(items, b);
+}
 
 var adjSelState = null;
 function openAdjSelector(id, si, ui, b) {
@@ -4361,9 +4378,12 @@ function openAdjSelector(id, si, ui, b) {
   D.forEach(function (s, sIdx) {
     if (!s.u) return;
     s.u.forEach(function (u, uIdx) {
-      docsOf(sIdx, uIdx, b).forEach(function (dc, dIdx) {
-        var k = dc[li()];
-        if (!seen[k]) { seen[k] = true; allDocs.push({ dc: dc, si: sIdx, ui: uIdx, idx: dIdx, uniqueKey: sIdx + '.' + uIdx + '.' + dIdx }); }
+      adjItemsOf(sIdx, uIdx, b).forEach(function (it) {
+        var link = getAdjLink(it.si, it.ui, b, it.idx);
+        var k = it.dc[li()] + '|' + (link || (it.si + '.' + it.ui + '.' + it.idx));
+        if (seen[k]) return;
+        seen[k] = true;
+        allDocs.push({ dc: it.dc, si: it.si, ui: it.ui, idx: it.idx, uniqueKey: it.si + '.' + it.ui + '.' + it.idx });
       });
     });
   });
@@ -4776,7 +4796,7 @@ function openPrep(id, src) {
   var v = findVidById(id);
   var m = ensurePrepModal();
   prepId = id; prepSrc = src;
-  document.getElementById('prepTitle').textContent = v ? vidTitle(v.v, id) : id;
+  document.getElementById('prepTitle').textContent = v ? vidTitleRaw(v.v, id) : id;
   document.getElementById('prepBody').innerHTML = prepHTML(prepText(id));
   m.classList.add('on');
   setTimeout(function () { document.getElementById('prepPlay').focus(); }, 60);
@@ -4796,12 +4816,12 @@ function adjListOf(id, track) {
     var p = k.split('.');
     var dc = (docsOf(+p[0], +p[1], b) || [])[+p[2]];
     var link = getAdjLink(+p[0], +p[1], b, +p[2]);
-    if (dc && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
+    if (dc && !dc[3] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
   });
   if (track && x.si !== undefined) {
     (docsOf(x.si, x.ui, b) || []).forEach(function (dc, i) {
       var link = getAdjLink(x.si, x.ui, b, i);
-      if (link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
+      if (!dc[3] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
     });
   }
   return out;
@@ -5186,7 +5206,7 @@ function sendNotesByEmail(videoId) {
   var notes = lsJSON(nkey, []);
   if (!notes.length) { showToast(LS.lang === 'ca' ? 'No hi ha notes per enviar.' : 'No hay notas para enviar.'); return; }
   var v = findVidById(videoId);
-  var title = v ? vidTitle(v.v, v.id) : videoId;
+  var title = v ? vidTitleRaw(v.v, v.id) : videoId;
   var isCa = LS.lang === 'ca';
   var subject = (isCa ? 'Notes del vídeo: ' : 'Notas del vídeo: ') + title + ' — ' + LS.user;
   var body = isCa ? 'Hola,\n\nEt faig arribar les notes personals que he anat apuntant al vídeo:\n\n'
@@ -5287,7 +5307,7 @@ function renderTrack() {
         tb.style.cssText = 'background:rgba(10,12,16,.85);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;';
         tb.onclick = function (e) {
           e.stopPropagation();
-          var nt = prompt(LS.lang === 'ca' ? 'Nou títol de la masterclass:' : 'Nuevo título de la masterclass:', vidTitle(g, gid));
+          var nt = prompt(LS.lang === 'ca' ? 'Nou títol de la masterclass:' : 'Nuevo título de la masterclass:', vidTitleRaw(g, gid));
           if (nt === null || !nt.trim()) return;
           OV.t[gid] = OV.t[gid] || {}; OV.t[gid][LS.lang] = nt.trim();
           render();
@@ -5365,10 +5385,6 @@ function renderTrack() {
           }, 400);
         }
       }
-    }
-    if (!isDocId(next.id)) {
-      var ap = adjParts(next.si, next.ui, vidBlockById(next.id));
-      if (ap) { now.appendChild(ap.btn); now.appendChild(ap.box); }
     }
     tv.appendChild(now);
   }
@@ -5550,22 +5566,9 @@ function renderFree() {
   head.innerHTML = '<span class="blkt">' + esc(globalSearch ? (isCa ? 'Cerca global' : 'Búsqueda global') : (names[freeBlock] || '')) + '</span>' +
     (globalSearch ? '<span id="searchCount" style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.06em"></span>' : '');
 
-  var secs = levelSections(freeLevel);
-  var docs = [], dseen = {}, firstSi = secs[0], targetUi = 0;
-  secs.forEach(function (si) {
-    if (!D[si] || !D[si].u) return;
-    D[si].u.forEach(function (u, ui) {
-      var bl = u[freeBlock];
-      if (bl && bl.d) bl.d.forEach(function (dc) {
-        var k = dc[li()];
-        if (dseen[k]) return;
-        dseen[k] = 1; docs.push(dc);
-        if (!targetUi) targetUi = ui;
-      });
-    });
-  });
-  if (docs.length && !globalSearch) {
-    var ap = mkAdj(docs, firstSi, targetUi, freeBlock);
+  var items = globalSearch ? [] : adjItemsLevel(freeLevel, freeBlock);
+  if (items.length) {
+    var ap = mkAdj(items, freeBlock);
     head.appendChild(ap.btn);
     fv.appendChild(head); fv.appendChild(ap.box);
   } else fv.appendChild(head);
@@ -5600,7 +5603,7 @@ function renderFree() {
       del.title = isCa ? 'Elimina només del curs ' + LS.lang.toUpperCase() : 'Elimina solo del curso ' + LS.lang.toUpperCase();
       del.onclick = function (e) {
         e.stopPropagation();
-        if (!confirm((isCa ? 'Eliminar aquest vídeo NOMÉS de ' : '¿Eliminar este vídeo SOLO de ') + LS.lang.toUpperCase() + '?\n\n' + vidTitle(x.v, id))) return;
+        if (!confirm((isCa ? 'Eliminar aquest vídeo NOMÉS de ' : '¿Eliminar este vídeo SOLO de ') + LS.lang.toUpperCase() + '?\n\n' + vidTitleRaw(x.v, id))) return;
         if (isDocId(id)) OV.idocs = docsAll().filter(function (d) { return d.id !== id; });
         else markDeleted(id);
         hydrateCourse(); render();
@@ -6208,94 +6211,68 @@ function initDragDrop() {
    14. EDITOR DE PARTITURES
    ================================================================ */
 function openDocsEditor(level, uiUnused, b) {
-  var items = [], seen = {};
-  function rebuild() {
-    items = []; seen = {};
-    D.forEach(function (s, si) {
-      if (!s.u) return;
-      if (vidLevel(si + '.0.t.0') !== freeLevel && freeLevel !== 0) return;
-      if (freeLevel === 0 && si !== 0) return;
-      s.u.forEach(function (u, ui) {
-        var bl = u[b];
-        if (bl && bl.d) bl.d.forEach(function (dc, idx) {
-          var k = dc[li()];
-          if (seen[k]) return;
-          seen[k] = 1; items.push({ dc: dc, si: si, ui: ui, idx: idx });
-        });
-      });
-    });
-  }
+  var items = [];
+  function rebuild() { items = adjItemsLevel(freeLevel, b); }
   rebuild();
   var old = $('docsModal'); if (old) old.remove();
   var wrap = document.createElement('div');
   wrap.className = 'docsmodal on'; wrap.id = 'docsModal';
   var box = document.createElement('div');
   box.className = 'docsbox';
-  box.innerHTML = '<h2><span>🎼 ' + (LS.lang === 'ca' ? 'Partitures i adjunts del bloc' : 'Partituras y adjuntos del bloque') + ': ' +
-    blockNames(freeLevel, LS.lang)[b] + ' (' + items.length + ')</span><button type="button" id="docsClose">✕</button></h2>' +
-    '<div id="docsList"></div><div class="addrow" id="docsAdd">+ ' + (LS.lang === 'ca' ? 'Afegir partitura / adjunt' : 'Añadir partitura / adjunt') + '</div>';
+  box.innerHTML = '<h2><span>🎼 ' + L('Partitures i adjunts del bloc', 'Partituras y adjuntos del bloque') + ': ' +
+    esc(blockNames(freeLevel, LS.lang)[b]) + ' (' + items.length + ')</span><button type="button" id="docsClose">✕</button></h2>' +
+    '<div id="docsList"></div><div class="addrow" id="docsAdd">+ ' + L('Afegir partitura / adjunt', 'Añadir partitura / adjunt') + '</div>';
   wrap.appendChild(box);
   document.body.appendChild(wrap);
   function paint() {
     var list = box.querySelector('#docsList');
     list.innerHTML = '';
     items.forEach(function (it) {
-      var dc = it.dc;
-      var driveId = getAdjLink(it.si, it.ui, b, it.idx);
+      var dc = it.dc, driveId = getAdjLink(it.si, it.ui, b, it.idx);
       var row = document.createElement('div');
       row.className = 'docrow';
       var opts = DI_KEYS.map(function (k) {
         return '<option value="' + k + '"' + ((dc[2] || 'd') === k ? ' selected' : '') + '>' + DI[k] + '</option>';
       }).join('');
-      row.innerHTML = '<select class="di-sel" title="' + (LS.lang === 'ca' ? 'Tria la icona' : 'Elige el icono') + '">' + opts + '</select>' +
-        '<input class="dn" value="' + esc(dc[li()]) + '" placeholder="' + (LS.lang === 'ca' ? 'Nom' : 'Nombre') + '">' +
-        '<input class="dl" value="' + (driveId || '') + '" placeholder="ID / URL Drive">' +
+      row.innerHTML = '<select class="di-sel" title="' + L('Tria la icona', 'Elige el icono') + '">' + opts + '</select>' +
+        '<input class="dn" value="' + esc(dc[li()]) + '" placeholder="' + L('Nom', 'Nombre') + '">' +
+        '<input class="dl" value="' + esc(driveId || '') + '" placeholder="ID / URL Drive">' +
         '<button type="button" class="prev" title="Preview">👁️</button>' +
-        '<button type="button" class="del" title="Eliminar">🗑️</button>';
-      row.querySelector('.di-sel').onchange = function () {
-        var real = docsOf(it.si, it.ui, b)[it.idx];
-        if (real) real[2] = this.value;
-        paint();
-      };
+        '<button type="button" class="del" title="' + L('Eliminar', 'Eliminar') + '">🗑️</button>';
+      row.querySelector('.di-sel').onchange = function () { retypeDoc(it.si, it.ui, b, it.idx, this.value); rebuild(); paint(); };
       row.querySelector('.dn').onchange = function () {
         var nm = this.value.trim(); if (!nm) return;
-        var real = docsOf(it.si, it.ui, b)[it.idx]; if (!real) return;
-        var lg = li(); real[lg] = nm; if (!real[lg === 0 ? 1 : 0]) real[lg === 0 ? 1 : 0] = nm;
+        renameDoc(it.si, it.ui, b, it.idx, nm); rebuild(); paint();
       };
       row.querySelector('.dl').onchange = function () { setAdjLink(it.si, it.ui, b, it.idx, parseDriveId(this.value)); };
       row.querySelector('.prev').onclick = function () {
         var ex = row.querySelector('.docpreview');
         if (ex) { ex.remove(); return; }
         var did = getAdjLink(it.si, it.ui, b, it.idx);
-        if (!did) { showToast(LS.lang === 'ca' ? '⚠️ Aquest adjunt no té link' : '⚠️ Este adjunto no tiene link'); return; }
+        if (!did) { showToast(L('⚠️ Aquest adjunt no té link', '⚠️ Este adjunto no tiene link')); return; }
         var fr = document.createElement('iframe');
         fr.className = 'docpreview';
         fr.src = 'https://drive.google.com/file/d/' + did + '/preview';
         row.appendChild(fr);
       };
       row.querySelector('.del').onclick = function () {
-        if (!confirm(LS.lang === 'ca' ? 'Eliminar aquest adjunt?' : '¿Eliminar este adjunto?')) return;
-        setAdjLink(it.si, it.ui, b, it.idx, null);
-        docsOf(it.si, it.ui, b).splice(it.idx, 1);
+        if (!confirm(L('Eliminar aquest adjunt?', '¿Eliminar este adjunto?'))) return;
+        removeDoc(it.si, it.ui, b, it.idx);
         rebuild(); paint();
       };
       list.appendChild(row);
     });
   }
   paint();
-  box.querySelector('#docsClose').onclick = function () { wrap.remove(); render(); };
-  wrap.addEventListener('click', function (e) { if (e.target === wrap) { wrap.remove(); render(); } });
+  box.querySelector('#docsClose').onclick = function () { wrap.remove(); hydrateCourse(); render(); };
+  wrap.addEventListener('click', function (e) { if (e.target === wrap) { wrap.remove(); hydrateCourse(); render(); } });
   box.querySelector('#docsAdd').onclick = function () {
-    var name = prompt(LS.lang === 'ca' ? 'Nom del document:' : 'Nombre del documento:', LS.lang === 'ca' ? 'Nova partitura' : 'Nueva partitura');
+    var name = prompt(L('Nom del document:', 'Nombre del documento:'), L('Nova partitura', 'Nueva partitura'));
     if (!name) return;
     var link = prompt('ID / URL de Google Drive (opcional):', '');
     var c = slotCoords(freeLevel, b);
-    if (!D[c.si] || !D[c.si].u[c.ui]) { showToast(LS.lang === 'ca' ? 'Aquest bloc encara no existeix.' : 'Este bloque aún no existe.'); return; }
-    var dst = D[c.si].u[c.ui][b];
-    if (!dst) dst = D[c.si].u[c.ui][b] = { v: [], d: [] };
-    if (!dst.d) dst.d = [];
-    dst.d.push([name, name, 's']);
-    if (link && link.trim()) setAdjLink(c.si, c.ui, b, dst.d.length - 1, parseDriveId(link));
+    var idx = addDoc(c.si, c.ui, b, name, 's');
+    if (link && link.trim()) setAdjLink(c.si, c.ui, b, idx, parseDriveId(link));
     rebuild(); paint();
   };
 }
@@ -6497,7 +6474,7 @@ function visibleIds(ids) {
     if (P.blk && vidBlockById(id) !== P.blk) return false;
     if (!q) return true;
     var v = findVidById(id);
-    return String(v ? vidTitle(v.v, id) : id).toLowerCase().indexOf(q) >= 0;
+    return String(v ? vidTitleRaw(v.v, id) : id).toLowerCase().indexOf(q) >= 0;
   });
 }
 function pushUndo() { P.undo.push(levelIds(P.lvl).slice()); if (P.undo.length > 80) P.undo.shift(); P.redo.length = 0; }
@@ -6562,7 +6539,7 @@ function pubBanner(lvl) {
   list.forEach(function (p) {
     var isV = p.kind === 'video';
     var v = isV ? findVidById(p.vid) : null;
-    var title = isV ? (v ? vidTitle(v.v, p.vid) : '') : (p.t || '');
+    var title = isV ? (v ? vidTitleRaw(v.v, p.vid) : '') : (p.t || '');
     var desc = isV ? (v ? vidDesc(v.v, p.vid, vidBlockById(p.vid)) : '') : (p.d || '');
     var win = p.to ? L('Disponible fins al ', 'Disponible hasta el ') + niceDate(p.to) : L('Disponible per temps limitat', 'Disponible por tiempo limitado');
     h += '<div class="pubitem"><div class="pubbadge">' + (isV ? '🎬' : '🎼') + '</div><div class="pubbody">' +
@@ -6596,7 +6573,7 @@ function pubBanner(lvl) {
     lsSet(pubSeenKey(), JSON.stringify(seen));
     if (fresh) {
       var v2 = fresh.kind === 'video' ? findVidById(fresh.vid) : null;
-      var ttl = fresh.kind === 'video' ? (v2 ? vidTitle(v2.v, fresh.vid) : '') : fresh.t;
+      var ttl = fresh.kind === 'video' ? (v2 ? vidTitleRaw(v2.v, fresh.vid) : '') : fresh.t;
       showToast('🗓 ' + (fresh.label ? fresh.label + ' · ' : '') + ttl, 4200);
     }
   } catch (e) {}
@@ -6687,7 +6664,7 @@ function paintOrder(host, flash) {
         '<span class="ord-grip" title="' + L('Arrossega per reordenar', 'Arrastra para reordenar') + '">⠿</span>' +
         '<span class="ord-n" data-pos="' + id + '" title="' + L('Canvia la posició', 'Cambia la posición') + '">' + (pos + 1) + '</span>' +
         '<span class="ord-blk" style="--c:' + (BCOL[b] || '#e8b04b') + '">' + esc(names[b] || b) + '</span>' +
-        '<span class="ord-t">' + esc(vidTitle(v.v, id)) + '</span>' +
+        '<span class="ord-t">' + esc(vidTitleRaw(v.v, id)) + '</span>' +
         (doc ? '<span class="ord-lk">📄</span>' : '') +
         '<span class="ord-imp" data-imp2="' + id + '" title="' + L('Important / opcional', 'Importante / opcional') + '">' + (imp ? '⭐' : '☆') + '</span>' +
         '<span class="ord-lk' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
@@ -6731,7 +6708,7 @@ function wireOrder(host, ids) {
     var all = levelIds(P.lvl), names = blockNames(P.lvl, LS.lang);
     var txt = levelName(P.lvl) + ' · ' + LS.lang.toUpperCase() + '\n' + all.map(function (id, i) {
       var v = findVidById(id);
-      return (i + 1) + '\t' + (names[vidBlockById(id)] || '') + '\t' + (v ? vidTitle(v.v, id) : id) + '\t' + id;
+      return (i + 1) + '\t' + (names[vidBlockById(id)] || '') + '\t' + (v ? vidTitleRaw(v.v, id) : id) + '\t' + id;
     }).join('\n');
     var ok = function () { showToast(L('⧉ Ordre copiat', '⧉ Orden copiado')); };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, ok); else ok();
@@ -6802,7 +6779,7 @@ document.addEventListener('pointerdown', function (e) {
   row.classList.add('dragging');
   ghost = el('div'); ghost.id = 'ordGhost';
   var v = findVidById(drag.id);
-  ghost.textContent = '⠿ ' + (v ? vidTitle(v.v, drag.id) : drag.id);
+  ghost.textContent = '⠿ ' + (v ? vidTitleRaw(v.v, drag.id) : drag.id);
   document.body.appendChild(ghost);
   place(e);
   try { g.setPointerCapture(e.pointerId); } catch (err) {}
@@ -6915,7 +6892,7 @@ function paintManager() {
       var ttl = hasPub ? L('Publicació programada', 'Publicación programada') : (never ? L('Mai recomanat', 'Nunca recomendado') : L('Recomanació / publicació', 'Recomendación / publicación'));
       h += '<div class="cm-vrow">' +
         '<span class="cm-vn" title="' + L('Posició a l\'itinerari del nivell', 'Posición en el itinerario del nivel') + '">' + getVideoOrder(id) + '</span>' +
-        '<span class="cm-vt">' + esc(vidTitle(v.v, id)) + '</span>' +
+        '<span class="cm-vt">' + esc(vidTitleRaw(v.v, id)) + '</span>' +
         (doc ? '<span class="cm-vl">📄</span>' : '') +
         '<span class="cm-vl' + (link ? ' ok' : '') + '">' + (link ? '▶' : '—') + '</span>' +
         (doc ? '' : '<button class="cm-ib pubrowbtn' + cls + '" data-pub="' + id + '" title="' + ttl + '">🗓</button>') +
@@ -6986,7 +6963,7 @@ function paintManager() {
   main.querySelectorAll('[data-del]').forEach(function (b) {
     b.onclick = function () {
       var id = b.dataset.del, v = findVidById(id);
-      var msg = L('Eliminar aquest pas NOMÉS del curs en ', 'Eliminar este paso SOLO del curso en ') + LS.lang.toUpperCase() + '?\n\n' + (v ? vidTitle(v.v, id) : id);
+      var msg = L('Eliminar aquest pas NOMÉS del curs en ', 'Eliminar este paso SOLO del curso en ') + LS.lang.toUpperCase() + '?\n\n' + (v ? vidTitleRaw(v.v, id) : id);
       if (!confirm(msg)) return;
       if (isDocId(id)) OV.idocs = docsAll().filter(function (d) { return d.id !== id; });
       else markDeleted(id);
@@ -7122,7 +7099,7 @@ function paintPubPanel(lvl) {
   if (!list.length) h += '<div class="cm-empty">' + L('Cap publicació en aquest nivell.', 'Ninguna publicación en este nivel.') + '</div>';
   list.forEach(function (p) {
     var st = pubState(p), v = p.kind === 'video' ? findVidById(p.vid) : null;
-    var title = p.kind === 'video' ? (v ? vidTitle(v.v, p.vid) : L('vídeo eliminat', 'vídeo eliminado')) : p.t;
+    var title = p.kind === 'video' ? (v ? vidTitleRaw(v.v, p.vid) : L('vídeo eliminat', 'vídeo eliminado')) : p.t;
     var win = (p.from ? niceDate(p.from) : L('ara', 'ahora')) + ' → ' + (p.to ? niceDate(p.to) : '∞');
     var lbl = st === 'live' ? L('En curs', 'En curso') : st === 'soon' ? L('Properament', 'Próximamente') : L('Inactiva', 'Inactiva');
     h += '<div class="pubmrow"><span class="ic">' + (p.kind === 'video' ? '🎬' : '🎼') + '</span>' +
@@ -7180,7 +7157,7 @@ function paintPubForm() {
     if (!ids.length) h += '<option value="">—</option>';
     ids.forEach(function (id) {
       var v = findVidById(id); if (!v) return;
-      h += '<option value="' + id + '"' + (id === c.vid ? ' selected' : '') + '>' + esc((names[vidBlockById(id)] || '') + ' · ' + vidTitle(v.v, id) + (isImp(id) ? ' ⭐' : ' ☆')) + '</option>';
+      h += '<option value="' + id + '"' + (id === c.vid ? ' selected' : '') + '>' + esc((names[vidBlockById(id)] || '') + ' · ' + vidTitleRaw(v.v, id) + (isImp(id) ? ' ⭐' : ' ☆')) + '</option>';
     });
     h += '</select></div><div class="cm-fld"><span>' + L('Com es recomana', 'Cómo se recomienda') + '</span><div class="cm-seg" id="pbMode">' +
       '<button data-m="auto"' + (c.mode === 'auto' ? ' class="on"' : '') + '>' + L('Automàtica', 'Automática') + '</button>' +
