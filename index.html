@@ -2193,9 +2193,50 @@ html[data-theme="sepia"] .faq-item {
 .blkcol button:not(.on) { background: var(--card) !important; border-color: var(--hair-2) !important; color: var(--ink) !important; box-shadow: var(--elev-1) !important; }
 .blkcol button:not(.on):hover { border-color: var(--gold) !important; color: var(--gold) !important; box-shadow: var(--elev-2) !important; }
 
-/* Tooltip subtil */
-#gjps-tip { position: fixed; z-index: 2147483647; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.35; pointer-events: none; opacity: 0; transform: translateY(3px); transition: opacity .12s ease, transform .12s ease; max-width: 220px; white-space: normal; box-shadow: 0 2px 8px rgba(0,0,0,.12); background: var(--card); color: var(--ink); border: 1px solid var(--hair-2); }
-#gjps-tip.on { opacity: 1; transform: translateY(0); }
+/* Tooltip net sense fletxa · aparició subtil */
+#gjps-tip {
+  position: fixed;
+  z-index: 2147483647;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px) scale(.99);
+  transition: opacity .45s cubic-bezier(.22,.61,.36,1), transform .45s cubic-bezier(.22,.61,.36,1);
+  max-width: 300px;
+  white-space: normal;
+  text-align: center;
+  letter-spacing: .01em;
+  background: linear-gradient(180deg, #1e2330 0%, #161a24 100%);
+  color: #e8ecf4;
+  border: 1px solid rgba(232,176,75,.28);
+  box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+#gjps-tip.on { opacity: 1; transform: translateY(0) scale(1); }
+html:not([data-theme="dark"]) #gjps-tip {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ee 100%);
+  color: #1a2030;
+  border-color: rgba(232,176,75,.45);
+  box-shadow: 0 8px 24px rgba(0,0,0,.12), 0 0 0 1px rgba(255,255,255,.6) inset;
+}
+html[data-theme="dark"] .blkcol button:not(.on) {
+  background: linear-gradient(158deg, rgba(255,255,255,.07), rgba(255,255,255,.02)) !important;
+  border-color: var(--hair-2) !important;
+  color: var(--ink) !important;
+  box-shadow: var(--elev-1) !important;
+}
+html[data-theme="dark"] .blkcol button:not(.on):hover {
+  background: linear-gradient(158deg, rgba(255,255,255,.12), rgba(255,255,255,.04)) !important;
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+}
+.lvlmenu { scrollbar-width: none; -ms-overflow-style: none; }
+.lvlmenu::-webkit-scrollbar { display: none; width: 0; height: 0; }
 html[data-theme="dark"] .blkcol button:not(.on) {
   background: linear-gradient(158deg, rgba(255,255,255,.07), rgba(255,255,255,.02)) !important;
   border-color: var(--hair-2) !important;
@@ -8051,7 +8092,7 @@ document.addEventListener('keydown', function(e) {
   document.body.appendChild(tip);
 
   var showTimer = null, currentEl = null;
-  var DELAY_SHOW = 900;
+  var DELAY_SHOW = 1100;
 
   function pickLang(t) {
     if (t.indexOf(' / ') >= 0) { var p = t.split(' / '); if (p.length === 2) return (LS.lang === 'ca') ? p[0] : p[1]; }
@@ -8092,14 +8133,14 @@ document.addEventListener('keydown', function(e) {
   }
   function move(e) {
     if (!tip.classList.contains('on')) return;
-    var w = tip.offsetWidth || 160, h = tip.offsetHeight || 24;
-    var left = e.clientX - w / 2, top = e.clientY - h - 10;
-    if (left < 8) left = 8;
-    if (left + w > window.innerWidth - 8) left = window.innerWidth - w - 8;
-    if (top < 8) top = e.clientY + 18;
-    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+    var w = tip.offsetWidth || 160, h = tip.offsetHeight || 30;
+    var left = e.clientX - w / 2, top = e.clientY - h - 18;
+    if (left < 10) left = 10;
+    if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+    if (top < 10) top = e.clientY + 20;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
   }
-
   var SEL = '[title],[data-tip]';
   document.addEventListener('mouseover', function (e) {
     var t = e.target;
