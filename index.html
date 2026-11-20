@@ -1879,13 +1879,16 @@ html.fx-calm .prep-box { animation: none; }
 .prep-head .cm-x { position: absolute; top: 14px; right: 14px; }
 .prep-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 22px; }
 .prep-scroll .prep-body { display: block; margin-top: 0; border: 0; background: transparent; padding: 0; font-size: 13px; }
-.prep-foot { flex: none; display: flex; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--hair);
+.prep-foot { flex: none; display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--hair);
   background: var(--tap); }
-.prep-foot button { flex: 1; padding: 13px 16px; border-radius: 12px; cursor: pointer; font-family: inherit;
-  font-size: 13.5px; font-weight: 800; transition: transform .16s, box-shadow .2s, filter .2s; }
+.prep-foot button { flex: 1; min-width: 0; padding: 13px 14px; border-radius: 12px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 800; transition: transform .16s, box-shadow .2s, filter .2s; white-space: nowrap; }
 .prep-later { border: 1px solid var(--hair-2); background: var(--card); color: var(--mut); }
 .prep-later:hover { color: var(--ink); border-color: var(--gold); }
-.prep-play { border: 0; background: linear-gradient(135deg, var(--gold), color-mix(in srgb, var(--gold) 62%, #000)); color: #fff;
+.prep-skip { border: 1px solid color-mix(in srgb, #4cc9f0 55%, transparent); background: color-mix(in srgb, #4cc9f0 12%, transparent); color: #4cc9f0; }
+.prep-skip:hover { background: color-mix(in srgb, #4cc9f0 22%, transparent); border-color: #4cc9f0; }
+html[data-theme="blue"] .prep-skip, html[data-theme="sepia"] .prep-skip { color: #1f6f8b; border-color: color-mix(in srgb, #1f6f8b 55%, transparent); background: color-mix(in srgb, #1f6f8b 12%, transparent); }
+.prep-play { flex: 1.4; border: 0; background: linear-gradient(135deg, var(--gold), color-mix(in srgb, var(--gold) 62%, #000)); color: #fff;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--gold) 34%, transparent); }
 html[data-theme="dark"] .prep-play { color: #14161c; }
 .prep-play:hover { transform: translateY(-1px); filter: brightness(1.06); }
@@ -1914,7 +1917,11 @@ html.no-hover .editbtn:hover { transform: none !important; }
 @media (max-width: 767px) {
   .prep-head { padding: 16px 46px 12px 16px; }
   .prep-scroll { padding: 14px 16px; }
-  .prep-foot { padding: 12px 16px; flex-direction: column-reverse; }
+  .prep-foot { padding: 12px 14px; gap: 8px; }
+  .prep-foot button { padding: 12px 8px; font-size: 12px; }
+  .prep-later { order: 1; flex: 1; }
+  .prep-skip { order: 2; flex: 1; }
+  .prep-play { order: 3; flex-basis: 100%; }
 }
 
 /* ============================================================
@@ -4681,7 +4688,22 @@ function prepHTML(txt) {
 function prepSeenKey() { return 'gjps_prep_v1_' + (LS.user || '') + '_' + LS.lang; }
 function prepSeen() { return lsJSON(prepSeenKey(), {}); }
 function markPrepSeen(id) { var s = prepSeen(); s[id] = 1; lsSet(prepSeenKey(), JSON.stringify(s)); }
-function prepNeeded(id) { return hasPrep(id) && !prepSeen()[id]; }
+function prepNeeded(id) { return hasPrep(id); }
+function performSkip(id) {
+  LS.skipped = LS.skipped || []; LS.skipAfter = LS.skipAfter || {};
+  if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
+  LS.skipAfter[id] = (function () {
+    var list = orderList();
+    for (var i = 0; i < list.length; i++) {
+      var cid = list[i];
+      if (isGiftId(cid) || LS.done[cid] || LS.skipped.indexOf(cid) >= 0) continue;
+      var cv = findVidById(cid);
+      if (cv && driveSrc(cv.v, cid)) return cid;
+    }
+    return null;
+  })();
+  saveSkip();
+}
 
 var prepModal = null, prepSrc = '', prepId = '';
 function ensurePrepModal() {
@@ -4694,12 +4716,20 @@ function ensurePrepModal() {
       '<h3 id="prepTitle"></h3><button class="cm-x" id="prepX" type="button">✕</button></div>' +
       '<div class="prep-scroll"><div class="prep-body" id="prepBody"></div></div>' +
       '<div class="prep-foot"><button class="prep-later" id="prepLater" type="button">' + L('Ara no', 'Ahora no') + '</button>' +
+      '<button class="prep-skip" id="prepSkip" type="button">⏭ ' + L('Aplaçar', 'Aplazar') + '</button>' +
       '<button class="prep-play" id="prepPlay" type="button">▶ ' + L('Reprodueix', 'Reproducir') + '</button></div>' +
     '</div>';
   document.body.appendChild(prepModal);
   prepModal.addEventListener('click', function (e) { if (e.target === prepModal) closePrep(false); });
   document.getElementById('prepX').onclick = function () { closePrep(false); };
   document.getElementById('prepLater').onclick = function () { closePrep(false); };
+  document.getElementById('prepSkip').onclick = function () {
+    var id = prepId;
+    performSkip(id);
+    closePrep(false);
+    showToast(L('⏭ Vídeo aplaçat', '⏭ Vídeo aplazado'));
+    render();
+  };
   document.getElementById('prepPlay').onclick = function () { closePrep(true); };
   return prepModal;
 }
@@ -4870,19 +4900,7 @@ function makeVid(v, id, track, tag) {
     skipBtn.onclick = function () {
       if (editModeOn) return;
       var btn = this;
-      LS.skipped = LS.skipped || []; LS.skipAfter = LS.skipAfter || {};
-      if (LS.skipped.indexOf(id) < 0) LS.skipped.push(id);
-      LS.skipAfter[id] = (function () {
-        var list = orderList();
-        for (var i = 0; i < list.length; i++) {
-          var cid = list[i];
-          if (isGiftId(cid) || LS.done[cid] || LS.skipped.indexOf(cid) >= 0) continue;
-          var cv = findVidById(cid);
-          if (cv && driveSrc(cv.v, cid)) return cid;
-        }
-        return null;
-      })();
-      saveSkip();
+      performSkip(id);
       btn.style.borderColor = '#4cc9f0'; btn.style.color = '#0a2e38';
       btn.style.background = '#4cc9f0'; btn.style.opacity = '1'; btn.disabled = true;
       showToast(isCa ? '⏭ Vídeo aplaçat' : '⏭ Vídeo aplazado');
