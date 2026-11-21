@@ -1140,6 +1140,9 @@ html:not([data-theme="dark"]) .adjsel { background: rgba(40,34,24,.42); }
   body:not(.editmode) .acts .ax { display: none; }
 }
 .now .acts .skip .ai { display: none !important; }
+.acts button.skipm { color: var(--mut); }
+.acts button.skipm:hover { border-color: var(--danger); color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.now .acts .skipm .ai { display: none !important; }
 .now .acts .skip .al { letter-spacing: -.005em; }
 
 @media (max-width: 767px) and (orientation: portrait) {
@@ -2430,7 +2433,7 @@ html.lowfx .video-overlay .icon { animation: none !important; }
   </div>
   <div class="hdr">
     <span class="modes">
-<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
+<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
 
 <button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
 
@@ -2438,18 +2441,18 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 
     <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="">FAQ</button>
     </span>
-    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
+    <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
     <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
     <button id="langToggle" class="langbtn" data-tip="Canvia d'idioma / Cambiar de idioma" aria-label="Canvia d'idioma / Cambiar de idioma">🌐 <span id="langCur">CAT</span></button>
   </div>
 </header>
 
 <main>
-  <div id="trackView" style="display: block;"></div>
+  <div id="trackView" style="display: none;"></div>
   <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
   <div id="infoView" style="display: none;"></div>
-  <div id="helpView" style="display: none;"></div>
+  <div id="helpView" style="display: block;"></div>
 </main>
 
 <div class="modal" id="modal">
@@ -2547,13 +2550,19 @@ function loadSkip() {
   if (ra && (ra.ca !== undefined || ra.es !== undefined)) LS.skipAfterFull = { ca: ra.ca || {}, es: ra.es || {} };
   else { var legA = (ra && typeof ra === 'object') ? ra : {}; LS.skipAfterFull = { ca: Object.assign({}, legA), es: Object.assign({}, legA) }; }
   LS.skipAfter = LS.skipAfterFull[LS.lang];
+  var rp = lsJSON('gjps_skipperm_' + u, null);
+  if (rp && (rp.ca !== undefined || rp.es !== undefined)) LS.skipPermFull = { ca: Array.isArray(rp.ca) ? rp.ca : [], es: Array.isArray(rp.es) ? rp.es : [] };
+  else { var legP = Array.isArray(rp) ? rp : []; LS.skipPermFull = { ca: legP.slice(), es: legP.slice() }; }
+  LS.skipPerm = LS.skipPermFull[LS.lang];
 }
 function saveSkip() {
   var u = LS.user || 'guest';
   LS.skippedFull[LS.lang] = LS.skipped;
   LS.skipAfterFull[LS.lang] = LS.skipAfter;
+  LS.skipPermFull[LS.lang] = LS.skipPerm;
   lsSet('gjps_skipped_' + u, JSON.stringify(LS.skippedFull));
   lsSet('gjps_skipafter_' + u, JSON.stringify(LS.skipAfterFull));
+  lsSet('gjps_skipperm_' + u, JSON.stringify(LS.skipPermFull));
 }
 loadSkip();
 
@@ -4240,8 +4249,14 @@ function withLink(ids) { return ids.filter(function (id) { var v = findVidById(i
 function allImpDone(ids) { var imp = ids.filter(isImp); return imp.length === 0 || imp.every(function (id) { return !!LS.done[id]; }); }
 function prog(l) { var d = 0; l.forEach(function (x) { if (LS.done[x.id]) d++; }); return { d: d, n: l.length, p: l.length ? Math.round(d / l.length * 100) : 0 }; }
 
+function isSkipPerm(id) { return (LS.skipPerm || []).indexOf(id) >= 0; }
+function proposePool(ids) {
+  return withLink(ids).filter(function (id) {
+    return !LS.done[id] && recMode(id) !== 'never' && !isSkipPerm(id);
+  });
+}
 function pickFrom(ids) {
-  var pool = withLink(ids).filter(function (id) { return recMode(id) !== 'never'; });
+  var pool = proposePool(ids);
   if (!pool.length) return null;
   var skipped = LS.skipped || [];
   LS.skipAfter = LS.skipAfter || {};
@@ -4268,13 +4283,15 @@ function trackContext() {
   for (var i = 0; i < lvls.length; i++) {
     var l = lvls[i];
     if (l === 0) {
-      var w = withLink(blockSeq(0, 'w'));
-      if (w.some(function (id) { return !LS.done[id]; })) return { level: 0, block: 'w', ids: w };
+      var w = blockSeq(0, 'w');
+      if (proposePool(w).length) return { level: 0, block: 'w', ids: w };
       continue;
     }
     var ids = levelIds(l);
-    var pend = withLink(ids).filter(function (id) { return !LS.done[id] && recMode(id) !== 'never'; });
-    if (pend.length) return { level: l, block: vidBlockById(pend[0]), ids: ids };
+    var pool = proposePool(ids);
+    var impAll = ids.filter(isImp);
+    var gate = impAll.length ? pool.filter(isImp) : pool;
+    if (gate.length) return { level: l, block: vidBlockById(pool[0] || gate[0]), ids: ids };
   }
   return null;
 }
@@ -4282,28 +4299,15 @@ function findNext() {
   initializeOrder();
   var ctx = trackContext();
   if (ctx) { var got = pickFrom(ctx.ids); if (got) return got; }
-  var rest = orderList().filter(function (id) { return !isGiftId(id) && !LS.done[id] && recMode(id) !== 'never'; });
+  var rest = orderList().filter(function (id) { return !isGiftId(id) && !LS.done[id] && recMode(id) !== 'never' && !isSkipPerm(id); });
   return pickFrom(rest);
 }
 function smartFreeLevel() {
-  var all = allVids();
-  var welcome = all.filter(function (x) { return vidLevel(x.id) === 0; });
-  var wl = welcome.filter(function (x) { return !!driveSrc(x.v, x.id); });
-  var welcomeDone = (wl.length === 0) || (welcome.length > 0 && welcome.every(function (x) { return LS.done[x.id]; }));
-  if (!welcomeDone) { freeLevel = 0; freeBlock = 'w'; return; }
-  initializeOrder();
-  var found = false, list = orderList();
-  for (var i = 0; i < list.length; i++) {
-    var id = list[i];
-    if (isWelcomeId(id) || isGiftId(id)) continue;
-    if (!LS.done[id] && findVidById(id)) {
-      var lv = vidLevel(id);
-      if (levelActive(lv)) { freeLevel = lv; found = true; break; }
-    }
-  }
-  if (!found) freeLevel = activeLevels()[1] || activeLevels()[0] || 0;
-  if (freeBlock === 'w' && freeLevel !== 0) freeBlock = 't';
+  var ctx = trackContext();
+  freeLevel = ctx ? ctx.level : (activeLevels().slice(-1)[0] || 0);
   if (!levelActive(freeLevel)) freeLevel = activeLevels()[0] || 0;
+  if (freeLevel === 0) freeBlock = 'w';
+  else if (freeBlock === 'w') freeBlock = 't';
 }
 
 /* ================================================================
@@ -4976,6 +4980,9 @@ function makeVid(v, id, track, tag) {
   var skipFull = isCa ? 'Aplaçar aquest vídeo i passar al següent' : 'Aplazar este vídeo y pasar al siguiente';
   var skipBtnHtml = (track && hasLink && !LS.done[id])
     ? '<button class="skip" title="' + skipFull + '" aria-label="' + skipFull + '"><span class="ai">⏭</span><span class="al">' + (isCa ? 'Aplaçar' : 'Aplazar') + '</span></button>' : '';
+  var skipPermFull = isCa ? 'Salta aquest vídeo opcional: el Seguiment no el tornarà a proposar' : 'Sálta este vídeo opcional: el Seguimiento no lo volverá a proponer';
+  var skipPermHtml = (track && hasLink && !LS.done[id] && importance === 'optional')
+    ? '<button class="skipm" title="' + skipPermFull + '" aria-label="' + skipPermFull + '"><span class="ai">»</span><span class="al">' + (isCa ? 'Saltar' : 'Saltar') + '</span></button>' : '';
   var done = hasLink && !!LS.done[id];
   var ckIcon = done ? '↺' : '✔';
   var ckShort = done ? (isCa ? 'Desfer' : 'Deshacer') : (track ? (isCa ? 'Fet' : 'Hecho') : (isCa ? 'Fet' : 'Hecho'));
@@ -5003,7 +5010,7 @@ function makeVid(v, id, track, tag) {
     '<div class="vt" data-ovid="' + id + '" data-ovk="t">' + vidTitle(v, id) + '</div>' + infoBtn + docChip + impInRow + '</div>' +
     '<div class="acts">' +
       '<button class="ck' + (done ? ' done' : '') + '" title="' + ckFull + '" aria-label="' + ckFull + '"><span class="ai">' + ckIcon + '</span><span class="al">' + ckShort + '</span><span class="ax">' + ckExtra + '</span></button>' +
-      skipBtnHtml +
+      skipBtnHtml + skipPermHtml +
       '<button class="bk' + (bkMarked ? ' bookmarked' : '') + '" title="' + bkFull + '" aria-label="' + bkFull + '"><span class="ai">🔖</span><span class="al">' + bkShort + '</span></button>' +
       '<button class="' + ntClass + '" title="' + ntFull + '" aria-label="' + ntFull + '"><span class="ai">' + (hasNotes ? ICON_PENCIL : ICON_NOTE) + '</span><span class="al">' + ntShort + '</span></button>' +
     '</div>' +
@@ -5028,7 +5035,7 @@ function makeVid(v, id, track, tag) {
   if (mx) mx.onclick = function () { var src = driveSrc(v, id); if (src) openFullscreenVideo(src); else showToast(t().soon); };
   var cl = row.querySelector('.cl');
   if (cl) cl.onclick = function () { row.querySelector('.inl').classList.remove('on'); row.querySelector('.inl iframe').src = ''; };
-  if (!hasLink) row.querySelectorAll('.acts .ck, .acts .bk, .acts .nt, .acts .skip').forEach(function (bb) { bb.disabled = true; });
+  if (!hasLink) row.querySelectorAll('.acts .ck, .acts .bk, .acts .nt, .acts .skip, .acts .skipm').forEach(function (bb) { bb.disabled = true; });
 
   row.querySelector('.ck').onclick = function () {
     if (editModeOn) return;
@@ -5056,6 +5063,17 @@ function makeVid(v, id, track, tag) {
       btn.style.background = '#4cc9f0'; btn.style.opacity = '1'; btn.disabled = true;
       showToast(isCa ? '⏭ Vídeo aplaçat' : '⏭ Vídeo aplazado');
       setTimeout(function () { render(); }, 250);
+    };
+  }
+  var skipPermBtn = row.querySelector('.skipm');
+  if (skipPermBtn) {
+    skipPermBtn.onclick = function () {
+      if (editModeOn) return;
+      LS.skipPerm = LS.skipPerm || [];
+      if (LS.skipPerm.indexOf(id) < 0) LS.skipPerm.push(id);
+      saveSkip();
+      showToast(isCa ? '» Vídeo opcional saltat: no el tornarem a proposar' : '» Vídeo opcional saltado: no lo volveremos a proponer');
+      setQuiet(true); render();
     };
   }
   if (editModeOn && !isGiftId(id)) {
@@ -8365,5 +8383,58 @@ document.addEventListener('keydown', function(e) {
   requestAnimationFrame(frame);
 })();
 </script>
+<script>
+/* ═══ ENGANXADA NETA · text pla sense arrossegar la font del origen ═══ */
+(function () {
+  'use strict';
+  if (window.__gjPasteClean) return; window.__gjPasteClean = true;
 
+  function editableHost(t) {
+    if (!t) return null;
+    if (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT') return null; // natiu text pla
+    if (t.isContentEditable) return t;
+    return t.closest ? t.closest('[contenteditable="true"]') : null;
+  }
+  function isOneLine(host) {
+    if (!host) return false;
+    if (host.classList && host.classList.contains('vt')) return true;
+    var k = host.getAttribute('data-ovk') || host.getAttribute('data-fqk') ||
+            host.getAttribute('data-ovak') || host.getAttribute('data-appk') ||
+            host.getAttribute('data-hk');
+    return k === 't' || k === 'q' || k === 'n';
+  }
+
+  document.addEventListener('paste', function (e) {
+    var host = editableHost(e.target);
+    if (!host) return;                       // fora d'edició o textarea: no intervenim
+    var cd = e.clipboardData || window.clipboardData;
+    if (!cd) return;
+    var text = cd.getData('text/plain');
+    if (text == null) return;
+    e.preventDefault();
+
+    text = text.replace(/\r\n?/g, '\n');
+    if (isOneLine(host)) text = text.replace(/\s*\n\s*/g, ' ').trim(); // títols: una línia
+
+    var frag = document.createDocumentFragment(), nodes = [];
+    var parts = text.split('\n');
+    for (var i = 0; i < parts.length; i++) {
+      if (i > 0) { var br = document.createElement('br'); nodes.push(br); frag.appendChild(br); }
+      if (parts[i]) { var tn = document.createTextNode(parts[i]); nodes.push(tn); frag.appendChild(tn); }
+    }
+
+    var sel = window.getSelection();
+    if (!sel || !sel.rangeCount) { host.appendChild(frag); return; }
+    var range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(frag);
+    var last = nodes[nodes.length - 1];
+    if (last) {
+      var after = document.createRange();
+      after.setStartAfter(last); after.collapse(true);
+      sel.removeAllRanges(); sel.addRange(after);
+    }
+  }, true);
+})();
+</script>
 </body></html>
