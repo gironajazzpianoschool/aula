@@ -717,8 +717,17 @@ body.editmode .stagetag { padding-right: 78px; }
 .editing { outline: 1px dashed var(--gold); background: rgba(232,176,75,.07); cursor: text; border-radius: 6px; padding: 2px 5px; color: var(--ink); }
 .docs { display: none; margin: 0 0 14px; }
 .docs.on { display: block; }
-.doc { display: flex; gap: 10px; align-items: center; color: var(--mut); font-size: var(--fs-btn); padding: 6px 9px; border: 1px dashed var(--hair-2); border-radius: var(--r-md); margin-top: 7px; }
-.doc a { color: var(--ok); text-decoration: none; font-weight: 700; }
+.docs-head { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--mut); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--hair); }
+.docs-head .docs-n { margin-left: auto; font-size: 10px; font-weight: 800; letter-spacing: .06em; padding: 2px 9px; border-radius: 99px; background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+.doc { display: flex; gap: 10px; align-items: center; color: var(--ink); font-size: var(--fs-btn); padding: 9px 12px; border: 1px solid var(--hair); border-radius: var(--r-md); margin-top: 7px; background: var(--card); box-shadow: var(--elev-1); transition: border-color .18s, background .18s, transform .18s; }
+.doc:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 6%, var(--card)); transform: translateX(2px); }
+.doc-ico { flex: none; width: 30px; height: 30px; display: grid; place-items: center; font-size: 15px; line-height: 1; border-radius: 8px; background: color-mix(in srgb, var(--gold) 12%, transparent); border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent); }
+.doc-name { flex: 1; min-width: 0; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc a { flex: none; display: inline-flex; align-items: center; gap: 5px; color: var(--gold); text-decoration: none; font-weight: 800; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 11px; border-radius: 99px; border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); background: color-mix(in srgb, var(--gold) 10%, transparent); transition: all .18s; }
+.doc a:hover { background: var(--gold); color: #14161c; border-color: var(--gold); }
+.doc-nolink { flex: none; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--mut); padding: 4px 9px; border-radius: 99px; border: 1px dashed var(--hair-2); opacity: .8; }
+html:not([data-theme="dark"]) .doc { background: var(--bg); }
+html:not([data-theme="dark"]) .doc a:hover { color: #fff; }
 .notes { display: none; margin-top: 12px; border-top: 1px solid var(--hair); padding-top: 12px; }
 .notes.on { display: block; }
 .ntitle { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; }
@@ -756,7 +765,7 @@ body.editmode .stagetag { padding-right: 78px; }
 .add-vid-btn:hover { background: rgba(232,176,75,0.15); }
 .vid-drag { position: absolute; top: 10px; left: 8px; width: 20px; height: 20px; border-radius: 5px; background: transparent; border: none; color: var(--mut); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: grab; z-index: 7; user-select: none; touch-action: none; transition: all .2s; opacity: .5; }
 .vid-drag:hover { opacity: 1; color: var(--gold); transform: scale(1.15); }
-body.editmode .vid { padding-left: 34px; }
+body.editmode .vgrid .vid { padding-left: 34px; }
 .vid-drag.dragging { cursor: grabbing; opacity: .5; }
 .vid.dragging-src { opacity: .35; border-style: dashed; }
 .vgrid.drop-hover { outline: 2px dashed var(--gold); outline-offset: 4px; border-radius: 12px; }
@@ -1881,6 +1890,32 @@ html.fx-calm .prep-box { animation: none; }
 .prep-scroll .prep-body { display: block; margin-top: 0; border: 0; background: transparent; padding: 0; font-size: 15px; line-height: 1.7; }
 .prep-scroll .prep-body h5 { font-size: 11px; }
 .prep-scroll .prep-body .prep-sum { font-size: 15px; }
+/* Recordatori d'adjunts al modal de preparació */
+.prep-adj { flex: none; display: none; padding: 0 22px 14px; }
+.prep-adj.on { display: block; }
+.prep-adj > button {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 13px; cursor: pointer;
+  border-radius: 11px; border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--gold) 14%, transparent), color-mix(in srgb, var(--gold) 4%, transparent));
+  color: var(--ink); font-family: inherit; font-size: 12.5px; font-weight: 700; text-align: left;
+  transition: border-color .2s, background .2s; }
+.prep-adj > button:hover { border-color: var(--gold); }
+.prep-adj .pa-ico { flex: none; font-size: 15px; line-height: 1; }
+.prep-adj .pa-tx { flex: 1; min-width: 0; line-height: 1.45; }
+.prep-adj .pa-n { flex: none; font-size: 10px; font-weight: 800; letter-spacing: .08em;
+  padding: 3px 8px; border-radius: 99px; background: var(--gold); color: #14161c; }
+.prep-adj .pa-ch { flex: none; color: var(--gold); transition: transform .22s; }
+.prep-adj.open .pa-ch { transform: rotate(180deg); }
+.prep-adj-list { display: none; margin-top: 8px; flex-direction: column; gap: 6px; max-height: 168px; overflow-y: auto; }
+.prep-adj.open .prep-adj-list { display: flex; }
+.prep-adj-list a { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 9px;
+  border: 1px solid var(--hair-2); background: var(--tap); color: var(--ink);
+  text-decoration: none; font-size: 12px; font-weight: 600; transition: all .18s; }
+.prep-adj-list a:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.prep-adj-list a .pa-li { flex: none; font-size: 14px; }
+.prep-adj-list a .pa-lt { flex: 1; min-width: 0; }
+.prep-adj-list a .pa-ld { flex: none; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+html:not([data-theme="dark"]) .prep-adj .pa-n { color: #fff; }
 .prep-foot { flex: none; display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--hair);
   background: var(--tap); }
 .prep-foot button { flex: 1; min-width: 0; padding: 13px 14px; border-radius: 12px; cursor: pointer; font-family: inherit;
@@ -1919,6 +1954,8 @@ html.no-hover .editbtn:hover { transform: none !important; }
 @media (max-width: 767px) {
   .prep-head { padding: 16px 46px 12px 16px; }
   .prep-scroll { padding: 14px 16px; }
+  .prep-adj { padding: 0 16px 12px; }
+  .prep-adj > button { font-size: 11.5px; padding: 9px 11px; }
   .prep-foot { padding: 12px 14px; gap: 8px; }
   .prep-foot button { padding: 12px 8px; font-size: 12px; }
   .prep-later { order: 1; flex: 1; }
@@ -2097,6 +2134,12 @@ html[data-theme="sepia"] .faq-item {
 .vid-info-content ul { padding-left: 18px; margin: 0 0 8px; }
 .vid-info-content li { margin-bottom: 4px; }
 .vid-info-content .prep-sum { font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hair); display: block; }
+.vid-info-content .info-adj { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.vid-info-content .info-adj a { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--hair-2); background: var(--tap); color: var(--ink); text-decoration: none; font-size: 12px; font-weight: 600; transition: all .18s; }
+.vid-info-content .info-adj a:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.vid-info-content .info-adj .ia-ico { flex: none; font-size: 14px; }
+.vid-info-content .info-adj .ia-tx { flex: 1; min-width: 0; }
+.vid-info-content .info-adj .ia-dl { flex: none; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
 
 /* Trofeu: contenidor centrat + glow posicionat (el gir el fa el JS) */
 .celebration { position: relative; text-align: center; }
@@ -2372,7 +2415,7 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GJPS">
 
-<body class="">
+</head><body class="">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
 <div id="toast" style="opacity:0"></div>
@@ -2387,13 +2430,13 @@ html.lowfx .video-overlay .icon { animation: none !important; }
   </div>
   <div class="hdr">
     <span class="modes">
-<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
+<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
 
 <button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
 
 <button id="mApps" data-tip="Aplicacions i eines d'entrenament / Aplicaciones y herramientas de entrenamiento" aria-label="Aplicacions / Aplicaciones" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
 
-    <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="on">FAQ</button>
+    <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="">FAQ</button>
     </span>
     <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
     <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
@@ -2402,10 +2445,10 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 </header>
 
 <main>
-  <div id="trackView" style="display: none;"></div>
+  <div id="trackView" style="display: block;"></div>
   <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
-  <div id="infoView" style="display: block;"></div>
+  <div id="infoView" style="display: none;"></div>
   <div id="helpView" style="display: none;"></div>
 </main>
 
@@ -4296,7 +4339,11 @@ function docsOf(si, ui, b) {
 }
 function adjItemsOf(si, ui, b) {
   var out = [];
-  docsOf(si, ui, b).forEach(function (dc, i) { if (!dc[3]) out.push({ dc: dc, si: si, ui: ui, idx: i }); });
+  docsOf(si, ui, b).forEach(function (dc, i) {
+    if (dc[3]) return;
+    if (!dc[li()]) return;
+    out.push({ dc: dc, si: si, ui: ui, idx: i });
+  });
   return out;
 }
 function adjItemsLevel(l, b) {
@@ -4316,12 +4363,20 @@ function adjItemsLevel(l, b) {
   return out;
 }
 function addDoc(si, ui, b, name, type) {
-  ndList(si, ui, b).push([name, name, type || 'd']);
+  var row = ['', '', type || 'd'];
+  row[li()] = name;
+  ndList(si, ui, b).push(row);
   return baseDocs(si, ui, b).length + ndList(si, ui, b).length - 1;
 }
 function renameDoc(si, ui, b, idx, name) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {}))[LS.lang] = name; }
 function retypeDoc(si, ui, b, idx, type) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {})).t = type; }
-function removeDoc(si, ui, b, idx) { var m = dnMap(si, ui, b); (m[idx] || (m[idx] = {})).del = 1; }
+function removeDoc(si, ui, b, idx) {
+  var m = dnMap(si, ui, b);
+  var o = m[idx] || (m[idx] = {});
+  o[LS.lang] = '';
+  var dc = docsOf(si, ui, b)[idx];
+  if (dc && !dc[0] && !dc[1]) o.del = 1;
+}
 
 function getAdjLink(si, ui, b, docIdx) {
   var key = si + '.' + ui + '.' + b + '.' + docIdx;
@@ -4358,17 +4413,19 @@ function mkAdj(items, b) {
   var rows = '';
   items.forEach(function (it) {
     var driveId = getAdjLink(it.si, it.ui, b, it.idx);
-    var linkHtml = driveId ? ' <a href="https://drive.google.com/file/d/' + driveId + '/view" target="_blank" rel="noopener" style="color:var(--ok)">↗</a>' : '';
-    rows += '<div class="doc"><span style="font-size:14px">' + (DI[it.dc[2]] || '📄') + '</span><span style="flex:1;font-weight:600">' + esc(it.dc[li()]) + '</span>' + linkHtml + '</div>';
+    var linkHtml = driveId
+      ? '<a href="https://drive.google.com/file/d/' + driveId + '/view" target="_blank" rel="noopener">' + L('Obre', 'Abre') + ' ↗</a>'
+      : (editModeOn ? '<span class="doc-nolink">' + L('Sense enllaç', 'Sin enlace') + '</span>' : '');
+    rows += '<div class="doc"><span class="doc-ico">📎</span><span class="doc-name">' + esc(it.dc[li()]) + '</span>' + linkHtml + '</div>';
   });
-  box.innerHTML = '<div style="font-size:12px;color:var(--mut);font-weight:600;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)">' +
-    L('Documents d\'aquest bloc', 'Documentos de este bloque') + '</div>' + rows;
+  box.innerHTML = '<div class="docs-head">' + L('Documents d\'aquest bloc', 'Documentos de este bloque') +
+    '<span class="docs-n">' + items.length + '</span></div>' + rows;
   btn.onclick = function () { if (editModeOn) { openDocsEditor(null, null, b); return; } box.classList.toggle('on'); };
   return { btn: btn, box: box };
 }
 function adjParts(si, ui, b) {
   var items = adjItemsOf(si, ui, b).filter(function (it) { return !!getAdjLink(it.si, it.ui, b, it.idx); });
-  if (!items.length) return null;
+  if (!items.length && !editModeOn) return null;
   return mkAdj(items, b);
 }
 
@@ -4379,6 +4436,7 @@ function openAdjSelector(id, si, ui, b) {
     if (!s.u) return;
     s.u.forEach(function (u, uIdx) {
       adjItemsOf(sIdx, uIdx, b).forEach(function (it) {
+        if (!it.dc[li()]) return;
         var link = getAdjLink(it.si, it.ui, b, it.idx);
         var k = it.dc[li()] + '|' + (link || (it.si + '.' + it.ui + '.' + it.idx));
         if (seen[k]) return;
@@ -4774,6 +4832,7 @@ function ensurePrepModal() {
       '<div class="prep-head"><span class="prep-kicker">' + L('Prepara\'t per al vídeo', 'Prepárate para el vídeo') + '</span>' +
       '<h3 id="prepTitle"></h3><button class="cm-x" id="prepX" type="button">✕</button></div>' +
       '<div class="prep-scroll"><div class="prep-body" id="prepBody"></div></div>' +
+      '<div class="prep-adj" id="prepAdj"></div>' +
       '<div class="prep-foot"><button class="prep-later" id="prepLater" type="button">' + L('Ara no', 'Ahora no') + '</button>' +
       '<button class="prep-skip" id="prepSkip" type="button">⏭ ' + L('Aplaçar', 'Aplazar') + '</button>' +
       '<button class="prep-play" id="prepPlay" type="button">▶ ' + L('Reprodueix', 'Reproducir') + '</button></div>' +
@@ -4792,12 +4851,45 @@ function ensurePrepModal() {
   document.getElementById('prepPlay').onclick = function () { closePrep(true); };
   return prepModal;
 }
+function paintPrepAdj(id) {
+  var box = document.getElementById('prepAdj');
+  if (!box) return;
+  var files = adjListOf(id, true);
+  box.classList.remove('open', 'on');
+  box.innerHTML = '';
+  if (!files.length) return;
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML = '<span class="pa-tx">' +
+    (files.length === 1
+      ? L('Recorda descarregar l\'arxiu adjunt en acabar el vídeo', 'Recuerda descargar el archivo adjunto al terminar el vídeo')
+      : L('Recorda descarregar els arxius adjunts en acabar el vídeo', 'Recuerda descargar los archivos adjuntos al terminar el vídeo')) +
+    '</span><span class="pa-n">' + files.length + '</span><span class="pa-ch">' + ICON_CHEVRON + '</span>';
+  var list = document.createElement('div');
+  list.className = 'prep-adj-list';
+  files.forEach(function (f) {
+    var a = document.createElement('a');
+    a.href = 'https://drive.google.com/file/d/' + f.l + '/view';
+    a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = '<span class="pa-li">📎</span><span class="pa-lt">' + esc(f.n) +
+      '</span><span class="pa-ld">' + L('Obre', 'Abre') + ' ↗</span>';
+    list.appendChild(a);
+  });
+  btn.onclick = function () {
+    var open = box.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  box.appendChild(btn); box.appendChild(list);
+  box.classList.add('on');
+}
 function openPrep(id, src) {
   var v = findVidById(id);
   var m = ensurePrepModal();
   prepId = id; prepSrc = src;
   document.getElementById('prepTitle').textContent = v ? vidTitleRaw(v.v, id) : id;
   document.getElementById('prepBody').innerHTML = prepHTML(prepText(id));
+  paintPrepAdj(id);
   m.classList.add('on');
   setTimeout(function () { document.getElementById('prepPlay').focus(); }, 60);
 }
@@ -4816,12 +4908,12 @@ function adjListOf(id, track) {
     var p = k.split('.');
     var dc = (docsOf(+p[0], +p[1], b) || [])[+p[2]];
     var link = getAdjLink(+p[0], +p[1], b, +p[2]);
-    if (dc && !dc[3] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
+    if (dc && !dc[3] && dc[li()] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
   });
   if (track && x.si !== undefined) {
     (docsOf(x.si, x.ui, b) || []).forEach(function (dc, i) {
       var link = getAdjLink(x.si, x.ui, b, i);
-      if (!dc[3] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
+      if (!dc[3] && dc[li()] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
     });
   }
   return out;
@@ -4850,7 +4942,7 @@ function makeVid(v, id, track, tag) {
   if (editModeOn) impTitle += ' · ' + (LS.lang === 'ca' ? 'Clica per alternar ⭐/☆' : 'Clic para alternar ⭐/☆');
 
   var numberHtml = '', importanceHtml = '', dragHtml = '';
-  if (editModeOn && !isGiftId(id)) {
+  if (editModeOn && !isGiftId(id) && !track) {
     dragHtml = '<div class="vid-drag" title="' + (LS.lang === 'ca' ? 'Arrossega per moure' : 'Arrastra para mover') + '">✋</div>';
   }
   if (!isGiftId(id)) {
@@ -4903,7 +4995,8 @@ function makeVid(v, id, track, tag) {
   var docChip = isDoc ? '<span class="doc-step">' + (isCa ? 'Document' : 'Documento') + '</span>' : '';
   var playGlyph = isDoc ? '📄' : '▶';
   var descTxt = isDoc ? (doc && doc.to ? (isCa ? 'Disponible fins al ' : 'Disponible hasta el ') + niceDate(doc.to) : (isCa ? 'Material de l\'itinerari' : 'Material del itinerario')) : '';
-  var infoBtn = (hasPrep(id) || editModeOn) ? '<button class="vid-info-btn" data-info-id="' + id + '" title="' + L('Descripció del contingut del vídeo', 'Descripción del contenido del vídeo') + '"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>' : '';
+  var files = adjListOf(id, track);
+  var infoBtn = (hasPrep(id) || files.length || editModeOn) ? '<button class="vid-info-btn" data-info-id="' + id + '" data-info-track="' + (track ? 1 : 0) + '" title="' + L('Descripció i material del vídeo', 'Descripción y material del vídeo') + '"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>' : '';
 
   row.innerHTML = (tag ? '<div class="stagetag" data-ovstid="' + id + '">' + esc(tag) + '</div>' : '') + dragHtml + impOnCard +
     '<div style="position:relative" class="vr"><button class="play">' + playGlyph + '</button>' +
@@ -5037,13 +5130,12 @@ function makeVid(v, id, track, tag) {
     updateNoteButton();
   }
 
-  var files = adjListOf(id, track);
-  if (files.length) {
+  if (track && files.length) {
     var abox = document.createElement('div');
     abox.className = 'adj-notice';
     var abtn = document.createElement('button');
     abtn.type = 'button';
-    abtn.innerHTML = '<span class="an-ico">📎</span><span class="an-tx">' +
+    abtn.innerHTML = '<span class="an-ico">🔔</span><span class="an-tx">' +
       (isCa ? 'Descarrega el material d\'aquest vídeo' : 'Descarga el material de este vídeo') +
       '</span><span class="an-n">' + files.length + '</span><span class="an-ch">' + ICON_CHEVRON + '</span>';
     var alist = document.createElement('div');
@@ -5052,7 +5144,7 @@ function makeVid(v, id, track, tag) {
       var a = document.createElement('a');
       a.href = 'https://drive.google.com/file/d/' + f.l + '/view';
       a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = '<span class="al-ico">' + (DI[f.t] || '📄') + '</span><span class="al-tx">' + esc(f.n) +
+      a.innerHTML = '<span class="al-ico">📎</span><span class="al-tx">' + esc(f.n) +
         '</span><span class="al-dl">' + (isCa ? 'Obre' : 'Abre') + ' ↗</span>';
       alist.appendChild(a);
     });
@@ -5105,7 +5197,11 @@ function levelState(l) {
 }
 function activeLevels() { var o = []; for (var l = 0; l <= MAX_LVL; l++) if (levelActive(l)) o.push(l); return o; }
 function levelSections(l) { if (l === 0) return [0]; if (l === 1) return [1, 2, 3, 4, 5, 6]; return [6 + l]; }
-function slotCoords(l, b) { return { si: (l === 1) ? 6 : 6 + l, ui: (l === 1) ? 3 : 0, b: b }; }
+function slotCoords(l, b) {
+  if (l === 0) return { si: 0, ui: 0, b: b };
+  if (l === 1) return { si: 6, ui: 3, b: b };
+  return { si: 6 + l, ui: 0, b: b };
+}
 function dKey(si, ui, b) { return si + '.' + ui + '.' + b; }
 function legacyCount(si, ui, b) {
   var cur = 0;
@@ -5567,7 +5663,7 @@ function renderFree() {
     (globalSearch ? '<span id="searchCount" style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.06em"></span>' : '');
 
   var items = globalSearch ? [] : adjItemsLevel(freeLevel, freeBlock);
-  if (items.length) {
+  if (items.length || (editModeOn && !globalSearch)) {
     var ap = mkAdj(items, freeBlock);
     head.appendChild(ap.btn);
     fv.appendChild(head); fv.appendChild(ap.box);
@@ -6227,6 +6323,9 @@ function openDocsEditor(level, uiUnused, b) {
   function paint() {
     var list = box.querySelector('#docsList');
     list.innerHTML = '';
+    if (!items.length) {
+      list.innerHTML = '<div class="cm-empty">' + L('Encara no hi ha cap adjunt en aquest bloc. Clica «+ Afegir partitura / adjunt» per crear-ne el primer.', 'Todavía no hay ningún adjunto en este bloque. Pulsa «+ Añadir partitura / adjunto» para crear el primero.') + '</div>';
+    }
     items.forEach(function (it) {
       var dc = it.dc, driveId = getAdjLink(it.si, it.ui, b, it.idx);
       var row = document.createElement('div');
@@ -6235,7 +6334,7 @@ function openDocsEditor(level, uiUnused, b) {
         return '<option value="' + k + '"' + ((dc[2] || 'd') === k ? ' selected' : '') + '>' + DI[k] + '</option>';
       }).join('');
       row.innerHTML = '<select class="di-sel" title="' + L('Tria la icona', 'Elige el icono') + '">' + opts + '</select>' +
-        '<input class="dn" value="' + esc(dc[li()]) + '" placeholder="' + L('Nom', 'Nombre') + '">' +
+        '<input class="dn" value="' + esc(dc[li()]) + '" placeholder="' + (dc[li()] ? L('Nom', 'Nombre') : L('Buit = no visible en aquest idioma', 'Vacío = no visible en este idioma')) + '">' +
         '<input class="dl" value="' + esc(driveId || '') + '" placeholder="ID / URL Drive">' +
         '<button type="button" class="prev" title="Preview">👁️</button>' +
         '<button type="button" class="del" title="' + L('Eliminar', 'Eliminar') + '">🗑️</button>';
@@ -6256,7 +6355,7 @@ function openDocsEditor(level, uiUnused, b) {
         row.appendChild(fr);
       };
       row.querySelector('.del').onclick = function () {
-        if (!confirm(L('Eliminar aquest adjunt?', '¿Eliminar este adjunto?'))) return;
+        if (!confirm(L('Eliminar aquest adjunt d\'aquest idioma?', '¿Eliminar este adjunto de este idioma?'))) return;
         removeDoc(it.si, it.ui, b, it.idx);
         rebuild(); paint();
       };
@@ -7831,25 +7930,18 @@ try {
     var FLAG = 'gjps_sw_cleaned_v1', done = lsGet(FLAG);
     if (!done) {
       lsSet(FLAG, '1');
-      if ('serviceWorker' in navigator) {
-        var swUrl = new URL('./sw.js', location.href).href;
-        navigator.serviceWorker.getRegistrations().then(function (rs) {
-          rs.forEach(function (r) {
-            if (r.active && r.active.scriptURL === swUrl) {
-              try { r.unregister(); } catch (e) {}
-            }
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (r) { r.unregister(); });
           });
-        }).catch(function () {});
-      }
-      if (window.caches && caches.keys) {
-        caches.keys().then(function (ks) {
-          ks.forEach(function (k) {
-            if (k.indexOf('gjps') >= 0 || k.indexOf('girona') >= 0) {
-              try { caches.delete(k); } catch (e) {}
-            }
+        }
+        if ('caches' in window) {
+          caches.keys().then(function (ks) {
+            ks.forEach(function (k) { if (/^(gjps|girona)/i.test(k)) caches.delete(k); });
           });
-        }).catch(function () {});
-      }
+        }
+      } catch (e) {}
     }
     return;
   }
@@ -7857,17 +7949,15 @@ try {
   link.rel = 'manifest'; link.href = './manifest.json';
   document.head.appendChild(link);
   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (window.__gjSwReloaded) return;
+      window.__gjSwReloaded = true;
+      setTimeout(function () { location.reload(); }, 300);
+    });
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function (reg) {
       reg.update();
       document.addEventListener('visibilitychange', function () { if (!document.hidden) reg.update(); });
-      reg.addEventListener('updatefound', function () {
-        var nw = reg.installing; if (!nw) return;
-        nw.addEventListener('statechange', function () {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-            showToast(LS.lang === 'ca' ? '🔄 Versió nova disponible. Recarrega per veure-la.' : '🔄 Versión nueva disponible. Recarga para verla.', 6000);
-          }
-        });
-      });
+      window.addEventListener('pageshow', function () { reg.update(); });
     }).catch(function (err) { console.log('SW:', err); });
   }
 })();
@@ -7976,10 +8066,11 @@ console.log('⚡ GJPS · mode lleuger: ' + (low ? 'actiu' : 'inactiu') + ' · nu
 <script>
 
 /* ═══ MODAL D'INFORMACIÓ DE SESSIÓ (ℹ️) ═══ */
-function showInfoModal(id) {
+function showInfoModal(id, track) {
   var txt = prepText(id);
   var realDesc = (OV.d[id] && OV.d[id][LS.lang]) ? String(OV.d[id][LS.lang]).trim() : '';
-  if (!txt && !realDesc) return;
+  var files = adjListOf(id, !!track);
+  if (!txt && !realDesc && !files.length) return;
 
   var modal = document.getElementById('vidInfoModal');
   if (!modal) {
@@ -8002,6 +8093,17 @@ function showInfoModal(id) {
     html += '<span class="prep-sum">' + esc(realDesc) + '</span>';
   }
   html += prepHTML(txt);
+  if (files.length) {
+    html += '<h5>' + L('Material per descarregar', 'Material para descargar') + ' (' + files.length + ')</h5>';
+    html += '<div class="info-adj">';
+    files.forEach(function (f) {
+      html += '<a href="https://drive.google.com/file/d/' + f.l + '/view" target="_blank" rel="noopener">' +
+        '<span class="ia-ico">📎</span>' +
+        '<span class="ia-tx">' + esc(f.n) + '</span>' +
+        '<span class="ia-dl">' + L('Obre', 'Abre') + ' ↗</span></a>';
+    });
+    html += '</div>';
+  }
   content.innerHTML = html;
   modal.classList.add('on');
 }
@@ -8010,7 +8112,7 @@ document.addEventListener('click', function(e) {
   var btn = e.target.closest('.vid-info-btn');
   if (btn) {
     e.stopPropagation();
-    showInfoModal(btn.dataset.infoId);
+    showInfoModal(btn.dataset.infoId, btn.dataset.infoTrack === '1');
   }
 });
 document.addEventListener('keydown', function(e) {
@@ -8263,4 +8365,5 @@ document.addEventListener('keydown', function(e) {
   requestAnimationFrame(frame);
 })();
 </script>
+
 </body></html>
