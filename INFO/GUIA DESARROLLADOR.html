@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Guia tècnica per a desenvolupadors · GJPS</title>
+<style>
+  :root{--gold:#a9762a;--ink:#22201c;--mut:#6b6660;--line:#e2ddd4;--bg:#fbfaf7;--code:#f2efe8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.65 'Segoe UI',system-ui,sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:30px 34px 60px}
+  h1{font-size:23px;margin:0 0 4px;color:var(--gold)}
+  .sub{color:var(--mut);font-size:12px;margin:0 0 24px}
+  h2{font-size:15px;margin:26px 0 8px;padding-bottom:5px;border-bottom:2px solid var(--gold);color:#3a3630}
+  h3{font-size:13px;margin:14px 0 5px;color:var(--gold)}
+  p,li{font-size:12.5px}
+  ul,ol{margin:6px 0 10px;padding-left:20px}
+  li{margin-bottom:4px}
+  code,pre{font-family:Consolas,Menlo,monospace}
+  code{background:var(--code);padding:1px 4px;border-radius:4px;font-size:11.5px}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:11px;overflow-x:auto;white-space:pre-wrap}
+  table{border-collapse:collapse;width:100%;margin:8px 0;font-size:11.5px}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+  th{background:var(--code)}
+  .box{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:6px;padding:10px 14px;margin:10px 0}
+  .warn{border-left-color:#b3402f}
+  .switch{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 34px;display:flex;gap:8px;align-items:center;z-index:5}
+  .switch button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 16px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--mut)}
+  .switch button.on{background:var(--gold);border-color:var(--gold);color:#fff}
+  .switch .hint{margin-left:auto;font-size:11px;color:var(--mut)}
+  .lang{display:none}.lang.on{display:block}
+  @media print{.switch{display:none}.wrap{max-width:none;padding:0}h2{break-after:avoid}pre,table,.box{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="switch">
+  <button id="sw-ca" class="on">Català</button>
+  <button id="sw-es">Español</button>
+  <span class="hint">Tria l'idioma i fes Ctrl+P → Desa com a PDF · Elige idioma y Ctrl+P → Guardar como PDF</span>
+</div>
+
+<!-- ═══════ CATALÀ ═══════ -->
+<div class="wrap lang on" id="m-ca">
+<h1>Guia tècnica per a desenvolupadors</h1>
+<p class="sub">GJPS · index.html v6.0 · Complement del «Manual de manteniment i diagnosi» (operacions). Aquest document descriu l'arquitectura i com estendre-la.</p>
+
+<h2>1 · Restriccions de disseny (llegir primer)</h2>
+<ul>
+<li><b>Un sol fitxer</b> <code>index.html</code>: HTML + CSS + ~12 scripts inline + dades. Sense build, sense bundler, sense dependències externes (només font Inter i iframes Drive/YouTube).</li>
+<li><b>Sense backend.</b> Persistència = <code>localStorage</code> (per dispositiu) + el bloc <code>OV</code> serialitzat dins del propi fitxer en guardar.</li>
+<li><b>Estil ES5</b> (<code>var</code>, <code>function</code>, sense classes ni mòduls) per màxima compatibilitat. Respecta-ho en codi nou.</li>
+<li><b>Bilingüe CA/ES</b> com a dos cursos independents: gairebé tot el que es persisteix porta sufix o clau per idioma.</li>
+<li><b>Autodefensa:</b> un «Guardià d'arrencada» (script #0) captura errors de sintaxi/execució i els diagnostica abans que el web mori en silenci.</li>
+</ul>
+<div class="box warn"><b>Conseqüència directa:</b> mailing massiu, xat i pagaments <b>requereixen servidor</b>. <code>localStorage</code> no es comparteix entre dispositius i no hi ha secrets segurs al client (vegeu §12).</div>
+
+<h2>2 · Mapa del fitxer</h2>
+<table>
+<tr><th>Script</th><th>Banner <code>═══</code></th><th>Responsabilitat</th></tr>
+<tr><td>#0</td><td>GUARDIÀ D'ARRENCADA</td><td>Diagnòstic d'errors; no modificar.</td></tr>
+<tr><td>#1</td><td>Anti-flash</td><td>Aplica tema desat abans del primer pintat.</td></tr>
+<tr><td>#2</td><td>NUCLI v6.0</td><td>Estat global, dades (<code>D</code>,<code>OV</code>), adjunts, estalvi net, targeta (<code>makeVid</code>).</td></tr>
+<tr><td>#3</td><td>NUCLI continuació</td><td>Vistes, login, idiomes, reproductor, temes, drag&amp;drop, selector nivell.</td></tr>
+<tr><td>#4</td><td>GESTOR DEL CURS</td><td>Mòdul admin (IIFE): ordre, blocs, publicacions, documents, formularis.</td></tr>
+<tr><td>#5</td><td>APPS v7</td><td>Pestanya Apps i el seu editor.</td></tr>
+<tr><td>#6</td><td>ARRENCADA · PWA</td><td>Boot, Service Worker, manifest.</td></tr>
+<tr><td>#7</td><td>RELLEU · TROFEU · LLEUGER</td><td>Animacions, <code>lowfx</code>, intervals guardians (<code>every</code>).</td></tr>
+<tr><td>#8..#12</td><td>INFO / TOOLTIP / FINAL / REPINTAT / OVERLAY</td><td>Finestra ⓘ, tooltips, segells, guardià de <code>collectAll</code> abans de <code>render</code>, pulsació overlay.</td></tr>
+</table>
+<p>CSS: un sol <code>&lt;style&gt;</code> numerat 1–34 + bloc final «CUA FINAL NETA». <b>Afegeix CSS nou a la CUA FINAL NETA</b>, mai entremig.</p>
+
+<h2>3 · Model de dades</h2>
+<h3>3.1 <code>D</code> — curs de fàbrica (no es desa)</h3>
+<p><code>D[si].u[ui][bloc] = { v:[[ca,es,linkMarker],…], d:[[ca,es,tipus],…] }</code>. Blocs: <code>w,t,g,r,a,p</code>. <code>linkMarker</code> pot ser un ID de Drive o <code>LK:t:3</code> (referència a <code>LINKS</code>). Identificador d'un vídeo: <code>"si.ui.bloc.vi"</code>.</p>
+<h3>3.2 <code>OV</code> — dades editables persistides (l'únic que es desa al fitxer)</h3>
+<table>
+<tr><th>Clau</th><th>Contingut</th></tr>
+<tr><td><code>t,d,dx</code></td><td>Títols, descripcions curtes, fitxes de sessió (per id i idioma).</td></tr>
+<tr><td><code>l</code></td><td>Links Drive personalitzats per id+idioma.</td></tr>
+<tr><td><code>imp</code></td><td>Importància ⭐/☆, clau <code>id:lang</code>.</td></tr>
+<tr><td><code>order</code></td><td>Itinerari ordenat, <code>{ca:[ids],es:[ids]}</code>. És l'ordre real del Seguiment.</td></tr>
+<tr><td><code>bl,st,n,lnm,bn</code></td><td>Bloc reassignat, etiqueta d'etapa, noms d'etapa/nivell/bloc.</td></tr>
+<tr><td><code>lv,lst</code></td><td>Nivell publicat (booleà) i estat (done/wip/soon).</td></tr>
+<tr><td><code>nv</code></td><td>Vídeos nous creats en edició, per nivell i bloc (marcador d'idioma).</td></tr>
+<tr><td><code>del</code></td><td>Vídeos eliminats d'un idioma (<code>del[id][lang]=1</code>).</td></tr>
+<tr><td><code>rec,pub</code></td><td>Recomanació «mai» i publicacions programades.</td></tr>
+<tr><td><code>idocs</code></td><td>Documents d'itinerari (pas numerat amb dates i pes).</td></tr>
+<tr><td><code>nd,dn</code></td><td>Adjunts nous per bloc (<code>nd["si.ui.b"]=[ [ca,es,tipus],… ]</code>) i els seus overrides/esborrats per idioma i índex (<code>dn</code>).</td></tr>
+<tr><td><code>adj,va</code></td><td>Links d'adjunts (<code>adj["si.ui.b.idx"]={ca,es}</code>) i quins adjunts mostra cada vídeo (<code>va[id]=[keys]</code>).</td></tr>
+<tr><td><code>f,h,a,c,apps,am,aorder,madj</code></td><td>FAQ, ajuda, apps seed, celebració, apps noves, metadades apps, ordre apps, adjunts de masterclass.</td></tr>
+</table>
+<h3>3.3 <code>localStorage</code> (per usuari i dispositiu)</h3>
+<table>
+<tr><th>Clau</th><th>Contingut</th></tr>
+<tr><td><code>gjps_session</code>, <code>gjps_lang</code>, <code>gjps_mode</code>, <code>gjps_theme</code></td><td>Sessió, idioma, vista, tema.</td></tr>
+<tr><td><code>gjps_done_&lt;user&gt;</code></td><td><code>{ca:{id:1},es:{…}}</code> vídeos fets.</td></tr>
+<tr><td><code>gjps_bookmarks_&lt;user&gt;</code>, <code>gjps_notes_&lt;user&gt;_&lt;id&gt;:&lt;lang&gt;</code></td><td>Repàs i notes per vídeo.</td></tr>
+<tr><td><code>gjps_skipped_&lt;user&gt;</code>, <code>gjps_skipafter_&lt;user&gt;</code></td><td>Vídeos aplaçats i quin els va substituir.</td></tr>
+<tr><td><code>gjps_prep_v1_…</code>, <code>gjps_pubseen_…</code>, <code>gjps_guest_date</code>, <code>gjps_return_mode</code></td><td>Fitxes vistes, publicacions vistes, caducitat guest, vista de retorn post-vídeo.</td></tr>
+<tr><td><code>gjps_debug</code>, <code>gjps_guard_h</code>, <code>gjps_sw_cleaned_v1</code></td><td>Desbloqueig guardià, empremta admin, neteja SW d'escriptori.</td></tr>
+</table>
+
+<h2>4 · Cicle de render</h2>
+<p><code>render()</code> → valida sessió → tria vista (<code>LS.mode</code>: track/free/apps/info/help) → <code>renderTrack|renderFree|renderApps|renderInfo|renderHelp</code> → <code>applyEditState()</code>. Tota vista comença amb <code>hydrateCourse()</code>, que reconstrueix seccions sintètiques, hidrata <code>OV.nv</code> dins de <code>D</code> i <b>invalida la caché</b> <code>__lvlCache</code> abans de <code>initializeOrder()</code>.</p>
+<ul>
+<li><code>levelIds(l)</code> retorna <b>còpia</b> (mai mutar-la sense <code>applyLevelIds</code> + <code>render</code>).</li>
+<li>Reconstruccions «silencioses»: <code>setQuiet(true)</code> afegeix <code>body.quiet</code> per suprimir animacions d'entrada en re-renders.</li>
+<li>Targeta única: <code>makeVid(v,id,track,tag)</code>; <code>track=true</code> ⇒ targeta gran del Seguiment (medalló hero, botó Aplaçar, avís d'adjunts, fitxa de preparació).</li>
+</ul>
+
+<h2>5 · Mode edició i guardat (el contracte més delicat)</h2>
+<ul>
+<li>Els textos editables porten atributs <code>data-*</code>: <code>data-ovid/ovk</code>, <code>data-fqi/fqk</code>, <code>data-ovaid/ovak</code>, <code>data-appj/appk</code>, <code>data-hi/hk</code>, <code>data-ovstid</code>. <code>collectAll()</code> els llegeix amb <code>collectText()</code> (preserva salts de línia, no depèn del layout) i els bolca a <code>OV</code>.</li>
+<li><code>applyEditState()</code> activa <code>contenteditable</code> i afegeix botons per targeta (<code>.editbtn,.lkbtn,.vadbtn,.pvbtn</code>); els treu en sortir.</li>
+<li><code>saveAsFile()</code>: <code>collectAll()</code> → surt d'edició → <code>cleanClone()</code> (clona el DOM i <b>esborra</b> tot node de <code>RUNTIME_IDS</code>, buida <code>REPAINT</code>, treu <code>contenteditable</code>/<code>.editing</code>, resetea tema i classes) → reemplaça el bloc <code>/*OV-START*/ … /*OV-END*/</code> per <code>safeOVJSON()</code> (escapa <code>&lt;/script</code> i <code>&lt;!--</code>) → descarrega/comparteix.</li>
+<li><b>Regla:</b> tot node creat en runtime ha d'anar a <code>RUNTIME_IDS</code> o ser buidat via <code>REPAINT</code>, o es colarà al fitxer exportat.</li>
+</ul>
+
+<h2>6 · Motor de recomanació (Seguiment Continuat)</h2>
+<p><code>trackContext()</code> tria nivell; <code>pickFrom(ids)</code> tria pas: primer aplaçats recuperables (<code>LS.skipped</code> + <code>LS.skipAfter</code>), primer no-fet no-aplaçat, després aplaçats pendents. <code>recMode(id)</code> = <code>never</code> (exclòs) si <code>OV.rec</code> ho diu i no és ⭐. Els donuts i la celebració només miren vídeos ⭐ (<code>isImp</code>); la Navegació Lliure mira tot el bloc.</p>
+
+<h2>7 · Adjunts i documents (schema complet)</h2>
+<ul>
+<li>Capes: <code>baseDocs</code> (de <code>D</code>) + <code>ndList</code> (nous, <code>OV.nd</code>) fusionades per <code>docsOf</code> aplicant overrides <code>OV.dn[idx]</code> (<code>ca/es/t/del</code>). <b>Els índexs són estables i compartits entre idiomes</b>; mai reordenar ni filtrar abans de resoldre un índex.</li>
+<li>Idioma: un doc és visible només si té nom en aquell idioma (<code>dc[li()]</code>) i no està marcat <code>del</code>. Crear en CA no el crea a ES.</li>
+<li>Links: <code>OV.adj["si.ui.b.idx"]={ca,es}</code>; <code>setAdjLink</code> manté alineació en esborrar.</li>
+<li>Per vídeo: <code>OV.va[id]</code> = llista de claus <code>"si.ui.idx"</code>; <code>adjListOf(id,track)</code> = seleccionats + (si <code>track</code>) tots els de la seva unitat amb link.</li>
+<li>Documents d'itinerari (<code>OV.idocs</code>): pas numerat propi amb dates (<code>docState</code>: live/soon/off) i pes ⭐/☆; id <code>"doc.&lt;uid&gt;"</code>.</li>
+</ul>
+
+<h2>8 · Publicacions programades</h2>
+<p><code>OV.pub[]</code>: <code>{id,lang,kind:'video'|'doc',vid,t,d,l,lvl(-1=tots),label,from,to,active}</code>. <code>pubState</code> per dates; <code>liveFor(lvl)</code> alimenta <code>pubBanner</code> al Seguiment. Un vídeo programat queda <code>rec='never'</code> (fora d'itinerari) mentre dura; en eliminar-la es restaura <code>auto</code>.</p>
+
+<h2>9 · i18n</h2>
+<ul>
+<li><code>LS.lang</code> ∈ {ca,es}; <code>L(ca,es)</code>, <code>t()</code> (UI), <code>li()</code> (índex 0/1).</li>
+<li><b>HTML</b>: <code>esc()</code> (escapa <code>&amp; &lt; &gt; "</code>; <b>no</b> la cometa simple). <b>Text pla / prompt / cerca</b>: <code>vidTitleRaw()</code>. <code>vidTitle()</code> = <code>esc(vidTitleRaw())</code>; mai fer <code>esc(vidTitle(…))</code> (doble escapament).</li>
+<li>Independència per idioma a: fets, repàs, notes, aplaçats, ordre, importància, rec, pub, idocs, noms editables.</li>
+</ul>
+
+<h2>10 · Sistemes d'UI transversals</h2>
+<table>
+<tr><th>Sistema</th><th>Punts clau</th></tr>
+<tr><td>Tooltips</td><td><code>#gjps-tip</code>; converteix <code>title</code>→<code>data-tip</code>; retard 1100 ms; exclou <code>.now .play</code> i <code>.vr[data-tip]</code>.</td></tr>
+<tr><td>Fitxa de preparació</td><td><code>prepNeeded=hasPrep</code>; <code>openPrep/closePrep</code>; botons Ara no / Aplaçar (<code>performSkip</code>) / Reprodueix; recordatori d'adjunts <code>paintPrepAdj</code> (🔔 capçalera, 📎 files).</td></tr>
+<tr><td>Finestra ⓘ</td><td><code>showInfoModal(id,track)</code>: descripció + fitxa + adjunts.</td></tr>
+<tr><td>Temes</td><td><code>GJPSTheme</code>; <code>data-theme</code> dark/blue/sepia; tecla T.</td></tr>
+<tr><td>Rendiment</td><td><code>html.lowfx</code> automàtic en mòbils modestos; <code>GJSPerf</code>; intervals via <code>every(ms,fn,guard)</code>.</td></tr>
+<tr><td>PWA</td><td><code>sw.js</code> network-first per a navegació (canvis al servidor es veuen sense tancar l'app), <code>skipWaiting</code>+<code>claim</code>; client fa <code>controllerchange → reload</code>.</td></tr>
+</table>
+
+<h2>11 · Superfície pública d'extensió (API)</h2>
+<pre>window.GJPSCourse  { open, close, rebuild, levels, seq, blockSeq, levelIds, data()→OV }
+window.GJPSPub     { list, live, open, form, rec, setRec, banner, openPdf, reset }
+window.GJSDocs     { list, open, form, state }
+window.GJSOrder    { view, levelIds, apply, repaint }
+window.GJSPrep     { text, set, reset, open }
+window.GJSApps     { entries, meta, form, move, data }
+window.GJPSTheme / window.GJSPerf
+window.openVideoForm / openDocForm / openPubForm
+window.render, window.collectAll, window.$, L(), esc(), vidTitleRaw()</pre>
+<p>Qualsevol funcionalitat nova hauria de construir-se <b>sobre aquesta API</b> i el patró <code>setMode()/render()</code>, mai duplicant lògica de dades.</p>
+
+<h2>12 · Guia d'implantació: mailing, xat, pagaments</h2>
+<h3>12.0 Pre-requisit comú</h3>
+<pre>&lt;script&gt; window.GJPS_CONFIG = {
+  apiBase: 'https://api.el-teu-domini.com',   // backend nou
+  stripePk: 'pk_live_…',                      // només pública
+  wsUrl:   'wss://…'                          // xat (o SDK Firebase/Supabase)
+};&lt;/script&gt;</pre>
+<p>Afegir-lo com a script propi abans del boot. Cap credencial secreta al client.</p>
+<h3>12.1 Mailing massiu</h3>
+<ul>
+<li>Avui només existeix <code>sendNotesByEmail()</code> (mailto, 1 vídeo, 1 alumne). El massiu <b>no pot</b> sortir del navegador.</li>
+<li>Migrar <code>USERS_DB</code> (ara en clar al fitxer!) al backend; el login actual passa a ser contra API i <code>LS.user</code> esdevé un token.</li>
+<li>Punt d'enganxament UI: gestor (<code>paintManager</code>) o nova vista via <code>setMode('mail')</code>; consentiment i plantilles al servidor; cues i reintents server-side.</li>
+</ul>
+<h3>12.2 Xat públic i privat</h3>
+<ul>
+<li>Nou mode: <code>setMode('chat')</code> + <code>renderChat()</code> seguint el patró de <code>renderInfo</code>; contenidor <code>#chatView</code> a <code>&lt;main&gt;</code> i botó a <code>.hdr</code>.</li>
+<li>Canal en temps real (Firestore/Supabase/WebSocket). Públic = sala per nivell; privat = fil alumne–professor clauat per <code>LS.user</code>.</li>
+<li>Moderació amb <code>currentUserRole()</code>; persistència mai a <code>localStorage</code>.</li>
+</ul>
+<h3>12.3 Pagament amb targeta</h3>
+<ul>
+<li><b>Stripe Checkout / Payment Links</b> redirigint des del client; el webhook al backend marca entitlements.</li>
+<li>Punt d'enganxament: substituir <code>levelActive(l)</code> per una consulta d'entitlements (cachejada) o rebre <code>OV.lv</code> des del servidor per usuari; mai decidir pagament al client.</li>
+<li>Mai emmagatzemar dades de targeta; PCI fora del navegador via Checkout.</li>
+</ul>
+<h3>12.4 Migració de contingut</h3>
+<p><code>GJPSCourse.data()</code> retorna <code>OV</code> sencer: és el volcat natural per sembrar la base de dades del backend (títols, links, ordre, adjunts, publicacions).</p>
+
+<h2>13 · Convencions per a codi nou</h2>
+<ul>
+<li>ES5 (<code>var</code>, funcions declarades); IIFE amb flag <code>window.__gjXx</code> per evitar doble execució.</li>
+<li>Strings visibles sempre via <code>L(ca,es)</code>; HTML via <code>esc()</code>; text pla via <code>vidTitleRaw()</code>.</li>
+<li>CSS nou → «CUA FINAL NETA»; nodes runtime → <code>RUNTIME_IDS</code>/<code>REPAINT</code>.</li>
+<li>Editar dades persistides → passar per <code>OV</code> i cridar <code>hydrateCourse(); render();</code> (i <code>repaint()</code> si el gestor és obert).</li>
+<li>No mutar arrays de <code>levelIds()</code> sense <code>applyLevelIds()</code> + <code>render()</code>.</li>
+</ul>
+
+<h2>14 · Regressió mínima abans de cada release</h2>
+<ol>
+<li>Guardià absent + consola neta.</li>
+<li>Script d'invariants del Manual bàsic §5 (duplicats i residus).</li>
+<li>Fluxos: Seguiment (play, fitxa, aplaçar, ⓘ), Lliure (cerca, blocs, adjunts), edició (crear/esborrar adjunt i vídeo, ordre), guardar→reobrir, PWA mòbil.</li>
+<li>Canvi d'idioma CA↔ES en cada vista i al gestor.</li>
+</ol>
+</div>
+
+<!-- ═══════ ESPAÑOL ═══════ -->
+<div class="wrap lang" id="m-es">
+<h1>Guía técnica para desarrolladores</h1>
+<p class="sub">GJPS · index.html v6.0 · Complemento del «Manual de mantenimiento y diagnóstico» (operaciones). Este documento describe la arquitectura y cómo extenderla.</p>
+
+<h2>1 · Restricciones de diseño (leer primero)</h2>
+<ul>
+<li><b>Un solo fichero</b> <code>index.html</code>: HTML + CSS + ~12 scripts inline + datos. Sin build, sin bundler, sin dependencias externas (salvo fuente Inter e iframes Drive/YouTube).</li>
+<li><b>Sin backend.</b> Persistencia = <code>localStorage</code> (por dispositivo) + el bloque <code>OV</code> serializado dentro del propio fichero al guardar.</li>
+<li><b>Estilo ES5</b> (<code>var</code>, <code>function</code>, sin clases ni módulos) por máxima compatibilidad. Respétalo en código nuevo.</li>
+<li><b>Bilingüe CA/ES</b> como dos cursos independientes: casi todo lo persistido lleva sufijo o clave por idioma.</li>
+<li><b>Autodefensa:</b> un «Guardián de arranque» (script #0) captura errores de sintaxis/ejecución y los diagnostica antes de que el web muera en silencio.</li>
+</ul>
+<div class="box warn"><b>Consecuencia directa:</b> mailing masivo, chat y pagos <b>requieren servidor</b>. <code>localStorage</code> no se comparte entre dispositivos y no hay secretos seguros en el cliente (ver §12).</div>
+
+<h2>2 · Mapa del fichero</h2>
+<table>
+<tr><th>Script</th><th>Banner <code>═══</code></th><th>Responsabilidad</th></tr>
+<tr><td>#0</td><td>GUARDIÁN DE ARRANQUE</td><td>Diagnóstico de errores; no modificar.</td></tr>
+<tr><td>#1</td><td>Anti-flash</td><td>Aplica tema guardado antes del primer pintado.</td></tr>
+<tr><td>#2</td><td>NÚCLEO v6.0</td><td>Estado global, datos (<code>D</code>,<code>OV</code>), adjuntos, guardado limpio, tarjeta (<code>makeVid</code>).</td></tr>
+<tr><td>#3</td><td>NÚCLEO continuación</td><td>Vistas, login, idiomas, reproductor, temas, drag&amp;drop, selector de nivel.</td></tr>
+<tr><td>#4</td><td>GESTOR DEL CURSO</td><td>Módulo admin (IIFE): orden, bloques, publicaciones, documentos, formularios.</td></tr>
+<tr><td>#5</td><td>APPS v7</td><td>Pestaña Apps y su editor.</td></tr>
+<tr><td>#6</td><td>ARRANQUE · PWA</td><td>Boot, Service Worker, manifest.</td></tr>
+<tr><td>#7</td><td>RELIEVE · TROFEO · LIGERO</td><td>Animaciones, <code>lowfx</code>, intervalos guardián (<code>every</code>).</td></tr>
+<tr><td>#8..#12</td><td>INFO / TOOLTIP / FINAL / REPINTADO / OVERLAY</td><td>Ventana ⓘ, tooltips, sellos, guardián de <code>collectAll</code> antes de <code>render</code>, pulso del overlay.</td></tr>
+</table>
+<p>CSS: un solo <code>&lt;style&gt;</code> numerado 1–34 + bloque final «CUA FINAL NETA» / cola final. <b>Añade CSS nuevo en la cola final</b>, nunca en medio.</p>
+
+<h2>3 · Modelo de datos</h2>
+<h3>3.1 <code>D</code> — curso de fábrica (no se guarda)</h3>
+<p><code>D[si].u[ui][bloque] = { v:[[ca,es,linkMarker],…], d:[[ca,es,tipo],…] }</code>. Bloques: <code>w,t,g,r,a,p</code>. <code>linkMarker</code> puede ser un ID de Drive o <code>LK:t:3</code> (referencia a <code>LINKS</code>). Identificador de un vídeo: <code>"si.ui.bloque.vi"</code>.</p>
+<h3>3.2 <code>OV</code> — datos editables persistidos (lo único que se guarda en el fichero)</h3>
+<table>
+<tr><th>Clave</th><th>Contenido</th></tr>
+<tr><td><code>t,d,dx</code></td><td>Títulos, descripciones cortas, fichas de sesión (por id e idioma).</td></tr>
+<tr><td><code>l</code></td><td>Links Drive personalizados por id+idioma.</td></tr>
+<tr><td><code>imp</code></td><td>Importancia ⭐/☆, clave <code>id:lang</code>.</td></tr>
+<tr><td><code>order</code></td><td>Itinerario ordenado, <code>{ca:[ids],es:[ids]}</code>. Es el orden real del Seguimiento.</td></tr>
+<tr><td><code>bl,st,n,lnm,bn</code></td><td>Bloque reasignado, etiqueta de etapa, nombres de etapa/nivel/bloque.</td></tr>
+<tr><td><code>lv,lst</code></td><td>Nivel publicado (booleano) y estado (done/wip/soon).</td></tr>
+<tr><td><code>nv</code></td><td>Vídeos nuevos creados en edición, por nivel y bloque (marcador de idioma).</td></tr>
+<tr><td><code>del</code></td><td>Vídeos eliminados de un idioma (<code>del[id][lang]=1</code>).</td></tr>
+<tr><td><code>rec,pub</code></td><td>Recomendación «nunca» y publicaciones programadas.</td></tr>
+<tr><td><code>idocs</code></td><td>Documentos de itinerario (paso numerado con fechas y peso).</td></tr>
+<tr><td><code>nd,dn</code></td><td>Adjuntos nuevos por bloque (<code>nd["si.ui.b"]=[ [ca,es,tipo],… ]</code>) y sus overrides/borrados por idioma e índice (<code>dn</code>).</td></tr>
+<tr><td><code>adj,va</code></td><td>Links de adjuntos (<code>adj["si.ui.b.idx"]={ca,es}</code>) y qué adjuntos muestra cada vídeo (<code>va[id]=[keys]</code>).</td></tr>
+<tr><td><code>f,h,a,c,apps,am,aorder,madj</code></td><td>FAQ, ayuda, apps seed, celebración, apps nuevas, metadatos apps, orden apps, adjuntos de masterclass.</td></tr>
+</table>
+<h3>3.3 <code>localStorage</code> (por usuario y dispositivo)</h3>
+<table>
+<tr><th>Clave</th><th>Contenido</th></tr>
+<tr><td><code>gjps_session</code>, <code>gjps_lang</code>, <code>gjps_mode</code>, <code>gjps_theme</code></td><td>Sesión, idioma, vista, tema.</td></tr>
+<tr><td><code>gjps_done_&lt;user&gt;</code></td><td><code>{ca:{id:1},es:{…}}</code> vídeos hechos.</td></tr>
+<tr><td><code>gjps_bookmarks_&lt;user&gt;</code>, <code>gjps_notes_&lt;user&gt;_&lt;id&gt;:&lt;lang&gt;</code></td><td>Repaso y notas por vídeo.</td></tr>
+<tr><td><code>gjps_skipped_&lt;user&gt;</code>, <code>gjps_skipafter_&lt;user&gt;</code></td><td>Vídeos aplazados y cuál los sustituyó.</td></tr>
+<tr><td><code>gjps_prep_v1_…</code>, <code>gjps_pubseen_…</code>, <code>gjps_guest_date</code>, <code>gjps_return_mode</code></td><td>Fichas vistas, publicaciones vistas, caducidad guest, vista de retorno post-vídeo.</td></tr>
+<tr><td><code>gjps_debug</code>, <code>gjps_guard_h</code>, <code>gjps_sw_cleaned_v1</code></td><td>Desbloqueo del guardián, huella admin, limpieza SW de escritorio.</td></tr>
+</table>
+
+<h2>4 · Ciclo de render</h2>
+<p><code>render()</code> → valida sesión → elige vista (<code>LS.mode</code>: track/free/apps/info/help) → <code>renderTrack|renderFree|renderApps|renderInfo|renderHelp</code> → <code>applyEditState()</code>. Toda vista empieza con <code>hydrateCourse()</code>, que reconstruye secciones sintéticas, hidrata <code>OV.nv</code> dentro de <code>D</code> e <b>invalida la caché</b> <code>__lvlCache</code> antes de <code>initializeOrder()</code>.</p>
+<ul>
+<li><code>levelIds(l)</code> devuelve <b>copia</b> (no mutarla sin <code>applyLevelIds</code> + <code>render</code>).</li>
+<li>Reconstrucciones «silenciosas»: <code>setQuiet(true)</code> añade <code>body.quiet</code> para suprimir animaciones de entrada en re-renders.</li>
+<li>Tarjeta única: <code>makeVid(v,id,track,tag)</code>; <code>track=true</code> ⇒ tarjeta grande del Seguimiento (medallón hero, botón Aplazar, aviso de adjuntos, ficha de preparación).</li>
+</ul>
+
+<h2>5 · Modo edición y guardado (el contrato más delicado)</h2>
+<ul>
+<li>Los textos editables llevan atributos <code>data-*</code>: <code>data-ovid/ovk</code>, <code>data-fqi/fqk</code>, <code>data-ovaid/ovak</code>, <code>data-appj/appk</code>, <code>data-hi/hk</code>, <code>data-ovstid</code>. <code>collectAll()</code> los lee con <code>collectText()</code> (preserva saltos de línea, no depende del layout) y los vuelca a <code>OV</code>.</li>
+<li><code>applyEditState()</code> activa <code>contenteditable</code> y añade botones por tarjeta (<code>.editbtn,.lkbtn,.vadbtn,.pvbtn</code>); los retira al salir.</li>
+<li><code>saveAsFile()</code>: <code>collectAll()</code> → sale de edición → <code>cleanClone()</code> (clona el DOM y <b>borra</b> todo nodo de <code>RUNTIME_IDS</code>, vacía <code>REPAINT</code>, quita <code>contenteditable</code>/<code>.editing</code>, resetea tema y clases) → reemplaza el bloque <code>/*OV-START*/ … /*OV-END*/</code> por <code>safeOVJSON()</code> (escapa <code>&lt;/script</code> y <code>&lt;!--</code>) → descarga/comparte.</li>
+<li><b>Regla:</b> todo nodo creado en runtime debe ir a <code>RUNTIME_IDS</code> o vaciarse vía <code>REPAINT</code>, o se colará en el fichero exportado.</li>
+</ul>
+
+<h2>6 · Motor de recomendación (Seguimiento Continuo)</h2>
+<p><code>trackContext()</code> elige nivel; <code>pickFrom(ids)</code> elige paso: primero aplazados recuperables (<code>LS.skipped</code> + <code>LS.skipAfter</code>), luego primer no-hecho no-aplazado, después aplazados pendientes. <code>recMode(id)</code> = <code>never</code> (excluido) si <code>OV.rec</code> lo dice y no es ⭐. Los donuts y la celebración solo miran vídeos ⭐ (<code>isImp</code>); la Navegación Libre mira todo el bloque.</p>
+
+<h2>7 · Adjuntos y documentos (schema completo)</h2>
+<ul>
+<li>Capas: <code>baseDocs</code> (de <code>D</code>) + <code>ndList</code> (nuevos, <code>OV.nd</code>) fusionadas por <code>docsOf</code> aplicando overrides <code>OV.dn[idx]</code> (<code>ca/es/t/del</code>). <b>Los índices son estables y compartidos entre idiomas</b>; nunca reordenar ni filtrar antes de resolver un índice.</li>
+<li>Idioma: un doc es visible solo si tiene nombre en ese idioma (<code>dc[li()]</code>) y no está marcado <code>del</code>. Crearlo en CA no lo crea en ES.</li>
+<li>Links: <code>OV.adj["si.ui.b.idx"]={ca,es}</code>; <code>setAdjLink</code> mantiene la alineación al borrar.</li>
+<li>Por vídeo: <code>OV.va[id]</code> = lista de claves <code>"si.ui.idx"</code>; <code>adjListOf(id,track)</code> = seleccionados + (si <code>track</code>) todos los de su unidad con link.</li>
+<li>Documentos de itinerario (<code>OV.idocs</code>): paso numerado propio con fechas (<code>docState</code>: live/soon/off) y peso ⭐/☆; id <code>"doc.&lt;uid&gt;"</code>.</li>
+</ul>
+
+<h2>8 · Publicaciones programadas</h2>
+<p><code>OV.pub[]</code>: <code>{id,lang,kind:'video'|'doc',vid,t,d,l,lvl(-1=todos),label,from,to,active}</code>. <code>pubState</code> por fechas; <code>liveFor(lvl)</code> alimenta <code>pubBanner</code> en el Seguimiento. Un vídeo programado queda <code>rec='never'</code> (fuera del itinerario) mientras dura; al eliminarla se restaura <code>auto</code>.</p>
+
+<h2>9 · i18n</h2>
+<ul>
+<li><code>LS.lang</code> ∈ {ca,es}; <code>L(ca,es)</code>, <code>t()</code> (UI), <code>li()</code> (índice 0/1).</li>
+<li><b>HTML</b>: <code>esc()</code> (escapa <code>&amp; &lt; &gt; "</code>; <b>no</b> la comilla simple). <b>Texto plano / prompt / búsqueda</b>: <code>vidTitleRaw()</code>. <code>vidTitle()</code> = <code>esc(vidTitleRaw())</code>; nunca hacer <code>esc(vidTitle(…))</code> (doble escapado).</li>
+<li>Independencia por idioma en: hechos, repaso, notas, aplazados, orden, importancia, rec, pub, idocs, nombres editables.</li>
+</ul>
+
+<h2>10 · Sistemas de UI transversales</h2>
+<table>
+<tr><th>Sistema</th><th>Puntos clave</th></tr>
+<tr><td>Tooltips</td><td><code>#gjps-tip</code>; convierte <code>title</code>→<code>data-tip</code>; retardo 1100 ms; excluye <code>.now .play</code> y <code>.vr[data-tip]</code>.</td></tr>
+<tr><td>Ficha de preparación</td><td><code>prepNeeded=hasPrep</code>; <code>openPrep/closePrep</code>; botones Ahora no / Aplazar (<code>performSkip</code>) / Reproducir; recordatorio de adjuntos <code>paintPrepAdj</code> (🔔 cabecera, 📎 filas).</td></tr>
+<tr><td>Ventana ⓘ</td><td><code>showInfoModal(id,track)</code>: descripción + ficha + adjuntos.</td></tr>
+<tr><td>Temas</td><td><code>GJPSTheme</code>; <code>data-theme</code> dark/blue/sepia; tecla T.</td></tr>
+<tr><td>Rendimiento</td><td><code>html.lowfx</code> automático en móviles modestos; <code>GJSPerf</code>; intervalos vía <code>every(ms,fn,guard)</code>.</td></tr>
+<tr><td>PWA</td><td><code>sw.js</code> network-first para navegación (los cambios del servidor se ven sin cerrar la app), <code>skipWaiting</code>+<code>claim</code>; el cliente hace <code>controllerchange → reload</code>.</td></tr>
+</table>
+
+<h2>11 · Superficie pública de extensión (API)</h2>
+<pre>window.GJPSCourse  { open, close, rebuild, levels, seq, blockSeq, levelIds, data()→OV }
+window.GJPSPub     { list, live, open, form, rec, setRec, banner, openPdf, reset }
+window.GJSDocs     { list, open, form, state }
+window.GJSOrder    { view, levelIds, apply, repaint }
+window.GJSPrep     { text, set, reset, open }
+window.GJSApps     { entries, meta, form, move, data }
+window.GJPSTheme / window.GJSPerf
+window.openVideoForm / openDocForm / openPubForm
+window.render, window.collectAll, window.$, L(), esc(), vidTitleRaw()</pre>
+<p>Cualquier funcionalidad nueva debería construirse <b>sobre esta API</b> y el patrón <code>setMode()/render()</code>, nunca duplicando lógica de datos.</p>
+
+<h2>12 · Guía de implantación: mailing, chat, pagos</h2>
+<h3>12.0 Pre-requisito común</h3>
+<pre>&lt;script&gt; window.GJPS_CONFIG = {
+  apiBase: 'https://api.tu-dominio.com',   // backend nuevo
+  stripePk: 'pk_live_…',                   // solo pública
+  wsUrl:   'wss://…'                       // chat (o SDK Firebase/Supabase)
+};&lt;/script&gt;</pre>
+<Añadirla como script propio antes del boot. Ninguna credencial secreta en el cliente.>
+<h3>12.1 Mailing masivo</h3>
+<ul>
+<li>Hoy solo existe <code>sendNotesByEmail()</code> (mailto, 1 vídeo, 1 alumno). El masivo <b>no puede</b> salir del navegador.</li>
+<li>Migrar <code>USERS_DB</code> (¡hoy en claro en el fichero!) al backend; el login actual pasa a ser contra API y <code>LS.user</code> se convierte en token.</li>
+<li>Punto de enganche UI: gestor (<code>paintManager</code>) o nueva vista vía <code>setMode('mail')</code>; consentimiento y plantillas en el servidor; colas y reintentos server-side.</li>
+</ul>
+<h3>12.2 Chat público y privado</h3>
+<ul>
+<li>Nuevo modo: <code>setMode('chat')</code> + <code>renderChat()</code> siguiendo el patrón de <code>renderInfo</code>; contenedor <code>#chatView</code> en <code>&lt;main&gt;</code> y botón en <code>.hdr</code>.</li>
+<li>Canal en tiempo real (Firestore/Supabase/WebSocket). Público = sala por nivel; privado = hilo alumno–profesor claveado por <code>LS.user</code>.</li>
+<li>Moderación con <code>currentUserRole()</code>; persistencia nunca en <code>localStorage</code>.</li>
+</ul>
+<h3>12.3 Pago con tarjeta</h3>
+<ul>
+<li><b>Stripe Checkout / Payment Links</b> redirigiendo desde el cliente; el webhook en el backend marca entitlements.</li>
+<li>Punto de enganche: sustituir <code>levelActive(l)</code> por una consulta de entitlements (cacheada) o recibir <code>OV.lv</code> desde el servidor por usuario; nunca decidir el pago en el cliente.</li>
+<li>No almacenar jamás datos de tarjeta; PCI fuera del navegador vía Checkout.</li>
+</ul>
+<h3>12.4 Migración de contenido</h3>
+<p><code>GJPSCourse.data()</code> devuelve <code>OV</code> entero: es el volcado natural para sembrar la base de datos del backend (títulos, links, orden, adjuntos, publicaciones).</p>
+
+<h2>13 · Convenciones para código nuevo</h2>
+<ul>
+<li>ES5 (<code>var</code>, funciones declaradas); IIFE con flag <code>window.__gjXx</code> para evitar doble ejecución.</li>
+<li>Strings visibles siempre vía <code>L(ca,es)</code>; HTML vía <code>esc()</code>; texto plano vía <code>vidTitleRaw()</code>.</li>
+<li>CSS nuevo → cola final («CUA FINAL NETA»); nodos runtime → <code>RUNTIME_IDS</code>/<code>REPAINT</code>.</li>
+<li>Editar datos persistidos → pasar por <code>OV</code> y llamar <code>hydrateCourse(); render();</code> (y <code>repaint()</code> si el gestor está abierto).</li>
+<li>No mutar arrays de <code>levelIds()</code> sin <code>applyLevelIds()</code> + <code>render()</code>.</li>
+</ul>
+
+<h2>14 · Regresión mínima antes de cada release</h2>
+<ol>
+<li>Guardián ausente + consola limpia.</li>
+<li>Script de invariantes del Manual básico §5 (duplicados y residuos).</li>
+<li>Flujos: Seguimiento (play, ficha, aplazar, ⓘ), Libre (búsqueda, bloques, adjuntos), edición (crear/borrar adjunto y vídeo, orden), guardar→reabrir, PWA móvil.</li>
+<li>Cambio de idioma CA↔ES en cada vista y en el gestor.</li>
+</ol>
+</div>
+
+<script>
+(function(){
+  var b=document.getElementById('sw-ca'), c=document.getElementById('sw-es');
+  var ca=document.getElementById('m-ca'), es=document.getElementById('m-es');
+  function set(x){
+    ca.classList.toggle('on', x==='ca'); es.classList.toggle('on', x==='es');
+    b.classList.toggle('on', x==='ca');  c.classList.toggle('on', x==='es');
+  }
+  b.onclick=function(){set('ca');};
+  c.onclick=function(){set('es');};
+})();
+</script>
+</body>
+</html>
