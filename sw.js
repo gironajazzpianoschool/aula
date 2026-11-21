@@ -1,41 +1,53 @@
-/* GJPS Service Worker v2 · network-first per a navegacions */
-var CACHE = 'gjps-v2';
-self.addEventListener('install', function () { self.skipWaiting(); });
-self.addEventListener('activate', function (e) {
-  e.waitUntil(
-    caches.keys().then(function (keys) {
-      return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
-    }).then(function () { return self.clients.claim(); })
-  );
+/* GJPS sw · navegació sempre de la xarxa, recursos amb cache */
+var CACHE = 'gjps-v1';
+
+self.addEventListener('install', function () {
+  self.skipWaiting();               // el SW nou pren el control de seguida
 });
+
+self.addEventListener('activate', function (e) {
+  e.waitUntil((async function () {
+    var keys = await caches.keys();
+    await Promise.all(keys
+      .filter(function (k) { return k.indexOf('gjps-') === 0 && k !== CACHE; })
+      .map(function (k) { return caches.delete(k); }));
+    await self.clients.claim();
+  })());
+});
+
 self.addEventListener('fetch', function (e) {
-  if (e.request.method !== 'GET') return;
-  var url = new URL(e.request.url);
-  /* Navegacions: primer xarxa, cau com a reserva */
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request).then(function (res) {
-        var copy = res.clone();
-        caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
-        return res;
-      }).catch(function () {
-        return caches.match(e.request).then(function (m) { return m || caches.match('./index.html'); });
-      })
-    );
+  var req = e.request;
+  if (req.method !== 'GET') return;
+  var url = new URL(req.url);
+  if (url.origin !== location.origin) return;
+
+  /* Navegacions (index.html): XARXA primer; cache només si no hi ha connexió */
+  if (req.mode === 'navigate') {
+    e.respondWith((async function () {
+      try {
+        var net = await fetch(req);
+        var c = await caches.open(CACHE);
+        c.put(req, net.clone());
+        return net;
+      } catch (err) {
+        var c2 = await caches.open(CACHE);
+        var hit = await c2.match(req) || await c2.match('./index.html');
+        return hit || new Response('Sense connexió', { status: 503, headers: { 'Content-Type': 'text/plain' } });
+      }
+    })());
     return;
   }
-  /* Mateix origen (img, css, js): cau amb revalidació */
-  if (url.origin === location.origin) {
-    e.respondWith(
-      caches.match(e.request).then(function (cached) {
-        var fetched = fetch(e.request).then(function (res) {
-          if (res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(e.request, copy); }); }
-          return res;
-        }).catch(function () { return cached; });
-        return cached || fetched;
-      })
-    );
-    return;
-  }
-  /* Creuat (Drive, fonts): no ho toquem */
+
+  /* Recursos (img, apps, icones): cache primer i refresc en segon pla */
+  e.respondWith((async function () {
+    var c = await caches.open(CACHE);
+    var hit = await c.match(req);
+    var netP = fetch(req).then(function (n) {
+      if (n && n.ok) c.put(req, n.clone());
+      return n;
+    }).catch(function () { return null; });
+    if (hit) return hit;
+    var net = await netP;
+    return net || new Response('', { status: 504 });
+  })());
 });
