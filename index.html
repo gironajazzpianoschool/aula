@@ -5402,6 +5402,7 @@ function renderReviewBox(container) {
 
 function renderTrack() {
   hydrateCourse();
+  LS.trackId = null; // FORÇA A RECALCULAR DES DE ZERO EN ENTRAR AL SEGUIMENT
   var ctx = trackContext();
   var lvl = ctx ? ctx.level : (activeLevels().slice(-1)[0] || 1);
   var all = withLink(levelIds(lvl));
