@@ -7,20 +7,20 @@ d'usuari al web, com es generen les contrasenyes i el procediment per
 donar de baixa un alumne de manera immediata i segura.
 
 ------------------------------------------------------------------------
-1. EL COMPTE D'"INVITAT" (ACCÉS DIARI)
+1. EL COMPTE DE CONVIDAT (ACCÉS DIARI)
 ------------------------------------------------------------------------
 Aquest compte està dissenyat per a persones que volen provar el web o 
 fer una visita puntual sense tenir un compte d'alumne assignat.
 
-• Nom d'usuari: Invitat
+• Nom d'usuari: guest
 • Contrasenya: Canvia automàticament cada dia.
-  La fórmula és: [Dia del mes] + [Mes de l'any] + 42
+  La fórmula és: [Dia del mes] + [Mes de l'any] + 42, seguit de [Dia del mes en dues xifres] + [Mes de l'any en dues xifres]
   
-  Exemple: Si avui és dia 26 del mes 10 (octubre), la contrasenya serà:
-  26 + 10 + 42 = 78
+  Exemple: Si avui és dia 2 del novembre, la contrasenya serà:
+  2 + 11 + 42, seguit de 0211 = 550211
 
 • Mecanisme de caducitat automàtica: 
-  Quan l'usuari "Invitat" inicia sessió, el web guarda la data d'avui 
+  Quan l'usuari "guest" inicia sessió, el web guarda la data d'avui 
   a la memòria del navegador. Si l'endemà l'usuari intenta navegar o 
   fer qualsevol acció, el sistema detecta que la data actual no coincideix 
   amb la guardada. En aquell moment, el web tanca la sessió automàticament 

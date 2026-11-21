@@ -2,10 +2,15 @@
 user: gjpianoschoolmc@gmail.com
 psswd: classesjEP
 
+NIVELL 1 CAT: https://drive.google.com/file/d/1or2gX_IaZ9QDwxw5f3zaxi3OPa_1f-4p/view?usp=sharing
+NIVEL 1 SP: https://drive.google.com/file/d/1slQZBKC7_uwiSoX2dd7aW0XUm4Wt4goG/view?usp=sharing
+
 Masterclas Clàssica cat: https://drive.google.com/file/d/16VAaCCvSqD1I-QuGXq6CBU8YhLV26vDA/view?usp=sharing
 Masterclas Classica esp: https://drive.google.com/file/d/1qyi41EYduAG3aeSs40VB3JT8L2Ni1H2Y/view?usp=sharing
 Masterclass Jazz cat: https://drive.google.com/file/d/1OFThJqwDq46Fa_qeBf-FroHmiCXwHgLl/view?usp=sharing
+Adjunt descarregable Masterclass Jazz cat: https://drive.google.com/file/d/18Oh_aeIQyp-Eq6AfJsn5pmX6JknG1NUr/view?usp=sharing
 Masterclass Jazz esp: https://drive.google.com/file/d/19ZY_CzFGSKnMfNgRFarYokOiZRwBVbX9/view?usp=sharing
+Adjunt descarregable Masterclass Jazz sp: https://drive.google.com/file/d/1d0UQN8qvKhwuWH9XU99TboC7PLwkK9nR/view?usp=sharing
 
 
 #NÚVOL DRIVE 1:
@@ -67,9 +72,9 @@ T04cat: https://drive.google.com/file/d/1rC-hzFKjkNSlBhfzbNKuXr-zuSxikuW1/view?u
 T05cat: https://drive.google.com/file/d/1zN7p0do8nezfm1zClu1IggfoPEPA9O1H/view?usp=sharing
 T06cat: https://drive.google.com/file/d/1x7I-fDE0SSsv-8SnyraMCtjFJ5zwgFV5/view?usp=sharing
 T07cat: https://drive.google.com/file/d/1OFYINMfF6suImcrg2d4SxfaPlJ_PUG7x/view?usp=sharing
-T08cat: 
-T09cat: 
-T10cat: 
+T08cat: https://drive.google.com/file/d/1wHl7EjdIrYOfxpgvcOOkSuT_xAISqv4b/view?usp=sharing
+T09cat: https://drive.google.com/file/d/1dIwt1i7MVl8h25v33fYiE-D_YpVVrsjJ/view?usp=sharing
+T10cat: https://drive.google.com/file/d/1jlJ69oNq5JoQIn21-gTKp7AikhAm743A/view?usp=sharing
 T11cat: 
 
 T01sp: https://drive.google.com/file/d/1pfzM2lUFMe0p1D90i_m79SXHgtKOhAUK/view?usp=sharing
@@ -79,7 +84,54 @@ T04sp: https://drive.google.com/file/d/16t3LcAE3E6EWCSmY2Z2_WtTWe1y3TRih/view?us
 T05sp: https://drive.google.com/file/d/1RlHXbwc2_A6cA-JSmljCJUyFsWhDp9rl/view?usp=sharing
 T06sp: https://drive.google.com/file/d/1z4osLC6yqSQgTRafjv_ocq4rSgHZJED_/view?usp=sharing
 T07sp: https://drive.google.com/file/d/1ar_I6xcrSZm38ySNsSJxvSC8sJ5BMPhi/view?usp=sharing
-T08sp: 
-T09sp: 
-T10sp: 
+T08sp: https://drive.google.com/file/d/1sOayWKQ-28Y7NkE7H0wXNA9QzH4P70DY/view?usp=sharing
+T09sp: https://drive.google.com/file/d/1ZsuaoFT29Payw131PjUNOvCkjslETplD/view?usp=sharing
+T10sp: https://drive.google.com/file/d/1J3dePkstlSCeikZuPZHtvuOsIvqS4zqv/view?usp=sharing
 T11sp: 
+
+#NÚVOL DRIVE 2:
+user: 
+psswd: classespiano
+
+R01cat: 
+R02cat: 
+R03cat: 
+R04cat: 
+R05cat: 
+R06cat: 
+R07cat: 
+R07cat: 
+R08cat: 
+R09cat: 
+R10cat: 
+R11cat: 
+R12cat: 
+R13cat: 
+R14cat: 
+R15cat: 
+R16cat: 
+R17cat: 
+R18cat: 
+R19cat: 
+R20cat: 
+
+R01sp: 
+R02sp: 
+R03sp: 
+R04sp: 
+R05sp: 
+R06sp: 
+R07sp: 
+R08sp: 
+R09sp: 
+R10sp: 
+R11sp: 
+R12sp: 
+R13sp: 
+R14sp: 
+R15sp: 
+R16sp: 
+R17sp: 
+R18sp: 
+R19sp: 
+R20sp: 
