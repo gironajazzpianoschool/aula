@@ -8039,6 +8039,21 @@ try {
   if (f) { f.style.display = 'block'; f.textContent = '⚠️ Error init: ' + e.message; }
 }
 
+/* ═══ CACHE-BUSTER MANUAL (fora del SW) ═══ */
+(function(){
+  var key = 'gjps_last_html_hash';
+  var currentHash = document.documentElement.outerHTML.length.toString(36);
+  var storedHash = localStorage.getItem(key);
+  if (storedHash && storedHash !== currentHash) {
+    console.log('🔄 Canvi detectat al HTML → recàrrega dura');
+    localStorage.setItem(key, currentHash);
+    location.reload(true);
+    return;
+  }
+  localStorage.setItem(key, currentHash);
+})();
+
+/* ═══ NETEJA SW DESKTOP + REGISTRE PWA ═══ */
 (function () {
   var ua = navigator.userAgent;
   var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
@@ -8046,6 +8061,7 @@ try {
   function mq(q) { try { return matchMedia(q).matches; } catch (e) { return false; } }
   var coarseOnly = mq('(pointer: coarse)') && !mq('(any-pointer: fine)') && !mq('(any-hover: hover)');
   var isDesktop = !isMobileUA && !isIPadOS && !coarseOnly;
+  
   if (isDesktop) {
     window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); return false; });
     var FLAG = 'gjps_sw_cleaned_v1', done = lsGet(FLAG);
@@ -8053,33 +8069,30 @@ try {
       lsSet(FLAG, '1');
       try {
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function (regs) {
-            regs.forEach(function (r) { r.unregister(); });
+          navigator.serviceWorker.getRegistrations().then(function(regs){
+            regs.forEach(function(r){ r.unregister(); });
+            console.log('🧹 SW desktop netejats');
           });
         }
-        if ('caches' in window) {
-          caches.keys().then(function (ks) {
-            ks.forEach(function (k) { if (/^(gjps|girona)/i.test(k)) caches.delete(k); });
-          });
-        }
-      } catch (e) {}
+      } catch(e) { console.warn('Neteja SW fallida:', e); }
     }
-    return;
-  }
-  var link = document.createElement('link');
-  link.rel = 'manifest'; link.href = './manifest.json';
-  document.head.appendChild(link);
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (window.__gjSwReloaded) return;
-      window.__gjSwReloaded = true;
-      setTimeout(function () { location.reload(); }, 300);
-    });
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function (reg) {
-      reg.update();
-      document.addEventListener('visibilitychange', function () { if (!document.hidden) reg.update(); });
-      window.addEventListener('pageshow', function () { reg.update(); });
-    }).catch(function (err) { console.log('SW:', err); });
+  } else {
+    // Mòbil/Tablet: registra SW normalment
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').then(function(reg){
+          reg.update();
+          reg.onupdatefound = function() {
+            var installing = reg.installing;
+            installing.onstatechange = function() {
+              if (installing.state === 'activated') {
+                console.log('⚡ PWA actualitzada automàticament');
+              }
+            };
+          };
+        }).catch(function(err){ console.warn('SW registration failed:', err); });
+      });
+    }
   }
 })();
 </script>
