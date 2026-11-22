@@ -9035,5 +9035,67 @@ document.addEventListener('keydown', function(e) {
   }, true);
 })();
 </script>
+<script>
+/* ═══ VIGIA DE VERSIÓ iOS · detecta HTML nou al servidor i refresca ═══ */
+(function () {
+  'use strict';
+  if (window.__gjVerWatch) return; window.__gjVerWatch = true;
 
+  var docSig = (document.lastModified || '').trim();
+  var lastCheck = 0, reloading = false;
+
+  function doReload(reg) {
+    if (reloading) return; reloading = true;
+    try { sessionStorage.setItem('gjps_vreload', String(Date.now())); } catch (e) {}
+    if (reg && reg.waiting) { try { reg.waiting.postMessage('skipWaiting'); } catch (e) {} }
+    setTimeout(function () {
+      var base = location.pathname + location.search;
+      location.replace(base + (base.indexOf('?') >= 0 ? '&' : '?') + '_r=' + Date.now() + location.hash);
+    }, 250);
+  }
+
+  function serverSig() {
+    return fetch(location.pathname + '?gjv=' + Date.now(), { method: 'HEAD', cache: 'no-store', credentials: 'same-origin' })
+      .then(function (res) {
+        if (!res.ok) return null;
+        var f = (res.headers.get('etag') || '') + '|' + (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || '');
+        return f === '||' ? null : f;
+      })
+      .catch(function () { return null; });
+  }
+
+  function check(force) {
+    if (typeof editModeOn !== 'undefined' && editModeOn) return;
+    if (!navigator.onLine) return;
+    var now = Date.now();
+    if (!force && now - lastCheck < 60000) return;
+    lastCheck = now;
+    var last = 0;
+    try { last = parseInt(sessionStorage.getItem('gjps_vreload') || '0', 10); } catch (e) {}
+    if (now - last < 30000) return;
+    if (!docSig) return;
+
+    serverSig().then(function (f) {
+      if (!f) return;
+      var stored = sessionStorage.getItem('gjps_srv_sig') || f;
+      sessionStorage.setItem('gjps_srv_sig', f);
+      if (stored !== f) {
+        console.log('🔄 Servidor canviat → refresc');
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistration().then(function (reg) {
+            if (reg) reg.update().then(function () { doReload(reg); }, function () { doReload(reg); });
+            else doReload(null);
+          });
+        } else doReload(null);
+      }
+    });
+  }
+
+  function onResume() { check(true); }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) onResume(); });
+  window.addEventListener('pageshow', onResume);
+  window.addEventListener('focus', onResume);
+  setInterval(function () { check(false); }, 5 * 60 * 1000);
+})();
+</script>
 </body></html>
