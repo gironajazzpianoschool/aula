@@ -2460,11 +2460,11 @@ html { -webkit-tap-highlight-color: transparent; }
     <span class="modes">
 <button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg>  Seguiment Continuat</button>
 
-<button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
+<button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegació Lliure</button>
 
 <button id="mApps" data-tip="Aplicacions i eines d'entrenament / Aplicaciones y herramientas de entrenamiento" aria-label="Aplicacions / Aplicaciones" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
 
-    <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="on">FAQ</button>
+    <button id="mInfo" data-tip="Preguntes freqüents" aria-label="Preguntes freqüents" class="">FAQ</button>
     </span>
     <button id="mHelp" data-tip="Com funciona / Cómo funciona" aria-label="Com funciona / Cómo funciona" class=""><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></button>
     <button id="mSearch" data-tip="Cercar vídeos" aria-label="Cercar vídeos" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
@@ -2474,19 +2474,19 @@ html { -webkit-tap-highlight-color: transparent; }
 
 <main>
   <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: none;"></div>
+  <div id="freeView" style="display: block;"></div>
   <div id="appsView" style="display: none;"></div>
-  <div id="infoView" style="display: block;"></div>
+  <div id="infoView" style="display: none;"></div>
   <div id="helpView" style="display: none;"></div>
 </main>
 
-<div class="modal" id="modal">
+<div class="modal show-controls" id="modal">
   <div class="wrap">
-    <button class="close" id="xPlayer" title="Tancar">✕</button>
+    <button class="close" id="xPlayer" style="opacity: 0.15; pointer-events: auto;" data-tip="Tancar" aria-label="Tancar">✕</button>
     <div class="frame">
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" src="" scrolling="no" class=""></iframe>
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation" src="" scrolling="no" class="" allowfullscreen="true"></iframe>
       <div class="video-overlay" id="videoOverlay">
-        <div class="icon" style="box-shadow: rgba(232, 176, 75, 0.1) 0px 0px 0px 23px, rgba(232, 176, 75, 0.35) 0px 0px 47px 4px, rgba(232, 176, 75, 0.447) 0px 0px 60px 14px; opacity: 0.978; background: rgba(232, 176, 75, 0.192);">▶</div>
+        <div class="icon" style="box-shadow: rgba(232, 176, 75, 0.35) 0px 0px 36px 6px, rgba(232, 176, 75, 0.18) 0px 0px 60px 12px; opacity: 1; background: rgba(232, 176, 75, 0.192);">▶</div>
         <div class="text" id="overlayText">Fes clic per reproduir</div>
       </div>
     </div>
@@ -2507,11 +2507,11 @@ html { -webkit-tap-highlight-color: transparent; }
 
 <div class="adjsel" id="adjSelModal">
   <div class="aselbox">
-    <h2 id="adjSelTitle"></h2>
+    <h2 id="adjSelTitle">Selecciona quins adjunts del bloc han d'aparèixer en aquest vídeo:</h2>
     <div class="adlist" id="adjSelList"></div>
     <div class="actions">
-      <button class="go secondary" id="adjSelCancel"></button>
-      <button class="go" id="adjSelOk"></button>
+      <button class="go secondary" id="adjSelCancel">Cancel·lar</button>
+      <button class="go" id="adjSelOk">Aplicar</button>
     </div>
   </div>
 </div>
@@ -2527,7 +2527,7 @@ html { -webkit-tap-highlight-color: transparent; }
 </div>
 
 <button id="mEdit" data-tip="Mode edició" aria-label="Mode edició" class="">⚙️</button>
-<button id="mSave" data-tip="Guardar" aria-label="Guardar" class="">💾</button>
+<button id="mSave" data-tip="Enviar index.html per email" aria-label="Enviar index.html per email" class="">📧</button>
 <div id="appVer">GJPS v6.0 (20-11-2026)</div>
 
 <script>
@@ -2909,31 +2909,31 @@ var OV = /*OV-START*/
     },
     "2.0.g.0": {
       "es": "Introducción a las Tríadas",
-      "ca": "Introducción a las Tríadas"
+      "ca": "Introducció a les Tríades"
     },
     "3.0.g.0": {
       "es": "Escala Mayor: Patrón Universal",
-      "ca": "Escala Mayor: Patrón Universal"
+      "ca": "Escala Major: Patró Universal"
     },
     "3.2.g.0": {
       "es": "Introducción al Sistema Tonal",
-      "ca": "Introducción al Sistema Tonal"
+      "ca": "Introducció al Sistema Tonal"
     },
     "4.0.g.0": {
       "es": "Inversión de Tríadas Mayores y Menores",
-      "ca": "Inversión de Tríadas Mayores y Menores"
+      "ca": "Inversió de Tríades Majors i Menors"
     },
     "4.2.g.0": {
       "es": "Tríadas Mayores y Menores en Posición Abierta",
-      "ca": "Tríadas Mayores y Menores en Posición Abierta"
+      "ca": "Tríades Majors i Menors en Posició Oberta"
     },
     "5.0.g.0": {
       "es": "Voicings Triádicos a Dos Manos",
-      "ca": "Voicings Triádicos a Dos Manos"
+      "ca": "Voicings Triàdics a Dues Mans"
     },
     "5.2.g.0": {
       "es": "Introducción al Solfeo",
-      "ca": "Introducción al Solfeo"
+      "ca": "Introducció al Solfeig"
     },
     "6.0.g.0": {
       "es": "Funciones Tonales Básicas",
@@ -3201,6 +3201,9 @@ var OV = /*OV-START*/
     "1.0.g.0": {
       "ca": "1VeU8NSwOsN_eubIbfoQsKo4YFDnlqM5F",
       "es": "1pfzM2lUFMe0p1D90i_m79SXHgtKOhAUK"
+    },
+    "5.0.g.0": {
+      "ca": "1wHl7EjdIrYOfxpgvcOOkSuT_xAISqv4b"
     }
   },
   "f": {
@@ -4136,7 +4139,13 @@ var OV = /*OV-START*/
     "6.1.g": [],
     "6.2.g": [],
     "6.3.g": [],
-    "1.2.r": []
+    "1.2.r": [],
+    "0.0.g": [],
+    "8.0.g": [],
+    "9.0.g": [],
+    "10.0.g": [],
+    "11.0.g": [],
+    "12.0.g": []
   },
   "ford": {
     "es": [
