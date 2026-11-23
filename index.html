@@ -2401,6 +2401,12 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-iteration-count: 1 !important; }
 }
+/* ═══ FIX BOTÓ PLAY RODÓ A ANDROID ═══ */
+.play:active, .play:focus, .play:focus-visible {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+  overflow: hidden !important;
+}
 </style>
 <!-- ═══ FINAL · social, icones, PWA ═══ -->
 <meta name="description" content="Girona Jazz Piano School® · Aula online: blocs de vídeos, seguiment continuat i entrenament auditiu.">
