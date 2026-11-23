@@ -2401,11 +2401,30 @@ html.lowfx .video-overlay .icon { animation: none !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-iteration-count: 1 !important; }
 }
-/* ═══ FIX BOTÓ PLAY RODÓ A ANDROID ═══ */
-.play:active, .play:focus, .play:focus-visible {
+/* ═══ FIX TAP HIGHLIGHT ANDROID · botons de play ═══ */
+html { -webkit-tap-highlight-color: transparent; }
+.vr, .now, .vr .play, .now .play, .vr .play *, .now .play * {
   -webkit-tap-highlight-color: transparent !important;
+}
+.vr .play, .now .play {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  outline: none;
+  touch-action: manipulation;
+}
+.vr .play:active, .vr .play:focus, .vr .play:focus-visible,
+.now .play:active, .now .play:focus, .now .play:focus-visible {
   outline: none !important;
-  overflow: hidden !important;
+}
+.vr .play::-moz-focus-inner { border: 0; }
+/* ═══ Centrat instantani del play de l'overlay ═══ */
+#videoOverlay .play, #videoOverlay button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
 }
 </style>
 <!-- ═══ FINAL · social, icones, PWA ═══ -->
@@ -8757,8 +8776,7 @@ document.addEventListener('keydown', function(e) {
   }
 
   function frame(ts) {
-    requestAnimationFrame(frame);
-         if (document.hidden) return;
+       requestAnimationFrame(frame);
     var modal = document.getElementById('modal');
     var ov = document.getElementById('videoOverlay');
     var ic = ov && ov.querySelector('.icon');
