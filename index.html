@@ -8326,20 +8326,6 @@ try {
   if (f) { f.style.display = 'block'; f.textContent = '⚠️ Error init: ' + e.message; }
 }
 
-/* ═══ CACHE-BUSTER MANUAL (fora del SW) ═══ */
-(function(){
-  var key = 'gjps_last_html_hash';
-  var currentHash = document.documentElement.outerHTML.length.toString(36);
-  var storedHash = localStorage.getItem(key);
-  if (storedHash && storedHash !== currentHash) {
-    console.log('🔄 Canvi detectat al HTML → recàrrega dura');
-    localStorage.setItem(key, currentHash);
-    location.reload(true);
-    return;
-  }
-  localStorage.setItem(key, currentHash);
-})();
-
 /* ═══ NETEJA SW DESKTOP + REGISTRE PWA ═══ */
 (function () {
   var ua = navigator.userAgent;
@@ -8721,7 +8707,12 @@ document.addEventListener('keydown', function(e) {
       if (clicks >= 5) {
         clicks = 0;
         if (confirm('Reiniciar les dades locals d\'aquest navegador?\nEs perdrà el progrés desat en aquest dispositiu.')) {
-          try { localStorage.clear(); } catch (e) {}
+          try {
+  for (var i = localStorage.length - 1; i >= 0; i--) {
+    var k = localStorage.key(i);
+    if (k && k.indexOf('gjps_') === 0) localStorage.removeItem(k);
+  }
+} catch (e) {}
           location.reload();
         }
       }
@@ -8767,6 +8758,7 @@ document.addEventListener('keydown', function(e) {
 
   function frame(ts) {
     requestAnimationFrame(frame);
+         if (document.hidden) return;
     var modal = document.getElementById('modal');
     var ov = document.getElementById('videoOverlay');
     var ic = ov && ov.querySelector('.icon');
@@ -9116,6 +9108,7 @@ document.addEventListener('keydown', function(e) {
 (function () {
   'use strict';
   if (window.__gjVerWatch) return; window.__gjVerWatch = true;
+  if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
 
   var docSig = (document.lastModified || '').trim();
   var lastCheck = 0, reloading = false;
