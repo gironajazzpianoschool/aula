@@ -6462,8 +6462,8 @@ function openFullscreenVideo(src) {
   if (!isIOS() && isMobileDevice()) { window.open(src, '_blank'); return; }
   pushVideoState();
   document.documentElement.style.zoom = '1';
-  modal.classList.add('on', 'show-controls');
   if (isIOS()) {
+    modal.classList.add('on', 'show-controls');
     modal.classList.add('ios-device', 'gj-iosnote');
     overlay.style.display = 'none';
     player.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access-by-user-activation');
@@ -6478,13 +6478,36 @@ function openFullscreenVideo(src) {
     overlay.classList.remove('hidden');
     player.src = '';
     player.classList.remove('active');
+    modal.classList.add('on', 'show-controls');
     var wrap = document.querySelector('.wrap');
-    if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () {});
+    var cover = document.createElement('div');
+    cover.id = 'gjFsCover';
+    cover.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:2147483647;';
+    (wrap || document.body).appendChild(cover);
+    var dropCover = function () {
+      requestAnimationFrame(function () {
+        var c = document.getElementById('gjFsCover');
+        if (c && c.parentNode) c.parentNode.removeChild(c);
+      });
+    };
+    var safety = setTimeout(function () { dropCover(); }, 1500);
+    var once = function () {
+      document.removeEventListener('fullscreenchange', once);
+      document.removeEventListener('webkitfullscreenchange', once);
+      clearTimeout(safety);
+      dropCover();
+    };
+    document.addEventListener('fullscreenchange', once);
+    document.addEventListener('webkitfullscreenchange', once);
+    if (wrap && wrap.requestFullscreen) wrap.requestFullscreen().catch(function () { clearTimeout(safety); dropCover(); });
     else if (wrap && wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+    else { clearTimeout(safety); dropCover(); }
   }
   showCloseBtn();
 }
 function closeVideoPlayer(fromPop) {
+  var c = document.getElementById('gjFsCover');
+  if (c && c.parentNode) c.parentNode.removeChild(c);
   var m = $('modal');
   if (m) m.classList.remove('gj-iosnote', 'ios-device');
   var ov = $('videoOverlay');
