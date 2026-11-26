@@ -9868,8 +9868,9 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     ".gjm-desk{display:grid;grid-template-columns:1fr 1.05fr;gap:14px;align-items:stretch;}",
     "@media (max-width:860px){.gjm-desk{grid-template-columns:1fr;}.gjm-console{padding:14px;}.gjm-pad{width:42px;height:42px;font-size:14px;}}",
     ".gjm-col{display:flex;flex-direction:column;gap:9px;justify-content:space-between;}",
-    ".gjm-beats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;min-height:48px;align-items:center;}",
+    ".gjm-beats{display:flex;justify-content:center;align-content:center;gap:8px;flex-wrap:wrap;min-height:48px;align-items:center;}",
     ".gjm-pad{width:46px;height:46px;border-radius:13px;border:2px solid var(--hair-2);background:var(--bg);color:var(--mut);font-size:16px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:none;user-select:none;}",
+    "@media (max-width:640px){.gjm-beats{min-height:94px;gap:6px 7px;max-width:260px;margin:0 auto;}.gjm-pad{width:40px;height:40px;border-radius:11px;font-size:14px;}}",
     ".gjm-pad small{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}",
     ".gjm-pad[data-acc='2']{border-color:var(--ok);color:var(--ok);}",
     ".gjm-pad[data-acc='1']{border-color:var(--gold);color:var(--gold);}",
@@ -10745,9 +10746,40 @@ setTimeout(function () { if (isPlaying) setBpm(nextBpm, true); }, delayBpm);
 }
 }
 }
+var __gjWakeLock = null;
+function requestScreenWakeLock() {
+  try {
+    if ("wakeLock" in navigator && navigator.wakeLock && typeof navigator.wakeLock.request === "function") {
+      if (__gjWakeLock) return;
+      navigator.wakeLock.request("screen").then(function (lock) {
+        __gjWakeLock = lock;
+        if (lock && typeof lock.addEventListener === "function") {
+          lock.addEventListener("release", function () {
+            __gjWakeLock = null;
+          });
+        }
+      }).catch(function () {});
+    }
+  } catch (e) {}
+}
+function releaseScreenWakeLock() {
+  try {
+    if (__gjWakeLock && typeof __gjWakeLock.release === "function") {
+      __gjWakeLock.release().catch(function () {});
+    }
+  } catch (e) {}
+  __gjWakeLock = null;
+}
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible" && isPlaying) {
+    requestScreenWakeLock();
+  }
+});
+
 function startMetroPro() {
-initAudio();
-isPlaying = true; currentStep = 0; barCounter = 0; roundCounter = 1;
+  initAudio();
+  requestScreenWakeLock();
+  isPlaying = true; currentStep = 0; barCounter = 0; roundCounter = 1;
 if (amalgOn) { amalgIdx = 0; applyAmalgBar(0); }
 introStepsLeft = (trainerOn && introBarsOn) ? (2 * beats * subdiv) : 0;
 if (trainerOn) startTrainerClock();
@@ -10756,7 +10788,8 @@ lookaheadTimer = setInterval(scheduler, 15);
 btnPlay.classList.add("running"); btnPlay.textContent = "⏹ " + L("Atura", "Parar");
 }
 function stopMetroPro() {
-isPlaying = false; introStepsLeft = 0;
+  isPlaying = false;
+  releaseScreenWakeLock(); introStepsLeft = 0;
 clearInterval(lookaheadTimer); lookaheadTimer = null;
 polyTimers.forEach(function (tm) { clearTimeout(tm); });
 polyTimers = new Array();
