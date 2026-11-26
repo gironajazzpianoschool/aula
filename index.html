@@ -10138,10 +10138,11 @@ return res;
     "  #gjMetroModal .gjm-desk{display:flex;flex-direction:column;gap:10px;}",
     "  #gjMetroModal .gjm-col{width:100%;box-sizing:border-box;}",
     "  #gjMetroModal .gjm-pill{white-space:nowrap;font-size:10px;padding:6px 7px;min-width:0;}",
-    "  .gjm-poly-sw-row{display:grid;grid-template-columns:1.35fr 1fr;gap:8px;align-items:stretch;}",
-    "  .gjm-sw-mini{display:flex;flex-direction:column;justify-content:space-between;gap:6px;}",
-    "  .gjm-sw-mini-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}",
-    "  .gjm-sw-mini-btns{display:flex;gap:6px;}",
+    "  .gjm-poly-sw-row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;align-items:stretch;}",
+    "  .gjm-sw-mini{display:flex;flex-direction:column;justify-content:space-between;gap:6px;overflow:hidden;max-width:100%;}",
+    "  .gjm-sw-mini-top{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0;width:100%;flex-wrap:wrap;}",
+    "  .gjm-sw-mini-btns{display:flex;gap:6px;width:100%;}",
+    "  .gjm-sw-mini-btns .gjm-pill{flex:1 1 0;text-align:center;}",
     "}",
     "@media (min-width:641px){",
     "  .gjm-poly-sw-row{display:flex;flex-direction:column;gap:8px;}",
@@ -10239,7 +10240,15 @@ return res;
   /* Card 1: Compassos simples, compostos i Amalgama / Ritmes progressius */
   var c1 = mk("div", "gjm-card", null, colRight);
   c1.style.position = "relative";
-  mk("span", "gjm-clbl", L("Compàs i pulsació (clica els cercles per accentuar)", "Compás y pulsación (pulsa los círculos para acentuar)"), c1);
+  var isNarrowTitle = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
+  mk(
+    "span",
+    "gjm-clbl",
+    isNarrowTitle
+      ? L("Compàs i pulsació", "Compás y pulsación")
+      : L("Compàs i pulsació (clica els cercles per accentuar)", "Compás y pulsación (pulsa los círculos para acentuar)"),
+    c1
+  );
   var metersRow = mk("div", "gjm-pills", null, c1);
 
   var simpleUnit = "q";
@@ -10463,12 +10472,12 @@ selPolyB.onchange = function () { polyB = parseInt(this.value, 10) || 2; };
 
 /* Cronòmetre de sessió */
 var foot = mk("div", "gjm-foot gjm-sw-mini", null, polyAndSwRow);
-foot.style.minWidth = "0";
+foot.style.cssText = "min-width:0;max-width:100%;overflow:hidden;box-sizing:border-box;";
 var swLeft = mk("div", "gjm-sw-mini-top", null, foot);
 var swTitle = mk("span", null, L("Cronòmetre", "Cronómetro"), swLeft);
-swTitle.style.cssText = "font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);";
+swTitle.style.cssText = "font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);min-width:0;";
 var swVal = mk("span", null, "00:00", swLeft);
-swVal.style.cssText = "font-family:monospace;font-size:16px;font-weight:800;color:var(--ok);white-space:nowrap;";
+swVal.style.cssText = "font-family:monospace;font-size:14px;font-weight:800;color:var(--ok);white-space:nowrap;flex-shrink:0;";
 var swBtns = mk("div", "gjm-sw-mini-btns", null, foot);
 var btnSwStart = mk("button", "gjm-pill", "▶", swBtns); btnSwStart.type = "button"; btnSwStart.style.padding = "6px 10px";
 var btnSwReset = mk("button", "gjm-pill", "↺", swBtns); btnSwReset.type = "button"; btnSwReset.style.padding = "6px 10px";
