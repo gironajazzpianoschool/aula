@@ -6273,7 +6273,7 @@ function makeVid(v, id, track, tag) {
     abox.className = 'adj-notice';
     var abtn = document.createElement('button');
     abtn.type = 'button';
-    abtn.innerHTML = '<span class="an-ico">🔔</span><span class="an-tx">' +
+    abtn.innerHTML = '<span class="an-ico">📎</span><span class="an-tx">' +
       (isCa ? 'Descarrega el material d\'aquest vídeo' : 'Descarga el material de este vídeo') +
       '</span><span class="an-n">' + files.length + '</span><span class="an-ch">' + ICON_CHEVRON + '</span>';
     var alist = document.createElement('div');
@@ -11396,10 +11396,26 @@ try { render(); } catch (e) {}
 })();
 </script>
 <script>
-/* ═══ GJPS · ADJUNTS VISIBLES v1 · capa runtime definitiva ═══ */
+/* ═══ Repintat garantit després de la capa d'adjunts ═══ */
+(function () {
+  function rr() { try { if (window.render) render(); } catch (e) {} }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(rr, 0); });
+  } else {
+    setTimeout(rr, 0);
+  }
+  window.addEventListener('load', function () { setTimeout(rr, 0); });
+})();
+</script>
+<script>
+/* ═══ GJPS · ADJUNTS v5 · capa única i definitiva ═══ */
 (function () {
   'use strict';
-  if (window.__gjAdjVisible) return; window.__gjAdjVisible = true;
+  delete window.__gjAdjVisible;
+  delete window.__gjAdjVisible2;
+  delete window.__gjAdjVisible3;
+  delete window.__gjAdjVisible4;
+  window.__gjAdjVisible5 = true;
 
   /* Selecció per targeta, separada per idioma (migra arrays llegats) */
   function vaObj(id) {
@@ -11422,12 +11438,11 @@ try { render(); } catch (e) {}
     if (!v.ca.length && !v.es.length) delete OV.va[id];
   };
 
-  /* Resolució tolerant: claus de 3 o 4 camps + escombrat de blocs +
-     adjunts de la secció pròpia i del slot del nivell (sempre visibles) */
+  /* Resol adjunts: selecció pròpia + docs de TOTES les seccions del nivell */
   window.adjListOf = function (id, track) {
     var x = findVidById(id);
     if (!x || isDocId(id)) return [];
-    var b = vidBlockById(id), out = [], seen = {};
+    var out = [], seen = {};
     function push(si, ui, bb, i) {
       var dc = (docsOf(si, ui, bb) || [])[i];
       var link = getAdjLink(si, ui, bb, i);
@@ -11435,30 +11450,33 @@ try { render(); } catch (e) {}
         seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] });
       }
     }
+    /* 1. Selecció pròpia del vídeo (claus triades amb el selector) */
     (getVidAdjKeys(id) || []).forEach(function (k) {
       var p = String(k).split('.');
       var si = +p[0], ui = +p[1], bb, i;
-      if (p.length >= 4) { bb = p[2]; i = +p[3]; } else { bb = b; i = +p[2]; }
+      if (p.length >= 4) { bb = p[2]; i = +p[3]; } else { bb = vidBlockById(id); i = +p[2]; }
       var before = out.length;
       push(si, ui, bb, i);
       if (out.length === before) {
         for (var q = 0; q < B5.length; q++) { push(si, ui, B5[q], i); if (out.length > before) break; }
       }
     });
-    var secs = [];
-    if (x.si !== undefined) secs.push([x.si, x.ui]);
-    var sc = slotCoords(vidLevel(id), b);
-    if (sc) secs.push([sc.si, sc.ui]);
-    secs.forEach(function (su) {
-      (docsOf(su[0], su[1], b) || []).forEach(function (dc, i) { push(su[0], su[1], b, i); });
+    /* 2. Hereta documents de TOTES les seccions del nivell (per al bloc del vídeo) */
+    var b = vidBlockById(id);
+    var lvl = vidLevel(id);
+    levelSections(lvl).forEach(function (si) {
+      if (!D[si] || !D[si].u) return;
+      D[si].u.forEach(function (u, ui) {
+        (docsOf(si, ui, b) || []).forEach(function (dc, i) { push(si, ui, b, i); });
+      });
     });
     return out;
   };
 
-  /* La ⓘ i el prep s'obren amb descripció OV.d, fitxa OV.dx o adjunts */
-  var _hasPrep = window.hasPrep;
+  /* hasPrep = fitxa OV.dx, descripció OV.d o adjunts */
+  var _origHasPrep = window.hasPrep;
   window.hasPrep = function (id) {
-    if (_hasPrep && _hasPrep(id)) return true;
+    if (_origHasPrep && _origHasPrep(id)) return true;
     var d = OV.d && OV.d[id] && OV.d[id][LS.lang];
     if (d && String(d).trim()) return true;
     return window.adjListOf(id, false).length > 0;
@@ -11466,65 +11484,15 @@ try { render(); } catch (e) {}
 })();
 </script>
 <script>
-/* ═══ GJPS · ADJUNTS VISIBLES v2 · bloc per defecte + selecció pròpia ═══ */
+/* ═══ Repintat garantit ═══ */
 (function () {
-  'use strict';
-  if (window.__gjAdjVisible2) return; window.__gjAdjVisible2 = true;
-
-  function vaObj(id) {
-    OV.va = OV.va || {};
-    var v = OV.va[id];
-    if (Array.isArray(v)) { OV.va[id] = { ca: v.slice(), es: v.slice() }; v = OV.va[id]; }
-    if (!v || typeof v !== 'object') { OV.va[id] = { ca: [], es: [] }; v = OV.va[id]; }
-    if (!Array.isArray(v.ca)) v.ca = [];
-    if (!Array.isArray(v.es)) v.es = [];
-    return v;
+  function rr() { try { if (window.render) render(); } catch (e) {} }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(rr, 0); });
+  } else {
+    setTimeout(rr, 0);
   }
-  window.getVidAdjKeys = function (id) {
-    var a = vaObj(id)[LS.lang] || [];
-    if (a.length && typeof a[0] === 'number') return [];
-    return a;
-  };
-  window.setVidAdjKeys = function (id, keys) {
-    var v = vaObj(id);
-    if (!keys || !keys.length) delete v[LS.lang]; else v[LS.lang] = keys;
-    if (!v.ca.length && !v.es.length) delete OV.va[id];
-  };
-
-  window.adjListOf = function (id, track) {
-    var x = findVidById(id);
-    if (!x || isDocId(id)) return [];
-    var b = vidBlockById(id), out = [], seen = {};
-    function push(si, ui, bb, i) {
-      var dc = (docsOf(si, ui, bb) || [])[i];
-      var link = getAdjLink(si, ui, bb, i);
-      if (dc && !dc[3] && dc[li()] && link && !seen[link]) { seen[link] = 1; out.push({ n: dc[li()], l: link, t: dc[2] }); }
-    }
-    var sel = getVidAdjKeys(id) || [];
-    if (sel.length) {
-      sel.forEach(function (k) {
-        var p = String(k).split('.');
-        var si = +p[0], ui = +p[1], bb, i;
-        if (p.length >= 4) { bb = p[2]; i = +p[3]; } else { bb = b; i = +p[2]; }
-        var before = out.length;
-        push(si, ui, bb, i);
-        if (out.length === before) {
-          for (var q = 0; q < B5.length; q++) { push(si, ui, B5[q], i); if (out.length > before) break; }
-        }
-      });
-    } else {
-      try { adjItemsLevel(vidLevel(id), b).forEach(function (it) { push(it.si, it.ui, b, it.idx); }); } catch (e) {}
-    }
-    return out;
-  };
-
-  var _hasPrep = window.hasPrep;
-  window.hasPrep = function (id) {
-    if (_hasPrep && _hasPrep(id)) return true;
-    var d = OV.d && OV.d[id] && OV.d[id][LS.lang];
-    if (d && String(d).trim()) return true;
-    return window.adjListOf(id, false).length > 0;
-  };
+  window.addEventListener('load', function () { setTimeout(rr, 0); });
 })();
 </script>
 </body></html>
