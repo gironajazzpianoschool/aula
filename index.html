@@ -10132,7 +10132,22 @@ return res;
     ".gjm-slot{background:var(--card);border:1px solid var(--hair-2);border-radius:9px;padding:5px 6px;display:flex;flex-direction:column;gap:4px;align-items:center;}",
     ".gjm-slot.active-bar{border-color:#8c52ff;box-shadow:0 0 12px rgba(140,82,255,.35);}",
     ".gjm-slot-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);}",
-    ".gjm-slot-sel{display:flex;align-items:center;gap:2px;}"
+    ".gjm-slot-sel{display:flex;align-items:center;gap:2px;}",
+    "@media (max-width:640px){",
+    "  #gjMetroModal .gjm-console{width:min(96vw,520px);max-height:92dvh;overflow-y:auto;box-sizing:border-box;}",
+    "  #gjMetroModal .gjm-desk{display:flex;flex-direction:column;gap:10px;}",
+    "  #gjMetroModal .gjm-col{width:100%;box-sizing:border-box;}",
+    "  #gjMetroModal .gjm-pill{white-space:nowrap;font-size:10px;padding:6px 7px;min-width:0;}",
+    "  .gjm-poly-sw-row{display:grid;grid-template-columns:1.35fr 1fr;gap:8px;align-items:stretch;}",
+    "  .gjm-sw-mini{display:flex;flex-direction:column;justify-content:space-between;gap:6px;}",
+    "  .gjm-sw-mini-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}",
+    "  .gjm-sw-mini-btns{display:flex;gap:6px;}",
+    "}",
+    "@media (min-width:641px){",
+    "  .gjm-poly-sw-row{display:flex;flex-direction:column;gap:8px;}",
+    "  .gjm-sw-mini{display:flex;align-items:center;justify-content:space-between;gap:8px;}",
+    "  .gjm-sw-mini-btns{display:flex;gap:8px;}",
+    "}"
   ].join(" "), document.head);
 
   function initAudio() {
@@ -10250,14 +10265,15 @@ return res;
   var unitRow = mk("div", "gjm-tr-row", null, c1);
   unitRow.style.marginTop = "6px";
   mk("span", null, L("Figura de pulsació:", "Figura de pulsación:"), unitRow).style.cssText = "font-size:10px;color:var(--mut);font-weight:700;";
+  var isNarrowUnit = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
   new Array(
     { u: "q", t: "♩ " + L("Negra", "Negra") },
-    { u: "e", t: "♪ " + L("Corxera", "Corchea") },
-    { u: "s", t: "♬ " + L("Semicorxera", "Semicorchea") }
+    { u: "e", t: isNarrowUnit ? "♪ " + L("Corx.", "Corch.") : "♪ " + L("Corxera", "Corchea") },
+    { u: "s", t: isNarrowUnit ? "♬ " + L("Semi.", "Semi.") : "♬ " + L("Semicorxera", "Semicorchea") }
   ).forEach(function (uf) {
     var ub = mk("button", "gjm-pill" + (uf.u === "q" ? " on" : ""), uf.t, unitRow);
     ub.type = "button";
-    ub.style.cssText = "padding:4px 8px;font-size:10.5px;";
+    ub.style.cssText = "flex:1 1 auto;padding:4px 7px;font-size:10.5px;white-space:nowrap;";
     ub.onclick = function () {
       simpleUnit = uf.u;
       if (!amalgOn) beatUnit = simpleUnit;
@@ -10411,10 +10427,15 @@ btnAmalg.onclick = function () {
   metersRow.querySelectorAll(".gjm-pill").forEach(function (x) { if (x !== btnAmalg) x.classList.remove("on"); });
   applyAmalgBar(0);
 };
+/* Fila conjunta: Polirítmia + Cronòmetre (en mòbil queden un al costat de l'altre) */
+var polyAndSwRow = mk("div", "gjm-poly-sw-row", null, colRight);
+
 /* Card 2: Polirítmia */
-var cPoly = mk("div", "gjm-card", null, colRight);
+var cPoly = mk("div", "gjm-card", null, polyAndSwRow);
+cPoly.style.minWidth = "0";
 mk("span", "gjm-clbl", L("Polirítmia (creuada)", "Polirritmia (cruzada)"), cPoly);
 var polyRow = mk("div", "gjm-tr-row", null, cPoly);
+polyRow.style.flexWrap = "wrap";
 var btnPoly = mk("button", "gjm-pill", "🔀 OFF", polyRow);
 btnPoly.type = "button"; btnPoly.style.cssText = "flex:0 0 auto;padding:6px 9px;font-size:11px;";
 btnPoly.onclick = function () {
@@ -10439,6 +10460,19 @@ opt.value = String(n);
 if (n === 2) opt.selected = true;
 });
 selPolyB.onchange = function () { polyB = parseInt(this.value, 10) || 2; };
+
+/* Cronòmetre de sessió */
+var foot = mk("div", "gjm-foot gjm-sw-mini", null, polyAndSwRow);
+foot.style.minWidth = "0";
+var swLeft = mk("div", "gjm-sw-mini-top", null, foot);
+var swTitle = mk("span", null, L("Cronòmetre", "Cronómetro"), swLeft);
+swTitle.style.cssText = "font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);";
+var swVal = mk("span", null, "00:00", swLeft);
+swVal.style.cssText = "font-family:monospace;font-size:16px;font-weight:800;color:var(--ok);white-space:nowrap;";
+var swBtns = mk("div", "gjm-sw-mini-btns", null, foot);
+var btnSwStart = mk("button", "gjm-pill", "▶", swBtns); btnSwStart.type = "button"; btnSwStart.style.padding = "6px 10px";
+var btnSwReset = mk("button", "gjm-pill", "↺", swBtns); btnSwReset.type = "button"; btnSwReset.style.padding = "6px 10px";
+
 /* Card 3: Subdivisions completes (1, 2, Swing, 3, 4, 5, 6, 7) */
 var c3 = mk("div", "gjm-card", null, colRight);
 mk("span", "gjm-clbl", L("Subdivisió", "Subdivisión"), c3);
@@ -10504,17 +10538,6 @@ btnIntro.onclick = function () {
 introBarsOn = !introBarsOn;
 btnIntro.classList.toggle("on", introBarsOn);
 };
-/* Cronòmetre de sessió */
-var foot = mk("div", "gjm-foot", null, colRight);
-var swLeft = mk("div", null, null, foot);
-var swTitle = mk("span", null, L("Cronòmetre de sessió", "Cronómetro de sesión"), swLeft);
-swTitle.style.cssText = "font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);display:block;";
-var swVal = mk("span", null, "00:00", swLeft);
-swVal.style.cssText = "font-family:monospace;font-size:20px;font-weight:800;color:var(--ok);";
-var swBtns = mk("div", null, null, foot);
-swBtns.style.cssText = "display:flex;gap:8px;";
-var btnSwStart = mk("button", "gjm-pill", "▶", swBtns); btnSwStart.type = "button"; btnSwStart.style.padding = "8px 16px";
-var btnSwReset = mk("button", "gjm-pill", "↺", swBtns); btnSwReset.type = "button"; btnSwReset.style.padding = "8px 16px";
 function resetAccentsFor(n) {
   accents = new Array();
   for (var k = 0; k < n; k++) accents.push(1);
