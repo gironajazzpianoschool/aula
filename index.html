@@ -2453,6 +2453,13 @@ html { -webkit-tap-highlight-color: transparent; }
   100% { background: transparent; box-shadow: none; }
 }
 .ck.flash { animation: ckFlash .55s ease-out both; }
+.acts button.ck[disabled]:not(.done) {
+  background: var(--tap) !important;
+  border-color: var(--hair) !important;
+  color: var(--mut) !important;
+  opacity: .5 !important;
+  box-shadow: none !important;
+}
 </style>
 </head><body class="">
 <div id="wm"></div>
