@@ -7014,7 +7014,7 @@ function openDocsEditor(level, uiUnused, b) {
   box.className = 'docsbox';
   box.innerHTML = '<h2><span>🎼 ' + L('Partitures i adjunts del bloc', 'Partituras y adjuntos del bloque') + ': ' +
     esc(blockNames(freeLevel, LS.lang)[b]) + ' (' + items.length + ')</span><button type="button" id="docsClose">✕</button></h2>' +
-    '<div id="docsList"></div><div class="addrow" id="docsAdd">+ ' + L('Afegir partitura / adjunt', 'Añadir partitura / adjunt') + '</div>';
+    '<div id="docsList"></div><div class="addrow" id="docsAdd">+ ' + L('Afegir partitura / adjunt', 'Añadir partitura / adjunto') + '</div>';
   wrap.appendChild(box);
   document.body.appendChild(wrap);
   function paint() {
@@ -8878,13 +8878,15 @@ document.addEventListener('keydown', function(e) {
   }
   function move(e) {
     if (!tip.classList.contains('on')) return;
-    var w = tip.offsetWidth || 160, h = tip.offsetHeight || 30;
-    var left = e.clientX - w / 2, top = e.clientY - h - 18;
+    var z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+    var w = (tip.offsetWidth || 160) * z, h = (tip.offsetHeight || 30) * z;
+    var left = e.clientX - w / 2, top = e.clientY - h - 18 * z;
     if (left < 10) left = 10;
     if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
-    if (top < 10) top = e.clientY + 20;
-    tip.style.left = left + 'px';
-    tip.style.top = top + 'px';
+    if (top < 10) top = e.clientY + 20 * z;
+    if (top + h > window.innerHeight - 10) top = window.innerHeight - h - 10;
+    tip.style.left = (left / z) + 'px';
+    tip.style.top = (top / z) + 'px';
   }
   var SEL = '[title],[data-tip]';
   document.addEventListener('mouseover', function (e) {
@@ -9840,7 +9842,6 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     "#gjMetroModal.on{display:flex;}",
     ".gjm-console{width:min(1120px,96vw);max-height:94vh;overflow-y:auto;background:var(--card);border-radius:22px;padding:20px 24px;border:1px solid rgba(255,255,255,.16);box-shadow:0 2px 0 rgba(255,255,255,.12) inset,0 -3px 0 rgba(0,0,0,.45) inset,0 24px 60px rgba(0,0,0,.72),0 0 0 1px rgba(232,176,75,.25);display:flex;flex-direction:column;gap:14px;}",
     "@media (max-width:540px){.gjm-sound-poly{grid-template-columns:1fr !important;}}",
-
     "html:not([data-theme='dark']) .gjm-console{box-shadow:0 2px 0 rgba(255,255,255,.85) inset,0 -3px 0 rgba(0,0,0,.12) inset,0 20px 50px rgba(0,0,0,.22),0 0 0 1px rgba(61,90,128,.25);}",
     ".gjm-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:9px;border-bottom:1px solid var(--hair);}",
     ".gjm-brand{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}",
@@ -9852,7 +9853,7 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     "@media (max-width:860px){.gjm-desk{grid-template-columns:1fr;}.gjm-console{padding:14px;}.gjm-pad{width:42px;height:42px;font-size:14px;}}",
     ".gjm-col{display:flex;flex-direction:column;gap:9px;justify-content:space-between;}",
     ".gjm-beats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;min-height:48px;align-items:center;}",
-    ".gjm-pad{width:46px;height:46px;border-radius:13px;border:2px solid var(--hair-2);background:var(--bg);color:var(--mut);font-size:16px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .08s,background .08s,border-color .15s;user-select:none;}",
+    ".gjm-pad{width:46px;height:46px;border-radius:13px;border:2px solid var(--hair-2);background:var(--bg);color:var(--mut);font-size:16px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:none;user-select:none;}",
     ".gjm-pad small{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}",
     ".gjm-pad[data-acc='2']{border-color:var(--ok);color:var(--ok);}",
     ".gjm-pad[data-acc='1']{border-color:var(--gold);color:var(--gold);}",
@@ -10075,7 +10076,7 @@ var subj = L("Resum de notes d'estudi — ", "Resumen de notas de estudio — ")
 var body = allNotes.map(function (g) {
 return "📺 " + g.title + NL + g.notes.map(function (n) { return "  • [" + fmtDate(n.t) + "] " + n.n; }).join(NL);
 }).join(NL + NL + "─────────────────────" + NL + NL);
-window.location.href = "mailto:gironajazz@://gmail.com" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+window.location.href = "mailto:gironajazz@gmail.com?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
 
 };
 }
@@ -10126,7 +10127,6 @@ return res;
     ".gjm-ppad.active{transform:scale(1.18);background:#4cc9f0;color:#062029 !important;box-shadow:0 0 16px rgba(76,201,240,.7);}",
     ".gjm-amalg-box{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;background:var(--card);border:1.5px solid #8c52ff;border-radius:14px;padding:12px;box-shadow:0 18px 44px rgba(0,0,0,.78);flex-direction:column;gap:8px;}",
     ".gjm-amalg-box.on{display:flex;}",
-
     ".gjm-amalg-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}",
     "@media (max-width:540px){.gjm-amalg-slots{grid-template-columns:repeat(2,1fr);}}",
     ".gjm-slot{background:var(--card);border:1px solid var(--hair-2);border-radius:9px;padding:5px 6px;display:flex;flex-direction:column;gap:4px;align-items:center;}",
@@ -10134,9 +10134,9 @@ return res;
     ".gjm-slot-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);}",
     ".gjm-slot-sel{display:flex;align-items:center;gap:2px;}",
     "@media (max-width:640px){",
-    "  #gjMetroModal .gjm-console{width:min(96vw,520px);max-height:92dvh;overflow-y:auto;box-sizing:border-box;}",
-    "  #gjMetroModal .gjm-desk{display:flex;flex-direction:column;gap:10px;}",
-    "  #gjMetroModal .gjm-col{width:100%;box-sizing:border-box;}",
+    "  #gjMetroModal{padding:0 !important;align-items:stretch !important;justify-content:stretch !important;background:var(--card) !important;overscroll-behavior:contain;}",
+    "  #gjMetroModal .gjm-console{width:100vw !important;max-width:100vw !important;height:100dvh !important;max-height:100dvh !important;border-radius:0 !important;border:none !important;box-shadow:none !important;padding:calc(10px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px)) !important;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;gap:8px;}",
+    "  #gjMetroModal .gjm-desk{display:flex;flex-direction:column;gap:8px;}",
     "  #gjMetroModal .gjm-pill{white-space:nowrap;font-size:10px;padding:6px 7px;min-width:0;}",
     "  .gjm-poly-sw-row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;align-items:stretch;}",
     "  .gjm-sw-mini{display:flex;flex-direction:column;justify-content:space-between;gap:6px;overflow:hidden;max-width:100%;}",
@@ -10640,7 +10640,7 @@ polyTimers.push(tm);
 }
 }
 function scheduler() {
-while (nextNoteTime < audioCtx.currentTime + 0.1) {
+while (nextNoteTime < audioCtx.currentTime + 0.4) {
 var totalSteps = beats * subdiv;
 var beatIdx = Math.floor(currentStep / subdiv);
 var isSub = (currentStep % subdiv) !== 0;
@@ -10656,20 +10656,28 @@ if (currentStep === 0 && !inIntro && polyOn) {
 schedulePolyCycle(nextNoteTime, secPerBeat * polyB);
 }
 if (!isSub) {
-triggerSound(nextNoteTime, accLevel, false);
-(function (bIdx, isIntroBeat, iNum, sNum, rNum) {
-var delay = Math.max(0, (nextNoteTime - audioCtx.currentTime) * 1000);
-setTimeout(function () {
-if (!isPlaying) return;
-updateBarBadge(isIntroBeat, isIntroBeat ? iNum : sNum, rNum);
-var pads = padsHost.querySelectorAll(".gjm-pad");
-pads.forEach(function (p, i) {
-p.classList.toggle("intro-beat", isIntroBeat);
-p.classList.toggle("active", i === bIdx);
-});
-}, delay);
-})(beatIdx, inIntro, introBarNum, studyBarNum, curRound);
-} else if (accLevel > 0) {
+  var hitTime = nextNoteTime;
+  var visOffsetSec = -0.080;
+  var targetAudioTime = hitTime + visOffsetSec;
+  triggerSound(hitTime, accLevel, false);
+
+  (function (bIdx, isIntroBeat, iNum, sNum, rNum, tTarget) {
+    function tickVis() {
+      if (!isPlaying || !audioCtx) return;
+      if (audioCtx.currentTime >= tTarget) {
+        updateBarBadge(isIntroBeat, isIntroBeat ? iNum : sNum, rNum);
+        var pads = padsHost.querySelectorAll(".gjm-pad");
+        pads.forEach(function (p, i) {
+          p.classList.toggle("intro-beat", isIntroBeat);
+          p.classList.toggle("active", i === bIdx);
+        });
+        return;
+      }
+      requestAnimationFrame(tickVis);
+    }
+    requestAnimationFrame(tickVis);
+  })(beatIdx, inIntro, introBarNum, studyBarNum, curRound, targetAudioTime);
+}else if (accLevel > 0) {
 triggerSound(nextNoteTime, 1, true);
 }
 var stepDur = secPerBeat / subdiv;
@@ -10690,6 +10698,7 @@ amalgIdx = (amalgIdx + 1) % amalgCount;
 var nextBarDef = amalgBars[amalgIdx];
 beats = nextBarDef.n;
 denom = nextBarDef.d;
+beatUnit = nextBarDef.u || "q";
 resetAccentsFor(beats);
 var delayAmalg = Math.max(0, (nextNoteTime - audioCtx.currentTime) * 1000);
 (function (idxToPaint) {
@@ -10717,7 +10726,7 @@ if (amalgOn) { amalgIdx = 0; applyAmalgBar(0); }
 introStepsLeft = (trainerOn && introBarsOn) ? (2 * beats * subdiv) : 0;
 if (trainerOn) startTrainerClock();
 nextNoteTime = audioCtx.currentTime + 0.04;
-lookaheadTimer = setInterval(scheduler, 25);
+lookaheadTimer = setInterval(scheduler, 15);
 btnPlay.classList.add("running"); btnPlay.textContent = "⏹ " + L("Atura", "Parar");
 }
 function stopMetroPro() {
@@ -10732,7 +10741,13 @@ padsHost.querySelectorAll(".gjm-pad").forEach(function (p) { p.classList.remove(
 polyPadsHost.querySelectorAll(".gjm-ppad").forEach(function (p) { p.classList.remove("active"); });
 btnPlay.classList.remove("running"); btnPlay.textContent = "▶ " + L("Inicia", "Iniciar");
 }
-btnClose.onclick = function () { stopMetroPro(); mModal.classList.remove("on"); };
+btnClose.onclick = function () {
+  stopMetroPro();
+  if (document.fullscreenElement === mModal && document.exitFullscreen) {
+    document.exitFullscreen().catch(function () {});
+  }
+  mModal.classList.remove("on");
+};
 btnMinus.onclick = function () { setBpm(bpm - 1, false); };
 btnPlus.onclick = function () { setBpm(bpm + 1, false); };
 slider.oninput = function () { setBpm(parseInt(this.value, 10), false); };
@@ -10789,7 +10804,12 @@ if (kind === "metro") {
 btn.disabled = false;
 btn.style.opacity = "1";
 btn.textContent = t().appsOpen;
-btn.onclick = function () { mModal.classList.add("on"); };
+btn.onclick = function () {
+  mModal.classList.add("on");
+  if (isSmartphone() && mModal.requestFullscreen && !document.fullscreenElement) {
+    mModal.requestFullscreen().catch(function () {});
+  }
+};
 } else if (kind === "app" && isSmartphone()) {
 btn.textContent = L("💻 Només PC / Tablet", "💻 Solo PC / Tablet");
 btn.style.opacity = "0.6";
