@@ -10076,6 +10076,7 @@ var body = allNotes.map(function (g) {
 return "📺 " + g.title + NL + g.notes.map(function (n) { return "  • [" + fmtDate(n.t) + "] " + n.n; }).join(NL);
 }).join(NL + NL + "─────────────────────" + NL + NL);
 window.location.href = "mailto:gironajazz@://gmail.com" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+
 };
 }
 var oldBk = document.getElementById("gjBackupBar"); if (oldBk) oldBk.remove();
