@@ -10095,8 +10095,8 @@ try { renderGlobalExtras(); } catch (e) {}
 return res;
 };
 }
-  /* ── 5. METRÒNOM PRO CONSOLA 3D (PULSACIÓ + COMPOSTOS + AMALGAMA PROG) ─── */
-  var audioCtx = null, isPlaying = false, bpm = 100, beats = 4, denom = 4, beatUnit = "q", subdiv = 1, soundKit = "wood";
+ /* ── 5. METRÒNOM PRO CONSOLA 3D (PULSACIÓ + COMPOSTOS + AMALGAMA PROG) ─── */
+  var audioCtx = null, isPlaying = false, bpm = 100, beats = 4, denom = 4, beatUnit = "q", subdiv = 1, soundKit = "beep";
   var accents = new Array(1, 1, 1, 1);
   var currentStep = 0, nextNoteTime = 0, lookaheadTimer = null;
   var tapTimes = new Array(), trainerOn = false, trainerStep = 2, trainerBars = 4, introBarsOn = true, introStepsLeft = 0, barCounter = 0, roundCounter = 1, swingMode = false;
@@ -10158,55 +10158,14 @@ return res;
     var osc = audioCtx.createOscillator();
     var gain = audioCtx.createGain();
 
-    if (soundKit === "wood") {
-      osc.type = "triangle";
-      var wf = (level === 2) ? 980 : (isSub ? 620 : 740);
-      var wv = (level === 2) ? 0.52 : (isSub ? 0.18 : 0.34);
-      osc.frequency.setValueAtTime(wf, time);
-      osc.frequency.exponentialRampToValueAtTime(wf * 0.65, time + 0.045);
-      gain.gain.setValueAtTime(wv, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.045);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(time); osc.stop(time + 0.05);
-
-    } else if (soundKit === "conga") {
-      osc.type = "sine";
-      var fStart = (level === 2) ? 460 : (isSub ? 290 : 330);
-      var fEnd   = (level === 2) ? 210 : (isSub ? 150 : 175);
-      var dur    = (level === 2) ? 0.14 : (isSub ? 0.06 : 0.11);
-      var vol    = (level === 2) ? 0.65 : (isSub ? 0.22 : 0.42);
-      osc.frequency.setValueAtTime(fStart, time);
-      osc.frequency.exponentialRampToValueAtTime(fEnd, time + dur);
-      gain.gain.setValueAtTime(vol, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-      if (level === 2) {
-        var bufSize = Math.floor(audioCtx.sampleRate * 0.025);
-        var buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-        var data = buf.getChannelData(0);
-        for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufSize * 0.3));
-        var noise = audioCtx.createBufferSource();
-        noise.buffer = buf;
-        var filter = audioCtx.createBiquadFilter();
-        filter.type = "bandpass"; filter.frequency.value = 1400;
-        var nGain = audioCtx.createGain();
-        nGain.gain.setValueAtTime(0.35, time);
-        nGain.gain.exponentialRampToValueAtTime(0.001, time + 0.025);
-        noise.connect(filter); filter.connect(nGain); nGain.connect(audioCtx.destination);
-        noise.start(time);
-      }
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(time); osc.stop(time + dur + 0.01);
-
-    } else {
-      osc.type = "sine";
-      var bf = (level === 2) ? 1150 : (isSub ? 580 : 780);
-      var bv = (level === 2) ? 0.38 : (isSub ? 0.14 : 0.24);
-      osc.frequency.setValueAtTime(bf, time);
-      gain.gain.setValueAtTime(bv, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(time); osc.stop(time + 0.055);
-    }
+    osc.type = "sine";
+    var bf = (level === 2) ? 1150 : (isSub ? 580 : 780);
+    var bv = (level === 2) ? 0.38 : (isSub ? 0.14 : 0.24);
+    osc.frequency.setValueAtTime(bf, time);
+    gain.gain.setValueAtTime(bv, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(time); osc.stop(time + 0.055);
   }
 
   function tempoName(b) {
@@ -10452,25 +10411,8 @@ btnAmalg.onclick = function () {
   metersRow.querySelectorAll(".gjm-pill").forEach(function (x) { if (x !== btnAmalg) x.classList.remove("on"); });
   applyAmalgBar(0);
 };
-/* Card 2: So + Polirítmia */
-var rowSoundPoly = mk("div", "gjm-sound-poly", null, colRight);
-rowSoundPoly.style.cssText = "display:grid;grid-template-columns:1.15fr 0.85fr;gap:10px;";
-var c2 = mk("div", "gjm-card", null, rowSoundPoly);
-mk("span", "gjm-clbl", L("So", "Sonido"), c2);
-var kitsRow = mk("div", "gjm-pills", null, c2);
-var kitList = new Array(
-{ k: "wood", t: "🪵 Clau" }, { k: "conga", t: "🥁 Congues" }, { k: "beep", t: "🎛️ Beep" }
-);
-kitList.forEach(function (item) {
-var kb = mk("button", "gjm-pill" + (item.k === "wood" ? " on" : ""), item.t, kitsRow);
-    kb.type = "button"; kb.style.cssText = item.k === "conga" ? "font-size:11px;flex:1.45;min-width:0;padding:7px 5px;" : "font-size:11px;flex:1;min-width:0;padding:7px 5px;";
-
-kb.onclick = function () {
-soundKit = item.k;
-kitsRow.querySelectorAll(".gjm-pill").forEach(function (x) { x.classList.toggle("on", x === kb); });
-};
-});
-var cPoly = mk("div", "gjm-card", null, rowSoundPoly);
+/* Card 2: Polirítmia */
+var cPoly = mk("div", "gjm-card", null, colRight);
 mk("span", "gjm-clbl", L("Polirítmia (creuada)", "Polirritmia (cruzada)"), cPoly);
 var polyRow = mk("div", "gjm-tr-row", null, cPoly);
 var btnPoly = mk("button", "gjm-pill", "🔀 OFF", polyRow);
@@ -10792,8 +10734,8 @@ e: "logo",
 kind: "metro",
 n: { ca: "METRÒNOM PRO I CRONÒMETRE", es: "METRÓNOMO PRO Y CRONÓMETRO" },
 d: {
-ca: "Metrònom d'estudi a pantalla completa amb so de clau, congues o beep, subdivisions (inclòs Swing), compassos fins a 7/4, accentuació personalitzable, Mode Estudi progressiu, Tap Tempo i cronòmetre.",
-es: "Metrónomo de estudio a pantalla completa con sonido de clave, congas o beep, subdivisiones (incluido Swing), compases hasta 7/4, acentuación personalizable, Modo Estudio progresivo, Tap Tempo y cronómetro."
+ca: "Metrònom d'estudi a pantalla completa amb so de beep, subdivisions (inclòs Swing), compassos fins a 7/4, accentuació personalitzable, Mode Estudi progressiu, Tap Tempo i cronòmetre.",
+es: "Metrónomo de estudio a pantalla completa con sonido de beep, subdivisiones (incluido Swing), compases hasta 7/4, acentuación personalizable, Modo Estudio progresivo, Tap Tempo y cronómetro."
 }
 });
 }
