@@ -9781,27 +9781,43 @@ function openNews(){if(!modal){modal=document.createElement("div");modal.id="gjN
 body();modal.style.display="flex";
 jSet("gjps_news_read",allEntries().map(function(n){return n.id;}));jSet("gjps_news_vidsnap",inventory());paintDot();}
 bell.onclick=openNews;
+var __gjNewsToastShown=false;
 function mount(){rmAll("#gjNewsBtn");var anchor=document.getElementById("langToggle");if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(bell,anchor);paintDot();
-if(unread(allEntries()).length&&window.showToast){try{showToast("🔔 "+(lang()==="ca"?"Novetat publicada":"Novedad publicada"));}catch(e){}}}
+if(!__gjNewsToastShown&&unread(allEntries()).length&&window.showToast){__gjNewsToastShown=true;try{showToast("🔔 "+(lang()==="ca"?"Novetat publicada":"Novedad publicada"));}catch(e){}}}
 window.__gjNewsRemount=mount;
 if(document.getElementById("langToggle"))mount();else document.addEventListener("DOMContentLoaded",mount);
 
-/* ---- export net: no couar campana ni targetes al guardat ---- */
+/* ---- export net: neteja completa del DOM runtime abans de guardar i restauració segura ---- */
 if(typeof window.saveAsFile==="function"&&!window.saveAsFile.__gjClean){
-var _s=window.saveAsFile;window.saveAsFile=function(){rmAll("#gjNewsBtn");rmAll("#gjNewsModal");rmAll(".vr.gj-gift");
-try{return _s.apply(this,arguments);}finally{if(window.__gjNewsRemount){try{window.__gjNewsRemount();}catch(e){}}}};
+var _s=window.saveAsFile;
+window.saveAsFile=function(){
+  if(window.__gjExporting)return;
+  window.__gjExporting=true;
+  var prevNoCollect=Boolean(window.__gjNoCollect);
+  window.__gjNoCollect=true;
+  var selectors=["#gjNewsBtn","#gjNewsModal","#gjMetroModal","#gjStreakBadge","#gjGlobalNotes","#gjBackupBar",".gj-dur-pill",".vr.gj-gift"];
+  selectors.forEach(function(sel){rmAll(sel);});
+  try{
+    return _s.apply(this,arguments);
+  }finally{
+    window.__gjNoCollect=prevNoCollect;
+    window.__gjExporting=false;
+    if(typeof window.render==="function"){try{window.render();}catch(e){}}
+    if(window.__gjNewsRemount){try{window.__gjNewsRemount();}catch(e){}}
+  }
+};
 window.saveAsFile.__gjClean=true;}
 
 window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
 })();
 </script>
 <script>
-/* GUARD DE COLLECT · immune al canvi d'idioma */
+/* GUARD DE COLLECT · immune al canvi d'idioma i a l'exportació en mode edició */
 (function(){
   if (typeof window.collectAll === 'function' && !window.__gjCollectGuard) {
     var _c = window.collectAll;
     window.collectAll = function () {
-      if (window.__gjNoCollect) return;
+      if (window.__gjNoCollect || window.__gjExporting) return;
       return _c.apply(this, arguments);
     };
     window.__gjCollectGuard = true;
@@ -9891,9 +9907,15 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
 
   /* ── 1. RATXA D'ESTUDI ─────────────────────────────────────────────────── */
   function dayKey(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
-  function getStreakData() { return lsJSON("gjps_streak_" + (LS.user || "guest"), { days: new Array() }); }
+  function hasActiveUser() {
+    return Boolean(window.LS && typeof window.LS.user === "string" && window.LS.user.trim().length > 0 && window.LS.user !== "null" && window.LS.user !== "undefined");
+  }
+  function getStreakData() {
+    if (!hasActiveUser()) return { days: new Array() };
+    return lsJSON("gjps_streak_" + LS.user.trim(), { days: new Array() });
+  }
   function recordStudyToday() {
-    if (!LS.user) return;
+    if (!hasActiveUser()) return;
     var data = getStreakData(), today = dayKey(new Date());
     if (data.days.indexOf(today) < 0) {
       data.days.push(today);
@@ -9968,7 +9990,11 @@ out.push({ id: vidId, title: v ? vidTitleRaw(v.v, vidId) : vidId, notes: arr });
 return out;
 }
 function exportUserProgress() {
-var payload = {
+  if (!hasActiveUser()) {
+    if (typeof showToast === "function") showToast(L("Cal iniciar sessió per descarregar el progrés.", "Debes iniciar sesión para descargar el progreso."));
+    return;
+  }
+  var payload = {
 app: "GJPS", version: 1, user: LS.user, date: new Date().toISOString(),
 done: lsJSON("gjps_done_" + LS.user, {}), bookmarks: lsJSON("gjps_bookmarks_" + LS.user, {}),
 skipped: lsJSON("gjps_skipped_" + LS.user, {}), skipAfter: lsJSON("gjps_skipafter_" + LS.user, {}),
@@ -10741,13 +10767,19 @@ padsHost.querySelectorAll(".gjm-pad").forEach(function (p) { p.classList.remove(
 polyPadsHost.querySelectorAll(".gjm-ppad").forEach(function (p) { p.classList.remove("active"); });
 btnPlay.classList.remove("running"); btnPlay.textContent = "▶ " + L("Inicia", "Iniciar");
 }
-btnClose.onclick = function () {
+function closeMetroPro() {
   stopMetroPro();
   if (document.fullscreenElement === mModal && document.exitFullscreen) {
     document.exitFullscreen().catch(function () {});
   }
   mModal.classList.remove("on");
-};
+}
+btnClose.onclick = closeMetroPro;
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && mModal.classList.contains("on")) {
+    closeMetroPro();
+  }
+});
 btnMinus.onclick = function () { setBpm(bpm - 1, false); };
 btnPlus.onclick = function () { setBpm(bpm + 1, false); };
 slider.oninput = function () { setBpm(parseInt(this.value, 10), false); };
