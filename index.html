@@ -3971,7 +3971,7 @@ var OV = /*OV-START*/
         "es": "Aplicaciones de entrenamiento"
       },
       "p": {
-        "ca": "A la pestanya Apps trobaràs eines pensades per a les teves sessions d'estudi:\n\n• METRÒNOM PRO (PC, tablet i smartphone): una consola d'estudi a pantalla completa amb so de clau, congues o beep, accentuació personalitzable en cada temps, subdivisions (inclòs Swing), polirítmies creuades, compassos d'amalgama (fins a 4 compassos combinats), cronòmetre de sessió i un Mode Estudi que apuja la velocitat progressivament amb 2 compassos d'entrada per col·locar-te al piano.\n• Laboratoris interactius (com TONAL EMOTIONS): per entrenar l'oïda jugant. Requereixen pantalla gran (ordinador o tablet, i idealment un teclat MIDI), per la qual cosa estan restringits en telèfons mòbils.\n• Vídeos de recursos: com extensions de Chrome per fer loops i canviar la velocitat o l'afinació de vídeos de YouTube.",
+        "ca": "A la pestanya Apps trobaràs eines pensades per a les teves sessions d'estudi:\n\n- METRÒNOM PRO (PC, tablet i smartphone): consola d'estudi fàcil per al dia a dia i molt potent per a ritme avançat (polirítmies, acceleració progressiva i amalgames). Trobaràs les instruccions detallades dins del mateix metrònom.\n\n- Laboratoris interactius (com TONAL EMOTIONS): per entrenar l'oïda jugant. Requereixen pantalla gran (ordinador o tablet), motiu pel qual estan restringits als telèfons mòbils. Integren funcions que permeten interactuar-hi amb un teclat MIDI (excepte en iOS i macOS).\n\n- Vídeos de recursos: extensions de Chrome per fer bucles i canviar la velocitat o l'afinació de vídeos de YouTube.",
         "es": "En la pestaña Apps encontrarás herramientas pensadas para tus sesiones de estudio:\n\n• METRÓNOMO PRO (PC, tablet y smartphone): una consola de estudio a pantalla completa con sonido de clave, congas o beep, acentuación personalizable en cada tiempo, subdivisiones (incluido Swing), polirritmias cruzadas, compases de amalgama (hasta 4 compases combinados), cronómetro de sesión y un Modo Estudio que sube la velocidad progresivamente con 2 compases de entrada para colocarte en el piano.\n• Laboratorios interactivos (como TONAL EMOTIONS): para entrenar el oído jugando. Requieren pantalla grande (ordenador o tablet, e idealmente un teclado MIDI), por lo que están restringidos en teléfonos móviles.\n• Vídeos de recursos: como extensiones de Chrome para hacer loops y cambiar la velocidad o la afinación de vídeos de YouTube."
       }
     },
@@ -10453,6 +10453,13 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     ".gjm-intro-tag.on{display:inline-block;}",
     ".gjm-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--hair-2);background:var(--tap);color:var(--ink);font-size:16px;cursor:pointer;display:grid;place-items:center;}",
     ".gjm-close:hover{border-color:var(--gold);color:var(--gold);}",
+    ".gjm-help-backdrop{display:none;position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;}",
+    ".gjm-help-backdrop.on{display:flex !important;}",
+    ".gjm-help-box{width:min(560px,100%);max-height:86dvh;overflow-y:auto;background:var(--card);color:var(--ink);border:1.5px solid var(--gold);border-radius:16px;padding:18px 20px;box-shadow:0 24px 60px rgba(0,0,0,.65);display:flex;flex-direction:column;gap:12px;}",
+    ".gjm-help-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}",
+    ".gjm-help-title{font-size:15px;font-weight:800;letter-spacing:.02em;}",
+    ".gjm-help-sec{background:var(--bg);border:1px solid var(--hair-2);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;line-height:1.48;}",
+    ".gjm-help-sec strong{color:var(--gold);font-size:13px;}",
     "#gjMetroModal .gjm-top .gjm-brand{flex:1 1 auto;min-width:0;}",
     "#gjMetroModal .gjm-theme-btn{position:static !important;width:34px !important;height:34px !important;min-width:34px !important;min-height:34px !important;padding:0 !important;border-radius:50% !important;flex:0 0 34px !important;font-size:15px !important;line-height:1 !important;margin-left:auto;margin-right:8px;}",
     ".gjm-desk{display:grid;grid-template-columns:1fr 1.05fr;gap:14px;align-items:stretch;}",
@@ -10878,6 +10885,52 @@ return res;
     }
   }
 
+  var helpBackdrop = mk("div", "gjm-help-backdrop", null, document.body);
+  var helpBox = mk("div", "gjm-help-box", null, helpBackdrop);
+  var helpTop = mk("div", "gjm-help-top", null, helpBox);
+  var helpTitle = mk("span", "gjm-help-title", "ℹ " + L("Instruccions · Metrònom Pro", "Instrucciones · Metrónomo Pro"), helpTop);
+  var btnHelpClose = mk("button", "gjm-close", "✕", helpTop);
+  btnHelpClose.type = "button";
+
+  var secBasic = mk("div", "gjm-help-sec", null, helpBox);
+  mk("strong", null, "1. " + L("Ús bàsic (dia a dia)", "Uso básico (día a día)"), secBasic);
+  mk("span", null, L(
+    "Tria el BPM (o fes servir Tap Tempo), el compàs i la figura de pulsació, i clica els cercles per alternar entre normal (ON), accentuat (ACC) o silenciat (MUT). També pots activar el Mode estudi per apujar el BPM progressivament cada X compassos (amb +2 compassos d'entrada opcional).",
+    "Elige el BPM (o usa Tap Tempo), el compás y la figura de pulso, y pulsa los círculos para alternar entre normal (ON), acentuado (ACC) o silenciado (MUT). También puedes activar el Modo estudio para subir el BPM progresivamente cada X compases (con +2 compases de entrada opcional)."
+  ), secBasic);
+
+  var secPro = mk("div", "gjm-help-sec", null, helpBox);
+  mk("strong", null, "2. " + L("Nivell pro i amalgames", "Nivel pro y amalgamas"), secPro);
+  mk("span", null, L(
+    "Combina Subdivisió (incloent Swing), Polirítmia creuada i Amalgama (fins a 4 compassos encadenats amb pulsació i 1r temps accentuables, compatibles amb el Mode estudi). És una eina especialment pràctica i directa per treballar ritmes progressius i d'amalgama.",
+    "Combina Subdivisión (incluido Swing), Polirritmia cruzada y Amalgama (hasta 4 compases encadenados con pulso y 1.er tiempo acentuables, compatibles con el Modo estudio). Es una herramienta especialmente práctica y directa para trabajar ritmos progresivos y de amalgama."
+  ), secPro);
+
+  function closeHelpModal() {
+    helpBackdrop.classList.remove("on");
+    helpBackdrop.style.display = "none";
+  }
+  btnHelpClose.onclick = function (e) {
+    if (e) e.stopPropagation();
+    closeHelpModal();
+  };
+  helpBackdrop.onclick = function (e) {
+    if (e.target === helpBackdrop) closeHelpModal();
+  };
+
+  var btnHelp = mk("button", "gjm-close gjm-theme-btn", "i", mTop);
+  btnHelp.type = "button";
+  btnHelp.style.fontStyle = "italic";
+  btnHelp.style.fontWeight = "800";
+  btnHelp.title = L("Instruccions", "Instrucciones");
+  btnHelp.setAttribute("aria-label", L("Instruccions", "Instrucciones"));
+  btnHelp.onclick = function (e) {
+    if (e) e.stopPropagation();
+    helpTitle.textContent = "ℹ " + L("Instruccions · Metrònom Pro", "Instrucciones · Metrónomo Pro");
+    helpBackdrop.style.display = "flex";
+    helpBackdrop.classList.add("on");
+  };
+
   var btnTheme = mk("button", "gjm-close gjm-theme-btn", "", mTop);
   btnTheme.type = "button";
 
@@ -10911,6 +10964,32 @@ return res;
 
   /* ── COLUMNA ESQUERRA ── */
   var colLeft = mk("div", "gjm-col", null, desk);
+  var meterBar = mk("div", null, null, colLeft);
+  meterBar.style.cssText = "display:flex;align-items:center;justify-content:center;min-height:20px;";
+  var meterReadout = mk("span", null, "", meterBar);
+  meterReadout.style.cssText = "font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px;border:1px solid var(--hair-2);background:var(--card);color:var(--gold);font-variant-numeric:tabular-nums;";
+
+  function formatRealMeter() {
+    if (amalgOn && amalgBars[amalgIdx]) {
+      var curB = amalgBars[amalgIdx];
+      return curB.n + "/" + curB.d;
+    }
+    var mult = beatUnit === "dq" ? 3 : (beatUnit === "e" ? 1 : (beatUnit === "s" ? 0.5 : (beatUnit === "h" ? 4 : 2)));
+    var totalEighths = beats * mult;
+    if (Math.abs(totalEighths - Math.round(totalEighths)) < 0.001) {
+      var n8 = Math.round(totalEighths);
+      if (n8 % 2 === 0) return (n8 / 2) + "/4";
+      return n8 + "/8";
+    }
+    var n16 = Math.round(totalEighths * 2);
+    return n16 + "/16";
+  }
+
+  function updateMeterBadge() {
+    if (!meterReadout) return;
+    meterReadout.textContent = L("Mètrica: ", "Métrica: ") + formatRealMeter();
+  }
+
   var padsHost = mk("div", "gjm-beats", null, colLeft);
   var polyPadsHost = mk("div", "gjm-poly-beats", null, colLeft);
 
@@ -10936,7 +11015,7 @@ return res;
   var c1 = mk("div", "gjm-card", null, colRight);
   c1.style.position = "relative";
   var isNarrowTitle = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
-  mk(
+mk(
     "span",
     "gjm-clbl",
     isNarrowTitle
@@ -10944,6 +11023,27 @@ return res;
       : L("Compàs i pulsació (clica els cercles per accentuar)", "Compás y pulsación (pulsa los círculos para acentuar)"),
     c1
   );
+
+  function formatRealMeter() {
+    if (amalgOn && amalgBars[amalgIdx]) {
+      var curB = amalgBars[amalgIdx];
+      return curB.n + "/" + curB.d;
+    }
+    var mult = beatUnit === "dq" ? 3 : (beatUnit === "e" ? 1 : (beatUnit === "s" ? 0.5 : (beatUnit === "h" ? 4 : 2)));
+    var totalEighths = beats * mult;
+    if (Math.abs(totalEighths - Math.round(totalEighths)) < 0.001) {
+      var n8 = Math.round(totalEighths);
+      if (n8 % 2 === 0) return (n8 / 2) + "/4";
+      return n8 + "/8";
+    }
+    var n16 = Math.round(totalEighths * 2);
+    return n16 + "/16";
+  }
+
+  function updateMeterBadge() {
+    if (!meterReadout) return;
+    meterReadout.textContent = L("Mètrica: ", "Métrica: ") + formatRealMeter();
+  }
   var metersRow = mk("div", "gjm-pills", null, c1);
 
   var simpleUnit = "q";
@@ -10960,9 +11060,15 @@ return res;
         amalgBadge.classList.remove("on");
       }
       beats = num; beatUnit = simpleUnit;
+      if (beatUnit === "dq") denom = 8;
+      else if (beatUnit === "e") denom = 8;
+      else if (beatUnit === "s") denom = 16;
+      else if (beatUnit === "h") denom = 2;
+      else denom = 4;
       resetAccentsFor(beats);
       metersRow.querySelectorAll(".gjm-pill[data-num]").forEach(function (x) { x.classList.toggle("on", x === pb); });
       paintPads();
+      updateMeterBadge();
     };
     pb.setAttribute("data-num", String(num));
   });
@@ -10981,8 +11087,16 @@ return res;
     ub.style.cssText = "flex:1 1 auto;padding:4px 7px;font-size:10.5px;white-space:nowrap;";
     ub.onclick = function () {
       simpleUnit = uf.u;
-      if (!amalgOn) beatUnit = simpleUnit;
+      if (!amalgOn) {
+        beatUnit = simpleUnit;
+        if (beatUnit === "dq") denom = 8;
+        else if (beatUnit === "e") denom = 8;
+        else if (beatUnit === "s") denom = 16;
+        else if (beatUnit === "h") denom = 2;
+        else denom = 4;
+      }
       unitRow.querySelectorAll(".gjm-pill").forEach(function (x) { x.classList.toggle("on", x === ub); });
+      updateMeterBadge();
     };
   });
 
@@ -11011,13 +11125,30 @@ return res;
     return Math.max(1, Math.round(totalEighths / 2));
   }
 
+  function defaultAmalgAccents(nBeats) {
+    var arr = [];
+    for (var k = 0; k < nBeats; k++) {
+      arr.push(k === 0 ? 2 : 1);
+    }
+    return arr;
+  }
+
+  function ensureAmalgBarAccents(item, nBeats) {
+    if (!item) return defaultAmalgAccents(nBeats);
+    if (!Array.isArray(item.accents) || item.accents.length !== nBeats) {
+      item.accents = defaultAmalgAccents(nBeats);
+    }
+    return item.accents.slice();
+  }
+
   function applyAmalgBar(idx) {
     var item = amalgBars[idx] || { n: 4, d: 4, u: "q" };
+    if (!amalgBars[idx]) amalgBars[idx] = item;
     if (amalgOn) padsHost.classList.add("amalg-rows");
     beats = calcBarBeats(item);
     denom = item.d;
     beatUnit = item.u || "q";
-    resetAccentsFor(beats);
+    accents = ensureAmalgBarAccents(item, beats);
     paintPads();
     slotEls.forEach(function (el, k) { el.classList.toggle("active-bar", k === idx); });
     if (amalgOn) {
@@ -11025,6 +11156,7 @@ return res;
       amalgBadge.classList.add("on");
       amalgBadge.textContent = "🔀 " + (idx + 1) + "/" + amalgCount + " · " + item.n + "/" + item.d + " (" + uTxt + ")";
     }
+    updateMeterBadge();
   }
 
   function paintAmalgSlots() {
@@ -11085,7 +11217,26 @@ return res;
         });
         selU.onchange = function () {
           amalgBars[idx].u = this.value;
+          amalgBars[idx].accents = null;
           if (amalgOn && amalgIdx === idx) applyAmalgBar(idx);
+        };
+
+        var nBarBeats = calcBarBeats(amalgBars[idx]);
+        var barAccs = ensureAmalgBarAccents(amalgBars[idx], nBarBeats);
+        var btnAcc1 = mk("button", "gjm-pill" + (barAccs[0] === 2 ? " on" : ""), "1r ACC", box);
+        btnAcc1.type = "button";
+        btnAcc1.style.cssText = "padding:2px 6px;font-size:9px;margin-top:2px;";
+        btnAcc1.title = L("Accentua o treu l'accent del 1r temps d'aquest compàs", "Acentúa o quita el acento del 1er tiempo de este compás");
+        btnAcc1.onclick = function () {
+          var bCount = calcBarBeats(amalgBars[idx]);
+          var curAccs = ensureAmalgBarAccents(amalgBars[idx], bCount);
+          curAccs[0] = (curAccs[0] === 2) ? 1 : 2;
+          amalgBars[idx].accents = curAccs;
+          btnAcc1.classList.toggle("on", curAccs[0] === 2);
+          if (amalgOn && amalgIdx === idx) {
+            accents = curAccs.slice();
+            paintPads();
+          }
         };
 
         slotEls.push(box);
@@ -11113,6 +11264,7 @@ btnAmalgOff.title = L("Desactiva l'amalgama", "Desactiva la amalgama");
     resetAccentsFor(4);
     metersRow.querySelectorAll(".gjm-pill").forEach(function (x) { x.classList.toggle("on", x.textContent === "4"); });
     paintPads();
+    updateMeterBadge();
   };
 
 selAmalgLen.onchange = function () {
@@ -11279,6 +11431,10 @@ pad.setAttribute("data-acc", String(acc));
 mk("small", null, lbl, pad);
 pad.onclick = function () {
 accents[idx] = (accents[idx] + 2) % 3;
+if (amalgOn && amalgBars[amalgIdx]) {
+  amalgBars[amalgIdx].accents = accents.slice();
+  paintAmalgSlots();
+}
 paintPads();
 };
 })(i);
@@ -11323,6 +11479,7 @@ roundBadge.textContent = "🔄 " + L("Roda ", "Ronda ") + rNum;
 }
 }
 paintPads();
+updateMeterBadge();
 function schedulePolyCycle(startTime, cycleDur) {
 if (!polyOn || !audioCtx) return;
 for (var p = 0; p < polyA; p++) {
@@ -11396,14 +11553,20 @@ currentStep = 0;
 if (amalgOn) {
 amalgIdx = (amalgIdx + 1) % amalgCount;
 var nextBarDef = amalgBars[amalgIdx];
-beats = nextBarDef.n;
+beats = calcBarBeats(nextBarDef);
 denom = nextBarDef.d;
 beatUnit = nextBarDef.u || "q";
-resetAccentsFor(beats);
+accents = ensureAmalgBarAccents(nextBarDef, beats);
 var delayAmalg = Math.max(0, (nextNoteTime - audioCtx.currentTime) * 1000);
 (function (idxToPaint) {
-setTimeout(function () { if (isPlaying && amalgOn) applyAmalgBar(idxToPaint); }, delayAmalg);
+setTimeout(function () {
+  if (!isPlaying) return;
+  if (amalgOn) applyAmalgBar(idxToPaint);
+  else updateMeterBadge();
+}, delayAmalg);
 })(amalgIdx);
+} else {
+setTimeout(function () { if (isPlaying && !amalgOn) updateMeterBadge(); }, Math.max(0, (nextNoteTime - audioCtx.currentTime) * 1000));
 }
 if (trainerOn) {
 barCounter++;
@@ -11474,6 +11637,7 @@ polyPadsHost.querySelectorAll(".gjm-ppad").forEach(function (p) { p.classList.re
 btnPlay.classList.remove("running"); btnPlay.textContent = "▶ " + L("Inicia", "Iniciar");
 }
 function closeMetroPro() {
+  closeHelpModal();
   stopMetroPro();
   restorePageTheme();
   if (document.fullscreenElement === mModal && document.exitFullscreen) {
@@ -11483,8 +11647,12 @@ function closeMetroPro() {
 }
 btnClose.onclick = closeMetroPro;
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape" && mModal.classList.contains("on")) {
-    closeMetroPro();
+  if (e.key === "Escape") {
+    if (helpBackdrop.classList.contains("on")) {
+      closeHelpModal();
+    } else if (mModal.classList.contains("on")) {
+      closeMetroPro();
+    }
   }
 });
 btnMinus.onclick = function () { setBpm(bpm - 1, false); };
@@ -11676,7 +11844,7 @@ try { render(); } catch (e) {}
 /* ═══ GJPS · CACHE BUSTER v1 · força recàrrega automàtica ═══ */
 (function () {
   'use strict';
-  var CURRENT_VERSION = 'v6.0.1'; // Incrementa quan facis canvis importants
+  var CURRENT_VERSION = 'v6.0.2'; // Incrementa quan facis canvis importants
   
   // Guarda la versió actual al localStorage
   var storedVersion = localStorage.getItem('gjps_app_version');
