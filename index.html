@@ -2460,6 +2460,20 @@ html { -webkit-tap-highlight-color: transparent; }
   opacity: .5 !important;
   box-shadow: none !important;
 }
+/* Blindatge: anul·la estils inline permanents del codi antic */
+.acts button.ck[disabled]:not(.done) {
+  background: var(--tap) !important;
+  border-color: var(--hair) !important;
+  color: var(--mut) !important;
+  opacity: .5 !important;
+  box-shadow: none !important;
+  transition: all .2s ease !important;
+}
+.acts button.ck:not(.done):not(.flash) {
+  background: var(--tap) !important;
+  border-color: var(--hair) !important;
+  color: var(--ink) !important;
+}
 </style>
 </head><body class="">
 <div id="wm"></div>
@@ -9977,11 +9991,14 @@ document.addEventListener('keydown', function(e) {
       return;
     }
     var k = del.getAttribute('data-gjdel'), i = parseInt(del.getAttribute('data-gji'), 10);
+    if (k !== 'f' && k !== 'h') return;
     if (!confirm(L('Vols esborrar aquesta entrada?', '¿Quieres borrar esta entrada?'))) return;
-    gjSnap(); gjUndoOffer(L('Entrada esborrada', 'Entrada borrada'));
     var st = k === 'f' ? OV.f : OV.h, tk = k === 'f' ? 'q' : 't', ak = k === 'f' ? 'a' : 'p';
-    var e = k === 'f' ? (OV.nf || [])[i - FAQS.length] : (OV.nh || [])[i - HELP.length];
+    var arr = k === 'f' ? (OV.nf || []) : (OV.nh || []);
+    var baseLen = k === 'f' ? (typeof FAQS !== 'undefined' ? FAQS.length : 0) : (typeof HELP !== 'undefined' ? HELP.length : 0);
+    var e = (!isNaN(i) && i >= baseLen) ? arr[i - baseLen] : null;
     if (e) {
+      gjSnap(); gjUndoOffer(L('Entrada esborrada', 'Entrada borrada'));
       gjLangs(e, i, st, tk);
       e.langs[LS.lang] = 0;
       if (e[tk]) e[tk][LS.lang] = '';
@@ -10432,13 +10449,16 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     "@media (max-width:860px){.gjm-desk{grid-template-columns:1fr;}.gjm-console{padding:14px;}.gjm-pad{width:42px;height:42px;font-size:14px;}}",
     ".gjm-col{display:flex;flex-direction:column;gap:9px;justify-content:space-between;}",
     ".gjm-beats{display:flex;justify-content:center;align-content:center;gap:8px;flex-wrap:wrap;min-height:48px;align-items:center;}",
+    ".gjm-beats.amalg-rows{min-height:96px;}",
     ".gjm-pad{width:46px;height:46px;border-radius:13px;border:2px solid var(--hair-2);background:var(--bg);color:var(--mut);font-size:16px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:none;user-select:none;}",
-    "@media (max-width:640px){.gjm-beats{min-height:94px;gap:6px 7px;max-width:260px;margin:0 auto;}.gjm-pad{width:40px;height:40px;border-radius:11px;font-size:14px;}}",
+    "@media (max-width:640px){.gjm-beats{min-height:46px;gap:6px 7px;max-width:240px;margin:0 auto;}.gjm-beats.amalg-rows{min-height:92px;}.gjm-pad{width:40px;height:40px;border-radius:11px;font-size:14px;}.gjm-tr-row{gap:4px;}.gjm-tr-row .gjm-sel{padding:4px 5px;font-size:10.5px;}.gjm-tr-row .gjm-pill{padding:5px 7px;font-size:10.5px;min-width:0;flex:0 0 auto;}}",
     ".gjm-pad small{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}",
     ".gjm-pad[data-acc='2']{border-color:var(--ok);color:var(--ok);}",
     ".gjm-pad[data-acc='1']{border-color:var(--gold);color:var(--gold);}",
     ".gjm-pad[data-acc='0']{opacity:.42;border-style:dashed;}",
     ".gjm-pad.active{transform:scale(1.14);background:var(--gold);color:#14161c !important;box-shadow:0 0 20px rgba(232,176,75,.55);}",
+    "html[data-theme='sepia'] .gjm-pad.active{background:var(--gold);color:#fff !important;opacity:1 !important;}",
+    "html[data-theme='sepia'] .gjm-pad.active small{color:#fff !important;}",
     ".gjm-pad[data-acc='2'].active{background:var(--ok);box-shadow:0 0 22px rgba(57,217,138,.65);}",
     ".gjm-pad.intro-beat.active{background:#4cc9f0 !important;border-color:#4cc9f0 !important;color:#062029 !important;box-shadow:0 0 20px rgba(76,201,240,.65);}",
     ".gjm-bpm-box{display:flex;flex-direction:column;justify-content:center;text-align:center;background:var(--bg);border:1px solid var(--hair-2);border-radius:16px;padding:12px 16px;box-shadow:inset 0 2px 10px rgba(0,0,0,.25);}",
@@ -10453,7 +10473,8 @@ window.addEventListener("load",paintDot);setTimeout(paintDot,1500);
     ".gjm-pills{display:flex;gap:4px;flex-wrap:wrap;}",
     ".gjm-pill{flex:1;min-width:32px;padding:6px 5px;border-radius:8px;border:1px solid var(--hair-2);background:var(--card);color:var(--ink);font-size:11.5px;font-weight:700;cursor:pointer;text-align:center;white-space:nowrap;}",
     ".gjm-pill.on{background:var(--gold);border-color:transparent;color:#14161c;}",
-    "html:not([data-theme='dark']) .gjm-pill.on{color:#fff;}",
+    "html[data-theme='sepia'] .gjm-pill.on{background:var(--gold);border-color:transparent;color:#fff !important;}",
+    "html[data-theme='sepia'] .gjm-play:not(.running){color:#fff !important;}",
     ".gjm-tr-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}",
     ".gjm-sel{background:var(--card);border:1px solid var(--hair-2);color:var(--ink);border-radius:8px;padding:5px 7px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;}",
     ".gjm-actions{display:flex;gap:10px;align-items:stretch;}",
@@ -10732,8 +10753,8 @@ return res;
     ".gjm-slot-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);}",
     ".gjm-slot-sel{display:flex;align-items:center;gap:2px;}",
     "@media (max-width:640px){",
-    "  #gjMetroModal{padding:0 !important;align-items:stretch !important;justify-content:stretch !important;background:var(--card) !important;overscroll-behavior:contain;}",
-    "  #gjMetroModal .gjm-console{width:100vw !important;max-width:100vw !important;height:100dvh !important;max-height:100dvh !important;border-radius:0 !important;border:none !important;box-shadow:none !important;padding:calc(10px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px)) !important;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;gap:8px;}",
+    "  #gjMetroModal{padding:0 !important;align-items:stretch !important;justify-content:stretch !important;background:var(--card) !important;overscroll-behavior:none;overflow-x:hidden !important;touch-action:pan-y;width:100vw !important;max-width:100vw !important;left:0 !important;right:0 !important;}",
+    "  #gjMetroModal .gjm-console{width:100% !important;max-width:100% !important;height:100dvh !important;max-height:100dvh !important;border-radius:0 !important;border:none !important;box-shadow:none !important;padding:calc(10px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px)) !important;overflow-y:auto;overflow-x:hidden !important;touch-action:pan-y;-webkit-overflow-scrolling:touch;box-sizing:border-box;gap:8px;}",
     "  #gjMetroModal .gjm-desk{display:flex;flex-direction:column;gap:8px;}",
     "  #gjMetroModal .gjm-pill{white-space:nowrap;font-size:10px;padding:6px 7px;min-width:0;}",
     "  .gjm-poly-sw-row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;align-items:stretch;}",
@@ -10807,7 +10828,73 @@ return res;
   var roundBadge = mk("span", "gjm-bar-badge", "", brandBox);
   roundBadge.style.cssText = "width:104px;justify-content:center;box-sizing:border-box;white-space:nowrap;";
   var trTimeBadge = mk("span", "gjm-bar-badge", "", brandBox);
-  var btnClose = mk("button", "gjm-close", "✕", mTop);
+  var __gjSavedTheme = null;
+
+  var __gjThemes = [
+    { val: "dark",  icon: "🌙", ca: "Fosc",     es: "Oscuro" },
+    { val: "blue",  icon: "🌌", ca: "Blau nit", es: "Azul noche" },
+    { val: "sepia", icon: "📜", ca: "Sèpia",    es: "Sepia" }
+  ];
+
+  function currentThemeVal() {
+    if (window.GJPSTheme && typeof window.GJPSTheme.get === "function") {
+      return window.GJPSTheme.get() || "dark";
+    }
+    return document.documentElement.getAttribute("data-theme") || "dark";
+  }
+
+  function applyMetroTheme(val) {
+    if (window.GJPSTheme && typeof window.GJPSTheme.set === "function") {
+      window.GJPSTheme.set(val);
+    } else {
+      document.documentElement.setAttribute("data-theme", val);
+    }
+    if (window.GJPSTheme && typeof window.GJPSTheme.refresh === "function") {
+      try { window.GJPSTheme.refresh(); } catch (e) {}
+    }
+    updateThemeBtnLabel();
+  }
+
+  function snapshotPageTheme() {
+    __gjSavedTheme = currentThemeVal();
+  }
+
+  function restorePageTheme() {
+    if (__gjSavedTheme) {
+      applyMetroTheme(__gjSavedTheme);
+      __gjSavedTheme = null;
+    }
+  }
+
+  var topRight = mk("div", null, null, mTop);
+  topRight.style.cssText = "display:flex;align-items:center;gap:8px;";
+
+  var btnTheme = mk("button", "gjm-pill", "", topRight);
+  btnTheme.type = "button";
+  btnTheme.style.cssText = "flex:0 0 auto;padding:6px 10px;font-size:11px;";
+
+  function updateThemeBtnLabel() {
+    var cur = currentThemeVal();
+    var idx = 0;
+    for (var i = 0; i < __gjThemes.length; i++) {
+      if (__gjThemes[i].val === cur) { idx = i; break; }
+    }
+    var item = __gjThemes[idx];
+    btnTheme.textContent = item.icon + " " + L(item.ca, item.es) + " (" + (idx + 1) + "/3)";
+  }
+  updateThemeBtnLabel();
+
+  btnTheme.onclick = function () {
+    var cur = currentThemeVal();
+    var idx = 0;
+    for (var i = 0; i < __gjThemes.length; i++) {
+      if (__gjThemes[i].val === cur) { idx = i; break; }
+    }
+    var next = __gjThemes[(idx + 1) % __gjThemes.length];
+    applyMetroTheme(next.val);
+  };
+
+  var btnClose = mk("button", "gjm-close", "✕", topRight);
   btnClose.type = "button";
 
   var desk = mk("div", "gjm-desk", null, consoleBox);
@@ -10857,6 +10944,7 @@ return res;
     pb.onclick = function () {
       if (amalgOn) {
         amalgOn = false;
+        padsHost.classList.remove("amalg-rows");
         btnAmalg.classList.remove("on");
         amalgBox.classList.remove("on");
         amalgBadge.classList.remove("on");
@@ -10915,6 +11003,7 @@ return res;
 
   function applyAmalgBar(idx) {
     var item = amalgBars[idx] || { n: 4, d: 4, u: "q" };
+    if (amalgOn) padsHost.classList.add("amalg-rows");
     beats = calcBarBeats(item);
     denom = item.d;
     beatUnit = item.u || "q";
@@ -11006,6 +11095,7 @@ btnAmalgOff.style.cssText = "flex:0 0 auto;padding:4px 8px;font-size:11px;color:
 btnAmalgOff.title = L("Desactiva l'amalgama", "Desactiva la amalgama");
   btnAmalgOff.onclick = function () {
     amalgOn = false;
+    padsHost.classList.remove("amalg-rows");
     btnAmalg.classList.remove("on");
     amalgBox.classList.remove("on");
     amalgBadge.classList.remove("on");
@@ -11029,6 +11119,7 @@ btnAmalg.onclick = function () {
   }
   amalgOn = true;
   amalgIdx = 0;
+  padsHost.classList.add("amalg-rows");
   btnAmalg.classList.add("on");
   amalgBox.classList.add("on");
   metersRow.querySelectorAll(".gjm-pill").forEach(function (x) { if (x !== btnAmalg) x.classList.remove("on"); });
@@ -11138,7 +11229,8 @@ optB.value = String(bNum);
 if (bNum === 4) optB.selected = true;
 }
 selBars.onchange = function () { trainerBars = parseInt(this.value, 10) || 4; barCounter = 0; };
-var btnIntro = mk("button", "gjm-pill on", "⏳ +2 comp. inici", trRow);
+var isNarrowIntro = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
+var btnIntro = mk("button", "gjm-pill on", isNarrowIntro ? "⏳ +2" : "⏳ +2 comp. inici", trRow);
 btnIntro.type = "button"; btnIntro.style.fontSize = "11px"; btnIntro.style.padding = "6px 9px";
 btnIntro.title = L("Fa sonar 2 compassos d'entrada (-2, -1) només en iniciar", "Hace sonar 2 compases de entrada (-2, -1) solo al iniciar");
 btnIntro.onclick = function () {
@@ -11373,6 +11465,7 @@ btnPlay.classList.remove("running"); btnPlay.textContent = "▶ " + L("Inicia", 
 }
 function closeMetroPro() {
   stopMetroPro();
+  restorePageTheme();
   if (document.fullscreenElement === mModal && document.exitFullscreen) {
     document.exitFullscreen().catch(function () {});
   }
@@ -11441,12 +11534,14 @@ btn.disabled = false;
 btn.style.opacity = "1";
 btn.textContent = t().appsOpen;
 btn.onclick = function () {
+  snapshotPageTheme();
+  updateThemeBtnLabel();
+  mModal.scrollLeft = 0;
+  consoleBox.scrollLeft = 0;
   mModal.classList.add("on");
-  if (isSmartphone() && mModal.requestFullscreen && !document.fullscreenElement) {
-    mModal.requestFullscreen().catch(function () {});
-  }
 };
-} else if (kind === "app" && isSmartphone()) {
+}
+else if (kind === "app" && isSmartphone()) {
 btn.textContent = L("💻 Només PC / Tablet", "💻 Solo PC / Tablet");
 btn.style.opacity = "0.6";
 }
@@ -11565,6 +11660,37 @@ try { render(); } catch (e) {}
       } catch (e) {}
     };
   }
+})();
+</script>
+<script>
+/* ═══ GJPS · CACHE BUSTER v1 · força recàrrega automàtica ═══ */
+(function () {
+  'use strict';
+  var CURRENT_VERSION = 'v6.0.1'; // Incrementa quan facis canvis importants
+  
+  // Guarda la versió actual al localStorage
+  var storedVersion = localStorage.getItem('gjps_app_version');
+  if (storedVersion !== CURRENT_VERSION) {
+    // Força recàrrega amb cache busting
+    var url = new URL(window.location.href);
+    url.searchParams.set('_v', Date.now());
+    localStorage.setItem('gjps_app_version', CURRENT_VERSION);
+    // Només recarrega si no acabem d'arribar amb un paràmetre de versió
+    if (!url.searchParams.has('_forceReload')) {
+      url.searchParams.set('_forceReload', '1');
+      window.location.replace(url.toString());
+    }
+  }
+  
+  // Neteja el paràmetre de recàrrega després de 2 segons
+  setTimeout(function () {
+    var url = new URL(window.location.href);
+    if (url.searchParams.has('_forceReload')) {
+      url.searchParams.delete('_forceReload');
+      url.searchParams.delete('_v');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, 2000);
 })();
 </script>
 </body></html>
