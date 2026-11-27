@@ -1357,7 +1357,21 @@ html:not([data-theme="dark"]) .lvlmenu { background: rgba(var(--header-rgb), .93
   .lvlmenu { width: 100%; max-width: none; }
   .lvlopt { padding: 12px; }
 }
+/* Oculta el contingut fins que acabi el primer pintat inicial */
+body.loading #app,
+body.loading main,
+body.loading header ~ * {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
 
+/* Evita transicions i animacions durant l'arrencada */
+html:not(.gj-boot-ready) *,
+html:not(.gj-boot-ready) *::before,
+html:not(.gj-boot-ready) *::after {
+  transition: none !important;
+  animation: none !important;
+}
 /* ============================================================
    23. HOVER REACTIU
    ============================================================ */
@@ -2429,6 +2443,10 @@ html { -webkit-tap-highlight-color: transparent; }
   transform: translate(-50%, -50%);
   margin: 0;
 }
+body.loading {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
 </style>
 <!-- ═══ FINAL · social, icones, PWA ═══ -->
 <meta name="description" content="Girona Jazz Piano School® · Aula online: blocs de vídeos, seguiment continuat i entrenament auditiu.">
@@ -2474,8 +2492,19 @@ html { -webkit-tap-highlight-color: transparent; }
   border-color: var(--hair) !important;
   color: var(--ink) !important;
 }
+/* Amaga el contingut i bloqueja transicions fins que l'arrencada sigui llesta */
+body.loading {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+html:not(.gj-boot-ready) *,
+html:not(.gj-boot-ready) *::before,
+html:not(.gj-boot-ready) *::after {
+  transition: none !important;
+  animation: none !important;
+}
 </style>
-</head><body class="">
+</head><body class="loading">
 <div id="wm"></div>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:#7a0029;color:#fff;padding:10px 16px;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"></div>
 <div id="toast" style="opacity:0"></div>
@@ -2490,9 +2519,9 @@ html { -webkit-tap-highlight-color: transparent; }
   </div>
   <div class="hdr">
     <span class="modes">
-<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
+<button id="mTrack" data-tip="El teu itinerari guiat pas a pas / Tu itinerario guiado paso a paso" aria-label="Seguiment Continuat / Seguimiento Continuo" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg> Seguimiento Continuo</button>
 
-<button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class="on"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
+<button id="mFree" data-tip="Explora tots els vídeos per blocs / Explora todos los vídeos por bloques" aria-label="Navegació Lliure / Navegación Libre" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Navegación Libre</button>
 
 <button id="mApps" data-tip="Aplicacions i eines d'entrenament / Aplicaciones y herramientas de entrenamiento" aria-label="Aplicacions / Aplicaciones" class=""><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg> Apps</button>
 
@@ -2505,8 +2534,8 @@ html { -webkit-tap-highlight-color: transparent; }
 </header>
 
 <main>
-  <div id="trackView" style="display: none;"></div>
-  <div id="freeView" style="display: block;"></div>
+  <div id="trackView" style="display: block;"></div>
+  <div id="freeView" style="display: none;"></div>
   <div id="appsView" style="display: none;"></div>
   <div id="infoView" style="display: none;"></div>
   <div id="helpView" style="display: none;"></div>
@@ -2576,12 +2605,14 @@ html { -webkit-tap-highlight-color: transparent; }
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ================================================================
-   1. UTILITATS I ESTAT GLOBAL
+1. UTILITATS I ESTAT GLOBAL
    ================================================================ */
 (function () {
   var prev = window.onerror;
   window.onerror = function (m, s, l, c, er) {
-    if (typeof prev === 'function') { try { prev(m, s, l, c, er); } catch (e) {} }
+    if (typeof prev === 'function') {
+      try { prev(m, s, l, c, er); } catch (e) {}
+    }
     if (m === 'Script error.' || m === 'Script error' || (!s && (l === 0 || l === undefined))) return false;
     var f = document.getElementById('fatal');
     if (f) { f.style.display = 'block'; f.textContent = '⚠️ Error JS: ' + m + ' (línia ' + l + ')'; }
@@ -2597,7 +2628,6 @@ function lsJSON(k, def) { var r = lsGet(k); if (!r) return def; try { return JSO
 var APP_VERSION = '6.0', APP_BUILD = '20-11-2026';
 var LS = { lang: lsGet('gjps_lang') || 'ca', mode: lsGet('gjps_mode') || 'track', user: lsGet('gjps_session') || '', done: {} };
 document.body.classList.add('loading');
-
 function loadSkip() {
   var u = LS.user || 'guest';
   var rs = lsJSON('gjps_skipped_' + u, null);
@@ -7219,7 +7249,6 @@ $('mApps').onclick = function () { setMode('apps'); };
 $('mInfo').onclick = function () { setMode('info'); };
 $('mHelp').onclick = function () { setMode('help'); };
 $('mSearch').onclick = function () {
-  if (LS.mode !== 'free') setMode('free');
   var on = document.body.classList.toggle('search-on');
   this.classList.toggle('on', on);
   if (on) setTimeout(function () { var i = $('freeSearch'); if (i) i.focus(); }, 0);
@@ -8865,7 +8894,7 @@ window.GJSDocs = { list: docsAll, open: openDocPanel, form: openDocForm, state: 
 window.GJSOrder = { view: function (v) { MV = v || 'order'; applyView(true); }, levelIds: levelIds, apply: applyLevelIds, repaint: function () { lastSig = ''; repaint(); } };
 window.GJSPrep = { text: prepText, set: function (id, txt) { OV.dx[id] = OV.dx[id] || {}; OV.dx[id][LS.lang] = txt; render(); }, reset: function (id) { var s = prepSeen(); delete s[id]; lsSet(prepSeenKey(), JSON.stringify(s)); }, open: openPrep };
 
-try { hydrateCourse(); render(); } catch (e) {}
+try { hydrateCourse(); } catch (e) {}
 console.log('🗂 GJPS v6.0 · gestor actiu · idioma ' + LS.lang.toUpperCase() + ' · nivells ' + activeLevels().join(',') + ' · publicacions ' + pubs().length + ' · documents ' + docsAll().length);
 })();
 </script>
@@ -9190,21 +9219,33 @@ window.GJSApps = { entries: entries, meta: meta, form: openAppForm, move: moveKe
 try {
   if ($('appVer')) $('appVer').textContent = 'GJPS v' + APP_VERSION + ' (' + APP_BUILD + ')';
   console.log('🎹 GJPS v' + APP_VERSION + ' · ' + APP_BUILD);
-  setLabels();
+  var savedTheme = lsGet('gjps_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
   if (isIOSDevice || /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) document.documentElement.classList.add('ios-safari');
   loadDone();
   hydrateCourse();
   initDragDrop();
+
   var returnMode = lsGet('gjps_return_mode');
   LS.mode = returnMode || 'track';
   if (returnMode) lsSet('gjps_return_mode', '');
   lsSet('gjps_mode', LS.mode);
-  render();
+
+  setLabels();
+  if (typeof render === 'function') render();
+
+  requestAnimationFrame(function () {
+  requestAnimationFrame(function () {
+    document.body.classList.remove('loading');
+    document.documentElement.classList.add('gj-boot-ready');
+  });
+});
 } catch (e) {
+  document.body.classList.remove('loading');
+  document.documentElement.classList.add('gj-boot-ready');
   var f = $('fatal');
   if (f) { f.style.display = 'block'; f.textContent = '⚠️ Error init: ' + e.message; }
 }
-
 /* ═══ NETEJA SW DESKTOP + REGISTRE PWA ═══ */
 (function () {
   var ua = navigator.userAgent;
@@ -11733,22 +11774,29 @@ lt.addEventListener("click", function () {
 setTimeout(function () { if (window.__gjNewsRemount) window.__gjNewsRemount(); }, 50);
 });
 }
-try { render(); } catch (e) {}
+try { /* render diferit al bloc final */ } catch (e) {}
 })();
 </script>
 <script>
-/* ═══ Repintat garantit després de la capa d'adjunts ═══ */
+/* ═══ Alliberament net d'arrencada (sense repintat extra) ═══ */
 (function () {
-  function rr() { try { if (window.render) render(); } catch (e) {} }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(rr, 0); });
-  } else {
-    setTimeout(rr, 0);
+  if (window.__gjBootUnlockDone) return;
+  window.__gjBootUnlockDone = true;
+
+  function unlockBoot() {
+    requestAnimationFrame(function () {
+      document.body.classList.remove('loading');
+      document.documentElement.classList.add('gj-boot-ready');
+    });
   }
-  window.addEventListener('load', function () { setTimeout(rr, 0); });
+
+  if (document.readyState === 'complete') {
+    unlockBoot();
+  } else {
+    window.addEventListener('load', unlockBoot, { once: true });
+  }
 })();
-</script>
-<script>
+</script><script>
 /* ═══ GJPS · ADJUNTS v12 · NOMÉS selecció explícita, mai herència ═══ */
 (function () {
   'use strict';
@@ -11869,6 +11917,15 @@ try { render(); } catch (e) {}
       window.history.replaceState({}, '', url.toString());
     }
   }, 2000);
+})();
+</script>
+<script>
+/* ═══ GJPS · ARRENCADA ÚNICA · un sol render després de tot ═══ */
+(function () {
+  try { render(); } catch (e) {
+    var f = document.getElementById('fatal');
+    if (f) { f.style.display = 'block'; f.textContent = '⚠️ Error render: ' + e.message; }
+  }
 })();
 </script>
 </body></html>
