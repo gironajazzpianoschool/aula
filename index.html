@@ -6241,17 +6241,25 @@ function makeVid(v, id, track, tag) {
   row.querySelector('.ck').onclick = function () {
     if (editModeOn) return;
     var btn = this;
+    if (btn.dataset.busy === '1') return;
     if (LS.done[id]) { delete LS.done[id]; saveDone(); setQuiet(true); render(); return; }
     LS.done[id] = 1; saveDone();
     if (LS.skipped) { var sk = LS.skipped.indexOf(id); if (sk >= 0) LS.skipped.splice(sk, 1); }
     if (LS.skipAfter) delete LS.skipAfter[id];
     saveSkip();
-    /* Flash breu (no estils permanents) i repintat immediat */
+    btn.dataset.busy = '1';
     btn.classList.add('flash');
-    btn.addEventListener('animationend', function () { btn.classList.remove('flash'); }, { once: true });
-    setQuiet(true);
-    render();
+    var done = false;
+    function go() {
+      if (done) return; done = true;
+      btn.classList.remove('flash');
+      setQuiet(true);
+      render();
+    }
+    btn.addEventListener('animationend', go, { once: true });
+    setTimeout(go, 650);
   };
+
   row.querySelector('.bk').onclick = function () { if (editModeOn) return; toggleBookmark(id); setQuiet(true); render(); };
 
   var skipBtn = row.querySelector('.skip');
